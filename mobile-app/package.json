@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc"
   },
   "jest": {
     "preset": "@testing-library/react-native",
@@ -27,6 +31,7 @@
     ]
   },
   "dependencies": {
+    "@babel/preset-env": "^7.1.6",
     "@expo/vector-icons": "^13.0.0",
     "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/native": "^6.0.2",
@@ -37,6 +42,7 @@
     "expo-constants": "~14.0.2",
     "expo-font": "~11.0.1",
     "expo-linking": "~3.2.3",
+    "expo-modules-autolinking": ">=0.8.1",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "expo-system-ui": "~2.0.1",
@@ -59,8 +65,11 @@
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
     "@types/react-test-renderer": "^18.0.0",
+    "eslint": ">=4.4.1 <5.0.0",
+    "eslint-config-expo": "^6.0.0",
     "jest": "^26.6.3",
     "jest-expo": "~47.0.1",
+    "prettier": ">=1.5.3 <2.0.0",
     "react-test-renderer": "18.1.0",
     "typescript": "^4.6.3"
   },
