@@ -15,7 +15,8 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write !.expo/ ./**/*.{js,jsx,ts,tsx,css,md,json}  --config ./.prettierrc",
     "storybook": "start-storybook dev -p 7007",
-    "prestorybook": "rnstl"
+    "prestorybook": "rnstl",
+    "mock": "json-mock-api --port 3000 --directory ./mock"	
   },
   "jest": {
     "preset": "@testing-library/react-native",
@@ -54,6 +55,7 @@
     "expo-system-ui": "~2.0.1",
     "expo-web-browser": "~12.0.0",
     "inline-style-prefixer": "^7.0.0",
+    "json-mock-api": "^1.2.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
