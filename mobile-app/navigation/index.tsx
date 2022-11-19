@@ -7,7 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import StorybookScreen from '../screens/StorybookScreen';
 import { BottomTabParamList, RootStackParamList } from '../types';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -27,28 +27,29 @@ function RootNavigator() {
   );
 }
 
-
 const Tabs = createBottomTabNavigator<BottomTabParamList>();
 
-function  BottomTabNavigator() {
+function BottomTabNavigator() {
   return (
     <Tabs.Navigator>
       <Tabs.Screen
-      name="HomeScreen"
-      component={HomeScreen} 
-      options={{
-        tabBarIcon: ({focused, color}) => (<Ionicons name="md-home-outline" size={24} color={color} />)
-      }}   />
-      <Tabs.Screen 
-      name="Storybook" 
-      component={StorybookScreen}
-      options={{
-        tabBarIcon: ({focused, color}) => (<Ionicons name="md-book-outline" size={24} color={color} />)
-      }}  />
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons name="md-home-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Storybook"
+        component={StorybookScreen}
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons name="md-book-outline" size={24} color={color} />
+          ),
+        }}
+      />
     </Tabs.Navigator>
   );
 }
-
-
-
-

@@ -13,7 +13,7 @@
     "test:coverage": "jest --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc",
+    "format": "prettier --write !.expo/ ./**/*.{js,jsx,ts,tsx,css,md,json}  --config ./.prettierrc",
     "storybook": "start-storybook dev -p 7007",
     "prestorybook": "rnstl"
   },

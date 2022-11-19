@@ -1,1 +1,1 @@
-import "../StyledText.stories";
+import '../StyledText.stories';
