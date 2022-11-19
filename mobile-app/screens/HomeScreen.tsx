@@ -7,7 +7,7 @@ import { Text, View } from '../components/Themed';
 const HomeScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<RootStackParamList, 'HomeScreen'>) => {
+}: NativeStackScreenProps<RootStackParamList, 'Root'>) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Divvly Home Screen</Text>
