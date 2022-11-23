@@ -12,6 +12,7 @@ export const containerDecorator = (Story: any) => {
                     justifyContent: 'center',
                     width: '100%',
                     height: '100%',
+                    paddingHorizontal: 20
                 }}>
                     <Story />
                 </View>

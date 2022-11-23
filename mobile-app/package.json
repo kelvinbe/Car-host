@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -94,6 +93,7 @@
     "jest-expo": "~47.0.1",
     "prettier": ">=1.5.3 <2.0.0",
     "react-native-storybook-loader": "^2.0.5",
+    "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.1.0",
     "typescript": "^4.6.3",
     "webpack-dev-server": "^3"

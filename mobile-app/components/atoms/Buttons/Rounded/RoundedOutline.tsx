@@ -1,20 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { makeStyles } from '@rneui/themed'
-import { Button, ButtonProps } from '@rneui/base';
+import { ButtonProps, makeStyles } from '@rneui/themed'
+import { Button } from '@rneui/base';
 
-
-interface Props {
-    children?: string
+interface IProps {
     fullWidth?: boolean;
-    disabled?: boolean;
-    loading?: boolean;
+    width?: number;
 }
 
-const useStyles = makeStyles((theme, props: Props)=>{
+type Props = IProps & ButtonProps;
+
+const useStyles = makeStyles((theme, props: Props)=> {
     return ({
         buttonStyle: {
-            backgroundColor: theme.colors.primary,
             borderRadius: 25,
             paddingTop: 13,
             paddingHorizontal:  20,
@@ -22,9 +20,10 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: 'center',
             overflow: 'hidden',
             width: props?.fullWidth ? '100%' : 'auto',
+            borderColor: theme.colors.primary
         },
         titleStyle: {
-            color: theme.colors.white,
+            color: theme.colors.primary,
             fontSize: 20,
             fontWeight: '700',
             lineHeight: 24,
@@ -34,13 +33,20 @@ const useStyles = makeStyles((theme, props: Props)=>{
     })
 })
 
-const Rounded = (props: Props & ButtonProps) => {
-  const styles = useStyles(props)
+const RoundedOutline = (props: Props) => {
+    const styles = useStyles(props)
   return (
-    <Button onPress={props.onPress} buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} title={props.children} />
+    <Button
+        onPress={props.onPress}
+        buttonStyle={styles.buttonStyle}
+        titleStyle={styles.titleStyle}
+        type='outline'
+    >
+        {props.children}
+    </Button>
   )
 }
 
-export default Rounded
+export default RoundedOutline
 
 const styles = StyleSheet.create({})

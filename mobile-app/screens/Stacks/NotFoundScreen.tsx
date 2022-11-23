@@ -1,15 +1,15 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../components/Themed';
-import { RootStackParamList } from '../types';
+import { Text, View } from '../../components/Themed';
+import { BottomTabParamList, RootStackParamList } from '../../types';
 
 export default function NotFoundScreen({
   navigation,
-}: NativeStackScreenProps<RootStackParamList, 'NotFound'>) {
+}: BottomTabScreenProps<BottomTabParamList, 'NotFound'>) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>This screen doesn't exist.</Text>
-      <TouchableOpacity onPress={() => navigation.replace('HomeScreen')} style={styles.link}>
+      <TouchableOpacity onPress={navigation.goBack} style={styles.link}>
         <Text style={styles.linkText}>Go to home screen!</Text>
       </TouchableOpacity>
     </View>
