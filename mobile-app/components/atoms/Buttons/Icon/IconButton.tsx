@@ -31,14 +31,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: 'center',
             overflow: 'hidden',
             padding: 10,
-            ...props?.shadow && {
-                shadowColor: "rgba(0, 0, 0, 0.06)",
-                shadowOffset: {
-                    width: 0,
-                    height: 6,
-                },
-                shadowBlur: 24,
-            }
+            width: 50,
+            height: 50
         },
     })
 })
@@ -46,7 +40,10 @@ const useStyles = makeStyles((theme, props: Props)=>{
 const IconButton = (props: Props) => {
     const styles = useStyles(props)
   return (
-    <Button containerStyle={props.containerStyle} style={props.style} buttonStyle={styles.buttonStyle}  >
+    <Button raised={props.shadow}  containerStyle={[props.containerStyle, {
+            backgroundColor: "#ffffff",
+            borderRadius: 12,
+    }]} style={props.style} buttonStyle={styles.buttonStyle}  >
         <Icon name={props.name} type={props.iconType}  color={props?.theme?.colors.grey0}  />
     </Button>
   )

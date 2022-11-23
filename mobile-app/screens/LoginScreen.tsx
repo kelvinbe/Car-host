@@ -117,7 +117,7 @@ const LoginScreen = (props: Props) => {
                 </Divider>
                 <View style={styles.iconButtonsContainer} >
                     <IconButton name="google" iconType='font-awesome' />
-                    <IconButton containerStyle={{
+                    <IconButton shadow containerStyle={{
                         marginHorizontal: 10
                     }} name="apple" iconType='font-awesome' />
                     <IconButton name="facebook" iconType='font-awesome' />
