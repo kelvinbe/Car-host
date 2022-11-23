@@ -7,12 +7,12 @@ import Rounded from '../components/atoms/Buttons/Rounded/Rounded'
 import Divider from '../components/atoms/Divider/Divider'
 import IconButton from '../components/atoms/Buttons/Icon/IconButton'
 import { withTheme } from 'emotion-theming'
-import { Icon, Image, Theme } from '@rneui/base'
+import { Button, Icon, Image, Theme } from '@rneui/base'
 import { RootStackParamList } from '../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
+type Props = NativeStackScreenProps<RootStackParamList, 'ForgotPassword'> ;
 
 const useStyles = makeStyles((theme)=>{
     return ({
@@ -70,21 +70,32 @@ const useStyles = makeStyles((theme)=>{
             justifyContent: "center",
             marginVertical: 20
         },
-        helperTextStyle: {
-            fontSize: 14,
-            lineHeight: 16,
-            color: theme.colors.grey3,
-            marginTop: 5,
-            width: "100%",
-            textAlign: "right",
-            fontStyle: "italic",
-            fontWeight: "500",
-
+        verifyButtonStyles : {
+            borderRadius: 15,
+            borderWidth: 1,
+            borderColor: theme.colors.grey0,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            width: 100,
+            backgroundColor: theme.colors.white
         },
+        verifyButtonContainerStyle: {
+          width: "100%",
+          alignItems: "flex-end",
+          marginTop: 10
+        },
+        verifyButtonTextStyles: {
+          color: theme.colors.grey0,
+          fontSize: 12,
+          lineHeight: 18,
+          textAlign: "center"
+        }
     })
 })
 
-const LoginScreen = (props: Props) => {
+const ForgotPasswordScreen = (props: Props) => {
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
 
@@ -92,12 +103,8 @@ const LoginScreen = (props: Props) => {
         setViewPassword(!viewPassword)
     }
 
-    const navigateToRegister = () => {
-        props.navigation.navigate("Register")
-    }
-
-    const navigateToForgotPassword = () => {
-        props.navigation.navigate("ForgotPassword")
+    const navigateToLogin = () => {
+        props.navigation.navigate("Login")
     }
 
   return (
@@ -115,45 +122,44 @@ const LoginScreen = (props: Props) => {
         <View style={styles.contentContainer} >
             <View style={styles.topContent} >
                 <Text style={styles.title} >
-                    Login
+                    Forgot Password
                 </Text>
-                <BaseInput containerStyle={{marginBottom: 40}} fullWidth placeholder='e.g email@email.com' label="Email" keyboardType='email-address' />
-                <WithHelperText label="Password" secureTextEntry={!viewPassword} container={{marginBottom: 20}} 
-                    fullWidth 
-                    placeholder="password" 
-                    helperText={
-                        <Text onPress={navigateToForgotPassword} style={styles.helperTextStyle} >
-                            Forgot Password?
-                        </Text>
-                    }
-                    rightIcon={<Icon onPress={toggleViewPassword} name={ viewPassword  ? "eye" :"eye-slash"} type="font-awesome" />} 
-                    />
+                <BaseInput containerStyle={{marginBottom: 20}} fullWidth placeholder='email@email.com' label="Email"  />
                 <Rounded  fullWidth>
-                    Login
+                    Continue
                 </Rounded>
-                <Divider style={{marginTop: 20, marginBottom: 20}} >
-                    Or
-                </Divider>
-                <View style={styles.iconButtonsContainer} >
-                    <IconButton name="google" iconType='font-awesome' />
-                    <IconButton shadow containerStyle={{
-                        marginHorizontal: 10
-                    }} name="apple" iconType='font-awesome' />
-                    <IconButton name="facebook" iconType='font-awesome' />
+                <View style={styles.bottomTextContainer} >
+                    <Text style={styles.leftText} >
+                        Don't have access to email?
+                    </Text>
+                    {
+                        /**
+                         * @todo: Add onPress to this button, to navigate to Support Screen
+                         */
+                    }
+                    <Text  style={styles.rightText} >
+                        Support
+                    </Text>
                 </View>
             </View>
             <View style={styles.bottomTextContainer} >
                 <Text style={styles.leftText} >
-                    Don't have an account?
+                    Not You?
                 </Text>
-                <Text onPress={navigateToRegister} style={styles.rightText} >
-                    Register
+                {
+                    /**
+                     * @todo: Add onPress to this button, to navigate to Support Screen
+                     */
+                }
+                <Text onPress={navigateToLogin}  style={styles.rightText} >
+                    Back to login
                 </Text>
             </View>
+            
             
         </View>
     </View>
   )
 }
 
-export default LoginScreen
+export default ForgotPasswordScreen
