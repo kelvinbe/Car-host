@@ -8,6 +8,8 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import StorybookScreen from '../screens/StorybookScreen';
 import { BottomTabParamList, RootStackParamList } from '../types';
 import { Ionicons } from '@expo/vector-icons';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -21,8 +23,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='Login' >
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}   />
     </Stack.Navigator>
   );
 }
