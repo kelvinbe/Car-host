@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Input, InputProps, Text } from '@rneui/base'
 
 interface IProps {
     fullWidth?: boolean;
     width?: number;
-    helperText?: string;
+    helperText?: string | ReactNode; 
     helperOnPress?: () => void;
     container?: any
 }
@@ -96,9 +96,9 @@ const WithHelperText = (props: Props) => {
                 labelStyle={[props.labelStyle, styles.labelStyle]}
                 keyboardType={props.keyboardType}
                 />
-                <Text onPress={props?.helperOnPress} style={{
+                { typeof props?.helperText !== "string" ? props?.helperText : <Text onPress={props?.helperOnPress} style={{
                     ...styles.helperTextStyle,
-                }} >{props.helperText}</Text>
+                }} >{props.helperText}</Text>}
             </View>
         )}
     </ThemeConsumer>
