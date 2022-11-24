@@ -8,4 +8,10 @@ export type RootStackParamList = {
 export type BottomTabParamList = {
   HomeScreen: undefined;
   Storybook: undefined;
+  History: undefined;
+  Upcoming: undefined;
+  Profile: undefined;
+  ManageRes: undefined;
+  Issues: undefined;
+  NotFound: undefined;
 };

@@ -1,15 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useState} from 'react'
 import { makeStyles } from '@rneui/themed'
-import BaseInput from '../components/atoms/Input/BaseInput/BaseInput'
-import WithHelperText from '../components/atoms/Input/WithHelperText/WithHelperText'
-import Rounded from '../components/atoms/Buttons/Rounded/Rounded'
-import Divider from '../components/atoms/Divider/Divider'
-import IconButton from '../components/atoms/Buttons/Icon/IconButton'
+import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
+import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
+import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
+import Divider from '../../components/atoms/Divider/Divider'
+import IconButton from '../../components/atoms/Buttons/Icon/IconButton'
 import { withTheme } from 'emotion-theming'
 import { Button, Icon, Image, Theme } from '@rneui/base'
-import { RootStackParamList } from '../types'
+import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ForgotPassword'> ;
@@ -108,57 +109,59 @@ const ForgotPasswordScreen = (props: Props) => {
     }
 
   return (
-    <View style={styles.container} >
-        <View style={styles.logoContainer}>
-            <Image 
-                source={require('../assets/images/logo.png')}
-                style={{
-                    height: 20,
-                    width: 78,
-                }}
-                resizeMode="contain"
-            />
-        </View>
-        <View style={styles.contentContainer} >
-            <View style={styles.topContent} >
-                <Text style={styles.title} >
-                    Forgot Password
-                </Text>
-                <BaseInput containerStyle={{marginBottom: 20}} fullWidth placeholder='email@email.com' label="Email"  />
-                <Rounded  fullWidth>
-                    Continue
-                </Rounded>
+    <SafeAreaView>
+        <View style={styles.container} >
+            <View style={styles.logoContainer}>
+                <Image 
+                    source={require('../../assets/images/logo.png')}
+                    style={{
+                        height: 20,
+                        width: 78,
+                    }}
+                    resizeMode="contain"
+                />
+            </View>
+            <View style={styles.contentContainer} >
+                <View style={styles.topContent} >
+                    <Text style={styles.title} >
+                        Forgot Password
+                    </Text>
+                    <BaseInput containerStyle={{marginBottom: 20}} fullWidth placeholder='email@email.com' label="Email"  />
+                    <Rounded  fullWidth>
+                        Continue
+                    </Rounded>
+                    <View style={styles.bottomTextContainer} >
+                        <Text style={styles.leftText} >
+                            Don't have access to email?
+                        </Text>
+                        {
+                            /**
+                             * @todo: Add onPress to this button, to navigate to Support Screen
+                             */
+                        }
+                        <Text  style={styles.rightText} >
+                            Support
+                        </Text>
+                    </View>
+                </View>
                 <View style={styles.bottomTextContainer} >
                     <Text style={styles.leftText} >
-                        Don't have access to email?
+                        Not You?
                     </Text>
                     {
                         /**
                          * @todo: Add onPress to this button, to navigate to Support Screen
                          */
                     }
-                    <Text  style={styles.rightText} >
-                        Support
+                    <Text onPress={navigateToLogin}  style={styles.rightText} >
+                        Back to login
                     </Text>
                 </View>
+                
+                
             </View>
-            <View style={styles.bottomTextContainer} >
-                <Text style={styles.leftText} >
-                    Not You?
-                </Text>
-                {
-                    /**
-                     * @todo: Add onPress to this button, to navigate to Support Screen
-                     */
-                }
-                <Text onPress={navigateToLogin}  style={styles.rightText} >
-                    Back to login
-                </Text>
-            </View>
-            
-            
         </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

@@ -19,10 +19,10 @@ export default function App() {
       <Provider store={store}>
         <ThemeProvider theme={theme} >
           <SafeAreaProvider>
-            <SafeAreaView style={{width: "100%", height: "100%"}}>
+            {/* <SafeAreaView style={{width: "100%", height: "100%"}}> */}
               <Navigation colorScheme={colorScheme} />
-              <StatusBar />
-            </SafeAreaView>
+              <StatusBar backgroundColor={theme.lightColors?.white} />
+            {/* </SafeAreaView> */}
           </SafeAreaProvider>
         </ThemeProvider>
       </Provider>
