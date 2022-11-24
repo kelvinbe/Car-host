@@ -6,7 +6,7 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  HomeScreen: undefined;
+  SearchScreen: undefined;
   Storybook: undefined;
   History: undefined;
   Upcoming: undefined;
@@ -15,3 +15,9 @@ export type BottomTabParamList = {
   Issues: undefined;
   NotFound: undefined;
 };
+
+export type SearchScreenParamList = {
+  SearchScreenHome: undefined;
+  SearchLocallyScreen: undefined;
+  BookingConfirmationScreen: undefined;
+}
