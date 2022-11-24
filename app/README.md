@@ -50,3 +50,5 @@ export default function handler(
 
 ```
 you can then view this when you visit the `/api-docs` route.
+![image](https://user-images.githubusercontent.com/58218526/203850115-506a0170-edac-4a21-8b52-b9ca4aa6a725.png)
+
