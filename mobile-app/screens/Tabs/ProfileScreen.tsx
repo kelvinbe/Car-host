@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
     width: "100%",
     padding: 0,
     margin: 0,
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: 10
   },
   listItemContent: {
@@ -157,7 +157,9 @@ const useStyles = makeStyles((theme, props: Props) => ({
   },
   logoutSection: {
     width: "100%",
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    height: "20%",
+    justifyContent: "flex-end"
   },
   topNavSection: {
     width: "90%",
