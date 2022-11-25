@@ -44,7 +44,7 @@ const IconButton = (props: Props) => {
             backgroundColor: "#ffffff",
             borderRadius: 12,
     }]} style={props.style} buttonStyle={styles.buttonStyle}  >
-        <Icon name={props.name} type={props.iconType}  color={props?.theme?.colors.grey0}  />
+        <Icon name={props.name} type={props.iconType}  color={props?.theme?.colors.stroke}  />
     </Button>
   )
 }

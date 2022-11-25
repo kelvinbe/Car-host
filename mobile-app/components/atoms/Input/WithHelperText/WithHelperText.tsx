@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
     return ({
         containerStyle: {
             borderWidth: 1,
-            borderColor: theme.colors.grey0,
+            borderColor: theme.colors.stroke,
             borderRadius: 32,
             padding: 0,
             margin: 0,

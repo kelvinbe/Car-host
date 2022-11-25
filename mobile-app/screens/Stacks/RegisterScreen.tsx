@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme)=>{
         verifyButtonStyles : {
             borderRadius: 15,
             borderWidth: 1,
-            borderColor: theme.colors.grey0,
+            borderColor: theme.colors.stroke,
             alignItems: "center",
             justifyContent: "center",
             paddingHorizontal: 10,
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme)=>{
           marginTop: 10
         },
         verifyButtonTextStyles: {
-          color: theme.colors.grey0,
+          color: theme.colors.stroke,
           fontSize: 12,
           lineHeight: 18,
           textAlign: "center"

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme, props)=>({
     },
     iconButtonStyle: {
         borderRadius: 4,
-        borderColor: theme.colors.grey0
+        borderColor: theme.colors.stroke
     },
     iconButtonContainerStyle: {
         borderRadius: 4,
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme, props)=>({
         fontSize: 16,
         fontWeight: "700",
         textAlign: "center",
-        color: theme.colors.grey0
+        color: theme.colors.stroke
     }
 }))
 

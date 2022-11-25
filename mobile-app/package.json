@@ -69,7 +69,8 @@
     "redux": "^4.2.0",
     "regenerator-runtime": "*",
     "twrnc": "^3.4.1",
-    "webpack": ">=2"
+    "webpack": ">=2",
+    "expo-navigation-bar": "~2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
