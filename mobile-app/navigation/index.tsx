@@ -32,7 +32,9 @@ import { setBackgroundColorAsync } from "expo-navigation-bar"
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
-    "ProfileScreenEdit"
+    "ProfileScreenEdit",
+    "PaymentDetailsScreenHome",
+    "MPesaDetailsScreen"
 ]
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -94,12 +96,13 @@ function BottomTabNavigator() {
   React.useEffect(()=>{
     if(ScreensWithNoBottomNav.includes(previousScreen)){
       dispatch(showBottomNav())
-    }else if(
+    }
+    if(
       ScreensWithNoBottomNav.includes(currentScreen)
     ){
       dispatch(hideBottomNav())
     }
-  }, [previousScreen])
+  }, [previousScreen, currentScreen])
 
   return (
     <ThemeConsumer>

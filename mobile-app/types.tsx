@@ -25,4 +25,10 @@ export type SearchScreenParamList = {
 export type ProfileScreenParamList = {
   ProfileScreenHome: undefined;
   ProfileScreenEdit: undefined;
+  PaymentDetailsScreen: undefined;
+}
+
+export type PaymentDetailsScreenParamList = {
+  PaymentDetailsScreenHome: undefined;
+  MPesaDetailsScreen: undefined;
 }

@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import ProfileScreenHome from './ProfileScreenHome'
 import ProfileScreenEdit from './ProfileScreenEdit'
 import TopBar from './TopBar/TopBar'
+import PaymentDetailsScreen from './PaymentDetailsScreen'
 
 const ProfileScreenStackNavigator = createNativeStackNavigator<ProfileScreenParamList>();
 
@@ -44,9 +45,15 @@ const ProfileScreen = (props: Props) => {
                 <ProfileScreenStackNavigator.Screen 
                 options={{
                     header: (props) => <TopBar {...props} title="Edit Profile" />,
-                    
                 }}
                 name="ProfileScreenEdit" component={ProfileScreenEdit} />
+                <ProfileScreenStackNavigator.Screen
+                    options={{
+                        headerShown: false
+                    }}
+                    name="PaymentDetailsScreen"
+                    component={PaymentDetailsScreen}
+                />
             </ProfileScreenStackNavigator.Navigator>
         </SafeAreaView>
       )}
