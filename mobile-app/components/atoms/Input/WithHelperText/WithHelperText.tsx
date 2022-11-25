@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme, props: Props)=> {
             fontWeight: "400",
             color: theme.colors.grey3,
             width: props?.fullWidth ? "100%" : props?.width ? props.width : "auto",
+            justifyContent: "center",
+            
         },
         helperTextStyle: {
             fontSize: 14,
@@ -61,7 +63,10 @@ const useStyles = makeStyles((theme, props: Props)=> {
         },
         labelStyle: {
             marginTop: -26,
-            color: "black"
+            color: theme.colors.black,
+            width: "100%",
+            fontWeight: "600",
+            fontSize: 16,
         }
     })
 })

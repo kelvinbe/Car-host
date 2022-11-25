@@ -23,15 +23,21 @@ const useStyles = makeStyles((theme, props: Props)=> {
             fontWeight: "400",
             color: theme.colors.grey3,
             width: props?.fullWidth ? "100%" : props?.width ? props.width : "auto",
+            alignItems: "center",
+            justifyContent: "center",
         },
         inputStyle: {
             borderWidth: 0,
             paddingVertical: 15,
             paddingHorizontal: 20,
+            margin: 0
         },
         inputContainerStyle: {
             borderBottomWidth: 0,
             margin: 0,
+            padding: 0,
+            alignItems: "center",
+            justifyContent: "center",
         },
         style: {
             borderWidth: 0,
@@ -47,7 +53,10 @@ const useStyles = makeStyles((theme, props: Props)=> {
         },
         labelStyle: {
             marginTop: -26,
-            color: "black"
+            color: theme.colors.black,
+            width: "100%",
+            fontWeight: "600",
+            fontSize: 16,
         }
     })
 })

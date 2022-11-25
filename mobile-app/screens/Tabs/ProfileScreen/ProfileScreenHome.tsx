@@ -1,19 +1,19 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { BottomTabParamList } from '../../types'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { ProfileScreenParamList } from '../../../types'
 import { StatusBar } from 'expo-status-bar'
-import { Button, ButtonGroup, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
-import LogoutIcon from "../../assets/icons/logout.svg"
-import HomeIcon from "../../assets/icons/home.svg"
+import { Button, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
+import LogoutIcon from "../../../assets/icons/logout.svg"
+import HomeIcon from "../../../assets/icons/home.svg"
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface IProps {
 
 }
 
-type Props = IProps & BottomTabScreenProps<BottomTabParamList, "Profile">
+type Props = IProps & NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome">
 
 const useStyles = makeStyles((theme, props: Props) => ({
   container: {
@@ -177,14 +177,15 @@ const useStyles = makeStyles((theme, props: Props) => ({
   }
 }))
 
-const ProfileScreen = (props: Props) => {
+const ProfileScreenHome = (props: Props) => {
   const styles = useStyles(props)
+  const goToEdit = () =>{
+    props.navigation.navigate("ProfileScreenEdit")
+  }
   return (
     <ThemeConsumer>
       {({ theme }) => (
-        <SafeAreaView 
-          style={styles.container}
-        >
+        <View style={styles.container} >
           <StatusBar backgroundColor={theme.colors.primary} />
           <View style={styles.topBarContainerStyle} >
             <View style={styles.topNavSection} >
@@ -194,13 +195,13 @@ const ProfileScreen = (props: Props) => {
             </View>
             <View style={styles.topBarCardStyle} >
               <View style={styles.avatarStyle} >
-                <Image source={require("../../assets/images/user.png")} style={styles.avatarImageStyle} />
+                <Image source={require("../../../assets/images/user.png")} style={styles.avatarImageStyle} />
               </View>
               <View style={styles.topEditSectionContainer} >
-                <View style={styles.editButtonContainer} >
+                <TouchableOpacity onPress={goToEdit} style={styles.editButtonContainer} >
                   <Text style={styles.editButtonTextStyle} >Edit</Text>
                   <Icon name="edit" type="font-awesome" size={10} color={theme.colors.primary} />
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.profileInfoContainer} >
                     <Text style={styles.profileInfoTextStyle} >
@@ -284,14 +285,13 @@ const ProfileScreen = (props: Props) => {
                   </ListItem.Content>
               </ListItem>
           </View>
-
-        </SafeAreaView>
+          </View>
       )}
     </ThemeConsumer>
     
   )
 }
 
-export default ProfileScreen
+export default ProfileScreenHome
 
 const styles = StyleSheet.create({})
