@@ -4,6 +4,7 @@ const theme = createTheme({
     lightColors: {
         background: "#f8f8f8",
         background2: "#F5F6F7",
+        background3: "#F7F8F9",
         primary: "#E63B2E",
         white: "#ffffff",
         stroke: "#E5E5E5",
