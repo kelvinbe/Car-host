@@ -1,9 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, NavigationContainerRef, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
-import HomeScreen from '../screens/Tabs/HomeScreen';
 import NotFoundScreen from '../screens/Stacks/NotFoundScreen';
 import StorybookScreen from '../screens/Tabs/StorybookScreen';
 import { BottomTabParamList, RootStackParamList } from '../types';
@@ -23,10 +22,40 @@ import ManageIcon from "../assets/icons/manage.svg";
 import WarningIcon from "../assets/icons/warning.svg";
 import IssuesScreen from '../screens/Tabs/IssuesScreen';
 import BookIcon from "../assets/icons/book.svg"
+import { Text } from '@rneui/base';
+import _SearchScreen from '../screens/Tabs/SearchScreen/SearchScreen';
+import SearchScreen from '../screens/Tabs/SearchScreen';
+import { hideBottomNav, selectDisplayBottomNav, selectNavState, selectPreviousScreen, setNavScreens, showBottomNav } from '../store/slices/navigationSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/slices';
+
+const ScreensWithNoBottomNav = [
+    "BookingConfirmationScreen",
+]
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const navigationRef = useNavigationContainerRef();
+  const routeNameRef = React.useRef<any>()
+  const dispatch = useDispatch();
+  const onReadyHandler = () => {
+    routeNameRef.current = navigationRef.getCurrentRoute()?.name
+  }
+  const onStateChangeHandler = async () => {
+    const previousRouteName = routeNameRef.current
+    const currentRouteName = navigationRef.getCurrentRoute()?.name
+    if (previousRouteName !== currentRouteName) {
+      routeNameRef.current = currentRouteName
+      dispatch(setNavScreens({
+        current: currentRouteName,
+        previous: previousRouteName
+      }))
+    }
+  }
   return (
-    <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer 
+      onReady={onReadyHandler}
+      ref={navigationRef}
+      onStateChange={onStateChangeHandler} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -48,19 +77,41 @@ function RootNavigator() {
 const Tabs = createBottomTabNavigator<BottomTabParamList>();
 
 function BottomTabNavigator() {
+  const displayBottomNav = useSelector(selectDisplayBottomNav)
+  const [currentScreen, previousScreen] = useSelector(selectNavState)
+  const dispatch = useDispatch();
+
+  React.useEffect(()=>{
+    if(ScreensWithNoBottomNav.includes(previousScreen)){
+      dispatch(showBottomNav())
+    }else if(
+      ScreensWithNoBottomNav.includes(currentScreen)
+    ){
+      dispatch(hideBottomNav())
+    }
+  }, [previousScreen])
+
   return (
     <ThemeConsumer>
       {({ theme }) => (
         <Tabs.Navigator screenOptions={{
           tabBarHideOnKeyboard: true,
           tabBarInactiveTintColor: theme.colors.primary,
-        }} initialRouteName='HomeScreen' >
+          tabBarStyle: {
+            backgroundColor: theme.colors.background,
+            borderTopColor: theme.colors.background,
+            elevation: 5,
+            display: displayBottomNav ? "flex" : "none"
+          },
+          
+        }} initialRouteName='SearchScreen' >
           <Tabs.Screen
-            name="HomeScreen"
-            component={HomeScreen}
+            name="SearchScreen"
+            component={SearchScreen}
             options={{
               headerShown: false,
-              tabBarButton: () => <></>
+              tabBarButton: () => <>
+              </>,
             }}
           />
           <Tabs.Screen

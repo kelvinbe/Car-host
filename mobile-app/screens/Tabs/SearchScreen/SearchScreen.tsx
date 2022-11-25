@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { BottomTabParamList, RootStackParamList } from '../../types';
+import { BottomTabParamList, RootStackParamList, SearchScreenParamList } from '../../../types';
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ImageBackground, useWindowDimensions, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Icon, Image } from '@rneui/base';
-import InputWithButton from '../../components/atoms/Input/WithButton/WithButton';
-import RoundedOutline from '../../components/atoms/Buttons/Rounded/RoundedOutline';
+import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
+import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -89,27 +89,29 @@ const useStyles = makeStyles((theme, props) => ({
       color: theme.colors.primary,
       marginVertical: 20,
       textAlign: "center"	
+    },
+    screenContainerStyles: {
+      width: "100%",
+      height: "100%",
     }
 }))
 
-const HomeScreen = ({
-  navigation,
-  route,
-}: NativeStackScreenProps<BottomTabParamList, 'HomeScreen'>) => {
+const _SearchScreen = ({
+}) => {
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
+  
   return (
     <ThemeConsumer>
       {({ theme }) => (
-        <SafeAreaView>
+        <>
           <StatusBar backgroundColor={theme.colors.background} />
           <View style={styles.container} >
-            <ImageBackground source={require('../../assets/images/background-home.png')} style={[{ width: maxWidth, height: 356 }, styles.topContentContainerStyle]} resizeMode="cover" >
-                  <Image source={require('../../assets/images/logo.png')} style={styles.logoImage} />
+            <ImageBackground source={require('../../../assets/images/background-home.png')} style={[{ width: maxWidth, height: 356 }, styles.topContentContainerStyle]} resizeMode="cover" >
+                  <Image source={require('../../../assets/images/logo.png')} style={styles.logoImage} />
                   <Text style={styles.heading}>Airbnb Host Car Sharing</Text>
                   <Text style={styles.subHeading}>Rent a car hourly with fuel included</Text>
             </ImageBackground>
-
             <View style={styles.bottomContentContainerStyle} >
               <View style={styles.hostDetailsContainer} >
                 <InputWithButton placeholder='e.g 124589' label="Enter Host Code"  />
@@ -131,12 +133,12 @@ const HomeScreen = ({
               
             </View>
           </View>
-        </SafeAreaView>
+          </>
       )}
     </ThemeConsumer>
     
   );
 };
 
-export default HomeScreen;
+export default _SearchScreen;
 

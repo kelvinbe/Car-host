@@ -5,5 +5,7 @@ declare module '@rneui/themed' {
         title: string;
         iconPrimary: string;
         labelColor: string;
+        fadedPrimary: string;
+        background2: string;
   }
 }
