@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
@@ -33,7 +33,7 @@ const ProfileScreen = (props: Props) => {
   return (
     <ThemeConsumer>
       {({ theme }) => (
-        <SafeAreaView style={{
+        <View style={{
             width: "100%",
             height: "100%",
             backgroundColor: theme.colors.white,
@@ -55,7 +55,7 @@ const ProfileScreen = (props: Props) => {
                     component={PaymentDetailsScreen}
                 />
             </ProfileScreenStackNavigator.Navigator>
-        </SafeAreaView>
+        </View>
       )}
     </ThemeConsumer>
     

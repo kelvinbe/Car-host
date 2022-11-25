@@ -106,7 +106,6 @@ const LoginScreen = (props: Props) => {
     }
 
   return (
-    <SafeAreaView>
         <View style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
@@ -159,7 +158,6 @@ const LoginScreen = (props: Props) => {
                 
             </View>
         </View>
-    </SafeAreaView>
   )
 }
 

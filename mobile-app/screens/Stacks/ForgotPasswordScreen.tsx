@@ -109,7 +109,6 @@ const ForgotPasswordScreen = (props: Props) => {
     }
 
   return (
-    <SafeAreaView>
         <View style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
@@ -161,7 +160,6 @@ const ForgotPasswordScreen = (props: Props) => {
                 
             </View>
         </View>
-    </SafeAreaView>
   )
 }
 

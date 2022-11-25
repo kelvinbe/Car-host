@@ -18,20 +18,18 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
   return (
     <ThemeConsumer>
       {({ theme }) => (
-        <SafeAreaView style={{
+        <View style={{
             width: "100%",
             height: "100%",
-            
         }} >
           <StatusBar backgroundColor={theme.colors.background} />
             <SearchScreenStacks.Navigator 
-                initialRouteName="BookingConfirmationScreen"
+                initialRouteName="SearchScreenHome"
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: theme.colors.background, 
                     }
                 }}
-                
             >
                 <SearchScreenStacks.Screen  options={{
                     headerShown: false
@@ -40,7 +38,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                     header:(props) => <TopBar {...props} topNavigation={props} />
                 }} component={BookingConfirmationScreen}  />
             </SearchScreenStacks.Navigator>
-        </SafeAreaView>
+        </View>
       )}
     </ThemeConsumer>
     

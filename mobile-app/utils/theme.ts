@@ -14,8 +14,8 @@ const theme = createTheme({
         labelColor: "#1E1E1E",
         grey3: "#6C757D",
         fadedPrimary: "rgba(173, 181, 189, 0.1)",
-        subText: "#6C757D"
-        
+        subText: "#6C757D",
+        link: "#1877F2"
     },
     mode: 'light',
     components: {
