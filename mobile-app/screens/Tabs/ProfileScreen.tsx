@@ -5,8 +5,9 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { BottomTabParamList } from '../../types'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
-import { ButtonGroup, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
+import { Button, ButtonGroup, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
 import LogoutIcon from "../../assets/icons/logout.svg"
+import HomeIcon from "../../assets/icons/home.svg"
 
 interface IProps {
 
@@ -157,6 +158,20 @@ const useStyles = makeStyles((theme, props: Props) => ({
   logoutSection: {
     width: "100%",
     paddingHorizontal: 20
+  },
+  topNavSection: {
+    width: "90%",
+    alignItems: "flex-end",
+    justifyContent: "center",
+    paddingBottom: 25
+
+  },
+  homeButtonContainer: {
+    borderRadius: 4,
+    backgroundColor: theme.colors.white,
+    padding: 2,
+    height: 24,
+    width: 24
   }
 }))
 
@@ -170,6 +185,11 @@ const ProfileScreen = (props: Props) => {
         >
           <StatusBar backgroundColor={theme.colors.primary} />
           <View style={styles.topBarContainerStyle} >
+            <View style={styles.topNavSection} >
+              <Button style={styles.homeButtonContainer} buttonStyle={styles.homeButtonContainer} >
+                <HomeIcon width={12} height={12} />
+              </Button>
+            </View>
             <View style={styles.topBarCardStyle} >
               <View style={styles.avatarStyle} >
                 <Image source={require("../../assets/images/user.png")} style={styles.avatarImageStyle} />
