@@ -22,12 +22,13 @@ import ManageIcon from "../assets/icons/manage.svg";
 import WarningIcon from "../assets/icons/warning.svg";
 import IssuesScreen from '../screens/Tabs/IssuesScreen';
 import BookIcon from "../assets/icons/book.svg"
-import { Text } from '@rneui/base';
+import { makeStyles, Text, Theme } from '@rneui/base';
 import _SearchScreen from '../screens/Tabs/SearchScreen/SearchScreen';
 import SearchScreen from '../screens/Tabs/SearchScreen';
 import { hideBottomNav, selectDisplayBottomNav, selectNavState, selectPreviousScreen, setNavScreens, showBottomNav } from '../store/slices/navigationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/slices';
+import { setBackgroundColorAsync } from "expo-navigation-bar"
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -80,6 +81,14 @@ function BottomTabNavigator() {
   const displayBottomNav = useSelector(selectDisplayBottomNav)
   const [currentScreen, previousScreen] = useSelector(selectNavState)
   const dispatch = useDispatch();
+  let theme: Theme;
+  makeStyles((_theme: Theme)=>{
+    theme = _theme
+  })
+
+  React.useEffect(() => {
+    setBackgroundColorAsync("white")
+  }, [])
 
   React.useEffect(()=>{
     if(ScreensWithNoBottomNav.includes(previousScreen)){
@@ -96,15 +105,17 @@ function BottomTabNavigator() {
       {({ theme }) => (
         <Tabs.Navigator screenOptions={{
           tabBarHideOnKeyboard: true,
-          tabBarInactiveTintColor: theme.colors.primary,
           tabBarStyle: {
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme.colors.white,
             borderTopColor: theme.colors.background,
             elevation: 5,
-            display: displayBottomNav ? "flex" : "none"
+            display: displayBottomNav ? "flex" : "none",
+            height: 50,
           },
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.grey0.trim()
           
-        }} initialRouteName='SearchScreen' >
+        }} initialRouteName='Profile' >
           <Tabs.Screen
             name="SearchScreen"
             component={SearchScreen}
@@ -119,16 +130,19 @@ function BottomTabNavigator() {
             component={StorybookScreen}
             options={{
               tabBarIcon: ({ focused, color }) => (
-                <BookIcon width={24} height={24} fill={ focused ? color:  theme.colors.iconPrimary}  />
+                <BookIcon width={24} height={24} fill={ focused ? theme.colors.primary:  theme.colors.grey0?.trim()}  />
               ),
-              title: "Storybook"
+              title: "Storybook",
+              tabBarActiveTintColor: theme.colors.primary,
+              tabBarInactiveTintColor: theme.colors.grey0?.trim(),
+              
             }}
           />
           <Tabs.Screen
             name="History"
             component={HistoryScreen}
             options={{
-              tabBarIcon: ({ focused, color }) => (<HistoryIcon width={24} height={24} fill={ focused ? color:  theme.colors.iconPrimary}  />),
+              tabBarIcon: ({ focused, color }) => (<HistoryIcon width={24} height={24} fill={ focused ?theme.colors.primary:  theme.colors.grey0?.trim()}  />),
               headerShown: false,
               title: "History"
             }}
@@ -138,7 +152,7 @@ function BottomTabNavigator() {
             name="Upcoming"
             component={UpcomingScreen}
             options={{
-              tabBarIcon: ({ focused, color }) => (<ReservedIcon width={24} height={24} fill={focused ? color : theme.colors.iconPrimary}  />),
+              tabBarIcon: ({ focused, color }) => (<ReservedIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
               headerShown: false,
               title: "Upcoming"
             }}
@@ -147,7 +161,7 @@ function BottomTabNavigator() {
             name="Profile"
             component={ProfileScreen}
             options={{
-              tabBarIcon: ({ focused, color }) => (<UserIcon width={24} height={24} fill={focused ? color : theme.colors.iconPrimary}  />),
+              tabBarIcon: ({ focused, color }) => (<UserIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
               headerShown: false,
               title: "Profile"
             }}
@@ -156,7 +170,7 @@ function BottomTabNavigator() {
             name="ManageRes"
             component={ManageResScreen}
             options={{
-              tabBarIcon: ({ focused, color }) => (<ManageIcon width={24} height={24} fill={focused ? color : theme.colors.iconPrimary}  />),
+              tabBarIcon: ({ focused, color }) => (<ManageIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
               headerShown: false,
               title: "Manage Res"
             }}
@@ -165,7 +179,7 @@ function BottomTabNavigator() {
             name="Issues"
             component={IssuesScreen}
             options={{
-              tabBarIcon: ({ focused, color }) => (<WarningIcon width={24} height={24} fill={focused ? color : theme.colors.iconPrimary}  />),
+              tabBarIcon: ({ focused, color }) => (<WarningIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
               headerShown: false,
               title: "Issues"
             }}

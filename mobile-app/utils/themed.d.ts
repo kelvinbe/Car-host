@@ -7,5 +7,7 @@ declare module '@rneui/themed' {
         labelColor: string;
         fadedPrimary: string;
         background2: string;
+        subText: string;
+        stroke: string;
   }
 }
