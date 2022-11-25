@@ -32,6 +32,7 @@ import { setBackgroundColorAsync } from "expo-navigation-bar"
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
+    "ProfileScreenEdit"
 ]
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {

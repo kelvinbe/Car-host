@@ -21,3 +21,8 @@ export type SearchScreenParamList = {
   SearchLocallyScreen: undefined;
   BookingConfirmationScreen: undefined;
 }
+
+export type ProfileScreenParamList = {
+  ProfileScreenHome: undefined;
+  ProfileScreenEdit: undefined;
+}

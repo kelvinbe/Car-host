@@ -75,8 +75,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             width: "100%",	
             fontSize:16,
             lineHeight: 20,
-            color: theme.colors.labelColor,
-            fontWeight: "700",
+            color: theme.colors.black,
+            fontWeight: "600",
             marginBottom: 5
         }
     })
