@@ -29,6 +29,9 @@ import { hideBottomNav, selectDisplayBottomNav, selectNavState, selectPreviousSc
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/slices';
 import { setBackgroundColorAsync } from "expo-navigation-bar"
+import ClockIcon from "../assets/icons/clock.svg";
+import BaseTopBar from './TopBar/BaseTopBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -69,12 +72,17 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator initialRouteName='Login' >
-      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
-      <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}   />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}   />
-    </Stack.Navigator>
+    <SafeAreaView style={{
+      width: "100%",
+      height: "100%",
+    }} >
+      <Stack.Navigator initialRouteName='Login' >
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
+        <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}   />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}   />
+      </Stack.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -119,7 +127,7 @@ function BottomTabNavigator() {
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.grey0.trim()
           
-        }} initialRouteName='Profile' >
+        }} initialRouteName='SearchScreen' >
           <Tabs.Screen
             name="SearchScreen"
             component={SearchScreen}
@@ -146,9 +154,10 @@ function BottomTabNavigator() {
             name="History"
             component={HistoryScreen}
             options={{
-              tabBarIcon: ({ focused, color }) => (<HistoryIcon width={24} height={24} fill={ focused ?theme.colors.primary:  theme.colors.grey0?.trim()}  />),
-              headerShown: false,
-              title: "History"
+              tabBarIcon: ({ focused, color }) => (<ClockIcon width={24} height={24} fill={ focused ?theme.colors.primary:  theme.colors.grey0?.trim()}  />),
+              title: "History",
+              header: (props) => <BaseTopBar {...props} title="History" />,
+              
             }}
         
           />

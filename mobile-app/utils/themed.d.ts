@@ -10,5 +10,6 @@ declare module '@rneui/themed' {
         background3: string;
         subText: string;
         stroke: string;
+        link: string;
   }
 }
