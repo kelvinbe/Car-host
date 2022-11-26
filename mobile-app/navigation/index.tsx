@@ -184,8 +184,8 @@ function BottomTabNavigator() {
             component={ManageResScreen}
             options={{
               tabBarIcon: ({ focused, color }) => (<ManageIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
-              headerShown: false,
-              title: "Manage Res"
+              title: "Manage Res",
+              header: (props) => <BaseTopBar {...props} title="Manage Reservations" />,
             }}
           />
           <Tabs.Screen
