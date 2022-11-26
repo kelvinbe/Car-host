@@ -193,8 +193,8 @@ function BottomTabNavigator() {
             component={IssuesScreen}
             options={{
               tabBarIcon: ({ focused, color }) => (<WarningIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
-              headerShown: false,
-              title: "Issues"
+              title: "Issues",
+              header: (props) => <BaseTopBar {...props} title="Report Issues" />,
             }}
           />
         </Tabs.Navigator>
