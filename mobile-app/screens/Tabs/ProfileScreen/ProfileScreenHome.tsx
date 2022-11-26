@@ -185,6 +185,9 @@ const ProfileScreenHome = (props: Props) => {
   const goToPayments = ( ) =>{
     props.navigation.navigate("PaymentDetailsScreen")
   }
+  const goToSettings = () => {
+    props.navigation.navigate("ProfileSettingsScreen")
+  }
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -230,6 +233,7 @@ const ProfileScreenHome = (props: Props) => {
               <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
+                onPress={goToSettings}
               >
                   <ListItem.Content style={styles.listItemContent} >
                     <ListItem.Title style={styles.listItemTitleStyle} >Settings</ListItem.Title>

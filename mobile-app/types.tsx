@@ -26,6 +26,7 @@ export type ProfileScreenParamList = {
   ProfileScreenHome: undefined;
   ProfileScreenEdit: undefined;
   PaymentDetailsScreen: undefined;
+  ProfileSettingsScreen: undefined;
 }
 
 export type PaymentDetailsScreenParamList = {

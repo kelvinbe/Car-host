@@ -9,6 +9,8 @@ import ProfileScreenHome from './ProfileScreenHome'
 import ProfileScreenEdit from './ProfileScreenEdit'
 import TopBar from './TopBar/TopBar'
 import PaymentDetailsScreen from './PaymentDetailsScreen'
+import ProfileSettingsScreen from './ProfileSettingsScreen'
+import BaseTopBar from '../../../navigation/TopBar/BaseTopBar'
 
 const ProfileScreenStackNavigator = createNativeStackNavigator<ProfileScreenParamList>();
 
@@ -53,6 +55,14 @@ const ProfileScreen = (props: Props) => {
                     }}
                     name="PaymentDetailsScreen"
                     component={PaymentDetailsScreen}
+                />
+                <ProfileScreenStackNavigator.Screen
+                    options={{
+                        headerShown: true,
+                        header: (props) => <BaseTopBar {...props} title="Settings" home={false} chevronLeft />
+                    }}
+                    name="ProfileSettingsScreen"
+                    component={ProfileSettingsScreen}
                 />
             </ProfileScreenStackNavigator.Navigator>
         </View>
