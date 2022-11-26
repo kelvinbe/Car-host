@@ -2,6 +2,7 @@
   "replaceAttrValues": {
     "#495057": "{props.fill}",
     "black": "{props.fill}",
-    "#E63B2E": "{props.fill}"
+    "#E63B2E": "{props.fill}",
+    "#ADB5BD": "{props.stroke"
   }
 }

@@ -11,6 +11,7 @@ import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOut
 import _SearchScreen from './SearchScreen';
 import BookingConfirmationScreen from './BookingConfirmationScreen';
 import TopBar from '../../../navigation/TopBar/TopBar';
+import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
 
 const SearchScreenStacks = createNativeStackNavigator<SearchScreenParamList>()
 
@@ -24,7 +25,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
         }} >
           <StatusBar backgroundColor={theme.colors.background} />
             <SearchScreenStacks.Navigator 
-                initialRouteName="SearchScreenHome"
+                initialRouteName="BookingConfirmationScreen"
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: theme.colors.background, 
@@ -35,7 +36,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                     headerShown: false
                 }} name="SearchScreenHome" component={_SearchScreen} />
                 <SearchScreenStacks.Screen name="BookingConfirmationScreen" options={{
-                    header:(props) => <TopBar {...props} topNavigation={props} />
+                    header:(props) => <BaseTopBar onHomePress={()=>props.navigation.navigate("SearchScreenHome")} onBackPress={()=>props.navigation.navigate("SearchScreenHome")} home chevronLeft title={"Confirmation"} {...props} />
                 }} component={BookingConfirmationScreen}  />
             </SearchScreenStacks.Navigator>
         </View>

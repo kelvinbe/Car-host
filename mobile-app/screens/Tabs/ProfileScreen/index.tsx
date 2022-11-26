@@ -59,7 +59,7 @@ const ProfileScreen = (props: Props) => {
                 <ProfileScreenStackNavigator.Screen
                     options={{
                         headerShown: true,
-                        header: (props) => <BaseTopBar {...props} title="Settings" home={false} chevronLeft />
+                        header: (props) => <BaseTopBar {...props} title="Profile Settings" home={false} chevronLeft />
                     }}
                     name="ProfileSettingsScreen"
                     component={ProfileSettingsScreen}

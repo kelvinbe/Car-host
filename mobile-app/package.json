@@ -51,6 +51,7 @@
     "expo-font": "~11.0.1",
     "expo-linking": "~3.2.3",
     "expo-modules-autolinking": ">=0.8.1",
+    "expo-navigation-bar": "~2.0.1",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "expo-system-ui": "~2.0.1",
@@ -65,12 +66,12 @@
     "react-native-svg": "13.4.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.9",
+    "react-native-zigzag-view": "^0.2.0",
     "react-redux": "^8.0.5",
     "redux": "^4.2.0",
     "regenerator-runtime": "*",
     "twrnc": "^3.4.1",
-    "webpack": ">=2",
-    "expo-navigation-bar": "~2.0.1"
+    "webpack": ">=2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
