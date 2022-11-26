@@ -6,12 +6,15 @@ import { StatusBar } from 'expo-status-bar';
 import { Button } from '@rneui/base';
 import HomeIcon from "../../assets/icons/home.svg";
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
+import ChevronLeft from "../../assets/icons/chevron-left.svg";
 
 interface IProps {
     title?: string;
+    chevronLeft?: boolean;
+    home?: boolean;
 }
 
-type Props = IProps & BottomTabHeaderProps;
+type Props = IProps & (BottomTabHeaderProps | NativeStackHeaderProps);
 
 const useStyles = makeStyles((theme, props: Props)=>{
     return {
@@ -45,6 +48,9 @@ const BaseTopBar = (props: Props) => {
     const styles = useStyles(props)
 
     const goBack = () => {
+        props.navigation.goBack()
+    }
+    const toHome = () => {
         props.navigation.navigate("SearchScreen")
     }
   return (
@@ -52,13 +58,17 @@ const BaseTopBar = (props: Props) => {
         {({theme})=>(
             <View style={styles.container} >
             <StatusBar backgroundColor={theme.colors.white} />
-            
+            {
+                props.chevronLeft && <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
+                    <ChevronLeft height={12} width={12}  />
+                </Button>
+            }
             <Text style={styles.titleStyle} >
                 { props?.title }
             </Text>
-            <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
+            {(props.home !== false)&& <Button onPress={toHome} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
                 <HomeIcon height={12} width={12}  />
-            </Button>
+            </Button>}
         </View>
         )}
     </ThemeConsumer>
