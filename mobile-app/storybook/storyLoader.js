@@ -13,6 +13,7 @@ function loadStories() {
   require('../components/atoms/Input/WithHelperText/WithHelperText.stories');
   require('../components/molecules/CreditCard/CreditCard.stories');
   require('../components/molecules/CreditCardWithActions/CreditCardWithActions.stories');
+  require('../components/molecules/CreditCardWithAmount/CreditCardWithAmount.stories');
   require('../components/molecules/HistoryCard/HistoryCard.stories');
   require('../components/StyledText.stories');
 }
@@ -27,6 +28,7 @@ const stories = [
   '../components/atoms/Input/WithHelperText/WithHelperText.stories',
   '../components/molecules/CreditCard/CreditCard.stories',
   '../components/molecules/CreditCardWithActions/CreditCardWithActions.stories',
+  '../components/molecules/CreditCardWithAmount/CreditCardWithAmount.stories',
   '../components/molecules/HistoryCard/HistoryCard.stories',
   '../components/StyledText.stories',
 ];

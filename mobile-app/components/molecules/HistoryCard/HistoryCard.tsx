@@ -216,7 +216,7 @@ const HistoryCard = (props: Props) => {
 
                   </View>
                   <Text style={styles.ridePrice} >
-                    $ 20.00
+                    $20
                   </Text>
               </View>
             </View>

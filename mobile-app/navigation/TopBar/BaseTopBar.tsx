@@ -12,6 +12,8 @@ interface IProps {
     title?: string;
     chevronLeft?: boolean;
     home?: boolean;
+    onBackPress?: () => void;
+    onHomePress?: () => void;
 }
 
 type Props = IProps & (BottomTabHeaderProps | NativeStackHeaderProps);
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             fontWeight: "700",
             textAlign: "center",
             color: theme.colors.black,
-            width: "90%"
+            width: (props.home && props.chevronLeft) ? "80%" : "90%"
         }
     }
 })
@@ -48,10 +50,18 @@ const BaseTopBar = (props: Props) => {
     const styles = useStyles(props)
 
     const goBack = () => {
-        props.navigation.goBack()
+        if(props.onBackPress){
+            props.onBackPress();
+        }else{
+            props.navigation.goBack();
+        }
     }
     const toHome = () => {
-        props.navigation.navigate("SearchScreen")
+        if(props.onHomePress){
+            props.onHomePress();
+        }else{
+            props.navigation.navigate("Home");
+        }
     }
   return (
     <ThemeConsumer>
