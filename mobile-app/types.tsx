@@ -18,7 +18,10 @@ export type BottomTabParamList = {
 
 export type SearchScreenParamList = {
   SearchScreenHome: undefined;
-  SearchLocallyScreen: undefined;
+  MapScreen: undefined | {
+    searchType?: "local" | "host",
+    hostCode?: string
+  };
   BookingConfirmationScreen: undefined;
 }
 

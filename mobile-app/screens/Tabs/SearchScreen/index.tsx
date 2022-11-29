@@ -12,6 +12,7 @@ import _SearchScreen from './SearchScreen';
 import BookingConfirmationScreen from './BookingConfirmationScreen';
 import TopBar from '../../../navigation/TopBar/TopBar';
 import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
+import MapScreen from './MapScreen';
 
 const SearchScreenStacks = createNativeStackNavigator<SearchScreenParamList>()
 
@@ -25,7 +26,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
         }} >
           <StatusBar backgroundColor={theme.colors.background} />
             <SearchScreenStacks.Navigator 
-                initialRouteName="BookingConfirmationScreen"
+                initialRouteName="MapScreen"
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: theme.colors.background, 
@@ -38,6 +39,15 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                 <SearchScreenStacks.Screen name="BookingConfirmationScreen" options={{
                     header:(props) => <BaseTopBar onHomePress={()=>props.navigation.navigate("SearchScreenHome")} onBackPress={()=>props.navigation.navigate("SearchScreenHome")} home chevronLeft title={"Confirmation"} {...props} />
                 }} component={BookingConfirmationScreen}  />
+                <SearchScreenStacks.Screen 
+                  name="MapScreen"
+                  options={{
+                    header: (props) => <BaseTopBar onHomePress={()=>props.navigation.navigate("SearchScreenHome")} onBackPress={()=>props.navigation.navigate("SearchScreenHome")} home chevronLeft title={
+                      (props.route.params as any)?.searchType === "local" ? "Search Locally" : "Host: Jesse()"
+                    } {...props} />
+                  }}
+                  component={MapScreen}
+                />
             </SearchScreenStacks.Navigator>
         </View>
       )}

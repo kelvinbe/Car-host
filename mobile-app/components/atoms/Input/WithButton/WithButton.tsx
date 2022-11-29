@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { makeStyles } from '@rneui/themed'
 import { Button, Input, InputProps  } from '@rneui/base'
 
 interface IProps {
     fullWidth?: boolean;
     width?: number;
-    cta?: string | ReactNode 
+    cta?: string | ReactNode ,
+    onPress?: (value?: string)=> void
 }
 
 type Props = IProps & InputProps;
@@ -84,6 +85,12 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const InputWithButton = (props: Props) => {
     const styles = useStyles(props)
+    const [value, setValue] = useState<string>("")
+
+    const onChangeText = (v: string) =>{
+        setValue(v)
+        props.onChangeText && props.onChangeText(v)
+    }
   return (
     <>
         <Text style={styles.labelStyle}>
@@ -101,11 +108,13 @@ const InputWithButton = (props: Props) => {
                 errorStyle={styles.errorStyle}
                 style={styles.style}
                 placeholder={props.placeholder}
-                value={props.value}
-                onChangeText={props.onChangeText}
+                value={value}
+                onChangeText={onChangeText}
                 
             />
-            <Button buttonStyle={styles.rightButton} titleStyle={styles.buttonTitleStyle} >
+            <Button onPress={()=>{
+                props.onPress && props.onPress(value)
+            }} buttonStyle={styles.rightButton} titleStyle={styles.buttonTitleStyle} >
                 {
                     props.cta ? (
                         typeof props.cta === "string" ? props.cta : props.cta

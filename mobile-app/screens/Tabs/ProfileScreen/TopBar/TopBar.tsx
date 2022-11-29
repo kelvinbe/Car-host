@@ -52,7 +52,7 @@ const TopBar = (props: Props) => {
             <View style={styles.container} >
             <StatusBar backgroundColor={theme.colors.white} />
             <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
-                <ChevronLeft height={12} width={12}  />
+                <ChevronLeft stroke={theme.colors.black} height={12} width={12}  />
             </Button>
             <Text style={styles.titleStyle} >
                 { props?.title }
