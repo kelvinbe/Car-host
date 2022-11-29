@@ -60,7 +60,7 @@ const BaseTopBar = (props: Props) => {
         if(props.onHomePress){
             props.onHomePress();
         }else{
-            props.navigation.navigate("Home");
+            props.navigation.navigate("SearchScreenHome");
         }
     }
   return (
@@ -70,14 +70,14 @@ const BaseTopBar = (props: Props) => {
             <StatusBar backgroundColor={theme.colors.white} />
             {
                 props.chevronLeft && <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
-                    <ChevronLeft height={12} width={12}  />
+                    <ChevronLeft height={12} width={12}  stroke={theme.colors.black} />
                 </Button>
             }
             <Text style={styles.titleStyle} >
                 { props?.title }
             </Text>
             {(props.home !== false)&& <Button onPress={toHome} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
-                <HomeIcon height={12} width={12}  />
+                <HomeIcon height={12} width={12}   stroke={theme.colors.black} fill={theme.colors.black}  />
             </Button>}
         </View>
         )}

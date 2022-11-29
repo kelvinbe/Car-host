@@ -96,10 +96,21 @@ const useStyles = makeStyles((theme, props) => ({
     }
 }))
 
-const _SearchScreen = ({
-}) => {
+const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "SearchScreenHome">) => {
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
+
+  const hostCodeSearch = (value: any) =>{
+    props.navigation.navigate("MapScreen", {
+      searchType: "host",
+      hostCode: value
+    })
+  }
+  const searchLocally = () => {
+    props.navigation.navigate("MapScreen", {
+      searchType: "local"
+    })
+  }
   
   return (
     <ThemeConsumer>
@@ -114,7 +125,7 @@ const _SearchScreen = ({
             </ImageBackground>
             <View style={styles.bottomContentContainerStyle} >
               <View style={styles.hostDetailsContainer} >
-                <InputWithButton placeholder='e.g 124589' label="Enter Host Code"  />
+                <InputWithButton onPress={hostCodeSearch}  placeholder='e.g 124589' label="Enter Host Code"  />
                 <View style={styles.helperTextContainer} >
                     <Icon style={styles.helperTextIcon} name="info" type="material" color={theme.colors.grey3} />
                     <Text style={styles.helperText} >
@@ -122,12 +133,10 @@ const _SearchScreen = ({
                     </Text>
                 </View>
               </View>
-
               <Text style={styles.orText}  >
                 Or
               </Text>
-
-              <RoundedOutline>
+              <RoundedOutline onPress={searchLocally} >
                 Search Locally
               </RoundedOutline>
               

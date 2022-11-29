@@ -196,7 +196,7 @@ const ProfileScreenHome = (props: Props) => {
           <View style={styles.topBarContainerStyle} >
             <View style={styles.topNavSection} >
               <Button style={styles.homeButtonContainer} buttonStyle={styles.homeButtonContainer} >
-                <HomeIcon width={12} height={12} />
+                <HomeIcon stroke={theme.colors.black} fill={theme.colors.black} width={12} height={12} />
               </Button>
             </View>
             <View style={styles.topBarCardStyle} >
@@ -288,7 +288,7 @@ const ProfileScreenHome = (props: Props) => {
               >
 
                   <ListItem.Content style={styles.listItemContent} >
-                    <LogoutIcon/>
+                    <LogoutIcon fill={theme.colors.black}  />
                     <ListItem.Title style={[styles.listItemTitleStyle, {marginLeft: 10}]} >Logout</ListItem.Title>
                   </ListItem.Content>
               </ListItem>

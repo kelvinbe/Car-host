@@ -175,7 +175,7 @@ const HistoryCard = (props: Props) => {
               <View
                 style={styles.date}
               >
-                <CalendarIcon width={12} height={12} color={theme.colors.primary}  /> 
+                <CalendarIcon stroke={theme.colors.primary} fill={theme.colors.primary} width={12} height={12} color={theme.colors.primary}  /> 
                 <Text style={styles.dateText} > 
                   23rd November 2022
                 </Text>
@@ -208,7 +208,7 @@ const HistoryCard = (props: Props) => {
                       </Text>
                     </View>
                     <View style={styles.locationInfoContainer} >
-                      <LocationIcon style={styles.locationIcon} />
+                      <LocationIcon stroke={theme.colors.stroke} style={styles.locationIcon} />
                       <Text style={styles.locationInfo} >
                         21964 Jim Rosa Lane, SF
                       </Text>
