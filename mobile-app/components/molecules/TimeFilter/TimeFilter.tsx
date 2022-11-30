@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@rneui/themed'
 import Dropdown from '../Dropdown/Dropdown'
+import dayjs from 'dayjs'
 
 
 const useStyles = makeStyles((theme)=>({
@@ -17,69 +18,68 @@ const useStyles = makeStyles((theme)=>({
     bottomDropdowns: {
         width: "100%",
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-between",
-        marginTop: 10
+        marginTop: 10,
+        elevation: 5
     },
     dropdown: {
         width: "48%",
-        position: "absolute",
-        top: 0
     }
 }))
-
-const days = [
-    {
-        label: "Today",
-        value: "today"
-    },
-    {
-        label: "Tomorrow",
-        value: "tomorrow"
-    },
-    {
-        label: "Wednesday",
-        value: "wednesday"
-    }
-]
-const times = [
-    {
-        label: "03:30",
-        value: "330"
-    },
-    {
-        label: "05:30",
-        value: "530"
-    },
-    {
-        label: "06:30",
-        value: "0630"
-    }
-]
 
 const TimeFilter = () => {
     const styles = useStyles()
     const [viewDropdown, setViewDropdown] = useState(false)
-    const handleDayChange = (value: string) => {
+    const [days, setDays] = useState([])
+    const [times, setTimes] = useState([])
+    const [additionalFilter, setAdditionalFilter] = useState([])
+    const handleDayChange = (value: string | string[]) => {
         // console.log(value)
     }
 
-    const handlePickupTime = (value: string) => {
+    const handlePickupTime = (value: string | string[]) => {
         // console.log(value)
     }
 
-    const handleDropOffTime = (value: string) => {
+    const handleDropOffTime = (value: string | string[]) => {
         // console.log(value)
     }
+
+    useEffect(()=>{
+        const _days = [...Array(7).keys()].map((day, index)=>{
+            return {
+                label: dayjs(new Date()).add(index, "day").format("dddd"),
+                value: dayjs(new Date()).add(index, "day").format("dddd")
+            }
+        })
+
+        const _times = [...Array(48).keys()].map((time, index)=>{
+            return {
+                label: dayjs(dayjs(new Date()).format("hh")).add(index * 30, "minutes").format("hh:mm A")?.replace("AM", "")?.replace("PM", ""),
+                value: dayjs(dayjs(new Date()).format("hh")).add(index * 30, "minutes").format("hh:mm A")?.replace("AM", "")?.replace("PM", ""),
+                index
+            }
+        })
+        
+        console.log(dayjs(new Date()).format("HH"))
+        const _additionalFilter = [
+            dayjs(Date.now()).format("A"),
+            dayjs(Date.now()).format("A") === "AM" ? "PM" : "AM"
+        ]
+        setAdditionalFilter(()=>_additionalFilter as any)
+        setDays(()=>_days as any)
+        setTimes(()=>_times as any)
+    },[ ])
   return (
     <View style={styles.container} >
             <Dropdown dropdownOpen={setViewDropdown} items={days} onChange={handleDayChange} />
               <View style={[styles.bottomDropdowns, {display: !viewDropdown ? "flex" : "none" }]} >
-                <View style={[styles.dropdown, {left: 0}]} >
-                    <Dropdown items={times} onChange={handlePickupTime} additionlText="AM" />
+                <View style={[styles.dropdown]} >
+                    <Dropdown items={times} onChange={handlePickupTime} additionalFilter={additionalFilter} />
                 </View>
-                <View style={[styles.dropdown, {right: 0}]} >
-                    <Dropdown items={times} onChange={handleDropOffTime} additionlText="AM" />
+                <View style={[styles.dropdown]} >
+                    <Dropdown items={times} onChange={handleDropOffTime} additionalFilter={additionalFilter} />
                 </View>
             </View>
     </View>

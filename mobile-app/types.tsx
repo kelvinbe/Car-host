@@ -36,3 +36,9 @@ export type PaymentDetailsScreenParamList = {
   PaymentDetailsScreenHome: undefined;
   MPesaDetailsScreen: undefined;
 }
+
+export type BottomSheetParamList = {
+  BookingDetails: undefined;
+  ChoosePayment: undefined;
+  PaymentAuthorization: undefined;
+}

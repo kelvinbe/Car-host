@@ -14,7 +14,7 @@ interface Props {
 const useStyles = makeStyles((theme, props: Props)=>{
     return ({
         buttonStyle: {
-            backgroundColor: theme.colors.primary,
+            backgroundColor: props.disabled ? theme.colors.disabled : theme.colors.primary,
             borderRadius: 25,
             paddingTop: 13,
             paddingHorizontal:  20,
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 const Rounded = (props: Props & ButtonProps) => {
   const styles = useStyles(props)
   return (
-    <Button onPress={props.onPress} buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} title={props.children} />
+    <Button disabled={props.disabled} onPress={props.onPress} buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} disabledTitleStyle={styles.titleStyle}  title={props.children} />
   )
 }
 

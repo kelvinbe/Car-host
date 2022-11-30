@@ -26,7 +26,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
         }} >
           <StatusBar backgroundColor={theme.colors.background} />
             <SearchScreenStacks.Navigator 
-                initialRouteName="MapScreen"
+                initialRouteName="SearchScreenHome"
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: theme.colors.background, 

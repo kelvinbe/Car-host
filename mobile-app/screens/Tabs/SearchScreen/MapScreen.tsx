@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useReducer } from 'react'
+import { StyleSheet, Text, View, Animated } from 'react-native'
+import React, { useEffect, useReducer, useState, useRef } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import MapView, { Circle, Marker } from 'react-native-maps'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
@@ -9,6 +9,8 @@ import LocationMarkerIcon from "../../../assets/icons/location-marker.svg"
 import TimeFilter from '../../../components/molecules/TimeFilter/TimeFilter'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SearchScreenParamList } from '../../../types'
+import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet'
+import PaymentBottomSheet from '../../../components/organisms/MapScreenBottomSheet/BottomSheetScreens/PaymentBottomSheet'
 
 
 interface IProps {
@@ -33,106 +35,158 @@ const useStyles = makeStyles((theme, props)=>({
     map: {
         width: "100%",
         height: "100%"
-    }
+    },
+    statusContainer: {
+        width: "100%",
+        height: "100%",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: theme.colors.white
+
+    },
+    errorText: {
+        color: theme.colors.error,
+        fontSize: 16,
+        lineHeight: 16,
+        textAlign: "center",
+        fontWeight: "500",
+        width: "100%",
+       
+    },
+    loadingText: {
+        color: theme.colors.title,
+        fontSize: 16,
+        lineHeight: 16,
+        textAlign: "center",
+        fontWeight: "500",
+    },
 }))
 
 interface IState {
     location: Location.LocationObject | null,
+    errorMessage: null |string;
+    loading?: boolean
 }
 
 const initialState: IState = {
-    location: null
+    location: null,
+    errorMessage: null,
+    loading: true
 }
 
 const reducer = (state: IState, action: any) => {
-    
     switch (action.type) {
         case "setLocation":
             return {
                 ...state,
-                location: action.payload
+                location: action.payload,
+                loading: false
+            }
+        case "setErrorMessage":
+            return {
+                ...state,
+                errorMessage: action.payload,
+                loading: false
             }
         default:
             return state
     }
 }
 
+
+
 const MapScreen = (props: Props) => {
     const [state, dispatchAction] = useReducer(reducer, initialState)
     const styles = useStyles()
+    const [open, setOpen] = useState(true)
+    const opacity = useRef(new Animated.Value(0)).current
 
-    const requestPermission = () => {
-        Location.requestForegroundPermissionsAsync().then((permissionResponse)=>{
-            // console.log("permissionResponse", permissionResponse)
-            // console.log(permissionResponse)
-        }).catch((e)=>{
-            // console.log(e)
-            // console.log("An error occured", e)
-        })
+    const onOpen = () => {
+        setOpen(true)
     }
 
-    const getCoords = () =>{
-        Location.getCurrentPositionAsync().then((coords)=>{
-            dispatchAction({
-                type: "setLocation",
-                payload: coords
-            })
-            // console.log("coords", coords)
-        }).catch((e)=>{
-            // console.log("An error occured")
+    const onClose = () =>{
+        setOpen(false)
+    }
+
+    
+
+    const getCoords = async () =>{
+        const b= await Location.getLastKnownPositionAsync()
+
+        const location = await Location.getCurrentPositionAsync()
+
+        console.log("getCoords")
+
+        dispatchAction({
+            type: "setLocation",
+            payload: location
         })
+
     }
 
     useEffect(()=>{
-        getCoords()
+        console.log("MapScreen mounted")
+        getCoords().then(()=>{
+            console.log("Location fetched")
+        }).catch((e)=>{
+            console.log(e)
+        })
     },[])
 
-    useEffect(()=>{
-        // console.log("state", state)
-    }, [state.location])
   return (
     <ThemeConsumer>
         {({theme})=>(
-             <View style={styles.container} >
-        
-             <View style={styles.mapContainer} >
-                 {state?.location && <MapView
-                     style={styles.map}
-                     mapType="mutedStandard"
-                     initialRegion={{
-                         latitude: state?.location?.coords?.latitude || 0,
-                         longitude: state?.location?.coords?.longitude || 0,
-                         latitudeDelta: 0.005,
-                         longitudeDelta: 0.005,
-                     }}
-                     region={{
-                         latitude: state?.location?.coords?.latitude || 0,
-                         longitude: state?.location?.coords?.longitude || 0,
-                         latitudeDelta: 0.005,
-                         longitudeDelta: 0.005,
-                     }}
-                     
-                 >
-                     <Circle 
-                         center={{
-                             latitude: state?.location?.coords?.latitude || 0,
-                             longitude: state?.location?.coords?.longitude || 0,
-                         }}
-                         radius={300}
-                         strokeColor={theme.colors.primary}
-                         fillColor={theme.colors.fadedPrimary}
-                     />
-                     {state.location && 
-                         <LocationMarker
-                             location={state.location}
-                             title="Current Location"
-                             description="This is your current location"
-                         />}
-                 </MapView>}
-             </View>
-             <TimeFilter/>
-             
-         </View>
+              state.loading ? (<View style={[styles.statusContainer]} >
+                <Text style={[styles.loadingText]}>Loading...</Text>
+                </View>): state.errorMessage ? (
+                    <View style={styles.statusContainer} >
+                        <Text style={styles.errorText}>{state.errorMessage}</Text>
+                    </View>
+                ) : (<View style={styles.container} >
+                
+                <View style={styles.mapContainer} >
+                    {state?.location && <MapView
+                        style={styles.map}
+                        mapType="mutedStandard"
+                        initialRegion={{
+                            latitude: state?.location?.coords?.latitude || 0,
+                            longitude: state?.location?.coords?.longitude || 0,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                        }}
+                        region={{
+                            latitude: state?.location?.coords?.latitude || 0,
+                            longitude: state?.location?.coords?.longitude || 0,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005,
+                        }}
+                        
+                    >
+                        <Circle 
+                            center={{
+                                latitude: state?.location?.coords?.latitude || 0,
+                                longitude: state?.location?.coords?.longitude || 0,
+                            }}
+                            radius={300}
+                            strokeColor={theme.colors.primary}
+                            fillColor={theme.colors.fadedPrimary}
+                        />
+                        {state.location && 
+                            <LocationMarker
+                                location={state.location}
+                                title="Current Location"
+                                description="This is your current location"
+                            />}
+                    </MapView>}
+                </View>
+             { !open && <TimeFilter/>}
+             <MapScreenBottomSheet
+                onClose={onClose}
+                onOpen={onOpen}
+             />
+         </View>)
         )}
     </ThemeConsumer>
    
