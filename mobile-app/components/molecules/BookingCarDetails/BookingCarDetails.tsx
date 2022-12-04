@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             fontWeight: "500",
         },
         scrollView: {
-            width: "100%",
+            width: 350,
             height: 80,
             marginBottom: 10
         }
@@ -94,7 +94,7 @@ const BookingCarDetails = (props: Props) => {
             style={styles.container}
             >
                 <Text style={styles.headerTitle}>Car Name</Text>
-                <ScrollView style={styles.scrollView} horizontal  contentContainerStyle={styles.carSlideContainer}>
+                <ScrollView style={styles.scrollView} horizontal  >
                     {
                         [1,2,3,4, 5,6,7]?.map((_, index)=>(
                             <View key={index} style={styles.carSlide} >

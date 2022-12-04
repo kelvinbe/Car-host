@@ -34,6 +34,8 @@ const TimeFilter = () => {
     const [days, setDays] = useState([])
     const [times, setTimes] = useState([])
     const [additionalFilter, setAdditionalFilter] = useState([])
+    const [selectedDay, setSelectedDay] = useState("")
+    const [selectedTime, setSelectedTime] = useState("")
     const handleDayChange = (value: string | string[]) => {
         // console.log(value)
     }
@@ -53,6 +55,8 @@ const TimeFilter = () => {
                 value: dayjs(new Date()).add(index, "day").format("dddd")
             }
         })
+        setSelectedDay(_days[0].label)
+
 
         const _times = [...Array(48).keys()].map((time, index)=>{
             return {
@@ -61,8 +65,8 @@ const TimeFilter = () => {
                 index
             }
         })
+        setSelectedTime(_times[0].label)
         
-        console.log(dayjs(new Date()).format("HH"))
         const _additionalFilter = [
             dayjs(Date.now()).format("A"),
             dayjs(Date.now()).format("A") === "AM" ? "PM" : "AM"
@@ -73,13 +77,13 @@ const TimeFilter = () => {
     },[ ])
   return (
     <View style={styles.container} >
-            <Dropdown dropdownOpen={setViewDropdown} items={days} onChange={handleDayChange} />
+            <Dropdown key={days?.length} dropdownOpen={setViewDropdown} defaultValue={selectedDay} items={days} onChange={handleDayChange} />
               <View style={[styles.bottomDropdowns, {display: !viewDropdown ? "flex" : "none" }]} >
                 <View style={[styles.dropdown]} >
-                    <Dropdown items={times} onChange={handlePickupTime} additionalFilter={additionalFilter} />
+                    <Dropdown key={times?.length} items={times} onChange={handlePickupTime} defaultValue={selectedTime} defaultAdditionalFilter={additionalFilter?.[0]} additionalFilter={additionalFilter} />
                 </View>
                 <View style={[styles.dropdown]} >
-                    <Dropdown items={times} onChange={handleDropOffTime} additionalFilter={additionalFilter} />
+                    <Dropdown key={times?.length} items={times} onChange={handleDropOffTime} defaultValue={selectedTime} defaultAdditionalFilter={additionalFilter?.[0]} additionalFilter={additionalFilter} />
                 </View>
             </View>
     </View>

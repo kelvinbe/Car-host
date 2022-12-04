@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Divider, Icon } from '@rneui/base';
 import ChevronDown from "../../../assets/icons/chevron-down.svg"
@@ -14,6 +14,8 @@ interface IProps {
     placeholder?: string,
     additionalFilter?: string[],
     dropdownOpen?: (v: boolean) => void,
+    defaultValue?: string,
+    defaultAdditionalFilter?: string,
 }
 
 type Props = IProps;
@@ -96,10 +98,10 @@ const useStyles = makeStyles((theme, props: Props) =>{
 })
 
 const Dropdown = (props: Props) => {
-    const {items, onChange, placeholder, additionalFilter, dropdownOpen} = props
+    const {items, onChange, placeholder, additionalFilter, dropdownOpen, defaultAdditionalFilter, defaultValue} = props
     const [open, setOpen] = useState<boolean>(false)
-    const [currentValue, setCurrentValue] = useState<string>( placeholder || "Select " )
-    const [chosenFilter, setChosenFilter] = useState<string>(additionalFilter?.[0] || "")
+    const [currentValue, setCurrentValue] = useState<string>( defaultValue || placeholder || "Select " )
+    const [chosenFilter, setChosenFilter] = useState<string>( defaultAdditionalFilter || additionalFilter?.[0] || "")
     const styles = useStyles(props)
 
     const toggleDropdown = () => {

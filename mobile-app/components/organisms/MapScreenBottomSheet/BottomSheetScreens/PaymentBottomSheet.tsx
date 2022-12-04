@@ -117,7 +117,7 @@ const PaymentBottomSheet = (props: Props) => {
                                     }}
                                 />
                             }
-                            title="**** 1234"
+                            title="M-PESA"
                             onPress={handlePaymentSelect}
                         />
                     </View>

@@ -68,11 +68,16 @@ interface IState {
     errorMessage: null |string;
     loading?: boolean
 }
-
+// change initialState when location bug is dealt with
 const initialState: IState = {
-    location: null,
+    location: {
+        coords: {
+            latitude: 37.78825,
+            longitude: -122.4324,
+        } as any
+    } as any,
     errorMessage: null,
-    loading: true
+    loading: false
 }
 
 const reducer = (state: IState, action: any) => {
@@ -99,7 +104,7 @@ const reducer = (state: IState, action: any) => {
 const MapScreen = (props: Props) => {
     const [state, dispatchAction] = useReducer(reducer, initialState)
     const styles = useStyles()
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(false)
     const opacity = useRef(new Animated.Value(0)).current
 
     const onOpen = () => {
@@ -113,21 +118,21 @@ const MapScreen = (props: Props) => {
     
 
     const getCoords = async () =>{
-        const b= await Location.getLastKnownPositionAsync()
-
-        const location = await Location.getCurrentPositionAsync()
-
-        console.log("getCoords")
-
-        dispatchAction({
-            type: "setLocation",
-            payload: location
+        Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Low
+        }).then((location)=>{
+            console.log(location)
+            dispatchAction({
+                type: "setLocation",
+                payload: location
+            })
+        }).catch((e)=>{
+            console.log(e)
         })
-
     }
 
     useEffect(()=>{
-        console.log("MapScreen mounted")
+
         getCoords().then(()=>{
             console.log("Location fetched")
         }).catch((e)=>{
@@ -140,6 +145,9 @@ const MapScreen = (props: Props) => {
         {({theme})=>(
               state.loading ? (<View style={[styles.statusContainer]} >
                 <Text style={[styles.loadingText]}>Loading...</Text>
+                <Rounded onPress={getCoords} >
+                    Refetch
+                </Rounded>
                 </View>): state.errorMessage ? (
                     <View style={styles.statusContainer} >
                         <Text style={styles.errorText}>{state.errorMessage}</Text>
