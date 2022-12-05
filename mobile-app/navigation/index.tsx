@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme, NavigationContainerRef, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName } from 'react-native';
+import { ColorSchemeName, Platform } from 'react-native';
 import NotFoundScreen from '../screens/Stacks/NotFoundScreen';
 import StorybookScreen from '../screens/Tabs/StorybookScreen';
 import { BottomTabParamList, RootStackParamList } from '../types';
@@ -28,7 +28,7 @@ import SearchScreen from '../screens/Tabs/SearchScreen';
 import { hideBottomNav, selectDisplayBottomNav, selectNavState, selectPreviousScreen, setNavScreens, showBottomNav } from '../store/slices/navigationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/slices';
-import { setBackgroundColorAsync } from "expo-navigation-bar"
+import { setBackgroundColorAsync, setVisibilityAsync } from "expo-navigation-bar"
 import ClockIcon from "../assets/icons/clock.svg";
 import BaseTopBar from './TopBar/BaseTopBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -42,6 +42,8 @@ const ScreensWithNoBottomNav = [
     "MapScreen",
     "BookingDetails"
 ]
+
+
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const navigationRef = useNavigationContainerRef();
@@ -101,17 +103,24 @@ function BottomTabNavigator() {
   })
 
   React.useEffect(() => {
-    setBackgroundColorAsync("white")
+    if(Platform.OS === "android"){
+      setBackgroundColorAsync("white")
+    }else {
+      // I'm yet to find an ios alternative for changing the bottom status bar color
+    }
+    
   }, [])
 
   React.useEffect(()=>{
     if(ScreensWithNoBottomNav.includes(previousScreen)){
       dispatch(showBottomNav())
+      // setVisibilityAsync("visible")
     }
     if(
       ScreensWithNoBottomNav.includes(currentScreen)
     ){
       dispatch(hideBottomNav())
+      // doesnt seem to have any effect 👉 setVisibilityAsync("hidden")
     }
   }, [previousScreen, currentScreen])
 
