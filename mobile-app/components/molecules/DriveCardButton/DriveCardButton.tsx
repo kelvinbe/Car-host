@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, StyleProp, ViewStyle, Animated } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Image } from '@rneui/base'
 import LocationDirection from "../../../assets/icons/direction.svg"
-
 interface IProps {
     customContainerStyle?: StyleProp<ViewStyle>;
     onPress?: () => void;
+    opacity?: Animated.AnimatedInterpolation<string | number>;
+    scale?: Animated.AnimatedInterpolation<string | number>;
+    translateY?: Animated.AnimatedInterpolation<string | number>;
+    index?: number;
 }
 
 type Props = IProps
@@ -20,7 +23,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: "space-between",
             backgroundColor: theme.colors.white,
             borderRadius: 15,
-            elevation: 4,
+            // elevation: 4,
             width: "100%"
         },
         carImageContainer: {
@@ -83,14 +86,35 @@ const useStyles = makeStyles((theme, props: Props)=>{
 })
 
 const DriveCardButton = (props: Props) => {
+    const [is05, set_is05] = useState(false)
+    
+    props?.opacity?.addListener(({value})=>{
+        if(value?.toString()?.includes(".")){
+            set_is05(true)
+        }else{
+            set_is05(false)
+        }
+    })
 
   const styles = useStyles()
 
   return (
     <ThemeConsumer>
         {({theme})=>(
-            <TouchableOpacity onPress={props.onPress} style={[styles.container, props.customContainerStyle ]} >
-                <View style={styles.leftContainer} >
+            <Animated.View style={[styles.container, props.customContainerStyle, {
+                zIndex: is05 ? 1 : 5,
+                elevation: is05 ? 5 : 1,
+                transform: [
+                    {
+                        scale: props.scale || 1,
+                    },
+                    {
+                        translateY: props.translateY || 0
+                    }
+                ],
+                opacity: props.opacity || 1
+            } ]} >
+                <TouchableOpacity onPress={props.onPress} style={styles.leftContainer} >
                     <View style={styles.carImageContainer} >
                         <Image style={styles.carImage} source={require("../../../assets/images/car.png")} />
                     </View>
@@ -117,11 +141,14 @@ const DriveCardButton = (props: Props) => {
                             </Text>
                         </View>
                     </View>
-                </View>
-                <Text style={styles.amountStyle} >
-                    $5.00/hr
-                </Text>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={props.onPress} >
+                    <Text style={styles.amountStyle} >
+                        $5.00/hr
+                    </Text>
+                </TouchableOpacity>
+                
+            </Animated.View>
         )}
     </ThemeConsumer>
     

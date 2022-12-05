@@ -8,6 +8,7 @@ import BookingScreen from './BottomSheetScreens/BookingScreen'
 import PaymentBottomSheet from './BottomSheetScreens/PaymentBottomSheet'
 import AuthorizationBottomSheet from './BottomSheetScreens/AuthorizationCode'
 import DriveCardButton from '../../molecules/DriveCardButton/DriveCardButton'
+import AnimatedScrollList from '../AnimatedScrollList/AnimatedScrollList'
 
 
 
@@ -118,7 +119,7 @@ const MapScreenBottomSheet = (props: Props) => {
         dispatchAction({type: "closePaymentBottomSheet"})
     }
 
-    const openBottomSheet = () => {
+    const openBottomSheet = (index: number) => {
         props.onOpen()
         dispatchAction({type: "openBottomSheet"})
         
@@ -151,7 +152,8 @@ const MapScreenBottomSheet = (props: Props) => {
         { state.paymentOpen && <PaymentBottomSheet closeBottomSheet={closePaymentBottomSheet} />}
         { state.authorizationOpen && <AuthorizationBottomSheet closeBottomSheet={closeAuthorizationBottomSheet} />}
         { !state.open && <View style={styles.vehiclesScrollContainer} >
-            <DriveCardButton onPress={openBottomSheet} />
+            {/* <DriveCardButton onPress={openBottomSheet} /> */}
+            <AnimatedScrollList handleSelect={openBottomSheet} />
         </View>}
     </View>
     
