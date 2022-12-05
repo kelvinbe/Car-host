@@ -9,7 +9,7 @@ const theme = createTheme({
         primary: "#E63B2E",
         white: "#ffffff",
         stroke: "#E5E5E5",
-        grey0: " #ADB5BD",
+        grey0: "#ADB5BD",
         title: "#495057",
         iconPrimary: "#495057",
         labelColor: "#1E1E1E",
