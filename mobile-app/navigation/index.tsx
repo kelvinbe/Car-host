@@ -90,7 +90,8 @@ function RootNavigator() {
       width: "100%",
       height: "100%",
     }} >
-      <Stack.Navigator initialRouteName='ConfirmationSent' >
+      {/* Set confirmation screen as the default below inorder to view it */}
+      <Stack.Navigator initialRouteName='Login' >
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
         <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}   />
