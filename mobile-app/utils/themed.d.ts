@@ -11,5 +11,7 @@ declare module '@rneui/themed' {
         subText: string;
         stroke: string;
         link: string;
+        backdrop: string;
+        background4: string;
   }
 }

@@ -39,7 +39,8 @@ const ScreensWithNoBottomNav = [
     "PaymentDetailsScreenHome",
     "MPesaDetailsScreen",
     "ProfileSettingsScreen",
-    "MapScreen"
+    "MapScreen",
+    "BookingDetails"
 ]
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {

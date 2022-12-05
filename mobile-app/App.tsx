@@ -7,11 +7,13 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import store from './store/store';
 import { theme } from './utils/theme';
+import 'react-native-gesture-handler';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
-export default function App() {
+ function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-
+  
   if (!isLoadingComplete) {
     return null;
   } else {
@@ -29,3 +31,5 @@ export default function App() {
     );
   }
 }
+
+export default gestureHandlerRootHOC(App);
