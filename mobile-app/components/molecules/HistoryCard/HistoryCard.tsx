@@ -16,7 +16,8 @@ interface IProps {
   driverName?: string;
   driverImage?: string;
   hourlyRate?: number;
-  customStyle?: StyleProp<ViewStyle>
+  customStyle?: StyleProp<ViewStyle>,
+  onDetailsPress?: () => void;
 }
 
 type Props = IProps;
@@ -166,7 +167,7 @@ const HistoryCard = (props: Props) => {
   return (
     <ThemeConsumer>
       {({theme})=>(
-         <View
+         <TouchableOpacity
             style={[styles.container, props.customStyle]}
           >
             <View
@@ -180,7 +181,7 @@ const HistoryCard = (props: Props) => {
                   23rd November 2022
                 </Text>
               </View>
-              <TouchableOpacity >
+              <TouchableOpacity onPress={props?.onDetailsPress} >
                 <Text  style={styles.link}>
                     Details
                 </Text>
@@ -245,7 +246,7 @@ const HistoryCard = (props: Props) => {
                 </Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
       )}
     </ThemeConsumer>
    

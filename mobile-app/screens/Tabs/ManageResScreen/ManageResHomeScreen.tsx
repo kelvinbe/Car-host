@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View, FlatList } from 'react-native'
 import React from 'react'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { BottomTabParamList } from '../../types'
+import { BottomTabParamList, ManageResParamList } from '../../../types'
 import { makeStyles } from '@rneui/themed'
-import HistoryCard from '../../components/molecules/HistoryCard/HistoryCard'
+import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useDispatch } from 'react-redux'
+import { setChosenReservation } from '../../../store/slices/reservationSlice'
 
-type Props = BottomTabScreenProps<BottomTabParamList, "ManageRes">
+type Props = NativeStackScreenProps<ManageResParamList, "ManageResHome">
 
 const useStyles = makeStyles((theme, props: Props)=>({
   container: {
@@ -23,15 +26,22 @@ const useStyles = makeStyles((theme, props: Props)=>({
   }
 }))
 
-const ManageRes = (props: Props) => {
+const ManageResHomeScreen = (props: Props) => {
   const styles = useStyles(props)
+  const dispatch = useDispatch()
+  const onCardDetailsPress = (index?: number) => {
+    props.navigation.navigate("BookingDetails")
+    dispatch(setChosenReservation({
+      id: 1
+    }))
+  }
   return (
     <View style={styles.container} >
       <FlatList
       style={styles.flatListContainer}
         data={[1,2,3,4,5]}
         renderItem={(({item})=>(
-          <HistoryCard customStyle={{
+          <HistoryCard onDetailsPress={onCardDetailsPress} customStyle={{
             marginBottom: 20
           }} />
         ))}
@@ -42,4 +52,4 @@ const ManageRes = (props: Props) => {
   )
 }
 
-export default ManageRes
+export default ManageResHomeScreen

@@ -209,6 +209,7 @@ function BottomTabNavigator() {
               tabBarIcon: ({ focused, color }) => (<ManageIcon width={24} height={24} fill={focused ? theme.colors.primary : theme.colors.grey0?.trim()}  />),
               title: "Manage Res",
               header: (props) => <BaseTopBar {...props} title="Manage Reservations" />,
+              headerShown: false
             }}
           />
           <Tabs.Screen

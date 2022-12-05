@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface IProps {
     openAuthorizationCode?: () => void;
+    hasAuthorizationCode?: boolean;
 }
 
 type Props = IProps;
@@ -102,12 +103,12 @@ const BookingCarDetailsDriver = (props: Props) => {
                     />
                     <Text style={styles.locationInfoTitle}>21964 Jim Rosa Lane, SF</Text>
                 </View>
-                <View style={styles.authCodeContainer} >
+                { !props?.hasAuthorizationCode && <View style={styles.authCodeContainer} >
                     <Text style={styles.authCodeTitle}>Authorization Code:</Text>
                     <TouchableOpacity onPress={props?.openAuthorizationCode} style={styles.authCodeButton} >
                         <Text style={styles.authCodeButtonText}>Enter here</Text>
                     </TouchableOpacity>
-                </View> 
+                </View> }
             </View>
         )}
     </ThemeConsumer>

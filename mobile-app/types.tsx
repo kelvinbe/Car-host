@@ -26,6 +26,11 @@ export type SearchScreenParamList = {
   BookingConfirmationScreen: undefined;
 }
 
+export type ManageResParamList = {
+  ManageResHome?: undefined;
+  BookingDetails?: undefined;
+}
+
 export type ProfileScreenParamList = {
   ProfileScreenHome: undefined;
   ProfileScreenEdit: undefined;

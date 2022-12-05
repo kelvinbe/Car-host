@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@rneui/themed'
 import Dropdown from '../Dropdown/Dropdown'
 import dayjs from 'dayjs'
 
+
+type Props ={
+    customStyles?: StyleProp<ViewStyle>
+}
 
 const useStyles = makeStyles((theme)=>({
     container: {
@@ -28,8 +32,8 @@ const useStyles = makeStyles((theme)=>({
     }
 }))
 
-const TimeFilter = () => {
-    const styles = useStyles()
+const TimeFilter = (props: Props) => {
+    const styles = useStyles(props)
     const [viewDropdown, setViewDropdown] = useState(false)
     const [days, setDays] = useState([])
     const [times, setTimes] = useState([])
@@ -76,7 +80,7 @@ const TimeFilter = () => {
         setTimes(()=>_times as any)
     },[ ])
   return (
-    <View style={styles.container} >
+    <View style={[styles.container, props.customStyles]} >
             <Dropdown key={days?.length} dropdownOpen={setViewDropdown} defaultValue={selectedDay} items={days} onChange={handleDayChange} />
               <View style={[styles.bottomDropdowns, {display: !viewDropdown ? "flex" : "none" }]} >
                 <View style={[styles.dropdown]} >
