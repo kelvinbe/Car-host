@@ -32,6 +32,7 @@ import { setBackgroundColorAsync, setVisibilityAsync } from "expo-navigation-bar
 import ClockIcon from "../assets/icons/clock.svg";
 import BaseTopBar from './TopBar/BaseTopBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ConfirmationSentScreen from '../screens/Stacks/ConfirmationSentScreen';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -76,16 +77,25 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  React.useEffect(() => {
+    if(Platform.OS === "android"){
+      setBackgroundColorAsync("white")
+    }else {
+      // I'm yet to find an ios alternative for changing the bottom status bar color
+    }
+    
+  }, [])
   return (
     <SafeAreaView style={{
       width: "100%",
       height: "100%",
     }} >
-      <Stack.Navigator initialRouteName='Login' >
+      <Stack.Navigator initialRouteName='ConfirmationSent' >
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
         <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}   />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}   />
+        <Stack.Screen name="ConfirmationSent" component={ConfirmationSentScreen} options={{headerShown: false}}   />
       </Stack.Navigator>
     </SafeAreaView>
   );
