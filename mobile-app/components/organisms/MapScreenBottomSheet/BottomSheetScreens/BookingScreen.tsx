@@ -10,10 +10,17 @@ import BookingCarDetailsDriver from '../../../molecules/BookingCarDetails/Bookin
 import BookingCarDetailsRate from '../../../molecules/BookingCarDetails/BookingCarDetailsRate'
 import BookingCarPaymentInfo from '../../../molecules/BookingCarDetails/BookingCarPaymentInfo'
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../store/slices'
+import { selectChosenReservation } from '../../../../store/slices/reservationSlice'
+import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline'
 
 interface IProps {
     openAuthorization?: () => void,
     openSelectPaymentMethod?: () => void,
+    isReservation?: boolean,
+    openCancelReservation?: () => void,
+    openModifyReservation?: () => void
 }
 
 
@@ -39,8 +46,8 @@ const useStyles = makeStyles((theme, props)=>{
 })
 
 const BookingScreen = (props: Props) => {
-
   const styles = useStyles(props)
+  const chosenReservation = useSelector<RootState>(selectChosenReservation)
 
   return (
     <View style={styles.container} >
@@ -48,17 +55,26 @@ const BookingScreen = (props: Props) => {
         <Divider style={styles.divider} />
         <BookingCarSchedule/>
         <Divider style={styles.divider} />
-        <BookingCarDetailsDriver openAuthorizationCode={props.openAuthorization} />
+        <BookingCarDetailsDriver hasAuthorizationCode={props?.isReservation} openAuthorizationCode={props.openAuthorization} />
         <Divider style={styles.divider} />
         <BookingCarDetailsRate/>
         <Divider style={styles.divider} />
-        <BookingCarPaymentInfo openSelectPaymentMethod={props.openSelectPaymentMethod} />
+        <BookingCarPaymentInfo hasLinkedCard={props?.isReservation} openSelectPaymentMethod={props.openSelectPaymentMethod} />
         <Divider style={styles.divider}  />
-        <View style={styles.bottomSection} >
+        {props?.isReservation ? (
+            <View style={[styles.bottomSection, {flexDirection: "row", alignItems: "center", justifyContent: "space-around" }]} >
+                <RoundedOutline onPress={props?.openCancelReservation} width="45%" >
+                    Cancel
+                </RoundedOutline>
+                <Rounded onPress={props?.openModifyReservation} width="45%" >
+                    Modify
+                </Rounded>
+            </View>
+            ) : <View style={styles.bottomSection} >
             <Rounded disabled >
                 Book Now
             </Rounded>
-        </View>
+        </View>}
     </View>
   )
 }

@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme, props: Props) =>{
             elevation: 5,
             borderRadius: 4,
             marginTop: 10,
-            height: props?.items ? props?.items?.length > 5 ? 200 : props?.items?.length * 40 : "auto",
+            height: props?.items ? props?.items?.length > 5 ? 140 : props?.items?.length * 40 : "auto",
         },
         dropdownValue: {
             width: "100%",

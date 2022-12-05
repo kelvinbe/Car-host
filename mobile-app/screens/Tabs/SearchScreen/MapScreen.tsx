@@ -14,7 +14,7 @@ import PaymentBottomSheet from '../../../components/organisms/MapScreenBottomShe
 
 
 interface IProps {
-
+    inReservation?: boolean,
 }
 
 type Props = IProps & NativeStackScreenProps<SearchScreenParamList, "MapScreen">
@@ -132,7 +132,6 @@ const MapScreen = (props: Props) => {
     }
 
     useEffect(()=>{
-
         getCoords().then(()=>{
             console.log("Location fetched")
         }).catch((e)=>{
@@ -189,10 +188,11 @@ const MapScreen = (props: Props) => {
                             />}
                     </MapView>}
                 </View>
-             { !open && <TimeFilter/>}
+             { (props?.inReservation ? false : !open) && <TimeFilter/>}
              <MapScreenBottomSheet
                 onClose={onClose}
                 onOpen={onOpen}
+                inReservation={props.inReservation}
              />
          </View>)
         )}

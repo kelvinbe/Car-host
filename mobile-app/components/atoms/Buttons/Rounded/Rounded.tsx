@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, ViewStyle, StyleProp} from 'react-native'
 import React from 'react'
 import { makeStyles } from '@rneui/themed'
 import { Button, ButtonProps } from '@rneui/base';
@@ -9,6 +9,8 @@ interface Props {
     fullWidth?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    width?: number | string;
+    customStyle?: StyleProp<ViewStyle>
 }
 
 const useStyles = makeStyles((theme, props: Props)=>{
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
-            width: props?.fullWidth ? '100%' : 'auto',
+            elevation: 0,
         },
         titleStyle: {
             color: theme.colors.white,
@@ -30,6 +32,10 @@ const useStyles = makeStyles((theme, props: Props)=>{
             lineHeight: 24,
             textAlign: "center",
             width: '100%',
+        },
+        containerStyle: {
+            width: props?.fullWidth ? '100%' : props?.width ? props?.width  : 'auto',
+            elevation: 0,
         }
     })
 })
@@ -37,7 +43,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 const Rounded = (props: Props & ButtonProps) => {
   const styles = useStyles(props)
   return (
-    <Button disabled={props.disabled} onPress={props.onPress} buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} disabledTitleStyle={styles.titleStyle}  title={props.children} />
+    <Button containerStyle={[styles.containerStyle, props.customStyle]} disabled={props.disabled} onPress={props.onPress} buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} disabledTitleStyle={styles.titleStyle}  title={props.children} />
   )
 }
 

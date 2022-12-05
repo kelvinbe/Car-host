@@ -9,18 +9,23 @@ import PaymentBottomSheet from './BottomSheetScreens/PaymentBottomSheet'
 import AuthorizationBottomSheet from './BottomSheetScreens/AuthorizationCode'
 import DriveCardButton from '../../molecules/DriveCardButton/DriveCardButton'
 import AnimatedScrollList from '../AnimatedScrollList/AnimatedScrollList'
+import ModifyBookingBottomSheet from './BottomSheetScreens/ModifyBooking'
+import CancelBookingBottomSheet from './BottomSheetScreens/CancelBooking'
 
 
 
 interface IProps {
     onClose: ()=>void,
-    onOpen: ()=>void
+    onOpen: ()=>void,
+    inReservation?: boolean
 }
 
 interface IState {
     open: boolean,
     authorizationOpen: boolean,
     paymentOpen: boolean,
+    modifyBooking: boolean,
+    cancelBooking: boolean
 }
 
 type Props = IProps;
@@ -56,6 +61,8 @@ const initialState: IState = {
     open: false,
     authorizationOpen: false,
     paymentOpen: false,
+    modifyBooking: false,
+    cancelBooking: false
 }
 
 const reducer = (state: IState, action: any) => {
@@ -90,6 +97,26 @@ const reducer = (state: IState, action: any) => {
                 ...state,
                 open: false
             }
+        case "modifyBooking":
+            return {
+                ...state,
+                modifyBooking: true
+            }
+        case "cancelBooking":
+            return {
+                ...state,
+                cancelBooking: true
+            }
+        case "closeModifyBooking":
+            return {
+                ...state,
+                modifyBooking: false
+            }
+        case "closeCancelBooking":
+            return {
+                ...state,
+                cancelBooking: false
+            }
 
         default:
             return state
@@ -98,10 +125,11 @@ const reducer = (state: IState, action: any) => {
 
 const MapScreenBottomSheet = (props: Props) => {
 
-    const [state, dispatchAction] = useReducer(reducer, initialState)
+    const [state, dispatchAction] = useReducer(reducer, {...initialState, open: props.inReservation ? true : false})
     const snapPoints = ["90%"]
     const bottomSheetRef = useRef<BottomSheet>(null)
     const styles = useStyles(props)
+
 
     const openAuthorizationCode = () => {
         dispatchAction({type: "openAuthorizationCode"})
@@ -128,8 +156,24 @@ const MapScreenBottomSheet = (props: Props) => {
     const closeBottomSheet = () => {
         props.onClose()
         dispatchAction({type: "closeBottomSheet"})
-        
     }
+
+    const openModifyBooking = () => {
+        dispatchAction({type: "modifyBooking"})
+    }
+
+    const openCancelBooking = () => {
+        dispatchAction({type: "cancelBooking"})
+    }
+
+    const closeModifyBooking = () => {
+        dispatchAction({type: "closeModifyBooking"})
+    }
+
+    const closeCancelBooking = () => {
+        dispatchAction({type: "closeCancelBooking"})
+    }
+
   return (
     <View 
         style={styles.mapContainer}
@@ -137,7 +181,7 @@ const MapScreenBottomSheet = (props: Props) => {
         { state.open && <BottomSheet
             ref={bottomSheetRef}
             snapPoints={snapPoints}
-            enablePanDownToClose
+            enablePanDownToClose={props?.inReservation ? false : true}
             index={0}
             onClose={closeBottomSheet}
         >
@@ -145,12 +189,21 @@ const MapScreenBottomSheet = (props: Props) => {
                 <BookingScreen 
                     openAuthorization={openAuthorizationCode}
                     openSelectPaymentMethod={openSelectPaymentMethod}
+                    isReservation={props.inReservation}
+                    openCancelReservation={openCancelBooking}
+                    openModifyReservation={openModifyBooking}
                 />
             </BottomSheetView>
             
         </BottomSheet>}
         { state.paymentOpen && <PaymentBottomSheet closeBottomSheet={closePaymentBottomSheet} />}
         { state.authorizationOpen && <AuthorizationBottomSheet closeBottomSheet={closeAuthorizationBottomSheet} />}
+        {
+            state.modifyBooking && <ModifyBookingBottomSheet closeBottomSheet={closeModifyBooking} />
+        }
+        {
+            state.cancelBooking && <CancelBookingBottomSheet closeBottomSheet={closeCancelBooking} />
+        }
         { !state.open && <View style={styles.vehiclesScrollContainer} >
             {/* <DriveCardButton onPress={openBottomSheet} /> */}
             <AnimatedScrollList handleSelect={openBottomSheet} />
