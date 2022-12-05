@@ -15,6 +15,7 @@ function loadStories() {
   require('../components/molecules/CreditCardWithActions/CreditCardWithActions.stories');
   require('../components/molecules/CreditCardWithAmount/CreditCardWithAmount.stories');
   require('../components/molecules/DriveCardButton/DriveCardButton.stories');
+  require('../components/molecules/Feedback/Loading/Loading.stories');
   require('../components/molecules/HistoryCard/HistoryCard.stories');
   require('../components/organisms/AnimatedScrollList/AnimatedScrollList.stories');
   require('../components/StyledText.stories');
@@ -32,6 +33,7 @@ const stories = [
   '../components/molecules/CreditCardWithActions/CreditCardWithActions.stories',
   '../components/molecules/CreditCardWithAmount/CreditCardWithAmount.stories',
   '../components/molecules/DriveCardButton/DriveCardButton.stories',
+  '../components/molecules/Feedback/Loading/Loading.stories',
   '../components/molecules/HistoryCard/HistoryCard.stories',
   '../components/organisms/AnimatedScrollList/AnimatedScrollList.stories',
   '../components/StyledText.stories',
