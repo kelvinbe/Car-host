@@ -11,7 +11,7 @@ interface IProps {
 
 }
 
-type Props = IProps & NativeStackScreenProps<RootStackParamList, "ConfirmationSent">
+type Props = NativeStackScreenProps<RootStackParamList, "ConfirmationSent">
 
 const useStyles = makeStyles((theme, props: Props)=>{
     return ({
