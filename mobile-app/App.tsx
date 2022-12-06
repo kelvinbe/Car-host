@@ -9,6 +9,7 @@ import store from './store/store';
 import { theme } from './utils/theme';
 import 'react-native-gesture-handler';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import ToastContainer from './components/organisms/Feedback/ToastContainer/ToastContainer';
 
  function App() {
   const isLoadingComplete = useCachedResources();
@@ -25,6 +26,7 @@ import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
               <Navigation colorScheme={colorScheme} />
               <StatusBar backgroundColor={theme.lightColors?.white} />
             {/* </SafeAreaView> */}
+            <ToastContainer/>
           </SafeAreaProvider>
         </ThemeProvider>
       </Provider>
