@@ -1,3 +1,4 @@
+// Navigation types
 export type RootStackParamList = {
   Root: undefined;
   Login: undefined;
@@ -47,4 +48,16 @@ export type BottomSheetParamList = {
   BookingDetails: undefined;
   ChoosePayment: undefined;
   PaymentAuthorization: undefined;
+}
+
+
+
+// General App Types
+
+export interface IToast {
+  id?: string | number,
+  message: string,
+  type: "success" | "error" | "warning" | "primary",
+  duration?: number,
+  title?: string
 }

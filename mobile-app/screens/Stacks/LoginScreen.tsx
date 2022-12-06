@@ -11,7 +11,7 @@ import { Icon, Image, Theme } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
+import useToast from '../../hooks/useToast'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
 
@@ -88,6 +88,7 @@ const useStyles = makeStyles((theme)=>{
 const LoginScreen = (props: Props) => {
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
+    const toast = useToast()
 
     const toggleViewPassword = () => {
         setViewPassword(!viewPassword)
@@ -102,6 +103,12 @@ const LoginScreen = (props: Props) => {
     }
     
     const navigateToHome = () => {
+        // toast({
+        //     message: "This is a toast message",
+        //     type: "primary",
+        //     title: "Info",
+        //     duration: 5000
+        // })
         props.navigation.navigate("Root")
     }
 
