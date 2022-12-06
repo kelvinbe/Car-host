@@ -1,26 +1,43 @@
+import { ThemeConsumer } from '@rneui/themed';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 
 class ErrorBoundary extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { 
+      hasError: false,
+      error: null
+    };
   }
 
   static getDerivedStateFromError(error: any) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    // You can also log the error to an error reporting service
+    
     console.log(error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return <Text>Something went wrong.</Text>;
+      return <ThemeConsumer>
+        {({theme})=>(
+          <View style={styles.container}>
+            <Text style={{
+              color: theme.colors.error,
+              fontSize: 18,
+              fontWeight: 'bold'
+
+            }} >
+              {
+                this.state.error?.message
+              }
+            </Text>
+          </View>
+        )}
+      </ThemeConsumer>
     }
 
     return this.props.children;
@@ -28,3 +45,13 @@ class ErrorBoundary extends React.Component<any, any> {
 }
 
 export default ErrorBoundary;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20
+  }
+})
+
