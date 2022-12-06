@@ -10,11 +10,7 @@ import XIcon from "../../../../assets/icons/feather/x.svg"
 import { useDispatch } from 'react-redux'
 import { removeMessage } from '../../../../store/slices/notificationsSlice'
 
-interface IProps {
-
-}
-
-type Props = IProps & IToast 
+type Props = IToast 
 
 const renderIcon = (type: string, colors?: Colors ) => {
     switch (type) {
