@@ -9,7 +9,8 @@ interface IIconProps {
     name: string;
     size?: number;
     color?: string;
-    iconType?: string
+    iconType?: string;
+    onClick?: () => void
 }
 
 interface IProps {

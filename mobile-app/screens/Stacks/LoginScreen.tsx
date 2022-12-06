@@ -1,6 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useState} from 'react'
 import { makeStyles } from '@rneui/themed'
+import { initFirebase } from '../../firebase/firebaseApp'
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
@@ -86,9 +89,18 @@ const useStyles = makeStyles((theme)=>{
 })
 
 const LoginScreen = (props: Props) => {
+    initFirebase();
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    const [user, loading] = useAuthState(auth);
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
     const toast = useToast()
+
+    const signIn = async () => {
+        const result = await signInWithPopup(auth, provider);
+        console.log(result.user);
+      };
 
     const toggleViewPassword = () => {
         setViewPassword(!viewPassword)
@@ -110,6 +122,13 @@ const LoginScreen = (props: Props) => {
         //     duration: 5000
         // })
         props.navigation.navigate("Root")
+    }
+
+    if (loading) {
+        console.log('Loading...');
+    }
+    if (user) {
+        navigateToHome();
     }
 
   return (
@@ -147,7 +166,7 @@ const LoginScreen = (props: Props) => {
                         Or
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
-                        <IconButton name="google" iconType='font-awesome' />
+                        <IconButton name="google" iconType='font-awesome' onClick={() => signIn()} />
                         <IconButton shadow containerStyle={{
                             marginHorizontal: 10
                         }} name="apple" iconType='font-awesome' />

@@ -4,7 +4,7 @@ const swaggerHandler = withSwagger({
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'NextJS Swagger',
+      title: 'Divvly.io Swagger',
       version: '0.1.0',
     },
   },

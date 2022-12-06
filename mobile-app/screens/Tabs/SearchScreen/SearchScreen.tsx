@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BottomTabParamList, RootStackParamList, SearchScreenParamList } from '../../../types';
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
+import { initFirebase } from '../../../firebase/firebaseApp'
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ImageBackground, useWindowDimensions, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -97,6 +100,9 @@ const useStyles = makeStyles((theme, props) => ({
 }))
 
 const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "SearchScreenHome">) => {
+  initFirebase();
+  const auth = getAuth();
+  const [user, loading] = useAuthState(auth);
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
 
@@ -111,42 +117,57 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
       searchType: "local"
     })
   }
+
+  //Sign out example
+  const signOut = async () => {
+    auth.signOut();
+  }
+
+  if (loading) {
+    console.log('Loading...');
+  }
+
+  if (!user) {
+    console.log('User not logged');
+  }
   
-  return (
-    <ThemeConsumer>
-      {({ theme }) => (
-        <>
-          <StatusBar backgroundColor={theme.colors.background} />
-          <View style={styles.container} >
-            <ImageBackground source={require('../../../assets/images/background-home.png')} style={[{ width: maxWidth, height: 356 }, styles.topContentContainerStyle]} resizeMode="cover" >
-                  <Image source={require('../../../assets/images/logo.png')} style={styles.logoImage} />
-                  <Text style={styles.heading}>Airbnb Host Car Sharing</Text>
-                  <Text style={styles.subHeading}>Rent a car hourly with fuel included</Text>
-            </ImageBackground>
-            <View style={styles.bottomContentContainerStyle} >
-              <View style={styles.hostDetailsContainer} >
-                <InputWithButton onPress={hostCodeSearch}  placeholder='e.g 124589' label="Enter Host Code"  />
-                <View style={styles.helperTextContainer} >
-                    <Icon style={styles.helperTextIcon} name="info" type="material" color={theme.colors.grey3} />
-                    <Text style={styles.helperText} >
-                      Provided by your Airbnb host
-                    </Text>
+  if (user) {
+    return (
+      <ThemeConsumer>
+        {({ theme }) => (
+          <>
+            <StatusBar backgroundColor={theme.colors.background} />
+            <View style={styles.container} >
+              <ImageBackground source={require('../../../assets/images/background-home.png')} style={[{ width: maxWidth, height: 356 }, styles.topContentContainerStyle]} resizeMode="cover" >
+                    <Image source={require('../../../assets/images/logo.png')} style={styles.logoImage} />
+                    <Text style={styles.heading}>Airbnb Host Car Sharing</Text>
+                    <Text style={styles.subHeading}>Rent a car hourly with fuel included</Text>
+              </ImageBackground>
+              <View style={styles.bottomContentContainerStyle} >
+                <View style={styles.hostDetailsContainer} >
+                  <InputWithButton onPress={hostCodeSearch}  placeholder='e.g 124589' label="Enter Host Code"  />
+                  <View style={styles.helperTextContainer} >
+                      <Icon style={styles.helperTextIcon} name="info" type="material" color={theme.colors.grey3} />
+                      <Text style={styles.helperText} >
+                        Provided by your Airbnb host
+                      </Text>
+                  </View>
                 </View>
+                <Text style={styles.orText}  >
+                  Or
+                </Text>
+                <RoundedOutline onPress={searchLocally} >
+                  Search Locally
+                </RoundedOutline>
+                
               </View>
-              <Text style={styles.orText}  >
-                Or
-              </Text>
-              <RoundedOutline onPress={searchLocally} >
-                Search Locally
-              </RoundedOutline>
-              
             </View>
-          </View>
-          </>
-      )}
-    </ThemeConsumer>
-    
-  );
+            </>
+        )}
+      </ThemeConsumer>
+      
+    );
+  }
 };
 
 export default _SearchScreen;
