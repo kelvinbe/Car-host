@@ -114,8 +114,8 @@ const LoginScreen = (props: Props) => {
                 <Image 
                     source={require('../../assets/images/logo.png')}
                     style={{
-                        height: 20,
-                        width: 78,
+                        height: 100,
+                        width: 100,
                     }}
                     resizeMode="contain"
                 />

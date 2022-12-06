@@ -22,9 +22,10 @@ import ToastContainer from './components/organisms/Feedback/ToastContainer/Toast
       <Provider store={store}>
         <ThemeProvider theme={theme} >
           <SafeAreaProvider>
+          <StatusBar backgroundColor={theme.lightColors?.white} style="dark" />
             {/* <SafeAreaView style={{width: "100%", height: "100%"}}> */}
               <Navigation colorScheme={colorScheme} />
-              <StatusBar backgroundColor={theme.lightColors?.white} />
+              
             {/* </SafeAreaView> */}
             <ToastContainer/>
           </SafeAreaProvider>

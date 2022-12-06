@@ -44,6 +44,10 @@ const ScreensWithNoBottomNav = [
     "BookingDetails"
 ]
 
+const ScreensWithNoTopBar = [
+  "SearchScreenHome"
+]
+
 
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -77,6 +81,19 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+
+  const [showTopNav, setShowTopNav] = React.useState(false)
+  const [currentScreen, previousScreen] = useSelector(selectNavState)
+
+  React.useEffect(() => {
+    if(ScreensWithNoTopBar?.includes(currentScreen)){
+      setShowTopNav(false)
+    }
+    if(!ScreensWithNoTopBar?.includes(currentScreen)){
+      setShowTopNav(true)
+    }
+  }, [currentScreen, previousScreen])
+
   React.useEffect(() => {
     if(Platform.OS === "android"){
       setBackgroundColorAsync("white")
@@ -86,11 +103,19 @@ function RootNavigator() {
     
   }, [])
   return (
-    <SafeAreaView style={{
+    <SafeAreaView edges={showTopNav ? [
+      "top",
+      "bottom",
+      "left",
+      "right"
+    ] : [
+      "bottom",
+      "left",
+      "right"
+    ]} style={{
       width: "100%",
       height: "100%",
-    }} >
-      {/* Set confirmation screen as the default below inorder to view it */}
+    }}  >
       <Stack.Navigator initialRouteName='Login' >
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
@@ -145,10 +170,9 @@ function BottomTabNavigator() {
             borderTopColor: theme.colors.background,
             elevation: 5,
             display: displayBottomNav ? "flex" : "none",
-            height: 50,
           },
           tabBarActiveTintColor: theme.colors.primary,
-          tabBarInactiveTintColor: theme.colors.grey0.trim()
+          tabBarInactiveTintColor: theme.colors.grey0
           
         }} initialRouteName='SearchScreen' >
           <Tabs.Screen
@@ -169,7 +193,7 @@ function BottomTabNavigator() {
               ),
               title: "Storybook",
               tabBarActiveTintColor: theme.colors.primary,
-              tabBarInactiveTintColor: theme.colors.grey0?.trim(),
+              tabBarInactiveTintColor: theme.colors.grey0,
               
             }}
           />

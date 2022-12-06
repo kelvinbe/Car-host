@@ -1,19 +1,16 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { makeStyles, ThemeConsumer } from '@rneui/themed'
+import { Text, View, TouchableOpacity, StatusBar } from 'react-native'
+import React, { useEffect } from 'react'
+import { makeStyles,  ThemeConsumer, useTheme } from '@rneui/themed'
 import { ProfileScreenParamList } from '../../../types'
-import { StatusBar } from 'expo-status-bar'
 import { Button, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
 import LogoutIcon from "../../../assets/icons/logout.svg"
 import HomeIcon from "../../../assets/icons/home.svg"
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSelector } from 'react-redux'
+import { selectNavState } from '../../../store/slices/navigationSlice'
 
-interface IProps {
-
-}
-
-type Props = IProps & NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome">
+type Props = NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome"> 
 
 const useStyles = makeStyles((theme, props: Props) => ({
   container: {
@@ -178,7 +175,9 @@ const useStyles = makeStyles((theme, props: Props) => ({
 }))
 
 const ProfileScreenHome = (props: Props) => {
+  const { theme } = useTheme()
   const styles = useStyles(props)
+  const [ currentScreen, history] = useSelector(selectNavState)
   const goToEdit = () =>{
     props.navigation.navigate("ProfileScreenEdit")
   }
@@ -188,11 +187,20 @@ const ProfileScreenHome = (props: Props) => {
   const goToSettings = () => {
     props.navigation.navigate("ProfileSettingsScreen")
   }
+
+
+  useEffect(()=>{
+    if(currentScreen === "ProfileScreenHome"){
+      StatusBar.setBackgroundColor(theme.colors.primary)
+      StatusBar.setBarStyle("light-content")
+    }
+    
+    
+  }, [history?.length])
   return (
     <ThemeConsumer>
       {({ theme }) => (
         <View style={styles.container} >
-          <StatusBar backgroundColor={theme.colors.primary} />
           <View style={styles.topBarContainerStyle} >
             <View style={styles.topNavSection} >
               <Button style={styles.homeButtonContainer} buttonStyle={styles.homeButtonContainer} >
@@ -301,5 +309,3 @@ const ProfileScreenHome = (props: Props) => {
 }
 
 export default ProfileScreenHome
-
-const styles = StyleSheet.create({})

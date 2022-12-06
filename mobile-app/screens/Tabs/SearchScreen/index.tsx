@@ -4,7 +4,6 @@ import { BottomTabParamList, RootStackParamList, SearchScreenParamList } from '.
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ImageBackground, useWindowDimensions, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import { Icon, Image } from '@rneui/base';
 import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
@@ -24,7 +23,6 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
             width: "100%",
             height: "100%",
         }} >
-          <StatusBar backgroundColor={theme.colors.background} />
             <SearchScreenStacks.Navigator 
                 initialRouteName="SearchScreenHome"
                 screenOptions={{

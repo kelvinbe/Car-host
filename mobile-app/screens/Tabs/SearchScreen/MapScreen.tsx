@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Animated } from 'react-native'
+import { StyleSheet, Text, View, Animated, StatusBar } from 'react-native'
 import React, { useEffect, useReducer, useState, useRef } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import MapView, { Circle, Marker } from 'react-native-maps'
@@ -132,6 +132,8 @@ const MapScreen = (props: Props) => {
     }
 
     useEffect(()=>{
+        StatusBar.setBarStyle("dark-content")
+        StatusBar.setBackgroundColor("pink")
         getCoords().then(()=>{
             console.log("Location fetched")
         }).catch((e)=>{
@@ -152,7 +154,6 @@ const MapScreen = (props: Props) => {
                         <Text style={styles.errorText}>{state.errorMessage}</Text>
                     </View>
                 ) : (<View style={styles.container} >
-                
                 <View style={styles.mapContainer} >
                     {state?.location && <MapView
                         style={styles.map}

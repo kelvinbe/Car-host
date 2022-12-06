@@ -6,11 +6,12 @@ import { initFirebase } from '../../../firebase/firebaseApp'
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ImageBackground, useWindowDimensions, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { ImageBackground, StatusBar, useWindowDimensions, View } from 'react-native';
 import { Icon, Image } from '@rneui/base';
 import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
+import { useSelector } from 'react-redux';
+import { selectNavState } from '../../../store/slices/navigationSlice';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme, props) => ({
       marginBottom: 20
     },
     heading: {
-        color: theme.colors.title,
+        color: theme.colors.white,
         fontSize: 24,
         lineHeight: 24,
         textAlign: "center",
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme, props) => ({
         marginBottom: 10
     },
     subHeading: {
-      color: theme.colors.title,
+      color: theme.colors.white,
       fontSize: 20,
       lineHeight: 20,
       textAlign: "center",
@@ -105,7 +106,7 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
   const [user, loading] = useAuthState(auth);
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
-
+  const [currentScreen, previousScreen] = useSelector(selectNavState)
   const hostCodeSearch = (value: any) =>{
     props.navigation.navigate("MapScreen", {
       searchType: "host",
@@ -117,6 +118,19 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
       searchType: "local"
     })
   }
+
+  useEffect(()=>{
+    console.log("settinf")
+    if(currentScreen === "SearchScreenHome"){
+      StatusBar.setBackgroundColor("transparent")
+      StatusBar.setBarStyle("light-content")
+    }else{
+      if(currentScreen !== "ProfileScreenHome"){
+        StatusBar.setBackgroundColor("#fff")
+        StatusBar.setBarStyle("dark-content")
+      }
+    }
+  }, [currentScreen, previousScreen])
 
   //Sign out example
   const signOut = async () => {
