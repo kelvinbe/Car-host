@@ -1,4 +1,4 @@
-import { Pressable, Text, View, Animated } from 'react-native'
+import { TouchableOpacity, Text, View, Animated } from 'react-native'
 import React, { useEffect, useRef } from 'react'
 import { makeStyles, Colors, ThemeConsumer } from '@rneui/themed'
 import { IToast } from '../../../../types'
@@ -52,12 +52,12 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         titleStyle: {
             fontSize: 16,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             color: theme.colors?.[props?.type || "primary"],
         },
         messageStyle: {
             fontSize: 16,
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             color: theme.colors?.[props?.type || "primary"]
 
         },
@@ -120,9 +120,8 @@ const Toast = (props: Props) => {
                         <Text style={styles.messageStyle} >{props.message}</Text>
                     </View>
                 </View>
-                <Pressable
+                <TouchableOpacity
                     style={styles.iconButton}
-                    android_ripple={{color: theme.colors.greyOutline, borderless: true}}
                     onPress={onClose}
                 >
                     <XIcon 
@@ -130,7 +129,7 @@ const Toast = (props: Props) => {
                         width={24}
                         height={24}
                     />
-                </Pressable>
+                </TouchableOpacity>
             </Animated.View>
         )}
     </ThemeConsumer>

@@ -7,6 +7,8 @@ import { Button } from '@rneui/base';
 import HomeIcon from "../../assets/icons/home.svg";
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import ChevronLeft from "../../assets/icons/chevron-left.svg";
+import { useSelector } from 'react-redux';
+import { selectNavState } from '../../store/slices/navigationSlice';
 
 interface IProps {
     title?: string;
@@ -38,7 +40,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         titleStyle: {
             fontSize: 16,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             textAlign: "center",
             color: theme.colors.black,
             width: (props.home && props.chevronLeft) ? "80%" : "90%"
@@ -48,6 +51,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const BaseTopBar = (props: Props) => {
     const styles = useStyles(props)
+    const [currentScreen, previousScreen] = useSelector(selectNavState)
 
     const goBack = () => {
         if(props.onBackPress){
@@ -67,7 +71,7 @@ const BaseTopBar = (props: Props) => {
     <ThemeConsumer>
         {({theme})=>(
             <View style={styles.container} >
-            <StatusBar backgroundColor={theme.colors.white} style="dark" />
+            <StatusBar key={`${currentScreen+previousScreen}`} backgroundColor={theme.colors.white} style="dark" />
             {
                 props.chevronLeft && <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
                     <ChevronLeft height={12} width={12}  stroke={theme.colors.black} />

@@ -41,7 +41,8 @@ const useStyles = makeStyles((theme, props)=>({
     textStyle: {
         color: theme.colors.title,
         fontSize: 14,
-        fontWeight: "700",
+        fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
         marginBottom: 20
     },
     receipt: {

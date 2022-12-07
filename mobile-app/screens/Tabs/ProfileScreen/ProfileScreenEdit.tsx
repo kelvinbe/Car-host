@@ -91,7 +91,7 @@ const ProfileScreenEdit = (props: Props) => {
     <ThemeConsumer>
         {({theme}) => (
             <SafeAreaView style={styles.container} >
-                <StatusBar backgroundColor={theme.colors.white} />
+                <StatusBar style="dark" backgroundColor={theme.colors.white}  />
                 <View style={styles.contentContainer} >
                     <View style={styles.topImageContainer} >
                         <View style={styles.avatarSection} >

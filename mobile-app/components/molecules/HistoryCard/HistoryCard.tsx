@@ -43,14 +43,14 @@ const useStyles = makeStyles((theme, props: Props)=>({
     },
     dateText: {
       color: theme.colors.grey3,
-      fontWeight: "500",
+      fontWeight: "500", fontFamily: "Lato_400Regular",
       fontSize: 14,
       marginLeft: 10
     },
     link: {
       color: theme.colors.link,
       fontSize: 12,
-      fontWeight: "500",
+      fontWeight: "500", fontFamily: "Lato_400Regular",
     },
     divider: {
       width: "100%",
@@ -87,7 +87,8 @@ const useStyles = makeStyles((theme, props: Props)=>({
     },
     vehicleName: {
       fontSize: 14,
-      fontWeight: "700",
+      fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
       color: theme.colors.black,
     },
     driverInfo: {
@@ -105,7 +106,8 @@ const useStyles = makeStyles((theme, props: Props)=>({
     },
     driverName: {
       fontSize: 12,
-      fontWeight: "700",
+      fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
       color: theme.colors.black,
     },
     locationInfoContainer: {
@@ -120,7 +122,7 @@ const useStyles = makeStyles((theme, props: Props)=>({
     },
     locationInfo: {
       fontSize: 12,
-      fontWeight: "500",
+      fontWeight: "500", fontFamily: "Lato_400Regular",
       color: theme.colors.grey3,
       marginLeft: 10
     },
@@ -128,7 +130,8 @@ const useStyles = makeStyles((theme, props: Props)=>({
       alignItems: "flex-end",
       justifyContent: "center",
       fontSize: 14,
-      fontWeight: "700",
+      fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
       color: theme.colors.black
     },
     rideTimeInfoContainer: {
@@ -149,13 +152,14 @@ const useStyles = makeStyles((theme, props: Props)=>({
     },
     rideTimeInfoTitle: {
       fontSize: 14,
-      fontWeight: "500",
+      fontWeight: "500", fontFamily: "Lato_400Regular",
       color: theme.colors.black,
       marginLeft: 5
     },
     rideTimeInfoValue: {
       fontSize: 14,
-      fontWeight: "700",
+      fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
       color: theme.colors.grey3,
       marginTop: 10
     }

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useState} from 'react'
-import { makeStyles } from '@rneui/themed'
+import { makeStyles, useTheme } from '@rneui/themed'
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
@@ -11,6 +11,7 @@ import { Button, Icon, Image, Theme } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ForgotPassword'> ;
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme)=>{
             alignItems: "center",
             justifyContent: "center",
             fontSize: 16,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             marginVertical: 20
         },
         leftText: {
@@ -62,7 +63,8 @@ const useStyles = makeStyles((theme)=>{
         title: {
             color: theme.colors.title,
             fontSize: 24,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             marginBottom: 42
         },
         logoContainer: {
@@ -99,7 +101,7 @@ const useStyles = makeStyles((theme)=>{
 const ForgotPasswordScreen = (props: Props) => {
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
-
+    const { theme } = useTheme()
     const toggleViewPassword = () => {
         setViewPassword(!viewPassword)
     }
@@ -110,6 +112,7 @@ const ForgotPasswordScreen = (props: Props) => {
 
   return (
         <View style={styles.container} >
+            <StatusBar backgroundColor={theme.colors.white} style="dark" />
             <View style={styles.logoContainer}>
                  <Image 
                     source={require('../../assets/images/logo.png')}

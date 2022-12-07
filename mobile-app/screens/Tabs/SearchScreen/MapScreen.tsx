@@ -1,16 +1,15 @@
-import { StyleSheet, Text, View, Animated, StatusBar } from 'react-native'
+import { Text, View, Animated, StatusBar } from 'react-native'
 import React, { useEffect, useReducer, useState, useRef } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import MapView, { Circle, Marker } from 'react-native-maps'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import * as Location from "expo-location"
 import LocationMarker from '../../../components/atoms/GeoMarkers/LocationMarker/LocationMarker'
-import LocationMarkerIcon from "../../../assets/icons/location-marker.svg"
 import TimeFilter from '../../../components/molecules/TimeFilter/TimeFilter'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SearchScreenParamList } from '../../../types'
 import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet'
-import PaymentBottomSheet from '../../../components/organisms/MapScreenBottomSheet/BottomSheetScreens/PaymentBottomSheet'
+import { PROVIDER_GOOGLE } from 'react-native-maps'
 
 
 interface IProps {
@@ -50,16 +49,15 @@ const useStyles = makeStyles((theme, props)=>({
         fontSize: 16,
         lineHeight: 16,
         textAlign: "center",
-        fontWeight: "500",
+        fontWeight: "500", fontFamily: "Lato_400Regular",
         width: "100%",
-       
     },
     loadingText: {
         color: theme.colors.title,
         fontSize: 16,
         lineHeight: 16,
         textAlign: "center",
-        fontWeight: "500",
+        fontWeight: "500", fontFamily: "Lato_400Regular",
     },
 }))
 
@@ -132,13 +130,11 @@ const MapScreen = (props: Props) => {
     }
 
     useEffect(()=>{
-        StatusBar.setBarStyle("dark-content")
-        StatusBar.setBackgroundColor("pink")
-        getCoords().then(()=>{
-            console.log("Location fetched")
-        }).catch((e)=>{
-            console.log(e)
-        })
+        // getCoords().then(()=>{
+        //     console.log("Location fetched")
+        // }).catch((e)=>{
+        //     console.log(e)
+        // })
     },[])
 
   return (
@@ -155,7 +151,8 @@ const MapScreen = (props: Props) => {
                     </View>
                 ) : (<View style={styles.container} >
                 <View style={styles.mapContainer} >
-                    {state?.location && <MapView
+                    {state?.location && <MapView 
+                        provider={PROVIDER_GOOGLE}
                         style={styles.map}
                         mapType="mutedStandard"
                         initialRegion={{

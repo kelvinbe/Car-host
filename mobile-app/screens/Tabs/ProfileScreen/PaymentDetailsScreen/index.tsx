@@ -7,6 +7,7 @@ import { PaymentDetailsScreenParamList } from '../../../../types';
 import PaymentDetailsScreenHome from './PaymentDetailsScreenHome';
 import TopBar from '../TopBar/TopBar';
 import MpesaDetails from './MpesaDetails';
+import BaseTopBar from '../../../../navigation/TopBar/BaseTopBar';
 
 const PaymentDetailsScreenStackNavigator = createNativeStackNavigator<PaymentDetailsScreenParamList>();
 
@@ -25,10 +26,12 @@ const PaymentDetailsScreen = () => {
         {({ theme }) => (
                 <PaymentDetailsScreenStackNavigator.Navigator initialRouteName="PaymentDetailsScreenHome" >
                     <PaymentDetailsScreenStackNavigator.Screen options={{
-                        header: (props) => <TopBar {...props} title="Payment" />
+                        headerShown: true,
+                        header: (props) => <BaseTopBar {...props} title="Payment" home={false} chevronLeft />
                     }} name="PaymentDetailsScreenHome" component={PaymentDetailsScreenHome} />
                     <PaymentDetailsScreenStackNavigator.Screen options={{
-                        header: (props) => <TopBar {...props} title="M-Pesa" />
+                       headerShown: true,
+                       header: (props) => <BaseTopBar {...props} title="Mpesa" home={false} chevronLeft />
                     }} name="MPesaDetailsScreen" component={MpesaDetails} />
                 </PaymentDetailsScreenStackNavigator.Navigator>
         )}

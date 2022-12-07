@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme, props)=>{
         loadingText: {
             color: theme.colors.black,
             fontSize: 14,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             marginTop: 10
 
         }

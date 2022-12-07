@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme, props: Props)=>({
     actionTextStyle: {
         fontSize: 15,
         color: theme.colors.black,
-        fontWeight: "600",
+        fontWeight: "600", fontFamily: "Lato_400Regular",
         marginLeft: 10
     },
     buttonIcon: {

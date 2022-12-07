@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         titleStyle: {
             fontSize: 16,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             textAlign: "center",
             color: theme.colors.black,
             width: "90%"
@@ -50,7 +51,6 @@ const TopBar = (props: Props) => {
     <ThemeConsumer>
         {({theme})=>(
             <View style={styles.container} >
-            <StatusBar backgroundColor={theme.colors.white} />
             <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
                 <ChevronLeft stroke={theme.colors.black} height={12} width={12}  />
             </Button>

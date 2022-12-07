@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme, props)=>({
     },
     titleStyle: {
         fontSize: 16,
-        fontWeight: "700",
+        fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
         textAlign: "center",
         color: theme.colors.black
     }

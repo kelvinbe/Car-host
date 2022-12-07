@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme, props: Props)=>({
     textStyle: {
         fontSize: 13,
         color: theme.colors.black,
-        fontWeight: "700",
+        fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
         marginLeft: 10
     }
 }))
