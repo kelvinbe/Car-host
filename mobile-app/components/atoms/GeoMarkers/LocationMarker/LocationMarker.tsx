@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme, props: Props)=>({
     },
     tooltipText: {
         fontSize: 16,
-        fontWeight: "700",
+        fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
         color: theme.colors.white,
         textAlign: "center"
     },

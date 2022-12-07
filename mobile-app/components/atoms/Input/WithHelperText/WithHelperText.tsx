@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme, props: Props)=> {
             margin: 0,
             fontSize: 16,
             lineHeight: 24,
-            fontWeight: "400",
+            fontWeight: "400", 
+            fontFamily: "Lato_400Regular",
             color: theme.colors.grey3,
             width: props?.fullWidth ? "100%" : props?.width ? props.width : "auto",
             justifyContent: "center",
@@ -37,17 +38,19 @@ const useStyles = makeStyles((theme, props: Props)=> {
             width: "100%",
             textAlign: "right",
             fontStyle: "italic",
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
 
         },
         inputStyle: {
             borderWidth: 0,
-            paddingVertical: 15,
+            // paddingVertical: 15,
             paddingHorizontal: 20,
+            marginTop: 5
         },
         inputContainerStyle: {
             borderBottomWidth: 0,
             margin: 0,
+            marginTop: -2
         },
         style: {
             borderWidth: 0,
@@ -65,7 +68,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
             marginTop: -26,
             color: theme.colors.black,
             width: "100%",
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             fontSize: 16,
         }
     })
@@ -86,7 +89,7 @@ const WithHelperText = (props: Props) => {
                 placeholder={props.placeholder} 
                 value={props.value} 
                 defaultValue={props.defaultValue} 
-                inputStyle={styles.inputStyle} 
+                inputStyle={[styles.inputStyle, props.inputStyle]} 
                 placeholderTextColor={theme.colors.grey3}  
                 onChangeText={props.onChangeText} 
                 onBlur={props.onBlur} 

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, { ReactNode, useState } from 'react'
 import { makeStyles } from '@rneui/themed'
 import { Button, Input, InputProps  } from '@rneui/base'
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             flexDirection: "row",	
             alignItems: "center",
             justifyContent: "flex-start",
-            maxWidth: "60%"
+            maxWidth: "90%"
         },
         errorStyle: {
             height: 0,
@@ -62,6 +62,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             backgroundColor: theme.colors.primary,
             alignItems: "center",
             justifyContent: "center",
+            position: "absolute",
+            right: -1
         },
         style: {
             borderWidth: 0,
@@ -69,7 +71,9 @@ const useStyles = makeStyles((theme, props: Props)=>{
         buttonTitleStyle: {
             fontSize: 16,
             lineHeight: 20,
-            fontWeight: "700"
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
+            color: theme.colors.white
         },
         labelStyle: {
             textAlign: "left",
@@ -77,7 +81,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             fontSize:16,
             lineHeight: 20,
             color: theme.colors.black,
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             marginBottom: 5
         }
     })
@@ -112,15 +116,20 @@ const InputWithButton = (props: Props) => {
                 onChangeText={onChangeText}
                 
             />
-            <Button onPress={()=>{
+            <TouchableOpacity onPress={()=>{
                 props.onPress && props.onPress(value)
-            }} buttonStyle={styles.rightButton} titleStyle={styles.buttonTitleStyle} >
+            }} 
+            style={styles.rightButton}
+            >
+                <View style={{width: "100%", height: "100%", alignItems: "center", justifyContent: "center"}} >
                 {
                     props.cta ? (
-                        typeof props.cta === "string" ? props.cta : props.cta
-                    ) : "Go"
+                        typeof props.cta === "string" ? <Text style={styles.buttonTitleStyle} > {props.cta} </Text>   : props.cta
+                    ) : <Text style={styles.buttonTitleStyle} > Go </Text>
                 }
-            </Button>
+                </View>
+                
+            </TouchableOpacity>
         </View>
     </>
     

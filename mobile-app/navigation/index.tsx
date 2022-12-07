@@ -33,6 +33,7 @@ import ClockIcon from "../assets/icons/clock.svg";
 import BaseTopBar from './TopBar/BaseTopBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ConfirmationSentScreen from '../screens/Stacks/ConfirmationSentScreen';
+import VerificationScreen from '../screens/Stacks/VerificationScreen';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -116,12 +117,13 @@ function RootNavigator() {
       width: "100%",
       height: "100%",
     }}  >
-      <Stack.Navigator initialRouteName='Login' >
+      <Stack.Navigator initialRouteName='Register' >
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
         <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}   />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}   />
         <Stack.Screen name="ConfirmationSent" component={ConfirmationSentScreen} options={{headerShown: false}}   />
+        <Stack.Screen name="Verification" component={VerificationScreen} options={{headerShown: false}}   />
       </Stack.Navigator>
     </SafeAreaView>
   );

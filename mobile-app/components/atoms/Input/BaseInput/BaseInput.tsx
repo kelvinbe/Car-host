@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
             margin: 0,
             fontSize: 16,
             lineHeight: 24,
-            fontWeight: "400",
+            fontWeight: "400", fontFamily: "Lato_400Regular",
             color: theme.colors.grey3,
             width: props?.fullWidth ? "100%" : props?.width ? props.width : "auto",
             alignItems: "center",
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
         },
         inputStyle: {
             borderWidth: 0,
-            paddingVertical: 15,
+            paddingVertical: 10,
             paddingHorizontal: 20,
             margin: 0
         },
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
             marginTop: -26,
             color: theme.colors.black,
             width: "100%",
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             fontSize: 16,
         }
     })

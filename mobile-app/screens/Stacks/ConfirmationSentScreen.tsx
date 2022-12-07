@@ -35,14 +35,15 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         title: {    
             fontSize: 20,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             color: theme.colors.black,
             marginBottom: 10,
             textAlign: "center"
         },
         info: {
             fontSize: 16,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             color: theme.colors.black,
             textAlign: "center",
             marginBottom: 50
@@ -55,12 +56,12 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         infoText: {
             fontSize: 16,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             color: theme.colors.grey0
         },
         action: {
             fontSize: 16,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             color: theme.colors.link,
             marginLeft: 5
         }

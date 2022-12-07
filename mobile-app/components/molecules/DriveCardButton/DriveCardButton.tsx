@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: "center"
         },
         driveInfoText: {
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 16,
             marginBottom: 5
         },
@@ -60,7 +61,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             height: 30,
         },
         driverNameText: {
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 14,
             textAlign: "left",
             marginLeft: 5
@@ -74,12 +76,13 @@ const useStyles = makeStyles((theme, props: Props)=>{
             marginRight: 5
         },
         locationText: {
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             fontSize: 12,
             textAlign: "left",
         },
         amountStyle: {
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 16,
         }
     }

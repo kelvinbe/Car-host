@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme, props: Props)=> {
             alignItems: "center"
         },
         contentTitleStyle: {
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 20,
             marginBottom: 20
         },
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
         },
         textStyle: {
             fontSize: 20,
-            fontWeight: "400",
+            fontWeight: "400", fontFamily: "Lato_400Regular",
             color: theme.colors.black
         },
         bottomButtonsContainer: {

@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, {useState} from 'react'
-import { makeStyles } from '@rneui/themed'
+import React, { useState, useEffect } from 'react'
+import { makeStyles, useTheme } from '@rneui/themed'
 import { initFirebase } from '../../firebase/firebaseApp'
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
@@ -15,6 +15,12 @@ import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useToast from '../../hooks/useToast'
+import { StatusBar } from 'expo-status-bar';
+import GoogleIcon from "../../assets/icons/google.svg"
+import FacebookIcon from "../../assets/icons/facebook.svg"
+import AppleIcon from "../../assets/icons/apple.svg"
+import Loading from '../../components/molecules/Feedback/Loading/Loading';
+import { isEmpty } from 'lodash';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
 
@@ -51,7 +57,7 @@ const useStyles = makeStyles((theme)=>{
             alignItems: "center",
             justifyContent: "center",
             fontSize: 16,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             marginVertical: 20
         },
         leftText: {
@@ -65,7 +71,8 @@ const useStyles = makeStyles((theme)=>{
         title: {
             color: theme.colors.title,
             fontSize: 24,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             marginBottom: 42
         },
         logoContainer: {
@@ -82,7 +89,7 @@ const useStyles = makeStyles((theme)=>{
             width: "100%",
             textAlign: "right",
             fontStyle: "italic",
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
 
         },
     })
@@ -93,14 +100,79 @@ const LoginScreen = (props: Props) => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     const [user, loading] = useAuthState(auth);
+    const [_loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const toast = useToast()
+    const {theme} = useTheme()
 
-    const signIn = async () => {
-        const result = await signInWithPopup(auth, provider);
-        console.log(result.user);
-      };
+    const handleFirebaseAuthError = (e: any) =>{
+        setError(true)
+        switch(e.message){
+            case "Firebase: Error (auth/invalid-email).":
+                toast({
+                    message: "Invalid Email",
+                    type: "error",
+                    title: "Error",
+                    duration: 2000
+                })
+                break;
+            case "Firebase: Error (auth/user-disabled).":
+                toast({
+                    message: "User Disabled",
+                    type: "error",
+                    title: "Error",
+                    duration: 2000
+                })
+                break;
+            case "Firebase: Error (auth/user-not-found).":
+                toast({
+                    message: "User Not Found",
+                    type: "error",
+                    title: "Error",
+                    duration: 2000
+                })
+                break;
+            case "Firebase: Error (auth/wrong-password).":
+                toast({
+                    message: "Wrong Password",
+                    type: "error",
+                    title: "Error",
+                    duration: 2000
+                })
+                break;
+            default:
+                toast({
+                    message: e.message,
+                    type: "error",
+                    title: "Error",
+                    duration: 2000
+                })
+
+        }
+        
+    }
+
+    const signIn = () => {
+        setLoading(true)
+        signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+            toast({
+                message: "Login Successful",
+                type: "success",
+                title: "Success",
+                duration: 2000
+
+            })
+            setLoading(false)
+        }).catch((e)=>{
+            console.log(e.message);
+            setLoading(false)
+            handleFirebaseAuthError(e)
+        })
+    };
 
     const toggleViewPassword = () => {
         setViewPassword(!viewPassword)
@@ -124,15 +196,21 @@ const LoginScreen = (props: Props) => {
         props.navigation.navigate("Root")
     }
 
-    if (loading) {
-        console.log('Loading...');
-    }
-    if (user) {
-        navigateToHome();
-    }
+    if (loading || _loading) return <Loading/>
+    // if (user && !_loading && !loading && !error) {
+    //     console.log("error", error)
+    //     navigateToHome();
+    // }
+
+    useEffect(()=>{
+        if(!isEmpty(user) && !loading && !_loading && !error){
+            navigateToHome();
+        }
+    }, [user, loading, _loading, error])
 
   return (
         <View style={styles.container} >
+            <StatusBar backgroundColor={theme.colors.white} style="dark" />
             <View style={styles.logoContainer}>
                 <Image 
                     source={require('../../assets/images/logo.png')}
@@ -148,8 +226,8 @@ const LoginScreen = (props: Props) => {
                     <Text style={styles.title} >
                         Login
                     </Text>
-                    <BaseInput containerStyle={{marginBottom: 40}} fullWidth placeholder='e.g email@email.com' label="Email" keyboardType='email-address' />
-                    <WithHelperText label="Password" secureTextEntry={!viewPassword} container={{marginBottom: 20}} 
+                    <BaseInput value={email} onChangeText={setEmail} containerStyle={{marginBottom: 40}} fullWidth placeholder='e.g email@email.com' label="Email" keyboardType='email-address' />
+                    <WithHelperText value={password} onChangeText={setPassword} label="Password" secureTextEntry={!viewPassword} container={{marginBottom: 20}} 
                         fullWidth 
                         placeholder="password" 
                         helperText={
@@ -159,18 +237,24 @@ const LoginScreen = (props: Props) => {
                         }
                         rightIcon={<Icon onPress={toggleViewPassword} name={ viewPassword  ? "eye" :"eye-slash"} type="font-awesome" />} 
                         />
-                    <Rounded onPress={navigateToHome} fullWidth>
+                    <Rounded disabled={isEmpty(password) || isEmpty(email)} loading={loading} onPress={signIn} fullWidth>
                         Login
                     </Rounded>
                     <Divider style={{marginTop: 20, marginBottom: 20}} >
                         Or
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
-                        <IconButton name="google" iconType='font-awesome' onClick={() => signIn()} />
+                        <IconButton name="google" iconType='font-awesome' onClick={() => signIn()} >
+                            <GoogleIcon width={24} height={24} />
+                        </IconButton>
                         <IconButton shadow containerStyle={{
                             marginHorizontal: 10
-                        }} name="apple" iconType='font-awesome' />
-                        <IconButton name="facebook" iconType='font-awesome' />
+                        }} name="apple" iconType='font-awesome' >
+                            <AppleIcon fill="black" width={24} height={24} />
+                        </IconButton>
+                        <IconButton name="facebook" iconType='font-awesome' >
+                            <FacebookIcon width={24} height={24} />
+                        </IconButton>
                     </View>
                 </View>
                 <View style={styles.bottomTextContainer} >

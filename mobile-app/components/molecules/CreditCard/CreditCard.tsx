@@ -30,7 +30,8 @@ const useStyles = makeStyles((theme, props: CardProps)=> {
         creditCardName: {
             color: theme.colors.black,
             fontSize: 17,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
         },
         rightSection: {
             flexDirection: "row",
@@ -45,7 +46,8 @@ const useStyles = makeStyles((theme, props: CardProps)=> {
         textStyle: {
             fontSize: 13,
             color: theme.colors.black,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
 
         }
     })

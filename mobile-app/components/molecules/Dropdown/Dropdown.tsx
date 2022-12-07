@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme, props: Props) =>{
             justifyContent: "flex-start"
         },
         selectedText: {
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             fontSize: 16,
             textAlign: "left",
             width: "100%"
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme, props: Props) =>{
             backgroundColor: theme.colors.stroke
         },
         additionalText: {
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             fontSize: 12,
             paddingHorizontal: 10
         },
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme, props: Props) =>{
             paddingVertical: 15,
         },
         dropdownValueText: {
-            fontWeight: "600",
+            fontWeight: "600", fontFamily: "Lato_400Regular",
             fontSize: 16,
             textAlign: "left"
         },

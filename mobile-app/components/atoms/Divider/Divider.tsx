@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             color: theme.colors.primary,
             fontSize: 12,
             fontWeight: '700',
+            fontFamily: "Lato_700Bold",
             lineHeight: 14,
             textAlign: "center",
             paddingHorizontal: 10,

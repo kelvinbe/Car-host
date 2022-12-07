@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: "space-between"
         },
         sectionTitle: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.black
         },
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             borderBottomColor: theme.colors.primary
         },
         actionButtonText: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.primary
         },
@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         textInfo: {
             fontSize: 13,
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             color: theme.colors.black,
             marginLeft: 10
         }

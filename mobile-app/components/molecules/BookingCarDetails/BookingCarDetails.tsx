@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             width: "100%"
         },
         headerTitle: {
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 16,
             lineHeight: 19,
             marginBottom: 10
@@ -66,13 +67,13 @@ const useStyles = makeStyles((theme, props: Props)=>{
         title: {
             color: theme.colors.black,
             fontSize: 14,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             marginLeft: 5
         },
         value: {
             color: theme.colors.grey3,
             fontSize: 14,
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
         },
         scrollView: {
             width: 350,

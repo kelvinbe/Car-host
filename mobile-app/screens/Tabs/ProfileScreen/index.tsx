@@ -46,12 +46,13 @@ const ProfileScreen = (props: Props) => {
                 }} name="ProfileScreenHome" component={ProfileScreenHome} />
                 <ProfileScreenStackNavigator.Screen 
                 options={{
-                    header: (props) => <TopBar {...props} title="Edit Profile" />,
+                  headerShown: true,
+                  header: (props) => <BaseTopBar {...props} title="Profile Settings" home={false} chevronLeft />
                 }}
                 name="ProfileScreenEdit" component={ProfileScreenEdit} />
                 <ProfileScreenStackNavigator.Screen
                     options={{
-                        headerShown: false
+                      headerShown: false
                     }}
                     name="PaymentDetailsScreen"
                     component={PaymentDetailsScreen}

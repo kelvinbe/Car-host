@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
             height: 30,
         },
         driverName: {
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 14,
             textAlign: "left",
             marginLeft: 5,
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             marginBottom: 5
         },
         locationInfoTitle: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.grey3
         },
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: "flex-start",
         },
         authCodeTitle: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.black,
             marginRight: 5
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: "center",
         },
         authCodeButtonText: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.link
         }

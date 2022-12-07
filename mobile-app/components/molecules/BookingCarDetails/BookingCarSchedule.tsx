@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
             marginBottom: 5
         },
         topSectionTitle: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             lineHeight: 16,
             color: theme.colors.grey3,
@@ -41,14 +41,14 @@ const useStyles = makeStyles((theme, props: Props)=>{
             justifyContent: "flex-start"
         },
         bottomSubSectionTitle: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             lineHeight: 16,
             color: theme.colors.black,
             marginLeft: 5
         },
         bottomSubSectionValue: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             lineHeight: 16,
             color: theme.colors.grey3,

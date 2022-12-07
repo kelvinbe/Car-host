@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, StatusBar } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { makeStyles,  ThemeConsumer, useTheme } from '@rneui/themed'
 import { ProfileScreenParamList } from '../../../types'
 import { Button, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
@@ -9,6 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { selectNavState } from '../../../store/slices/navigationSlice'
+import { useFocusEffect } from '@react-navigation/native'
 
 type Props = NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome"> 
 
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   editButtonTextStyle: {
     color: theme.colors.primary,
     fontSize: 10,
-    fontWeight: "500",
+    fontWeight: "500", fontFamily: "Lato_400Regular",
     marginRight: 5
   },
   topEditSectionContainer: {
@@ -106,7 +107,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   actionButtonTextStyle: {
     color: theme.colors.title,
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "500", fontFamily: "Lato_400Regular",
     textAlign: "left"
   },
   listContainerStyle: {
@@ -148,7 +149,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   notificationText: {
     color: theme.colors.title,
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "500", fontFamily: "Lato_400Regular",
     textAlign: "left",
     width: "60%"
   },
@@ -188,15 +189,15 @@ const ProfileScreenHome = (props: Props) => {
     props.navigation.navigate("ProfileSettingsScreen")
   }
 
-
-  useEffect(()=>{
-    if(currentScreen === "ProfileScreenHome"){
+  useFocusEffect(useCallback(()=>{
+    setTimeout(()=>{
       StatusBar.setBackgroundColor(theme.colors.primary)
       StatusBar.setBarStyle("light-content")
-    }
-    
-    
-  }, [history?.length])
+    }, 1000)
+      
+  }, []))
+
+
   return (
     <ThemeConsumer>
       {({ theme }) => (

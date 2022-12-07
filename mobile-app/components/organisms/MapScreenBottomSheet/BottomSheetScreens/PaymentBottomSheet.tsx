@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme, props: Props)=> {
         },
         contentTitleStyle: {
             width: "100%",
-            fontWeight: "700",
+            fontWeight: "700", 
+ fontFamily: "Lato_700Bold",
             fontSize: 20,
             marginBottom: 20
         },

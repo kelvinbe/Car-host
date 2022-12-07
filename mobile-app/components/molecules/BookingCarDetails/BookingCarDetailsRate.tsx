@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme, props: Props)=>{
             marginBottom: 5
         },
         sectionTitle: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.black
         },
         sectionValue: {
-            fontWeight: "500",
+            fontWeight: "500", fontFamily: "Lato_400Regular",
             fontSize: 14,
             color: theme.colors.grey3,
             marginLeft: 5
