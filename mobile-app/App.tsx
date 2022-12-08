@@ -25,10 +25,11 @@ import {
 import Loading from './components/molecules/Feedback/Loading/Loading';
 import { initializeApp } from 'firebase/app';
 import LogRocket from '@logrocket/react-native';
-import { LOGROCKET_ID } from '@env';
+import { LOGROCKET_ID, STRIPE_PUBLISHABLE_KEY } from '@env';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { isEmpty } from 'lodash';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 
  function App() {
@@ -74,6 +75,10 @@ import { isEmpty } from 'lodash';
   } else{
     return (
       <Provider store={store}>
+        <StripeProvider 
+            publishableKey={STRIPE_PUBLISHABLE_KEY} 
+            //@TODO: add merchant id when available
+        >
         <ThemeProvider theme={theme} >
           <SafeAreaProvider>
           {/* <StatusBar backgroundColor={theme.lightColors?.white} style="dark" /> */}
@@ -84,6 +89,7 @@ import { isEmpty } from 'lodash';
             <ToastContainer/>
           </SafeAreaProvider>
         </ThemeProvider>
+        </StripeProvider>
       </Provider>
     );
   }
