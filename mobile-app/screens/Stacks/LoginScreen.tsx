@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { initFirebase } from '../../firebase/firebaseApp'
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword, FacebookAuthProvider, signInWithCredential } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
@@ -21,6 +21,11 @@ import FacebookIcon from "../../assets/icons/facebook.svg"
 import AppleIcon from "../../assets/icons/apple.svg"
 import Loading from '../../components/molecules/Feedback/Loading/Loading';
 import { isEmpty } from 'lodash';
+import useSocialAuth from '../../hooks/useSocialAuth';
+import { ResponseType } from 'expo-auth-session';
+initFirebase();
+const provider = new GoogleAuthProvider();
+import * as Facebook from 'expo-auth-session/providers/facebook';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
 
@@ -96,8 +101,7 @@ const useStyles = makeStyles((theme)=>{
 })
 
 const LoginScreen = (props: Props) => {
-    initFirebase();
-    const provider = new GoogleAuthProvider();
+    
     const auth = getAuth();
     const [user, loading] = useAuthState(auth);
     const [_loading, setLoading] = useState(false)
@@ -108,6 +112,8 @@ const LoginScreen = (props: Props) => {
     const [password, setPassword] = useState('')
     const toast = useToast()
     const {theme} = useTheme()
+    const {  googleLogin, socialAuthLoading, socialAuthError, facebookLogin } = useSocialAuth()
+
 
     const handleFirebaseAuthError = (e: any) =>{
         setError(true)
@@ -187,26 +193,20 @@ const LoginScreen = (props: Props) => {
     }
     
     const navigateToHome = () => {
-        // toast({
-        //     message: "This is a toast message",
-        //     type: "primary",
-        //     title: "Info",
-        //     duration: 5000
-        // })
         props.navigation.navigate("Root")
     }
 
-    if (loading || _loading) return <Loading/>
-    // if (user && !_loading && !loading && !error) {
-    //     console.log("error", error)
-    //     navigateToHome();
-    // }
-
     useEffect(()=>{
-        if(!isEmpty(user) && !loading && !_loading && !error){
-            navigateToHome();
-        }
-    }, [user, loading, _loading, error])
+        console.log(user)
+        console.log(socialAuthLoading)
+        console.log(socialAuthError)
+    }, [user, socialAuthError, socialAuthLoading])
+
+    if (loading || _loading || socialAuthLoading) return <Loading/>
+    
+    if(user){
+        navigateToHome()
+    }
 
   return (
         <View style={styles.container} >
@@ -244,7 +244,9 @@ const LoginScreen = (props: Props) => {
                         Or
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
-                        <IconButton name="google" iconType='font-awesome' onClick={() => signIn()} >
+                        <IconButton name="google" containerStyle={{
+                            // marginRight: 20
+                        }} onPress={()=>googleLogin()} iconType='font-awesome' >
                             <GoogleIcon width={24} height={24} />
                         </IconButton>
                         <IconButton shadow containerStyle={{
@@ -252,7 +254,7 @@ const LoginScreen = (props: Props) => {
                         }} name="apple" iconType='font-awesome' >
                             <AppleIcon fill="black" width={24} height={24} />
                         </IconButton>
-                        <IconButton name="facebook" iconType='font-awesome' >
+                        <IconButton onPress={()=>facebookLogin()} name="facebook" iconType='font-awesome' >
                             <FacebookIcon width={24} height={24} />
                         </IconButton>
                     </View>

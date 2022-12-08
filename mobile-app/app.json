@@ -7,6 +7,9 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "plugins": [
+       "expo-apple-authentication"
+    ],
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -15,7 +18,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "config": {
@@ -29,12 +34,18 @@
       },
       "config": {
         "googleMaps": {
-            "apiKey": "AIzaSyCs3fxia_UXztnwT9WJ-gnOGB30MGXF5_U"
+          "apiKey": "AIzaSyCs3fxia_UXztnwT9WJ-gnOGB30MGXF5_U"
         }
       }
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "66e442df-c84d-468f-8c52-f40c8e3902b5"
+      }
+    },
+    "owner": "niebex"
   }
 }

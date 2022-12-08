@@ -22,6 +22,8 @@ import {
 
 } from '@expo-google-fonts/lato';
 import Loading from './components/molecules/Feedback/Loading/Loading';
+import { initializeApp } from 'firebase/app';
+
 
  function App() {
   const isLoadingComplete = useCachedResources();

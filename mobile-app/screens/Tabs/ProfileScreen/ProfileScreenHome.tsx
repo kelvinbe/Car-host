@@ -10,8 +10,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { selectNavState } from '../../../store/slices/navigationSlice'
 import { useFocusEffect } from '@react-navigation/native'
+import { getAuth, signOut } from 'firebase/auth'
+import useUserAuth from '../../../hooks/useUserAuth'
 
-type Props = NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome"> 
+type Props =  NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome"> 
 
 const useStyles = makeStyles((theme, props: Props) => ({
   container: {
@@ -179,6 +181,7 @@ const ProfileScreenHome = (props: Props) => {
   const { theme } = useTheme()
   const styles = useStyles(props)
   const [ currentScreen, history] = useSelector(selectNavState)
+  const {logOut} = useUserAuth()
   const goToEdit = () =>{
     props.navigation.navigate("ProfileScreenEdit")
   }
@@ -187,6 +190,14 @@ const ProfileScreenHome = (props: Props) => {
   }
   const goToSettings = () => {
     props.navigation.navigate("ProfileSettingsScreen")
+  }
+
+  const logout = () =>{
+      logOut().then(()=>{
+
+      }).catch((e)=>{
+        console.log(e)
+      })
   }
 
   useFocusEffect(useCallback(()=>{
@@ -294,9 +305,9 @@ const ProfileScreenHome = (props: Props) => {
             <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
+                onPress={logout}
               >
-
-                  <ListItem.Content style={styles.listItemContent} >
+                  <ListItem.Content  style={styles.listItemContent} >
                     <LogoutIcon fill={theme.colors.black}  />
                     <ListItem.Title style={[styles.listItemTitleStyle, {marginLeft: 10}]} >Logout</ListItem.Title>
                   </ListItem.Content>

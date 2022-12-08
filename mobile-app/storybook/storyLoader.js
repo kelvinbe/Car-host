@@ -5,6 +5,7 @@
 
 function loadStories() {
   require('../components/atoms/Buttons/ActionButton/ActionButton.stories');
+  require('../components/atoms/Buttons/AppleSignIn/AppleSignIn.stories');
   require('../components/atoms/Buttons/Icon/IconButton.stories');
   require('../components/atoms/Buttons/Rounded/Rounded.stories');
   require('../components/atoms/Buttons/Rounded/RoundedOutline.stories');
@@ -24,6 +25,7 @@ function loadStories() {
 
 const stories = [
   '../components/atoms/Buttons/ActionButton/ActionButton.stories',
+  '../components/atoms/Buttons/AppleSignIn/AppleSignIn.stories',
   '../components/atoms/Buttons/Icon/IconButton.stories',
   '../components/atoms/Buttons/Rounded/Rounded.stories',
   '../components/atoms/Buttons/Rounded/RoundedOutline.stories',

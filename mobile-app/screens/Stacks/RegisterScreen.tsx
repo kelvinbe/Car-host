@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView } from 'react-native'
-import React, {useState, useReducer} from 'react'
+import { Text, View, KeyboardAvoidingView } from 'react-native'
+import React, { useReducer, useEffect} from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
@@ -18,6 +18,8 @@ import { StatusBar } from 'expo-status-bar'
 import FacebookIcon from "../../assets/icons/facebook.svg"
 import AppleIcon from "../../assets/icons/apple.svg"
 import GoogleIcon from "../../assets/icons/google.svg"
+import useSocialAuth from '../../hooks/useSocialAuth'
+import { isEmpty } from 'lodash'
 
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -237,6 +239,8 @@ const reducer = (state: IReducerState, action: any) => {
 
 
 const LoginScreen = (props: Props) => {
+    const { googleLogin, facebookLogin, socialAuthError, socialAuthLoading } = useSocialAuth()
+
     const [{
         email,
         password,
@@ -255,6 +259,18 @@ const LoginScreen = (props: Props) => {
     const toast = useToast()
 
     const {signUp} = useUserAuth()
+
+    useEffect(()=>{
+        if(!isEmpty(socialAuthError)){
+            console.log(socialAuthError)
+            toast({
+                title: "Error",
+                type: "error",
+                duration: 3000,
+                message: "Something went wrong"
+            })
+        }
+    }, [socialAuthError])
     
 
     const handleRegister = () => {
@@ -309,7 +325,7 @@ const LoginScreen = (props: Props) => {
         props.navigation.navigate("Login")
     }
 
-    if(loading) return <Loading/>
+    if(loading || socialAuthLoading) return <Loading/>
   return (
         <View style={styles.container} >
             <StatusBar backgroundColor={theme.colors.white} style="dark" />
@@ -456,7 +472,9 @@ const LoginScreen = (props: Props) => {
                         Or
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
-                        <IconButton name="google" iconType='font-awesome' >
+                        <IconButton name="google" containerStyle={{
+                            // marginRight: 20
+                        }} onPress={()=>{googleLogin(navigateToLogin)}} iconType='font-awesome' >
                             <GoogleIcon width={24} height={24} />
                         </IconButton>
                         <IconButton shadow containerStyle={{
@@ -464,7 +482,7 @@ const LoginScreen = (props: Props) => {
                         }} name="apple" iconType='font-awesome' >
                             <AppleIcon fill="black" width={24} height={24} />
                         </IconButton>
-                        <IconButton name="facebook" iconType='font-awesome' >
+                        <IconButton name="facebook" onPress={()=>{facebookLogin(navigateToLogin)}} iconType='font-awesome' >
                             <FacebookIcon width={24} height={24} />
                         </IconButton>
                     </View>

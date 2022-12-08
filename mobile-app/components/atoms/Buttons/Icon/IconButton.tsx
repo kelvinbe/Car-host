@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 const IconButton = (props: Props) => {
     const styles = useStyles(props)
   return (
-    <Button raised={props.shadow}  containerStyle={[props.containerStyle, {
+    <Button raised={props.shadow} onPress={props.onPress}  containerStyle={[props.containerStyle, {
             backgroundColor: "#ffffff",
             borderRadius: 12,
     }]} style={props.style} buttonStyle={styles.buttonStyle}  >

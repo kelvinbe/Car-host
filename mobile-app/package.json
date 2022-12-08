@@ -51,12 +51,14 @@
     "dayjs": "^1.11.6",
     "expo": "~47.0.6",
     "expo-asset": "~8.6.2",
+    "expo-auth-session": "~3.7.3",
     "expo-constants": "~14.0.2",
     "expo-font": "~11.0.1",
     "expo-linking": "~3.2.3",
     "expo-location": "~15.0.1",
     "expo-modules-autolinking": ">=0.8.1",
     "expo-navigation-bar": "~2.0.1",
+    "expo-random": "~13.0.0",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "expo-system-ui": "~2.0.1",
@@ -83,7 +85,8 @@
     "redux": "^4.2.0",
     "regenerator-runtime": "*",
     "twrnc": "^3.4.1",
-    "webpack": ">=2"
+    "webpack": ">=2",
+    "expo-apple-authentication": "~5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -107,6 +110,7 @@
     "jest": "^26.6.3",
     "jest-expo": "~47.0.1",
     "prettier": ">=1.5.3 <2.0.0",
+    "react-native-dotenv": "^3.4.2",
     "react-native-storybook-loader": "^2.0.5",
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.1.0",

@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme, NavigationContainerRef, useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, NavigationContainerRef, useNavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Platform } from 'react-native';
@@ -34,6 +34,8 @@ import BaseTopBar from './TopBar/BaseTopBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ConfirmationSentScreen from '../screens/Stacks/ConfirmationSentScreen';
 import VerificationScreen from '../screens/Stacks/VerificationScreen';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { getAuth } from 'firebase/auth';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -82,9 +84,9 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-
   const [showTopNav, setShowTopNav] = React.useState(false)
   const [currentScreen, previousScreen] = useSelector(selectNavState)
+  
 
   React.useEffect(() => {
     if(ScreensWithNoTopBar?.includes(currentScreen)){
@@ -135,6 +137,7 @@ function BottomTabNavigator() {
   const displayBottomNav = useSelector(selectDisplayBottomNav)
   const [currentScreen, previousScreen] = useSelector(selectNavState)
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   let theme: Theme;
   makeStyles((_theme: Theme)=>{
     theme = _theme
@@ -161,6 +164,12 @@ function BottomTabNavigator() {
       // doesnt seem to have any effect 👉 setVisibilityAsync("hidden")
     }
   }, [previousScreen, currentScreen])
+
+    const [user] = useAuthState(getAuth())
+
+    if(!user){
+      navigation.navigate("Login", {})
+    }
 
   return (
     <ThemeConsumer>

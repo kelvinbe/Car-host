@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth, UserCredential } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, UserCredential, signOut } from 'firebase/auth'
 import React from 'react'
 import useToast from './useToast'
 
@@ -24,8 +24,23 @@ function useUserAuth() {
         })
     })
 
+    /**
+     * @name signOut
+     * @description Sign out a user
+     * @return Promise with void
+     */
+
+    const logOut = (): Promise<void> => new Promise((res, rej)=>{
+      signOut(getAuth()).then(()=>{
+        res()
+      }).catch((e)=>{
+        rej(e)
+      })
+    })
+
   return {
-    signUp
+    signUp,
+    logOut
   }
 }
 

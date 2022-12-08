@@ -9,5 +9,8 @@
       "@testing-library/react-native",
       "@testing-library/jest-native"
     ]
-  }
+  },
+  "typeRoots": [
+    "./types"
+  ]
 }
