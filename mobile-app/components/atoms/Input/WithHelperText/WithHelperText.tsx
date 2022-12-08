@@ -107,6 +107,7 @@ const WithHelperText = (props: Props) => {
                 labelStyle={[props.labelStyle, styles.labelStyle]}
                 keyboardType={props.keyboardType}
                 maxLength={props.maxLength}
+                disabled={props?.disabled}
                 />
                 { typeof props?.helperText !== "string" ? props?.helperText : <Text onPress={props?.helperOnPress} style={{
                     ...styles.helperTextStyle,
