@@ -1,7 +1,7 @@
-import { StyleSheet, StyleProp, ViewStyle } from 'react-native'
+import { StyleSheet, StyleProp, ViewStyle, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { ButtonProps, makeStyles } from '@rneui/themed'
-import { Button } from '@rneui/base';
+import { Text } from '@rneui/base';
 
 interface IProps {
     fullWidth?: boolean;
@@ -15,12 +15,13 @@ const useStyles = makeStyles((theme, props: Props)=> {
     return ({
         buttonStyle: {
             borderRadius: 25,
-            paddingTop: 13,
+            paddingVertical: 13,
             paddingHorizontal:  20,
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
-            borderColor: theme.colors.primary
+            borderColor: theme.colors.primary,
+            borderWidth: 1
         },
         titleStyle: {
             color: theme.colors.primary,
@@ -40,15 +41,14 @@ const useStyles = makeStyles((theme, props: Props)=> {
 const RoundedOutline = (props: Props) => {
     const styles = useStyles(props)
   return (
-    <Button
-        containerStyle={[styles.containerStyle , props.customStyle]}
+    <TouchableOpacity
+        style={[styles.buttonStyle, styles.containerStyle , props.customStyle]}
         onPress={props.onPress}
-        buttonStyle={styles.buttonStyle}
-        titleStyle={styles.titleStyle}
-        type='outline'
     >
-        {props.children}
-    </Button>
+        <Text style={styles.titleStyle} >
+            {props.children}
+        </Text>
+    </TouchableOpacity>
   )
 }
 

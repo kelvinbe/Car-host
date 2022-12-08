@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Input, InputProps } from '@rneui/base'
 
 interface IProps {
     fullWidth?: boolean;
-    width?: number;
+    width?: number | string;
 }
 
 type Props = IProps & InputProps;
@@ -30,7 +30,10 @@ const useStyles = makeStyles((theme, props: Props)=> {
             borderWidth: 0,
             paddingVertical: 10,
             paddingHorizontal: 20,
-            margin: 0
+            paddingLeft: 10,
+            margin: 0,
+            marginTop: 10,
+            paddingTop: 5
         },
         inputContainerStyle: {
             borderBottomWidth: 0,
@@ -55,7 +58,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
             marginTop: -26,
             color: theme.colors.black,
             width: "100%",
-            fontWeight: "600", fontFamily: "Lato_400Regular",
+            fontWeight: "700", fontFamily: "Lato_700Bold",
             fontSize: 16,
         }
     })
@@ -89,6 +92,7 @@ const BaseInput = (props: Props) => {
             label={props.label}
             labelStyle={[props.labelStyle, styles.labelStyle]}
             keyboardType={props.keyboardType}
+            maxLength={props.maxLength}
             />
         )}
     </ThemeConsumer>

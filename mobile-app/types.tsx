@@ -43,6 +43,7 @@ export type ProfileScreenParamList = {
 export type PaymentDetailsScreenParamList = {
   PaymentDetailsScreenHome: undefined;
   MPesaDetailsScreen: undefined;
+  AddCardScreen: undefined;
 }
 
 export type BottomSheetParamList = {

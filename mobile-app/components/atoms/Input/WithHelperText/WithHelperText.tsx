@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import React, { ReactNode } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Input, InputProps, Text } from '@rneui/base'
@@ -43,9 +43,12 @@ const useStyles = makeStyles((theme, props: Props)=> {
         },
         inputStyle: {
             borderWidth: 0,
-            // paddingVertical: 15,
+            paddingVertical: 10,
             paddingHorizontal: 20,
-            marginTop: 5
+            paddingLeft: 10,
+            margin: 0,
+            marginTop: 10,
+            paddingTop: 5
         },
         inputContainerStyle: {
             borderBottomWidth: 0,
@@ -68,7 +71,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
             marginTop: -26,
             color: theme.colors.black,
             width: "100%",
-            fontWeight: "600", fontFamily: "Lato_400Regular",
+            fontWeight: "700", fontFamily: "Lato_700Bold",
             fontSize: 16,
         }
     })
@@ -103,6 +106,7 @@ const WithHelperText = (props: Props) => {
                 label={props.label}
                 labelStyle={[props.labelStyle, styles.labelStyle]}
                 keyboardType={props.keyboardType}
+                maxLength={props.maxLength}
                 />
                 { typeof props?.helperText !== "string" ? props?.helperText : <Text onPress={props?.helperOnPress} style={{
                     ...styles.helperTextStyle,

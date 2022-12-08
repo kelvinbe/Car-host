@@ -1,13 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PaymentDetailsScreenParamList } from '../../../../types';
 import PaymentDetailsScreenHome from './PaymentDetailsScreenHome';
-import TopBar from '../TopBar/TopBar';
 import MpesaDetails from './MpesaDetails';
 import BaseTopBar from '../../../../navigation/TopBar/BaseTopBar';
+import AddCard from './AddCard';
 
 const PaymentDetailsScreenStackNavigator = createNativeStackNavigator<PaymentDetailsScreenParamList>();
 
@@ -33,6 +31,10 @@ const PaymentDetailsScreen = () => {
                        headerShown: true,
                        header: (props) => <BaseTopBar {...props} title="Mpesa" home={false} chevronLeft />
                     }} name="MPesaDetailsScreen" component={MpesaDetails} />
+                    <PaymentDetailsScreenStackNavigator.Screen options={{
+                       headerShown: true,
+                       header: (props) => <BaseTopBar {...props} title="Add Card" home={false} chevronLeft />
+                    }} name="AddCardScreen" component={AddCard} />
                 </PaymentDetailsScreenStackNavigator.Navigator>
         )}
     </ThemeConsumer>

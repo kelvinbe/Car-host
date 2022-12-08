@@ -1,17 +1,14 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme, NavigationContainerRef, useNavigationContainerRef, useNavigation } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, useNavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Platform } from 'react-native';
-import NotFoundScreen from '../screens/Stacks/NotFoundScreen';
 import StorybookScreen from '../screens/Tabs/StorybookScreen';
 import { BottomTabParamList, RootStackParamList } from '../types';
-import { Ionicons } from '@expo/vector-icons';
 import LoginScreen from '../screens/Stacks/LoginScreen';
 import RegisterScreen from '../screens/Stacks/RegisterScreen';
 import ForgotPasswordScreen from '../screens/Stacks/ForgotPasswordScreen';
 import HistoryScreen from '../screens/Tabs/HistoryScreen';
-import HistoryIcon from "../assets/icons/history.svg";
 import { ThemeConsumer } from '@rneui/themed';
 import UpcomingScreen from '../screens/Tabs/UpcomingScreen';
 import ReservedIcon from "../assets/icons/reserved.svg";
@@ -27,7 +24,6 @@ import _SearchScreen from '../screens/Tabs/SearchScreen/SearchScreen';
 import SearchScreen from '../screens/Tabs/SearchScreen';
 import { hideBottomNav, selectDisplayBottomNav, selectNavState, selectPreviousScreen, setNavScreens, showBottomNav } from '../store/slices/navigationSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store/slices';
 import { setBackgroundColorAsync, setVisibilityAsync } from "expo-navigation-bar"
 import ClockIcon from "../assets/icons/clock.svg";
 import BaseTopBar from './TopBar/BaseTopBar';
@@ -44,7 +40,8 @@ const ScreensWithNoBottomNav = [
     "MPesaDetailsScreen",
     "ProfileSettingsScreen",
     "MapScreen",
-    "BookingDetails"
+    "BookingDetails",
+    "AddCardScreen"
 ]
 
 const ScreensWithNoTopBar = [

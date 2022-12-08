@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import { makeStyles } from '@rneui/themed'
 import CreditCard, { CardProps } from '../CreditCard/CreditCard'
-import RoundedOutline from '../../atoms/Buttons/Rounded/RoundedOutline';
-import { Button } from '@rneui/base';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface IProps {
     onActionPress?: () => void,
@@ -11,7 +10,6 @@ interface IProps {
 }
 
 type Props = IProps & CardProps;
-
 const useStyles = makeStyles((theme, props)=>({
     container: {
         alignItems: "flex-end",
@@ -24,22 +22,23 @@ const useStyles = makeStyles((theme, props)=>({
     },
     buttonStyle: {
         borderRadius: 25,
-        paddingTop: 13,
-        paddingHorizontal:  20,
+        paddingVertical: 6,
+        paddinHorizontal: 20,
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
         borderColor: theme.colors.primary,
-        width: "60%",
+        borderWidth: 1,
+        // width: "60%",
         marginTop: 10,
 
     },
     titleStyle: {
         color: theme.colors.primary,
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: '700',
         fontFamily: "Lato_700Bold",
-        lineHeight: 24,
+        lineHeight: 28,
         textAlign: "center",
         width: '100%',
     }
@@ -56,11 +55,17 @@ const CreditCardWithActions = (props: Props) => {
                 last4Digits={props.last4Digits}
             />
         </View>
-        <Button type="outline" buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} onPress={props.onActionPress} >
-            {
-                props.actionTitle
-            }
-        </Button>
+        <View style={{width: "50%"}} >
+            <TouchableOpacity  style={styles.buttonStyle}  onPress={props.onActionPress} >
+                <Text style={styles.titleStyle} >
+                    {
+                        props.actionTitle
+                    }
+                </Text>
+                
+            </TouchableOpacity>
+        </View>
+        
     </View>
   )
 }

@@ -55,6 +55,10 @@ function PaymentDetailsScreenHome(props: Props) {
     const goToMPesa = ( ) => {
         props.navigation.navigate("MPesaDetailsScreen")
     }
+
+    const addCard = () => {
+        props.navigation.navigate("AddCardScreen")
+    }
   return (
     <View style={styles.container} >
         <View style={styles.contentContainer} >
@@ -71,7 +75,7 @@ function PaymentDetailsScreenHome(props: Props) {
             <ActionButton onPress={goToMPesa} title={"M-PESA"} />
         </View>
         <View style={styles.bottomContainer} >
-            <Rounded>
+            <Rounded onPress={addCard} >
                 Add Card
             </Rounded>
         </View>
