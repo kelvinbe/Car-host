@@ -7,4 +7,5 @@ declare module "@env" {
     export const STORAGE_BUCKET: string;
     export const MESSAGING_SENDER_ID: string;
     export const APP_ID: string;
+    export const LOGROCKET_ID: string;
 }
