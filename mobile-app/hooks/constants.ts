@@ -33,3 +33,7 @@ export const SET_PAYMENT_ENDPOINT = DOMAIN + "/api/payment";
 export const SET_SETTINGS_ENDPOINT = DOMAIN + "/api/settings";
 
 export const VERIFY_AUTH_CODE_ENDPOINT = DOMAIN + "/api/authcode";
+
+export const SEND_MAIL_ENDPOINT = DOMAIN + "/api/mail/send/message";
+
+export const SEND_TEMPLETE_MAIL_ENDPOINT = DOMAIN + "/api/mail/send/template"; 

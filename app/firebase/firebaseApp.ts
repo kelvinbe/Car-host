@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD0MxidIh_kBkGMR6i0KehL88N11Xq17Qo",
-  authDomain: "divvly-61ce8.firebaseapp.com",
-  projectId: "divvly-61ce8",
-  storageBucket: "divvly-61ce8.appspot.com",
-  messagingSenderId: "564464808856",
-  appId: "1:564464808856:web:a5603b554e340309bab1ed"
+  apiKey: "AIzaSyA0SIb-nS_5aFe12GI8RKzTJw5Qk65hK1A",
+  authDomain: "divvly.firebaseapp.com",
+  projectId: "divvly",
+  storageBucket: "divvly.appspot.com",
+  messagingSenderId: "760482109861",
+  appId: "1:760482109861:web:304974c2f26876b4d8b04c"
 };
 
 // Initialize Firebase

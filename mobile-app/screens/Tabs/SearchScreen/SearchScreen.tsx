@@ -13,6 +13,7 @@ import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOut
 import { useSelector } from 'react-redux';
 import { selectNavState } from '../../../store/slices/navigationSlice';
 import { useFocusEffect } from '@react-navigation/native';
+import useMailer from '../../../hooks/useMailer';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -111,6 +112,8 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
   const [currentScreen, previousScreen, history] = useSelector(selectNavState)
+  const {sendMessage, sendMessageLoading, sendMessageError, sendMessageSuccess} = useMailer()
+
   const hostCodeSearch = (value: any) =>{
     props.navigation.navigate("MapScreen", {
       searchType: "host",
