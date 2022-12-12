@@ -22,18 +22,18 @@ import BookIcon from "../assets/icons/book.svg"
 import { makeStyles, Text, Theme } from '@rneui/base';
 import _SearchScreen from '../screens/Tabs/SearchScreen/SearchScreen';
 import SearchScreen from '../screens/Tabs/SearchScreen';
-import { hideBottomNav, selectDisplayBottomNav, selectNavState, selectPreviousScreen, setNavScreens, showBottomNav } from '../store/slices/navigationSlice';
+import { hideBottomNav, selectDisplayBottomNav, selectNavState, setNavScreens, showBottomNav } from '../store/slices/navigationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBackgroundColorAsync, setVisibilityAsync } from "expo-navigation-bar"
 import ClockIcon from "../assets/icons/clock.svg";
 import BaseTopBar from './TopBar/BaseTopBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import ConfirmationSentScreen from '../screens/Stacks/ConfirmationSentScreen';
 import VerificationScreen from '../screens/Stacks/VerificationScreen';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import ChangePasswordScreen from '../screens/Stacks/ChangePasswordScreen';
 import CustomSafeAreaView from '../components/common/CustomSafeAreaView/CustomSafeAreaView';
+import SupportScreen from '../screens/shared/SupportScreen';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -43,7 +43,11 @@ const ScreensWithNoBottomNav = [
     "ProfileSettingsScreen",
     "MapScreen",
     "BookingDetails",
-    "AddCardScreen"
+    "AddCardScreen",
+    "AboutScreen",
+    "SupportScreen",
+    "PrivacyPolicy",
+    "UserAgreement",
 ]
 
 const ScreensWithNoTopBar = [
@@ -114,6 +118,11 @@ function RootNavigator() {
         <Stack.Screen name="ConfirmationSent" component={ConfirmationSentScreen} options={{headerShown: false}}   />
         <Stack.Screen name="Verification" component={VerificationScreen} options={{headerShown: false}}   />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{headerShown: false}}   />
+        <Stack.Screen name="SupportScreen" component={SupportScreen} 
+        options={{
+                headerShown: true,
+                header: (props) => <BaseTopBar {...props} title="Support" home={false} chevronLeft />
+        }}   />
       </Stack.Navigator>
     </CustomSafeAreaView>
   );
@@ -125,7 +134,7 @@ function BottomTabNavigator() {
   const displayBottomNav = useSelector(selectDisplayBottomNav)
   const [currentScreen, previousScreen] = useSelector(selectNavState)
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const {navigate} = useNavigation();
   let theme: Theme;
   makeStyles((_theme: Theme)=>{
     theme = _theme
@@ -155,9 +164,13 @@ function BottomTabNavigator() {
 
     const [user] = useAuthState(getAuth())
 
-    if(!user){
-      navigation.navigate("Login", {})
-    }
+    React.useEffect(()=>{
+      if(!user){
+        navigate("Login", {})
+      }
+    }, [user])
+
+    
 
   return (
     <ThemeConsumer>

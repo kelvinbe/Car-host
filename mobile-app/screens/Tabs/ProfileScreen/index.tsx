@@ -11,6 +11,10 @@ import TopBar from './TopBar/TopBar'
 import PaymentDetailsScreen from './PaymentDetailsScreen'
 import ProfileSettingsScreen from './ProfileSettingsScreen'
 import BaseTopBar from '../../../navigation/TopBar/BaseTopBar'
+import AboutScreen from './AboutScreen'
+import PrivacyPolicy from './PrivacyPolicy'
+import UserAgreement from './UserAgreement'
+import SupportScreen from '../../shared/SupportScreen'
 
 const ProfileScreenStackNavigator = createNativeStackNavigator<ProfileScreenParamList>();
 
@@ -64,6 +68,38 @@ const ProfileScreen = (props: Props) => {
                     }}
                     name="ProfileSettingsScreen"
                     component={ProfileSettingsScreen}
+                />
+                <ProfileScreenStackNavigator.Screen
+                    options={{
+                        headerShown: true,
+                        header: (props) => <BaseTopBar {...props} title="About" home={false} chevronLeft />
+                    }}
+                    name="AboutScreen"
+                    component={AboutScreen}
+                />
+                <ProfileScreenStackNavigator.Screen
+                    options={{
+                        headerShown: true,
+                        header: (props) => <BaseTopBar {...props} title="Privacy Policy" home={false} chevronLeft />
+                    }}
+                    name="PrivacyPolicy"
+                    component={PrivacyPolicy}
+                />
+                <ProfileScreenStackNavigator.Screen
+                    options={{
+                        headerShown: true,
+                        header: (props) => <BaseTopBar {...props} title="User Agreement" home={false} chevronLeft />
+                    }}
+                    name="UserAgreement"
+                    component={UserAgreement}
+                />
+                <ProfileScreenStackNavigator.Screen 
+                  options={{
+                    headerShown: true,
+                    header: (props) => <BaseTopBar {...props} title="Support" home={false} chevronLeft />
+                  }}
+                  name="SupportScreen"
+                  component={SupportScreen}
                 />
             </ProfileScreenStackNavigator.Navigator>
         </View>

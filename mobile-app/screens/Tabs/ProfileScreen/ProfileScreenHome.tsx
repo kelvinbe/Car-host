@@ -192,6 +192,24 @@ const ProfileScreenHome = (props: Props) => {
     props.navigation.navigate("ProfileSettingsScreen")
   }
 
+  const goToAbout = () => {
+    props.navigation.navigate("AboutScreen")
+  }
+
+  const goToPrivacyPolicy = () =>{
+    props.navigation.navigate("PrivacyPolicy")
+  }
+
+  const goToUserAgreement = () =>{
+    props.navigation.navigate("UserAgreement")
+  }
+
+  const goToSupport = () =>{
+    props.navigation.navigate("SupportScreen", {
+      context: "profile"
+    })
+  }
+
   const logout = () =>{
       logOut().then(()=>{
 
@@ -262,6 +280,7 @@ const ProfileScreenHome = (props: Props) => {
               <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
+                onPress={goToUserAgreement}
               >
                   <ListItem.Content style={styles.listItemContent} >
                     <ListItem.Title style={styles.listItemTitleStyle} >User Agreement</ListItem.Title>
@@ -270,6 +289,7 @@ const ProfileScreenHome = (props: Props) => {
               <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
+                onPress={goToPrivacyPolicy}
               >
                   <ListItem.Content style={styles.listItemContent} >
                     <ListItem.Title style={styles.listItemTitleStyle} >Privacy Policy</ListItem.Title>
@@ -278,6 +298,7 @@ const ProfileScreenHome = (props: Props) => {
               <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
+                onPress={goToSupport}
               >
                   <ListItem.Content style={styles.listItemContent} >
                     <ListItem.Title style={styles.listItemTitleStyle} >Support</ListItem.Title>
@@ -286,6 +307,7 @@ const ProfileScreenHome = (props: Props) => {
               <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
+                onPress={goToAbout}
               >
                   <ListItem.Content style={styles.listItemContent} >
                     <ListItem.Title style={styles.listItemTitleStyle} >About</ListItem.Title>

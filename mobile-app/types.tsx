@@ -7,6 +7,9 @@ export type RootStackParamList = {
   ConfirmationSent: undefined;
   Verification: undefined;
   ChangePassword: undefined;
+  SupportScreen: {
+    context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
+  }
 };
 
 export type BottomTabParamList = {
@@ -39,6 +42,12 @@ export type ProfileScreenParamList = {
   ProfileScreenEdit: undefined;
   PaymentDetailsScreen: undefined;
   ProfileSettingsScreen: undefined;
+  AboutScreen: undefined;
+  PrivacyPolicy: undefined;
+  UserAgreement: undefined;
+  SupportScreen: {
+    context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
+  }
 }
 
 export type PaymentDetailsScreenParamList = {

@@ -110,6 +110,12 @@ const ForgotPasswordScreen = (props: Props) => {
         props.navigation.navigate("Login")
     }
 
+    const navigateToSupport = () => {
+        props.navigation.navigate("SupportScreen", {
+            context: "forgotPassword"
+        })
+    }
+
   return (
         <View style={styles.container} >
             <View style={styles.logoContainer}>
@@ -140,7 +146,7 @@ const ForgotPasswordScreen = (props: Props) => {
                              * @todo: Add onPress to this button, to navigate to Support Screen
                              */
                         }
-                        <Text  style={styles.rightText} >
+                        <Text  onPress={navigateToSupport} style={styles.rightText} >
                             Support
                         </Text>
                     </View>

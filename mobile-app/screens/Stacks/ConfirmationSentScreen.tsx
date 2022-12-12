@@ -74,6 +74,12 @@ const ConfirmationSentScreen = (props: Props) => {
     const backToLogin = () => {
         props.navigation.navigate("Login")
     }
+
+    const navigateToSupport = () => {
+        props.navigation.navigate("SupportScreen", {
+            context: "confirmationSent"
+        })
+    }
   return (
     <View style={styles.container} >
          <View style={styles.logoContainer}>
@@ -92,7 +98,7 @@ const ConfirmationSentScreen = (props: Props) => {
 
             <View style={styles.infoActionContainer} >
                 <Text style={styles.infoText} >Didn't receive any email?</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={navigateToSupport} >
                     <Text style={styles.action} >Support</Text>
                 </TouchableOpacity>
             </View>
