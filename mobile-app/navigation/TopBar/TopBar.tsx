@@ -52,7 +52,6 @@ const TopBar = (props: Props) => {
     <ThemeConsumer>
         {({theme})=>(
             <View style={styles.container} >
-            <StatusBar backgroundColor={theme.colors.white} />
             <Button onPress={goBack} style={styles.iconButtonContainerStyle} containerStyle={styles.iconButtonContainerStyle} type="outline" buttonStyle={styles.iconButtonStyle} >
                 <ChevronLeft height={12} width={12}  />
             </Button>

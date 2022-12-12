@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { selectNavState } from '../../../store/slices/navigationSlice';
 import { useFocusEffect } from '@react-navigation/native';
 import useMailer from '../../../hooks/useMailer';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -32,7 +33,8 @@ const useStyles = makeStyles((theme, props) => ({
         paddingHorizontal: 40,
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
-        marginBottom: 30
+        marginBottom: 30,
+        overflow: "hidden"
     },
     logoImage: {
       width: 100,
@@ -102,6 +104,13 @@ const useStyles = makeStyles((theme, props) => ({
     screenContainerStyles: {
       width: "100%",
       height: "100%",
+    },
+    gradient: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      borderBottomLeftRadius: 40,
+      borderBottomRightRadius: 40,
     }
 }))
 
@@ -127,13 +136,6 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
   }
 
 
-  useFocusEffect(useCallback(()=>{
-    setTimeout(()=>{
-      StatusBar.setBackgroundColor("rgba(0, 0, 0, 0.1)")
-      StatusBar.setBarStyle("light-content")
-    }, 1000)
-  }, [history?.length]))
-
   //Sign out example
   const signOut = async () => {
     auth.signOut();
@@ -153,7 +155,33 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
         {({ theme }) => (
           <>
             <View style={styles.container} >
-              <ImageBackground source={require('../../../assets/images/background-home.png')} style={[{ width: maxWidth, height: 356 }, styles.topContentContainerStyle]} resizeMode="cover" >
+              <ImageBackground source={require('../../../assets/images/background-home.png')} style={[styles.topContentContainerStyle, { width: maxWidth, height: 356 }]} resizeMode="cover" >
+                    <LinearGradient
+                      style={[styles.gradient, {
+                        width: maxWidth,
+                        height: 356
+                      }]}
+                      start={{
+                        x: 0.5,
+                        y: 0
+                      }}
+                      end={{
+                        x: 0.5,
+                        y: 1
+                      }}
+
+                      colors={[
+                        "rgba(0, 0, 0, 0)",
+                        "rgba(0, 0, 0, 0.5)",
+                        "rgba(0, 0, 0, 1)"
+                      ]}
+
+                      locations={[
+                        0,
+                        0.6927,
+                        1
+                      ]}
+                    />
                     <Image source={require('../../../assets/images/logo.png')} style={styles.logoImage} />
                     <Text style={styles.heading}>Airbnb Host Car Sharing</Text>
                     <Text style={styles.subHeading}>Rent a car hourly with fuel included</Text>
@@ -171,7 +199,7 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
                 <Text style={styles.orText}  >
                   Or
                 </Text>
-                <RoundedOutline onPress={searchLocally} >
+                <RoundedOutline fullWidth onPress={searchLocally} >
                   Search Locally
                 </RoundedOutline>
                 

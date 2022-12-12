@@ -112,7 +112,6 @@ const ForgotPasswordScreen = (props: Props) => {
 
   return (
         <View style={styles.container} >
-            <StatusBar backgroundColor={theme.colors.white} style="dark" />
             <View style={styles.logoContainer}>
                  <Image 
                     source={require('../../assets/images/logo.png')}

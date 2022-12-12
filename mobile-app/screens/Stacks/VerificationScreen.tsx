@@ -84,7 +84,6 @@ const VerificationScreen = (props: Props) => {
 
   return (
     <View style={styles.container} >
-        <StatusBar backgroundColor={theme.colors.white}  style={"dark"} />
         <View style={styles.contentContainer} >
             <Text style={styles.titleStyle}>Verification</Text>
             <Text style={styles.subtitleStyle}>Check your email for the verification code.</Text>

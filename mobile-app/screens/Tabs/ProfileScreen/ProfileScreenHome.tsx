@@ -200,14 +200,6 @@ const ProfileScreenHome = (props: Props) => {
       })
   }
 
-  useFocusEffect(useCallback(()=>{
-    setTimeout(()=>{
-      StatusBar.setBackgroundColor(theme.colors.primary)
-      StatusBar.setBarStyle("light-content")
-    }, 1000)
-      
-  }, []))
-
 
   return (
     <ThemeConsumer>

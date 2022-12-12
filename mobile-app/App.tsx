@@ -24,7 +24,7 @@ import {
 } from '@expo-google-fonts/lato';
 import Loading from './components/molecules/Feedback/Loading/Loading';
 import { initializeApp } from 'firebase/app';
-import LogRocket from '@logrocket/react-native';
+// import LogRocket from '@logrocket/react-native';
 import { LOGROCKET_ID, STRIPE_PUBLISHABLE_KEY } from '@env';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
@@ -37,18 +37,18 @@ import { StripeProvider } from '@stripe/stripe-react-native';
   const colorScheme = useColorScheme();
   const [user] = useAuthState(getAuth())
 
-  useEffect(()=>{
-    if(!isEmpty(user)){
-      LogRocket.identify(user.uid, {
-        name: user.displayName || "user",
-        email: user.email || "user",
-      })
-    }
-  }, [user])
+  // useEffect(()=>{
+  //   if(!isEmpty(user)){
+  //     LogRocket.identify(user.uid, {
+  //       name: user.displayName || "user",
+  //       email: user.email || "user",
+  //     })
+  //   }
+  // }, [user])
 
-  useEffect(()=>{
-    LogRocket.init(LOGROCKET_ID)
-  }, [])
+  // useEffect(()=>{
+  //   LogRocket.init(LOGROCKET_ID)
+  // }, [])
 
   let [fontsLoaded] = useFonts({
     Lato_300Light,

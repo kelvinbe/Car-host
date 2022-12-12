@@ -7,6 +7,7 @@ const UpcomingScreen = () => {
     <View style={{
       width: "100%",
       height: "100%",
+      backgroundColor: "white"
     }} >
       {/* This is for testing the scroll list, so far it doesnt work, but more changes are being made */}
       <AnimatedScrollList/>

@@ -33,6 +33,7 @@ import VerificationScreen from '../screens/Stacks/VerificationScreen';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import ChangePasswordScreen from '../screens/Stacks/ChangePasswordScreen';
+import CustomSafeAreaView from '../components/common/CustomSafeAreaView/CustomSafeAreaView';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -104,19 +105,7 @@ function RootNavigator() {
     
   }, [])
   return (
-    <SafeAreaView edges={showTopNav ? [
-      "top",
-      "bottom",
-      "left",
-      "right"
-    ] : [
-      "bottom",
-      "left",
-      "right"
-    ]} style={{
-      width: "100%",
-      height: "100%",
-    }}  >
+    <CustomSafeAreaView>
       <Stack.Navigator initialRouteName='Login' >
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}  />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}  />
@@ -126,7 +115,7 @@ function RootNavigator() {
         <Stack.Screen name="Verification" component={VerificationScreen} options={{headerShown: false}}   />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{headerShown: false}}   />
       </Stack.Navigator>
-    </SafeAreaView>
+    </CustomSafeAreaView>
   );
 }
 

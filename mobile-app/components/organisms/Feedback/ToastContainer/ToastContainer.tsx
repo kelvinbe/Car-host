@@ -6,6 +6,7 @@ import { RootState } from '../../../../store/slices'
 import { selectMessages } from '../../../../store/slices/notificationsSlice'
 import Toast from '../../../molecules/Feedback/Toast/Toast'
 import { IToast } from '../../../../types'
+import Constants from 'expo-constants'
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme, props) => ({
         left: 0,
         alignItems: "center",
         justifyContent: "flex-start",
-        marginTop: StatusBar.currentHeight,
+        marginTop: Constants.statusBarHeight,
         padding: 10
     }
 }))
@@ -25,7 +26,6 @@ const useStyles = makeStyles((theme, props) => ({
 const ToastContainer = () => {
     const styles = useStyles()
     const messages = useSelector<RootState>(selectMessages) as IToast[]
-
 
   return (
     <View style={styles.container} >

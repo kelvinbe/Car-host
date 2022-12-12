@@ -90,8 +90,7 @@ const ProfileScreenEdit = (props: Props) => {
   return (
     <ThemeConsumer>
         {({theme}) => (
-            <SafeAreaView style={styles.container} >
-                <StatusBar style="dark" backgroundColor={theme.colors.white}  />
+            <View style={styles.container} >
                 <View style={styles.contentContainer} >
                     <View style={styles.topImageContainer} >
                         <View style={styles.avatarSection} >
@@ -115,7 +114,7 @@ const ProfileScreenEdit = (props: Props) => {
                     </Rounded>
                 </View>
                 
-            </SafeAreaView>
+            </View>
         )}
     </ThemeConsumer>
     
