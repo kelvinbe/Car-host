@@ -1,0 +1,4 @@
+//protected routes regex that matches the base url and the sub url
+export const protectedRegex = /^(dashboard|reports|userManagement|allMapView|analytics|authCodeManagement|availability|integrations|locations|payouts|reservations|vehicleManagement)\/(.*)$/g
+export const adminRoutesRegex = /^(userManagement|allMapView)\/(.*)$/g // 👈 will update this when I have all the admin routes
+export const dashboardRoutesRegex = /^(dashboard|reports|userManagement|allMapView|analytics|authCodeManagement|availability|integrations|locations|payouts|reservations|vehicleManagement)\/(.*)$/g // 👈 will update this when I have all the dashboard routes

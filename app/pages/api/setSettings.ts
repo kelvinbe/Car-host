@@ -1,3 +1,5 @@
+import { genResponseDto } from './../../utils/utils';
+import { withAuth } from './../../middleware/withAuth';
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as admin from 'firebase-admin';
@@ -6,13 +8,6 @@ import excuteQuery from '../../lib/db';
 import moment from 'moment';
 import { SET_SETTINGS } from '../../mutations'
 
-var serviceAccount = require("../../firebase/serviceAccountkey.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-const auth = admin.auth();
 
 type Data = {
   uid?: any,
@@ -33,24 +28,28 @@ type Request = {
  *         description: Update Settings
  */
 
-export default async function handler(
+async function handler(
   req: NextApiRequest | any,
   res: NextApiResponse<Data>
 ) {
-  if (!req.headers.token) {
-    return res.status(401).json({ error: 'Please include id token' });
-  }
+ 
 
   try {
-    const { uid } = await auth.verifyIdToken(req.headers.token.split(' ')[1]);
     const result = await excuteQuery({
         query: SET_SETTINGS,
         values: [ 'Active' ],
     });
     //return result[0];
-    return result;
     return res.status(200).json({ });
   } catch (error: any) {
-    return res.status(401).json({ error: error.message });
+    return res.status(500).json(genResponseDto("error", error, "Error updating settings") as any);
+  }
+}
+
+export default withAuth(handler)
+
+export const config = {
+  api: {
+      externalResolver: true
   }
 }

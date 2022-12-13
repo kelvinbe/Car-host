@@ -1,11 +1,11 @@
-import { initFirebase } from '../firebase/firebaseApp'
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
+import { NextPageContext } from 'next';
+import { app } from '../../firebase/firebaseApp';
+const auth = getAuth(app);
 
 export default function Dashboard() {
-  initFirebase();
-  const auth = getAuth();
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
 
@@ -42,3 +42,15 @@ export default function Dashboard() {
     router.push('/');
   }
 }
+
+
+export function getStaticProps(context: NextPageContext) {
+  return {
+    props: {
+      authonly: true,
+      adminonly: false,
+      dashboard: true
+    },
+  };
+}
+

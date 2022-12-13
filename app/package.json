@@ -15,6 +15,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
@@ -23,6 +24,7 @@
     "eslint-config-next": "13.0.4",
     "firebase": "^9.14.0",
     "firebase-admin": "^11.3.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "13.0.4",
     "next-swagger-doc": "^0.3.6",
@@ -30,6 +32,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
+    "redux": "^4.2.0",
     "serverless-mysql": "^1.5.4",
     "stripe": "^11.2.0",
     "swagger-ui-react": "^4.11.1",
@@ -49,7 +52,9 @@
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "@types/lodash": "^4.14.191",
     "@types/swagger-ui-react": "^4.11.0",
+    "@types/uuid": "^9.0.0",
     "autoprefixer": "^10.4.13",
     "babel-jest": "^29.3.1",
     "babel-loader": "^8.3.0",
