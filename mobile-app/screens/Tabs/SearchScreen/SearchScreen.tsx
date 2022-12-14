@@ -1,19 +1,12 @@
-import React, { useEffect, useCallback } from 'react';
+import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { BottomTabParamList, RootStackParamList, SearchScreenParamList } from '../../../types';
+import { SearchScreenParamList } from '../../../types';
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
-import { initFirebase } from '../../../firebase/firebaseApp'
-import { getAuth } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ImageBackground, useWindowDimensions, View, StatusBar } from 'react-native';
+import { auth } from '../../../firebase/firebaseApp'
+import { ImageBackground, useWindowDimensions, View } from 'react-native';
 import { Icon, Image } from '@rneui/base';
 import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
-import { useSelector } from 'react-redux';
-import { selectNavState } from '../../../store/slices/navigationSlice';
-import { useFocusEffect } from '@react-navigation/native';
-import useMailer from '../../../hooks/useMailer';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -115,13 +108,8 @@ const useStyles = makeStyles((theme, props) => ({
 }))
 
 const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "SearchScreenHome">) => {
-  initFirebase();
-  const auth = getAuth();
-  const [user, loading] = useAuthState(auth);
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
-  const [currentScreen, previousScreen, history] = useSelector(selectNavState)
-  const {sendMessage, sendMessageLoading, sendMessageError, sendMessageSuccess} = useMailer()
 
   const hostCodeSearch = (value: any) =>{
     props.navigation.navigate("MapScreen", {
@@ -140,16 +128,7 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
   const signOut = async () => {
     auth.signOut();
   }
-
-  if (loading) {
-    console.log('Loading...');
-  }
-
-  if (!user) {
-    console.log('User not logged');
-  }
   
-  if (user) {
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -210,7 +189,6 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
       </ThemeConsumer>
       
     );
-  }
 };
 
 export default _SearchScreen;

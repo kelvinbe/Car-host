@@ -38,7 +38,6 @@ const AnimatedScrollList = (props: Props) => {
 
     <Animated.FlatList
         style={styles.container}
-        fadingEdgeLength={40}
         removeClippedSubviews
         contentContainerStyle={{
             marginTop: -40

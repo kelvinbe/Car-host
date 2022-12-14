@@ -238,7 +238,7 @@ const reducer = (state: IReducerState, action: any) => {
 }
 
 
-const LoginScreen = (props: Props) => {
+const RegisterScreen = (props: Props) => {
     const { googleLogin, facebookLogin, socialAuthError, socialAuthLoading } = useSocialAuth()
 
     const [{
@@ -325,8 +325,7 @@ const LoginScreen = (props: Props) => {
         props.navigation.navigate("Login")
     }
 
-    if(loading || socialAuthLoading) return <Loading/>
-  return (
+  return ( (loading || socialAuthLoading) ? <Loading/> :
         <View style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
@@ -499,4 +498,4 @@ const LoginScreen = (props: Props) => {
   )
 }
 
-export default LoginScreen
+export default RegisterScreen

@@ -7,12 +7,12 @@ import { selectMessages } from '../../../../store/slices/notificationsSlice'
 import Toast from '../../../molecules/Feedback/Toast/Toast'
 import { IToast } from '../../../../types'
 import Constants from 'expo-constants'
+import { isEmpty } from 'lodash'
 
 
 const useStyles = makeStyles((theme, props) => ({
     container: {
         width: "100%",
-        height: "100%",
         position: "absolute",
         top: 0,
         left: 0,
@@ -27,7 +27,7 @@ const ToastContainer = () => {
     const styles = useStyles()
     const messages = useSelector<RootState>(selectMessages) as IToast[]
 
-  return (
+  return (isEmpty(messages) ? null :
     <View style={styles.container} >
         {
             messages?.map((message, index)=>{

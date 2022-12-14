@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { initFirebase } from '../firebase/firebaseApp'
+import { auth } from '../firebase/firebaseApp'
 import { ResponseType } from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import * as Facebook from 'expo-auth-session/providers/facebook';
 import * as Google from 'expo-auth-session/providers/google';
-import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithCredential, OAuthProvider } from 'firebase/auth';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithCredential, OAuthProvider } from 'firebase/auth';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { isEmpty } from 'lodash';
 import useToast from './useToast';
 import { GOOGLE_CLIENT_ID, FACEBOOK_APP_ID } from "@env"
 import * as Crypto from 'expo-crypto';
 
-initFirebase()
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -37,7 +36,7 @@ function useSocialAuth() {
             if(fb_response?.type === "success"){
                 setSocialAuthLoading(true)
                 const { access_token } = fb_response.params
-                const auth = getAuth()
+                
                 const credential = FacebookAuthProvider.credential(access_token)
                 signInWithCredential(auth, credential).then((credentials)=>{
                     setSocialAuthLoading(false)
@@ -58,11 +57,10 @@ function useSocialAuth() {
             if(g_response?.type === "success"){
                 setSocialAuthLoading(true)
                 const { access_token } = g_response.params
-                const auth = getAuth()
                 const credential = GoogleAuthProvider.credential(null, access_token)
                 signInWithCredential(auth, credential).then((credentials)=>{
                     setSocialAuthLoading(false)
-                    console.log(credentials)
+                    // console.log(credentials)
                 }).catch((e)=>{
                     setSocialAuthLoading(false)
                     setSocialAuthError(e)
@@ -75,7 +73,6 @@ function useSocialAuth() {
     const appleLogin = () => {
         setSocialAuthLoading(true)
         const nonce = Math.random().toString(36).substring(2, 10);
-        const auth = getAuth()
         Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, nonce)
             .then((hashedNonce) =>
                 AppleAuthentication.signInAsync({
@@ -96,7 +93,7 @@ function useSocialAuth() {
 
                 signInWithCredential(auth, credential).then((credentials)=>{
                     setSocialAuthLoading(false)
-                    console.log(credentials)
+                    // console.log(credentials)
                 }).catch((e)=>{
                     setSocialAuthLoading(false)
                     setSocialAuthError(e)
@@ -120,18 +117,16 @@ function useSocialAuth() {
 
   return {
     facebookLogin: (cb?: Function)=>{
-        console.log({"fb_request": fb_request})
+        console.log("_")
         fb_promptAsync().then((res)=>{
             cb && cb()
-            console.log(res)
         }).catch((e)=>{
             console.log(e)
         })
     } ,
     googleLogin: (cb?: Function)=>{
-        console.log({"g_request": g_request})
+        console.log("_")
         g_promptAsync().then((res)=>{
-            console.log(res)
             cb && cb()
         }).catch((e)=>{
             console.log(e)

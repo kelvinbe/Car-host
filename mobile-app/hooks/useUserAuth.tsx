@@ -1,8 +1,7 @@
-import { createUserWithEmailAndPassword, getAuth, UserCredential, signOut } from 'firebase/auth'
+import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth'
 import React from 'react'
+import {  auth } from '../firebase/firebaseApp'
 import useToast from './useToast'
-
-const auth = getAuth()
 
 function useUserAuth() {
 
@@ -31,9 +30,12 @@ function useUserAuth() {
      */
 
     const logOut = (): Promise<void> => new Promise((res, rej)=>{
-      signOut(getAuth()).then(()=>{
+      console.log("logging out")
+      auth.signOut().then(()=>{
+        console.log("logout success")
         res()
       }).catch((e)=>{
+        console.log("logot error", e)
         rej(e)
       })
     })

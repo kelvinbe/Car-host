@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from "@rneui/themed";
 import useCachedResources from './hooks/useCachedResources';
@@ -23,20 +22,24 @@ import {
 
 } from '@expo-google-fonts/lato';
 import Loading from './components/molecules/Feedback/Loading/Loading';
-import { initializeApp } from 'firebase/app';
 // import LogRocket from '@logrocket/react-native';
 import { LOGROCKET_ID, STRIPE_PUBLISHABLE_KEY } from '@env';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { getAuth } from 'firebase/auth';
-import { isEmpty } from 'lodash';
 import { StripeProvider } from '@stripe/stripe-react-native';
+import { auth } from './firebase/firebaseApp';
 
 
  function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-  const [user] = useAuthState(getAuth())
 
+  useEffect(()=>{
+    auth.signOut().then(()=>{
+      console.log("signed out")
+    }).catch((e)=>{
+      console.log("error signing out: ", e)
+    })
+  }, [])
+  
   // useEffect(()=>{
   //   if(!isEmpty(user)){
   //     LogRocket.identify(user.uid, {
@@ -63,13 +66,13 @@ import { StripeProvider } from '@stripe/stripe-react-native';
   if (!isLoadingComplete) {
     return (
       <ThemeProvider theme={theme} >
-        <Loading/>
+        <Loading fontLoaded={false} />
       </ThemeProvider>
     )
   } else if (!fontsLoaded) {
     return (
       <ThemeProvider theme={theme} >
-        <Loading/>
+        <Loading fontLoaded={false} />
       </ThemeProvider>
     )
   } else{

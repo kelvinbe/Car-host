@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { getAuth } from 'firebase/auth'
 import React, { useReducer } from 'react'
+import { auth } from '../firebase/firebaseApp'
 import { SEND_MAIL_ENDPOINT } from './constants'
 
 interface MailerHookReducerInterface {
@@ -82,7 +82,7 @@ function useMailer() {
 
     const sendMessage = (to: string, subject: string, message: string) => {
         dispatch(_sendMessageLoading())
-        getAuth().currentUser?.getIdToken().then((token) => {
+        auth.currentUser?.getIdToken().then((token) => {
             axios.post(SEND_MAIL_ENDPOINT, {
                 // for dev purposes, we are sending to a blackhole email
                 to: "test@blackhole.postmarkapp.com",
@@ -115,7 +115,7 @@ function useMailer() {
 
     const sendTemplateMessage = (to: string, template: string, data: object) => {
         dispatch(_sendTemplateMessageLoading())
-        getAuth().currentUser?.getIdToken().then((token) => {
+        auth.currentUser?.getIdToken().then((token) => {
             axios.post(SEND_MAIL_ENDPOINT, {
                  // for dev purposes, we are sending to a blackhole email
                 to: "test@blackhole.postmarkapp.com",   

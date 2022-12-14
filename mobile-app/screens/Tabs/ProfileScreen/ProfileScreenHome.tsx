@@ -1,16 +1,13 @@
 import { Text, View, TouchableOpacity, StatusBar } from 'react-native'
-import React, { useEffect, useCallback } from 'react'
+import React from 'react'
 import { makeStyles,  ThemeConsumer, useTheme } from '@rneui/themed'
 import { ProfileScreenParamList } from '../../../types'
 import { Button, Divider, Icon, Image, ListItem, Switch } from '@rneui/base'
 import LogoutIcon from "../../../assets/icons/logout.svg"
 import HomeIcon from "../../../assets/icons/home.svg"
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { selectNavState } from '../../../store/slices/navigationSlice'
-import { useFocusEffect } from '@react-navigation/native'
-import { getAuth, signOut } from 'firebase/auth'
 import useUserAuth from '../../../hooks/useUserAuth'
 
 type Props =  NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenHome"> 

@@ -3,12 +3,13 @@ import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 
 interface IProps {
-    size?: number | "small" | "large" | undefined
+    size?: number | "small" | "large" | undefined,
+    fontLoaded?: boolean
 }
 
 type Props = IProps;
 
-const useStyles = makeStyles((theme, props)=>{
+const useStyles = makeStyles((theme, props: Props)=>{
     return {
         container: {
         flex: 1,
@@ -20,9 +21,8 @@ const useStyles = makeStyles((theme, props)=>{
             color: theme.colors.black,
             fontSize: 14,
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            ...((props.fontLoaded === false && typeof props.fontLoaded !== "undefined") ? null : {fontFamily: "Lato_700Bold"}),
             marginTop: 10
-
         }
     }
 })

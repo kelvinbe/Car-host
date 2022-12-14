@@ -30,10 +30,10 @@ import BaseTopBar from './TopBar/BaseTopBar';
 import ConfirmationSentScreen from '../screens/Stacks/ConfirmationSentScreen';
 import VerificationScreen from '../screens/Stacks/VerificationScreen';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getAuth } from 'firebase/auth';
 import ChangePasswordScreen from '../screens/Stacks/ChangePasswordScreen';
 import CustomSafeAreaView from '../components/common/CustomSafeAreaView/CustomSafeAreaView';
 import SupportScreen from '../screens/shared/SupportScreen';
+import { auth } from '../firebase/firebaseApp';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -162,7 +162,7 @@ function BottomTabNavigator() {
     }
   }, [previousScreen, currentScreen])
 
-    const [user] = useAuthState(getAuth())
+    const [user] = useAuthState(auth)
 
     React.useEffect(()=>{
       if(!user){

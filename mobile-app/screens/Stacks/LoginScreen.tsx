@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
-import { initFirebase } from '../../firebase/firebaseApp'
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword, FacebookAuthProvider, signInWithCredential } from 'firebase/auth';
+import { auth } from '../../firebase/firebaseApp'
+import {  GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
@@ -23,7 +23,6 @@ import Loading from '../../components/molecules/Feedback/Loading/Loading';
 import { isEmpty } from 'lodash';
 import useSocialAuth from '../../hooks/useSocialAuth';
 import { ResponseType } from 'expo-auth-session';
-initFirebase();
 const provider = new GoogleAuthProvider();
 import * as Facebook from 'expo-auth-session/providers/facebook';
 
@@ -102,7 +101,6 @@ const useStyles = makeStyles((theme)=>{
 
 const LoginScreen = (props: Props) => {
     
-    const auth = getAuth();
     const [user, loading] = useAuthState(auth);
     const [_loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
@@ -157,7 +155,6 @@ const LoginScreen = (props: Props) => {
                     title: "Error",
                     duration: 2000
                 })
-
         }
         
     }
@@ -197,18 +194,14 @@ const LoginScreen = (props: Props) => {
     }
 
     useEffect(()=>{
-        console.log(user)
-        console.log(socialAuthLoading)
-        console.log(socialAuthError)
+        if(user){
+            navigateToHome()
+        }
     }, [user, socialAuthError, socialAuthLoading])
 
-    if (loading || _loading || socialAuthLoading) return <Loading/>
     
-    if(user){
-        navigateToHome()
-    }
-
-  return (
+   
+  return ( (loading || _loading || socialAuthLoading) ? <Loading/> :
         <View style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
