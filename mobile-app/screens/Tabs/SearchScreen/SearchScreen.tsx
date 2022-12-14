@@ -123,7 +123,6 @@ const _SearchScreen = (props: NativeStackScreenProps<SearchScreenParamList, "Sea
     })
   }
 
-
   //Sign out example
   const signOut = async () => {
     auth.signOut();

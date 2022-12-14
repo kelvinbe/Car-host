@@ -177,6 +177,7 @@ const LoginScreen = (props: Props) => {
         })
     };
 
+
     const toggleViewPassword = () => {
         setViewPassword(!viewPassword)
     }

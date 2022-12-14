@@ -1,6 +1,5 @@
 import { genResponseDto } from './../../utils/utils';
 import { withAuth } from './../../middleware/withAuth';
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';

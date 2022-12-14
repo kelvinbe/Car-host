@@ -9,7 +9,6 @@ import moment from 'moment';
 import { ADD_CARD } from '../../mutations'
 
 
-
 type Data = {
   uid?: any,
   name?: string | string[],
