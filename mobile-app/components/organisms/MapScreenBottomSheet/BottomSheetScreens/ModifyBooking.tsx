@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, {useRef} from 'react'
+import React, { useRef, useEffect } from 'react'
 import BottomSheet from "@gorhom/bottom-sheet"
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import CashIcon from "../../../../assets/icons/cash.svg"
@@ -10,6 +10,8 @@ import BaseInput from '../../../atoms/Input/BaseInput/BaseInput'
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded'
 import TimeFilter from '../../../molecules/TimeFilter/TimeFilter'
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline'
+import useBookingActions from '../../../../hooks/useBookingActions'
+import { useUpdateBookingMutation } from '../../../../store/slices/reservationSlice'
 
 interface IProps {
     closeBottomSheet?: () => void
@@ -64,10 +66,19 @@ const ModifyBookingBottomSheet = (props: Props) => {
     const snapPoints = ["45%"]
     const styles = useStyles(props)
 
+    const { setStartDateTime, setEndDateTime, bookingDetails } = useBookingActions()
+    const [ updateBooking, {isLoading, error, data} ] = useUpdateBookingMutation()
+
     const close = () =>{
         bottomSheetRef.current?.close()
         props.closeBottomSheet && props.closeBottomSheet()
     }
+
+    useEffect(()=>{
+        if(data){
+            close()
+        }
+    }, [data])
 
     const handleCancel = () =>{
         /**
@@ -80,7 +91,10 @@ const ModifyBookingBottomSheet = (props: Props) => {
         /**
          * @todo: handle save booking
          */
-        close()
+        updateBooking({
+            endDateTime: bookingDetails.endDateTime,
+            startDateTime: bookingDetails.startDateTime,
+        } as any)
     }
 
   return (
@@ -106,14 +120,14 @@ const ModifyBookingBottomSheet = (props: Props) => {
                             }} onPress={handleCancel} width="45%" >
                                 Cancel
                             </RoundedOutline>
-                            <Rounded onPress={handleSave} width="45%" >
+                            <Rounded loading={isLoading} onPress={handleSave} width="45%" >
                                 Save
                             </Rounded>
                         </View>
                         <TimeFilter customStyles={{
                             paddingVertical: 0,
                             elevation: 5
-                        }} />
+                        }} setEndDateTime={setEndDateTime} setStartDateTime={setStartDateTime} />
                         
                     </View>
                     

@@ -5,7 +5,7 @@ import { BottomTabParamList, ManageResParamList } from '../../../types'
 import { BottomTabBarProps, BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import BaseTopBar from '../../../navigation/TopBar/BaseTopBar'
 import { makeStyles } from '@rneui/themed'
-import BookingDetailsScreen from './BookingDetailsScreen'
+import BookingDetailsScreen from '../../shared/BookingDetailsScreen'
 import ManageResHomeScreen from './ManageResHomeScreen'
 
 type Props = BottomTabScreenProps<BottomTabParamList, "ManageRes">

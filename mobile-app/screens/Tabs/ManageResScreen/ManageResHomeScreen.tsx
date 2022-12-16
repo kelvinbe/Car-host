@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, FlatList } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { BottomTabParamList, ManageResParamList } from '../../../types'
 import { makeStyles } from '@rneui/themed'
@@ -7,7 +7,12 @@ import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useDispatch } from 'react-redux'
-import { setChosenReservation } from '../../../store/slices/reservationSlice'
+import { setChosenReservation, useGetReservationsQuery } from '../../../store/slices/reservationSlice'
+import Loading from '../../../components/molecules/Feedback/Loading/Loading'
+import Error from '../../../components/molecules/Feedback/Error/Error'
+import Empty from '../../../components/molecules/Feedback/Empty/Empty'
+import { useAppDispatch } from '../../../store/store'
+import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice'
 
 type Props = NativeStackScreenProps<ManageResParamList, "ManageResHome">
 
@@ -27,24 +32,47 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const ManageResHomeScreen = (props: Props) => {
+  const { data, isLoading, error } = useGetReservationsQuery("")
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const [fetchError, setFetchError] = useState<boolean>(false)
+
   const styles = useStyles(props)
-  const dispatch = useDispatch()
-  const onCardDetailsPress = (index?: number) => {
-    props.navigation.navigate("BookingDetails")
-    dispatch(setChosenReservation({
-      id: 1
-    }))
+  const reduxDispatch = useAppDispatch()
+
+  /**
+   * @name onCardDetailsPress
+   * @description This function is called when the user presses the details button on a reservation card, it loads the booking details from the reservation id into the redux store
+   * @param reservationId 
+   */
+  const onCardDetailsPress = (reservationId: string) => {
+    setLoading(true)
+    setFetchError(false)
+    reduxDispatch(loadBookingDetailsFromReservation(reservationId)).unwrap().then((result)=>{
+      setLoading(false)
+      props.navigation.navigate("BookingDetails")
+    }).catch((e)=>{
+      setLoading(false)
+      setFetchError(true)
+    })
   }
-  return (
-    <View style={styles.container} >
+
+  return ( 
+   ( isLoading || loading )? (
+      <Loading/>
+    ) : (error || fetchError ) ? (
+      <Error/>
+    ) :
+     <View style={styles.container} >
       <FlatList
+      ListEmptyComponent={<Empty emptyText='No reservations yet!' />}
       style={styles.flatListContainer}
-        data={[1,2,3,4,5]}
-        renderItem={(({item})=>(
-          <HistoryCard onDetailsPress={onCardDetailsPress} customStyle={{
+        data={data ? data : []}
+        renderItem={({item})=>(
+          <HistoryCard {...item} onDetailsPress={onCardDetailsPress} customStyle={{
             marginBottom: 20
           }} />
-        ))}
+        )}
         keyExtractor={(item, index)=>index.toString()}
         
       />

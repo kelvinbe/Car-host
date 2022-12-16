@@ -10,6 +10,8 @@ import { isEmpty } from 'lodash';
 import useToast from './useToast';
 import { GOOGLE_CLIENT_ID, FACEBOOK_APP_ID } from "@env"
 import * as Crypto from 'expo-crypto';
+import { useAppDispatch } from '../store/store';
+import { fetchUserData } from '../store/slices/userSlice';
 
 
 WebBrowser.maybeCompleteAuthSession()
@@ -17,6 +19,7 @@ WebBrowser.maybeCompleteAuthSession()
 function useSocialAuth() {
     const [socialAuthLoading, setSocialAuthLoading] = useState(false)  
     const [socialAuthError, setSocialAuthError] = useState(null)
+    const reduxDispatch = useAppDispatch()
     const toast = useToast()
     const [fb_request, fb_response, fb_promptAsync] = Facebook.useAuthRequest({
         expoClientId:FACEBOOK_APP_ID,
@@ -39,7 +42,14 @@ function useSocialAuth() {
                 
                 const credential = FacebookAuthProvider.credential(access_token)
                 signInWithCredential(auth, credential).then((credentials)=>{
-                    setSocialAuthLoading(false)
+                    reduxDispatch(fetchUserData(credentials.user.uid)).unwrap().then(()=>{
+                        setSocialAuthLoading(false)
+                    }).catch((e)=>{
+                        console.log(e)
+                        setSocialAuthLoading(false)
+                        // console.log(error)
+                        setSocialAuthError(e)
+                    })
                     // console.log(credentials)
                 }).catch((error)=>{
                     setSocialAuthLoading(false)
@@ -59,8 +69,12 @@ function useSocialAuth() {
                 const { access_token } = g_response.params
                 const credential = GoogleAuthProvider.credential(null, access_token)
                 signInWithCredential(auth, credential).then((credentials)=>{
-                    setSocialAuthLoading(false)
-                    // console.log(credentials)
+                    reduxDispatch(fetchUserData(credentials.user.uid)).unwrap().then(()=>{
+                        setSocialAuthLoading(false)
+                    }).catch((e)=>{
+                        setSocialAuthLoading(false)
+                        setSocialAuthError(e)
+                    })
                 }).catch((e)=>{
                     setSocialAuthLoading(false)
                     setSocialAuthError(e)

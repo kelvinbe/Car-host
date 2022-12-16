@@ -3,6 +3,9 @@ import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import VisaIcon from "../../../assets/icons/visa.svg"
+import useBookingActions from '../../../hooks/useBookingActions'
+import { calcDuration } from '../../../utils/utils'
+import { isNull } from 'lodash'
 
 
 interface IProps {
@@ -53,6 +56,13 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const BookingCarPaymentInfo = (props: Props) => {
     const styles = useStyles(props)
+    const { bookingDetails: {vehicle, startDateTime, endDateTime, billingInfo} } = useBookingActions()
+
+    const calcAmount =( )=>{
+        if(isNull(vehicle)) return 0
+        return calcDuration(startDateTime, endDateTime) * (vehicle?.hourlyRate / 2)
+    }
+
   return (
     <ThemeConsumer>
         {({theme})=>(
@@ -60,23 +70,23 @@ const BookingCarPaymentInfo = (props: Props) => {
                 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Total</Text>
-                    { props?.hasLinkedCard && <TouchableOpacity onPress={props.openSelectPaymentMethod} style={[styles.actionButton, , {borderBottomColor: theme.colors.link}]}>
+                    { billingInfo && <TouchableOpacity onPress={props.openSelectPaymentMethod} style={[styles.actionButton, , {borderBottomColor: theme.colors.link}]}>
                         <Text style={[styles.actionButtonText, {color: theme.colors.link}]}>Change</Text>
                     </TouchableOpacity>}
                 </View>
                 <View style={[styles.section, {justifyContent: "space-between"}]}>
-                    <Text style={styles.sectionTitle}>$40.00</Text>
-                    { !props.hasLinkedCard && <TouchableOpacity onPress={props.openSelectPaymentMethod} style={[styles.actionButton]}>
+                    <Text style={styles.sectionTitle}>${calcAmount()}</Text>
+                    { !billingInfo && <TouchableOpacity onPress={props.openSelectPaymentMethod} style={[styles.actionButton]}>
                         <Text style={styles.actionButtonText}>Select Payment Method</Text>
                     </TouchableOpacity>}
 
                     {
-                        props?.hasLinkedCard && <View style={styles.paymentInfoContainer}>
+                        billingInfo && <View style={styles.paymentInfoContainer}>
                             <VisaIcon
                                 width={32}
                                 height={24}
                             />
-                            <Text style={styles.textInfo}>****3704</Text>
+                            { billingInfo?.details?.last4 &&  <Text style={styles.textInfo}>****{billingInfo.details.last4}</Text>}
                         </View>
                     }
                 </View>

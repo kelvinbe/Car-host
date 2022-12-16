@@ -1,0 +1,77 @@
+[
+    {
+        "reservationId": "1",
+        "hostId": "1",
+        "startDateTime": "2022-12-19T00:00:00",
+        "endDateTime": "2022-12-19T10:00:00",
+        "vehicleId": "1",
+        "vehicleModel": "X5",
+        "vehicleMake": "BMW",
+        "vehiclePicUrl": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+        "locationAddress": "1.3721, 103.8496",
+        "marketName": "Singapore",
+        "total": "100",
+        "status": "NotReserved",
+        "paymentMethod": {
+            "entityId": "1",
+            "paymentType": "Visa",
+            "details": {
+                "last4": "1111",
+                "brand": "Visa",
+                "expMonth": "12",
+                "expYear": "2058",
+                "nameOnCard": "John Doe"
+            }
+        }
+    },
+    {
+        "reservationId": "2",
+        "hostId": "1",
+        "startDateTime": "2022-12-19T00:00:00",
+        "endDateTime": "2022-12-19T10:00:00",
+        "vehicleId": "1",
+        "vehicleModel": "X5",
+        "vehicleMake": "BMW",
+        "vehiclePicUrl": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+        "locationAddress": "1.3721, 103.8496",
+        "marketName": "Singapore",
+        "total": "100",
+        "status": "NotReserved",
+        "paymentMethod": {
+            "entityId": "1",
+            "paymentType": "Visa",
+            "details": {
+                "last4": "1111",
+                "brand": "Visa",
+                "expMonth": "12",
+                "expYear": "2058",
+                "nameOnCard": "John Doe"
+            }
+        }
+    },
+    {
+        "reservationId": "3",
+        "hostId": "1",
+        "startDateTime": "2022-12-19T00:00:00",
+        "endDateTime": "2022-12-19T10:00:00",
+        "vehicleId": "1",
+        "vehicleModel": "X5",
+        "vehicleMake": "BMW",
+        "vehiclePicUrl": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+        "locationAddress": "1.3721, 103.8496",
+        "marketName": "Singapore",
+        "total": "100",
+        "status": "NotReserved",
+        "paymentMethod": {
+            "entityId": "1",
+            "paymentType": "Visa",
+            "details": {
+                "last4": "1111",
+                "brand": "Visa",
+                "expMonth": "12",
+                "expYear": "2058",
+                "nameOnCard": "John Doe"
+            }
+        }
+    }
+]

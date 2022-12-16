@@ -4,6 +4,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "dev":  "concurrently \"npm run start \" \"npm run mock\"",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -42,6 +43,7 @@
     "@expo/webpack-config": "^0.17.2",
     "@gorhom/bottom-sheet": "^4.4.5",
     "@logrocket/react-native": "^1.8.1",
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
@@ -89,8 +91,7 @@
     "redux": "^4.2.0",
     "regenerator-runtime": "*",
     "twrnc": "^3.4.1",
-    "webpack": ">=2",
-    "@react-native-async-storage/async-storage": "~1.17.3"
+    "webpack": ">=2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -109,6 +110,7 @@
     "@types/react-native": "~0.70.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-loader": "8.3.0",
+    "concurrently": "^7.6.0",
     "eslint": ">=4.4.1 <5.0.0",
     "eslint-config-expo": "^6.0.0",
     "jest": "^26.6.3",

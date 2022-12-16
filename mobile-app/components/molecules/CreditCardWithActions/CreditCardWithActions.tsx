@@ -1,12 +1,15 @@
-import { Text, View } from 'react-native'
-import React from 'react'
-import { makeStyles } from '@rneui/themed'
+import { ActivityIndicator, StyleProp, Text, View, ViewStyle } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { makeStyles, useTheme } from '@rneui/themed'
 import CreditCard, { CardProps } from '../CreditCard/CreditCard'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDeletePaymentMethodMutation } from '../../../store/slices/billingSlice';
+import useToast from '../../../hooks/useToast';
 
 interface IProps {
     onActionPress?: () => void,
-    actionTitle?: string
+    actionTitle?: string,
+    customStyle?: StyleProp<ViewStyle>
 }
 
 type Props = IProps & CardProps;
@@ -46,25 +49,61 @@ const useStyles = makeStyles((theme, props)=>({
 
 const CreditCardWithActions = (props: Props) => {
     const styles = useStyles()
+    const { theme } = useTheme()
+    const [deleteOption, setDeleteOption] = useState<boolean>(false)
+
+    const toast = useToast()
+
+    const [ deletePaymentMethod, {
+        isLoading,
+        error,
+        data
+    } ] = useDeletePaymentMethodMutation()
+
+    useEffect(()=>{
+        if(data){
+            toast({
+                type: "success",
+                message: "Payment method deleted.",
+                title: "Success",
+                duration: 3000,
+            })
+        }
+        if(error){
+            toast({
+                type: "error",
+                message: "Something went wrong",
+                title: "Error",
+                duration: 3000,
+            })
+        }
+    }, [error, data])
+
+    const removePaymentMethod = () => {
+        props?.entityId && deletePaymentMethod(props.entityId)
+        props?.onActionPress && props?.onActionPress()
+    }
+
   return (
-    <View style={styles.container} >
+    <View style={[styles.container, props?.customStyle]} >
         <View style={styles.cardContainer} >
             <CreditCard
-                cardHolderName={props.cardHolderName}
-                cardType={props.cardType}
-                last4Digits={props.last4Digits}
+                details={props.details}
+                onCardPress={() => setDeleteOption(!deleteOption)}
+                paymentType={props.paymentType}
+                entityId={props.entityId}
             />
         </View>
-        <View style={{width: "50%"}} >
-            <TouchableOpacity  style={styles.buttonStyle}  onPress={props.onActionPress} >
-                <Text style={styles.titleStyle} >
+        { deleteOption && <View style={{width: "50%"}} >
+            <TouchableOpacity  style={styles.buttonStyle}  onPress={removePaymentMethod} >
+                {isLoading ? <ActivityIndicator color={theme.colors.primary} size="large" /> :<Text style={styles.titleStyle} >
                     {
                         props.actionTitle
                     }
-                </Text>
+                </Text>}
                 
             </TouchableOpacity>
-        </View>
+        </View>}
         
     </View>
   )

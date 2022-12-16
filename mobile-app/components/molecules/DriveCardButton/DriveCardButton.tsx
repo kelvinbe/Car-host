@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Image } from '@rneui/base'
 import LocationDirection from "../../../assets/icons/direction.svg"
+import { IVehicle } from '../../../types'
 interface IProps {
     customContainerStyle?: StyleProp<ViewStyle>;
     onPress?: () => void;
@@ -12,7 +13,7 @@ interface IProps {
     index?: number;
 }
 
-type Props = IProps
+type Props = IProps & IVehicle
 
 const useStyles = makeStyles((theme, props: Props)=>{
     return {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
         carImage: {
             width: 80,
             height: 80,
+            resizeMode: 'contain'
         },
         leftContainer:{ 
             flexDirection: "row",
@@ -119,11 +121,13 @@ const DriveCardButton = (props: Props) => {
             } ]} >
                 <TouchableOpacity onPress={props.onPress} style={styles.leftContainer} >
                     <View style={styles.carImageContainer} >
-                        <Image style={styles.carImage} source={require("../../../assets/images/car.png")} />
+                        <Image style={styles.carImage} source={{
+                            uri: props?.vehiclePictures?.[0]
+                        }} />
                     </View>
                     <View style={styles.driveInfoContainer} >
                         <Text style={styles.driveInfoText} >
-                            PROTON-X70
+                            {props?.vehicleMake} {props?.vehicleModel}
                         </Text>
                         <View style={styles.driverInfoContainer} >
                             <View style={styles.driverAvatarStyle} >
@@ -147,10 +151,9 @@ const DriveCardButton = (props: Props) => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={props.onPress} >
                     <Text style={styles.amountStyle} >
-                        $5.00/hr
+                        ${props?.hourlyRate}/hr
                     </Text>
                 </TouchableOpacity>
-                
             </Animated.View>
         )}
     </ThemeConsumer>

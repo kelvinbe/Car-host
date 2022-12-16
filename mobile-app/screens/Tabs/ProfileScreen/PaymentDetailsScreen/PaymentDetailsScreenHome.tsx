@@ -7,6 +7,9 @@ import CreditCardWithActions from '../../../../components/molecules/CreditCardWi
 import { Divider, Text } from '@rneui/base';
 import ActionButton from '../../../../components/atoms/Buttons/ActionButton/ActionButton';
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded';
+import { useGetPaymentMethodsQuery } from '../../../../store/slices/billingSlice';
+import { isEmpty } from 'lodash';
+import Empty from '../../../../components/molecules/Feedback/Empty/Empty';
 
 interface IProps {
 
@@ -47,11 +50,16 @@ const useStyles = makeStyles((theme, props: Props)=>({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "700"
+    },
+    cardsContainer: {
+        width: "100%",
+        alignItems: "center",
     }
 }))
 
 function PaymentDetailsScreenHome(props: Props) {
     const styles = useStyles(props)
+    const { data : paymentMethods , isLoading, error } = useGetPaymentMethodsQuery("")
     const goToMPesa = ( ) => {
         props.navigation.navigate("MPesaDetailsScreen")
     }
@@ -62,12 +70,26 @@ function PaymentDetailsScreenHome(props: Props) {
   return (
     <View style={styles.container} >
         <View style={styles.contentContainer} >
-            <CreditCardWithActions
-                cardType={"visa"} 
-                last4Digits={"1234"} 
-                cardHolderName={"Sarah Lane"}
-                actionTitle={"Remove Card"}
-            />
+            <View style={styles.cardsContainer} >
+                {
+                    paymentMethods?.map((paymentMethod, index)=>{
+                        return (
+                            <CreditCardWithActions
+                                customStyle={{
+                                    marginBottom: 10
+                                }}
+                                details={paymentMethod.details}
+                                paymentType={paymentMethod.paymentType}
+                                entityId={paymentMethod.entityId}
+                                key={index}
+                                actionTitle="Remove"
+                            />
+                        )
+                    })
+                }
+            </View>
+            
+            
             <Divider style={styles.divider} />
             <Text style={styles.headerTitle} >
                 Other Methods

@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react-native";
 import Toast from "./Toast";
 
 
-storiesOf("Toast", module).add("Toast/Success", () => {
+storiesOf("Feedback/Toast", module).add("Toast/Success", () => {
     return <Toast
         message="This is a toast message"
         type="success"

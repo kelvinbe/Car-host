@@ -1,22 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { PaymentDetailsScreenParamList } from '../../../../types'
+import { IRawCard, IRawPaymentMethodDetails, PaymentDetailsScreenParamList } from '../../../../types'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../../../components/atoms/Input/WithHelperText/WithHelperText'
 import { Icon } from '@rneui/base'
 import { addSlashAfter2Digits, addSpacingAfterEveryFourDigits, removeSpaces } from "../../../../utils/utils"
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded'
 import Loading from '../../../../components/molecules/Feedback/Loading/Loading'
+import { useSetPaymentMethodMutation } from '../../../../store/slices/billingSlice'
+import { auth } from '../../../../firebase/firebaseApp'
+import useToast from '../../../../hooks/useToast'
 
 const ccNumberRegex = new RegExp("^[0-9]{16}$")
 const expDateRegex = new RegExp("^[0-9]{4}$")
 const cvvRegex = new RegExp("^[0-9]{3}$")
-
-
-
-
 
 type Props = NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
 
@@ -147,6 +146,12 @@ const reducer = (state: IReducerState, action: any) => {
 }
 
 const AddCard = (props: Props) => {
+    const [ addCard, {
+        isLoading: loading,
+        error: addCardError,
+        data
+    } ] = useSetPaymentMethodMutation()
+    const toast = useToast()
     const [{
         name,
         cardNumber,
@@ -156,7 +161,6 @@ const AddCard = (props: Props) => {
         isExpDateValid,
         isCvvValid,
         attemptsToSubmit,
-        loading,
         error
     }, dispatchAction] = useReducer(reducer, initialState)
 
@@ -194,18 +198,39 @@ const AddCard = (props: Props) => {
         dispatchAction({
             type: "SUBMIT"
         })
-        dispatchAction({
-            type: "SET_LOADING",
-            payload: true
+        addCard({
+            details: {
+                cardNumber,
+                cvc: cvv,
+                name,
+                expMonth: parseInt(expDate.slice(0, 2)),
+                expYear: parseInt(expDate.slice(3, 5)),
+                email: auth?.currentUser?.email
+            } as IRawCard
         })
-        setTimeout(() => {
-            dispatchAction({
-                type: "SET_LOADING",
-                payload: false
-            })
-        }, 2000)
 
     }
+
+    useEffect(()=>{
+        if(addCardError){
+            toast({
+                title: "Error",
+                message: "Something went wrong.\n Please try again later",
+                type: "error",
+                duration: 5000
+            })
+        }
+
+        if(data){
+            toast({
+                title: "Success",
+                message: "Card added successfully",
+                type: "success",
+                duration: 5000
+            })
+            props.navigation.goBack()
+        }
+    }, [addCardError, data])
 
     
 

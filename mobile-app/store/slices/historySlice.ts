@@ -1,40 +1,44 @@
+import { DOMAIN, FETCH_HISTORY_ENDPOINT } from './../../hooks/constants';
 import { createSlice } from "@reduxjs/toolkit";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { auth } from '../../firebase/firebaseApp';
+import { IReservation } from '../../types';
 
-interface Reservation {
-    reservationId: string;
-    hostId: string;
-    startDateTime: string;
-    endDateTime: string;
-    vehicleId: string;
-    vehicleModel: string;
-    vehicleMake: string;
-    vehiclePicUrl: string;
-    locationAddress: string;
-    marketName: string;
-    total: string;
-    status: string;
-}
+
 
 const initialState: {
-    history: Reservation[]
+    history: IReservation[]
 } = {
     history: []
 }
 
-const historySlice = createSlice({
-    name: "historySlice",
-    initialState: initialState,
-    reducers: {
-        setHistory: (state, action) => {
-            state.history = action.payload.history
+export const historyApi = createApi({
+    reducerPath: "historyApi",
+    baseQuery: fetchBaseQuery({
+        baseUrl: DOMAIN,
+        headers: {
+            token: `Bearer ${auth.currentUser?.getIdToken()}`
         }
-    }
+    }),
+    endpoints: (builder) => ({
+        getHistory: builder.query<IReservation[], any>({
+            query: ()=> `/api/history`,
+            transformResponse: (response: any) => {
+                console.log(response)
+                return response
+            }
+        }),
+        
+    })
+})
+
+export const {useGetHistoryQuery} = historyApi;
+
+const historySlice = createSlice({
+    name: "history",
+    initialState,
+    reducers: {},
 })
 
 export default historySlice.reducer;
 
-// actions
-export const { setHistory } = historySlice.actions;
-
-// selectors
-export const selectHistory = (state: any) => state.history;

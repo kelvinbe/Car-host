@@ -45,7 +45,7 @@ const MpesaDetails = (props: Props) => {
             />
             <BaseInput 
                 label="Account Number"
-                placeholder="e.g. IBAN000x90000000000000"
+                placeholder="+254xxxxxxxxx"
             />
         </View>
         <View style={styles.bottomContainer} >

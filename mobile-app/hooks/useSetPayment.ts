@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SET_PAYMENT_ENDPOINT } from './constants';
+import { IPaymentMethod } from '../types';
 
-interface PaymentMethod {
-    paymentType: 'MC' | 'Visa' | 'AMEX' | 'Discover' | 'Paypal' | 'Mpesa',
-    entityId?: string,
-    details?: any, //TODO: should be object types for each payment type
-};
+
 
 type Error = any;
 
-export default function useSetPayment(props: PaymentMethod){
+export default function useSetPayment(props: IPaymentMethod<any>){
 
     const {
         paymentType,

@@ -1,11 +1,23 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import TickMarkIcon from "../../../assets/icons/tick-mark.svg"
 import ZigzagView from 'react-native-zigzag-view'
 import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard'
 import CreditCardWithAmount from '../../../components/molecules/CreditCardWithAmount/CreditCardWithAmount'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { SearchScreenParamList } from '../../../types'
+import { useGetReservationQuery } from '../../../store/slices/reservationSlice'
+import Loading from '../../../components/molecules/Feedback/Loading/Loading'
+import Error from '../../../components/molecules/Feedback/Error/Error'
+import useBookingActions from '../../../hooks/useBookingActions'
+
+interface IProps {
+
+}
+
+type Props = NativeStackScreenProps<SearchScreenParamList, "BookingConfirmationScreen">
 
 const useStyles = makeStyles((theme, props)=>({
     container: {
@@ -65,16 +77,39 @@ const useStyles = makeStyles((theme, props)=>({
     }
 }))
 
-const BookingConfirmationScreen = () => {
+const BookingConfirmationScreen = (props: Props) => {
+    const { clearBookingState } = useBookingActions()
+    const { data, isLoading, error } = useGetReservationQuery(props.route.params.reservationId)
+    const [changeOk, setChangeOk] = useState<boolean>(false)
     const styles = useStyles()
+     useEffect(()=>props.navigation.addListener("beforeRemove", (e)=>{
+            // if(!changeOk){
+            //     e.preventDefault()
+            // }
+            // if(changeOk){
+            //     props.navigation.navigate("SearchScreenHome")
+            // }
+        }), [props.navigation, changeOk])
+    
+
+    const toSearchScreen = () =>{
+        setChangeOk(true)
+        props.navigation.navigate("SearchScreenHome")
+    }
 
   return (
+    isLoading ? (
+        <Loading/>
+    ) : error ? (
+        <Error/>
+    ) :
+    (
     <ThemeConsumer>
         {(({theme})=>(
             <View  style={styles.container} >
                 <View style={styles.confirmationContainer} >
         
-                    <ZigzagView
+                    { data && <ZigzagView
                         top={false}
                         bottom
                         style={styles.receipt}
@@ -88,23 +123,27 @@ const BookingConfirmationScreen = () => {
                             <Text style={styles.textStyle} >
                                 Booking Confirmed
                             </Text>
-                            <HistoryCard customStyle={{
+                            <HistoryCard 
+                            {
+                                ...data
+                            }
+                            customStyle={{
                                 marginBottom: 20
                             }} />
-                            <CreditCardWithAmount/>
+                            { (data && data.paymentMethod) && <CreditCardWithAmount {...data?.paymentMethod} amount={data?.total as any} />}
                         </View>
                         
-                    </ZigzagView>
-                    
+                    </ZigzagView>}
                 </View>
                 <View style={styles.bottomContainer} >
-                    <Rounded>
+                    <Rounded onPress={toSearchScreen} >
                         OK
                     </Rounded>
                 </View>
             </View>
         ))}
     </ThemeConsumer>
+    )
     
   )
 }

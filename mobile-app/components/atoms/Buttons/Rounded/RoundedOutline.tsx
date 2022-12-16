@@ -1,7 +1,8 @@
-import { StyleSheet, StyleProp, ViewStyle, TouchableOpacity } from 'react-native'
+import { StyleSheet, StyleProp, ViewStyle, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { ButtonProps, makeStyles } from '@rneui/themed'
 import { Text } from '@rneui/base';
+import { useTheme } from '@rneui/themed';
 
 interface IProps {
     fullWidth?: boolean;
@@ -40,14 +41,18 @@ const useStyles = makeStyles((theme, props: Props)=> {
 
 const RoundedOutline = (props: Props) => {
     const styles = useStyles(props)
+    const { theme } = useTheme()
   return (
     <TouchableOpacity
         style={[styles.buttonStyle, styles.containerStyle , props.customStyle]}
         onPress={props.onPress}
     >
-        <Text style={styles.titleStyle} >
-            {props.children}
-        </Text>
+        {
+            props.loading ? <ActivityIndicator color={theme.colors.primary}  size="large" /> : <Text style={styles.titleStyle} >
+                {props.children}
+            </Text>
+        }
+        
     </TouchableOpacity>
   )
 }

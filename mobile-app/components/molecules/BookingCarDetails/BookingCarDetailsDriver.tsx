@@ -4,6 +4,8 @@ import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Image } from '@rneui/base';
 import LocationIcon from "../../../assets/icons/location.svg"
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import useBookingActions from '../../../hooks/useBookingActions';
+import { isEmpty } from 'lodash';
 
 interface IProps {
     openAuthorizationCode?: () => void;
@@ -82,6 +84,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const BookingCarDetailsDriver = (props: Props) => {
     const styles = useStyles(props)
+    const { bookingDetails: { authCode } } = useBookingActions()
   return (
     <ThemeConsumer>
         {({theme})=>(
@@ -106,9 +109,9 @@ const BookingCarDetailsDriver = (props: Props) => {
                 </View>
                 { !props?.hasAuthorizationCode && <View style={styles.authCodeContainer} >
                     <Text style={styles.authCodeTitle}>Authorization Code:</Text>
-                    <TouchableOpacity onPress={props?.openAuthorizationCode} style={styles.authCodeButton} >
+                    { !isEmpty(authCode) ? <Text style={styles.authCodeTitle} >  ******  </Text>  : <TouchableOpacity onPress={props?.openAuthorizationCode} style={styles.authCodeButton} >
                         <Text style={styles.authCodeButtonText}>Enter here</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View> }
             </View>
         )}

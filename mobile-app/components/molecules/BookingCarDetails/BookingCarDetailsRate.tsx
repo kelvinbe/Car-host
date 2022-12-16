@@ -1,6 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { makeStyles } from '@rneui/themed'
+import useBookingActions from '../../../hooks/useBookingActions';
+import dayjs from 'dayjs';
+import { isNull } from 'lodash';
+import { calcDuration } from '../../../utils/utils';
 
 interface IProps {
 
@@ -34,16 +38,23 @@ const useStyles = makeStyles((theme, props: Props)=>{
 })
 
 const BookingCarDetailsRate = (props: Props) => {
+
     const styles = useStyles(props)
+
+    const { bookingDetails: { vehicle, startDateTime, endDateTime } } = useBookingActions()
+
+    
+    
+
   return (
     <View style={styles.container} >
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Total Duration: </Text>
-            <Text style={styles.sectionValue}>2hrs</Text>
+            <Text style={styles.sectionValue}>{calcDuration(startDateTime, endDateTime)/2}hr(s)</Text>
         </View>
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Rate</Text>
-            <Text style={styles.sectionValue}>$20.00 / hr</Text>
+            <Text style={styles.sectionValue}>${vehicle?.hourlyRate || 0} / hr</Text>
         </View>
     </View>
   )

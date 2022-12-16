@@ -4,12 +4,13 @@ import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Divider, Icon } from '@rneui/base';
 import ChevronDown from "../../../assets/icons/chevron-down.svg"
 import { ScrollView } from 'react-native-gesture-handler';
+import { isString } from 'lodash';
 
 interface IProps {
-    onChange?: (value: string[] | string) => void,
+    onChange?: (value:  (string|number)[] | string | number) => void,
     items?: {
         label: string,
-        value: string
+        value: string | number
     }[],
     placeholder?: string,
     additionalFilter?: string[],
@@ -32,18 +33,19 @@ const useStyles = makeStyles((theme, props: Props) =>{
             alignItems: "center",
             justifyContent: "space-between",
             backgroundColor: theme.colors.white,
-            paddingHorizontal: 20,
-            paddingVertical: 15,
+            // paddingHorizontal: 20,
+            // paddingVertical: 15,
             borderRadius: 25,
             borderWidth: 1,
             borderColor: theme.colors.stroke,
             overflow: "hidden"
         },
         selectedContainer: {
-            width: props?.additionalFilter ? "60%" : "80%",
-            height: 20,
+            width: props?.additionalFilter ? "50%" : "80%",
             alignItems: "center",
-            justifyContent: "flex-start"
+            justifyContent: "flex-start",
+            paddingLeft: 20,
+            paddingVertical: 15
         },
         selectedText: {
             fontWeight: "600", fontFamily: "Lato_400Regular",
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme, props: Props) =>{
             height: 10,
         },
         divider: {
-            backgroundColor: theme.colors.stroke
+            backgroundColor: theme.colors.stroke,
         },
         additionalText: {
             fontWeight: "600", fontFamily: "Lato_400Regular",
@@ -84,8 +86,9 @@ const useStyles = makeStyles((theme, props: Props) =>{
         iconContainer: {
             // width: "20%",
             height: 20,
-            alignItems: "flex-end",
-            justifyContent: "center"
+            alignItems: "center",
+            justifyContent: "center",
+            paddingRight: 20
         },
         additionalFilterContainer: {
             // width: "20%",
@@ -112,13 +115,14 @@ const Dropdown = (props: Props) => {
     const toggleFilter = () =>{
         const filter = chosenFilter;
         setChosenFilter(additionalFilter?.filter((f)=> f !== filter)[0] || "")
+        // onChange && onChange([currentValue, additionalFilter?.filter((f)=> f !== filter)[0] || ""])
     }
 
     const handleSelect = (index: number) =>{
         toggleDropdown()
-        setCurrentValue(items?.find((_, i)=> i== index)?.label || "")
+        setCurrentValue(items?.filter(({label, value})=>additionalFilter ? isString(value) ?  value?.includes(chosenFilter) : true : true)?.find((_, i)=> i== index)?.label || "")
         if(additionalFilter){
-            onChange && onChange([items?.find((_, i)=> i== index)?.value || "", chosenFilter])
+            onChange && onChange([items?.filter(({label, value})=>additionalFilter ? isString(value) ?  value?.includes(chosenFilter) : true : true)?.find((_, i)=> i== index)?.value || "", chosenFilter])
         }else{
             onChange && onChange(items?.find((_, i)=> i== index)?.value || "")
         }
@@ -128,10 +132,14 @@ const Dropdown = (props: Props) => {
         {({theme})=>(
             <View style={styles.container} >
                 <View  style={styles.dropdownInputContainer} >
-                    <TouchableOpacity onPress={toggleDropdown} style={styles.selectedContainer} >
+                    <TouchableOpacity onPress={toggleDropdown} style={[styles.selectedContainer, additionalFilter ? {
+                        borderRightWidth: 1,
+                        borderRightColor: theme.colors.stroke
+                    } : null]} >
                         <Text style={styles.selectedText} >{currentValue}</Text>
                     </TouchableOpacity>
-                    <Divider style={styles.divider} orientation='vertical' />
+                    
+                    
                     { additionalFilter &&
                         <TouchableOpacity onPress={toggleFilter} style={styles.additionalFilterContainer} >
                             <Text onPress={toggleFilter} style={styles.additionalText} >
@@ -148,7 +156,7 @@ const Dropdown = (props: Props) => {
                 </View>
                 { open && <ScrollView style={styles.dropdownValuesContainer} >
                     {
-                        items?.map((item, i)=>(
+                        items?.filter(({label, value})=>additionalFilter ? isString(value) ?  value?.includes(chosenFilter) : true : true).map((item, i)=>(
                             <TouchableOpacity key={i} onPress={()=>{
                                 handleSelect(i)
                                 }}  style={styles.dropdownValue} >

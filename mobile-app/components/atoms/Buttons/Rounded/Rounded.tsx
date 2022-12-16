@@ -44,7 +44,14 @@ const useStyles = makeStyles((theme, props: Props)=>{
 const Rounded = (props: Props & ButtonProps) => {
   const styles = useStyles(props)
   return (
-    <Button containerStyle={[styles.containerStyle, props.customStyle]} disabled={props.disabled} loading={props?.loading} onPress={props.onPress} buttonStyle={styles.buttonStyle} titleStyle={styles.titleStyle} disabledTitleStyle={styles.titleStyle}  title={props.children} />
+    <Button containerStyle={[styles.containerStyle, props.customStyle]} 
+    disabled={props.disabled} 
+    loading={props?.loading} 
+    onPress={props.onPress} 
+    buttonStyle={styles.buttonStyle} 
+    titleStyle={styles.titleStyle} 
+    disabledTitleStyle={styles.titleStyle}  
+    title={props.children} />
   )
 }
 

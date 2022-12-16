@@ -35,7 +35,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                     headerShown: false
                 }} name="SearchScreenHome" component={_SearchScreen} />
                 <SearchScreenStacks.Screen name="BookingConfirmationScreen" options={{
-                    header:(props) => <BaseTopBar onHomePress={()=>props.navigation.navigate("SearchScreenHome")} onBackPress={()=>props.navigation.navigate("SearchScreenHome")} home chevronLeft title={"Confirmation"} {...props} />
+                    header:(props) => <BaseTopBar onHomePress={()=>props.navigation.navigate("SearchScreenHome")} onBackPress={()=>props.navigation.navigate("SearchScreenHome")} home={false} title={"Confirmation"} {...props} />
                 }} component={BookingConfirmationScreen}  />
                 <SearchScreenStacks.Screen 
                   name="MapScreen"

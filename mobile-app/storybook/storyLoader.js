@@ -16,6 +16,8 @@ function loadStories() {
   require('../components/molecules/CreditCardWithActions/CreditCardWithActions.stories');
   require('../components/molecules/CreditCardWithAmount/CreditCardWithAmount.stories');
   require('../components/molecules/DriveCardButton/DriveCardButton.stories');
+  require('../components/molecules/Feedback/Empty/Empty.stories');
+  require('../components/molecules/Feedback/Error/Error.stories');
   require('../components/molecules/Feedback/Loading/Loading.stories');
   require('../components/molecules/Feedback/Toast/Toast.stories');
   require('../components/molecules/HistoryCard/HistoryCard.stories');
@@ -36,6 +38,8 @@ const stories = [
   '../components/molecules/CreditCardWithActions/CreditCardWithActions.stories',
   '../components/molecules/CreditCardWithAmount/CreditCardWithAmount.stories',
   '../components/molecules/DriveCardButton/DriveCardButton.stories',
+  '../components/molecules/Feedback/Empty/Empty.stories',
+  '../components/molecules/Feedback/Error/Error.stories',
   '../components/molecules/Feedback/Loading/Loading.stories',
   '../components/molecules/Feedback/Toast/Toast.stories',
   '../components/molecules/HistoryCard/HistoryCard.stories',

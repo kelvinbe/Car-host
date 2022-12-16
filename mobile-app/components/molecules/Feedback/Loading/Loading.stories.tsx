@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react-native";
 import Loading from "./Loading";
 
 
-storiesOf("Loading", module)
-    .add("Default", () => (
+storiesOf("Feedback/Loading", module)
+    .add("Loading/Default", () => (
         <Loading />
     ))

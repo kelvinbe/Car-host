@@ -1,62 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useReducer, useEffect, useState } from 'react'
 import { makeStyles } from '@rneui/themed';
 import BaseInput from '../../../components/atoms/Input/BaseInput/BaseInput';
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded';
 import { Icon } from '@rneui/base';
+import { auth } from '../../../firebase/firebaseApp';
+import { createSlice } from '@reduxjs/toolkit';
+import useUserAuth from '../../../hooks/useUserAuth';
+import PasswordCreator from '../../../components/organisms/input/PasswordCreator.tsx/PasswordCreator';
+import Loading from '../../../components/molecules/Feedback/Loading/Loading';
+import { isEmpty } from 'lodash';
+import useToast from '../../../hooks/useToast';
 
 interface  IProps  {}
 
 type Props = IProps;
-
-const initialState = {
-    currentPasswordIsVisible: false,
-    newPasswordIsVisible: false,
-    confirmPasswordIsVisible: false,
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: ""
-}
-
-const settingsScreenReducer = (state: any = initialState, action: any) => {
-    switch (action.type){
-        case "toggle_current_password":
-            return {
-                ...state,
-                currentPasswordIsVisible: !state.currentPasswordIsVisible
-            }
-        case "toggle_new_password":
-            return {
-                ...state,
-                newPasswordIsVisible: !state.newPasswordIsVisible
-            }
-        case "toggle_confirm_password":
-            return {
-                ...state,
-                confirmPasswordIsVisible: !state.confirmPasswordIsVisible
-            }
-        case "set_current_password":
-            return {
-                ...state,
-                currentPassword: action.payload
-            }
-        case "set_new_password":
-            return {
-                ...state,
-                newPassword: action.payload
-            }
-        case "set_confirm_password":
-            return {
-                ...state,
-                confirmPassword: action.payload
-            }
-        default:
-            return state
-
-    }
-}
-
-
 
 const useStyles = makeStyles((theme, props: Props)=>({
     container: {
@@ -64,87 +22,155 @@ const useStyles = makeStyles((theme, props: Props)=>({
         height: "100%",
         backgroundColor: theme.colors.white,
         alignItems: "center",
-        justifyContent: "flex-start",
-        paddingTop: 75
+        justifyContent: "space-between",
     },
     topSectionContainer: {
         width: "90%",
-        height: "80%"
+        paddingTop: 50
     },
     bottomSectionContainer: {
         width: "90%",
         height: "20%",
         alignItems: "center",
         justifyContent: "center",
+    },
+    providersSection: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    infoText: {
+        fontSize: 18,
+        fontWeight: "400",
+        fontFamily: "Lato_400Regular",
+        textAlign: "center",
+        marginBottom: 50,
+        width: "80%"
+    },
+    generalText: {
+        fontSize: 20,
+        fontWeight: "400",
+        fontFamily: "Lato_400Regular",
+        color: theme.colors.primary,
+        textAlign: "center"
     }
 }))
 
+interface IReducerState {
+    currentPasswordIsVisible: boolean;
+    currentPassword: string;
+    newPassword: string;
+    usesPassword: boolean;
+}
+
+const initialState: IReducerState = {
+    currentPasswordIsVisible: false,
+    currentPassword: "",
+    newPassword: "",
+    usesPassword: false
+}
+
+const settingsSlice = createSlice({
+    name: "settings",
+    initialState,
+    reducers: {
+        _toggle_current_password: (state) => {
+            state.currentPasswordIsVisible = !state.currentPasswordIsVisible
+        },
+        _set_current_password: (state, action) => {
+            state.currentPassword = action.payload
+        },
+        _set_new_password: (state, action) => {
+            state.newPassword = action.payload
+        },
+        _set_uses_password: (state, action) => {
+            state.usesPassword = action.payload
+        }
+    }
+})
+
+const reducer = settingsSlice.reducer
+
+const { _set_current_password, _set_new_password, _toggle_current_password } = settingsSlice.actions
+
 const ProfileSettingsScreen = (props: Props) => {
     const styles = useStyles(props)
+    const [isPasswordValid, setIsPasswordValid] = useState(false)
     const [{
         currentPasswordIsVisible,
-        newPasswordIsVisible,
-        confirmPasswordIsVisible,
         currentPassword,
-        newPassword,    
-        confirmPassword
-
-    }, dispatch] = React.useReducer(settingsScreenReducer, initialState)
-
+        newPassword
+    }, dispatch] = useReducer(reducer, initialState)
+    const toast = useToast()
+    const { userAuthProviders, loadingPasswordUpdate, passwordUpdateError, updateUserPassword, hasPasswordChanged } = useUserAuth()
     const toggleCurrentPasswordVisibility = () => {
-        dispatch({type: "toggle_current_password"})
+        dispatch(_toggle_current_password)
     }
-
-    const toggleNewPasswordVisibility = () => {
-        dispatch({type: "toggle_new_password"})
-    }
-
-    const toggleConfirmPasswordVisibility = () => {
-        dispatch({type: "toggle_confirm_password"})
-    }
-
     const setCurrentPassword = (text: string) => {
-        dispatch({type: "set_current_password", payload: text})
+        dispatch(_set_current_password(text))
     }
 
     const setNewPassword = (text: string) => {
-        dispatch({type: "set_new_password", payload: text})
+        dispatch(_set_new_password(text))
     }
 
-    const setConfirmPassword = (text: string) => {
-        dispatch({type: "set_confirm_password", payload: text})
+    useEffect(()=>{
+        if(!isEmpty(passwordUpdateError)){
+            toast({
+                message: passwordUpdateError,
+                type: "error",
+                duration: 4000,
+                title: "Password Reset"
+            })
+        }
+    }, [passwordUpdateError])
+
+    const confirmChange = () =>{
+        updateUserPassword(newPassword, currentPassword)
     }
 
 
   return (
+    loadingPasswordUpdate ? ( 
+    <Loading/>
+    ) : hasPasswordChanged ? ( 
+    <View style={[styles.container, {alignItems: "center", justifyContent: "center"}]}  > 
+        <Text style={styles.generalText} >
+            Password Changed
+        </Text> 
+    </View>
+    ) : (
     <View style={styles.container} >
         <View style={styles.topSectionContainer} >
-            <BaseInput secureTextEntry={!currentPasswordIsVisible} onChangeText={setCurrentPassword} label="Current Password" containerStyle={{
-                marginBottom: 50
-            }} placeholder="Current Password" rightIcon={
-                <Icon onPress={toggleCurrentPasswordVisibility} name={currentPasswordIsVisible ? "eye" : "eye-slash"}  type="font-awesome" />
-            } />
-            <BaseInput secureTextEntry={!newPasswordIsVisible} onChangeText={setNewPassword} label="New Password" containerStyle={{
-                marginBottom: 50
-            }} placeholder="New Password" rightIcon={
-                <Icon onPress={toggleNewPasswordVisibility} name={newPasswordIsVisible ? "eye" : "eye-slash"}  type="font-awesome" />
-            } />
-
-            <BaseInput secureTextEntry={!confirmPasswordIsVisible} onChangeText={setConfirmPassword} label="Confirm Password" containerStyle={{
-                marginBottom: 50
-            }} placeholder="Confirm Password" rightIcon={
-                <Icon onPress={toggleConfirmPasswordVisibility} name={confirmPasswordIsVisible ? "eye" : "eye-slash"}  type="font-awesome" />
-            } />
-
+            {
+                userAuthProviders?.includes("password") ? (
+                    <BaseInput secureTextEntry={!currentPasswordIsVisible} onChangeText={setCurrentPassword} label="Current Password" containerStyle={{
+                        marginBottom: 50
+                    }} placeholder="Current Password" rightIcon={
+                        <Icon onPress={toggleCurrentPasswordVisibility} name={currentPasswordIsVisible ? "eye" : "eye-slash"}  type="font-awesome" />
+                    } />
+                ) : (
+                    <View style={styles.providersSection} >
+                        <Text style={styles.infoText} > You haven't yet set a password, create one. </Text>
+                    </View>
+                )
+            }
+            <PasswordCreator
+                onConfirmPassword={setNewPassword}
+                isPasswordValid={setIsPasswordValid}
+            />
         </View>
         <View 
             style={styles.bottomSectionContainer}
         >
-            <Rounded>
-                Save Changes
+            <Rounded disabled={!isPasswordValid || (userAuthProviders?.includes("password") ? !(currentPassword?.length  >= 8) : false)} onPress={confirmChange} >
+                {
+                    userAuthProviders?.includes("password") ? "Update Password" : "Create Password"
+                }
             </Rounded>
         </View>
-    </View>
+    </View>)
   )
 }
 

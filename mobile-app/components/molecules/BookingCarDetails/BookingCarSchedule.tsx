@@ -3,6 +3,8 @@ import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import CalendarIcon from "../../../assets/icons/calendar.svg"
 import ClockIcon from "../../../assets/icons/clock.svg"
+import useBookingActions from '../../../hooks/useBookingActions'
+import dayjs from 'dayjs'
 
 interface IProps {
 
@@ -64,7 +66,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const BookingCarSchedule = (props: Props) => {
     const styles = useStyles(props)
-  return (
+    const { bookingDetails } = useBookingActions()
+   return (
     <ThemeConsumer>
         {({theme})=>(
             <View style={styles.container} >
@@ -76,7 +79,9 @@ const BookingCarSchedule = (props: Props) => {
                         stroke={theme.colors.primary}
                     />
                     <Text style={styles.topSectionTitle} >
-                        23rd November, 2022
+                        {
+                            dayjs(bookingDetails?.startDateTime )?.format("DD MMM YYYY")
+                        }
                     </Text>
                 </View>
                 <View style={styles.bottomSection} >
@@ -93,7 +98,7 @@ const BookingCarSchedule = (props: Props) => {
                             </Text>
                         </View>
                         <Text style={styles.bottomSubSectionValue} >
-                            10:00 AM
+                            {dayjs(bookingDetails?.startDateTime )?.format("hh:mm A")}
                         </Text>
                     </View>
                     <View style={styles.bottomSubSection} >
@@ -109,7 +114,7 @@ const BookingCarSchedule = (props: Props) => {
                             </Text>
                         </View>
                         <Text style={styles.bottomSubSectionValue} >
-                            10:00 AM
+                            {dayjs(bookingDetails?.endDateTime )?.format("hh:mm A")}
                         </Text>
                     </View>
                 </View>

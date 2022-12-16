@@ -3,10 +3,14 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@rneui/themed'
 import Dropdown from '../Dropdown/Dropdown'
 import dayjs from 'dayjs'
+import { isArray } from 'lodash'
+import { daysOfTheWeekFromToday, isAm, timeTilEndOfDay, timeTilEndOfNewDay } from '../../../utils/utils'
 
 
 type Props ={
-    customStyles?: StyleProp<ViewStyle>
+    customStyles?: StyleProp<ViewStyle>,
+    setStartDateTime?: (date: string) => void,
+    setEndDateTime?: (date: string) => void,
 }
 
 const useStyles = makeStyles((theme)=>({
@@ -34,60 +38,37 @@ const useStyles = makeStyles((theme)=>({
 
 const TimeFilter = (props: Props) => {
     const styles = useStyles(props)
-    const [viewDropdown, setViewDropdown] = useState(false)
-    const [days, setDays] = useState([])
-    const [times, setTimes] = useState([])
-    const [additionalFilter, setAdditionalFilter] = useState([])
-    const [selectedDay, setSelectedDay] = useState("")
-    const [selectedTime, setSelectedTime] = useState("")
-    const handleDayChange = (value: string | string[]) => {
-        // console.log(value)
+    const [viewDayDropdown, setViewDayDropdown] = useState<boolean>(false)
+    const [chosenDay, setChosenDay] = useState(0)
+    const [times, setTimes] = useState<{label: string, value: string }[]>([])
+
+    const handlePickupTime = (v: any) => {
+        props.setStartDateTime && props.setStartDateTime(dayjs(v?.[0]).toISOString())
     }
 
-    const handlePickupTime = (value: string | string[]) => {
-        // console.log(value)
-    }
-
-    const handleDropOffTime = (value: string | string[]) => {
-        // console.log(value)
+    const handleDropOffTime = (v: any) => {
+        props.setEndDateTime && props.setEndDateTime(dayjs(v?.[0]).toISOString())
     }
 
     useEffect(()=>{
-        const _days = [...Array(7).keys()].map((day, index)=>{
-            return {
-                label: dayjs(new Date()).add(index, "day").format("dddd"),
-                value: dayjs(new Date()).add(index, "day").format("dddd")
-            }
-        })
-        setSelectedDay(_days[0].label)
+        if(chosenDay === 0){
+            setTimes(()=>timeTilEndOfDay() as any)
+        }else{
+            setTimes(()=>timeTilEndOfNewDay(chosenDay) as any)
+        }
+    }, [chosenDay])
 
-
-        const _times = [...Array(48).keys()].map((time, index)=>{
-            return {
-                label: dayjs(dayjs(new Date()).format("hh")).add(index * 30, "minutes").format("hh:mm A")?.replace("AM", "")?.replace("PM", ""),
-                value: dayjs(dayjs(new Date()).format("hh")).add(index * 30, "minutes").format("hh:mm A")?.replace("AM", "")?.replace("PM", ""),
-                index
-            }
-        })
-        setSelectedTime(_times[0].label)
-        
-        const _additionalFilter = [
-            dayjs(Date.now()).format("A"),
-            dayjs(Date.now()).format("A") === "AM" ? "PM" : "AM"
-        ]
-        setAdditionalFilter(()=>_additionalFilter as any)
-        setDays(()=>_days as any)
-        setTimes(()=>_times as any)
-    },[ ])
   return (
     <View style={[styles.container, props.customStyles]} >
-            <Dropdown key={days?.length} dropdownOpen={setViewDropdown} defaultValue={selectedDay} items={days} onChange={handleDayChange} />
-              <View style={[styles.bottomDropdowns, {display: !viewDropdown ? "flex" : "none" }]} >
+            <Dropdown key={times?.length} dropdownOpen={setViewDayDropdown} defaultValue={daysOfTheWeekFromToday()?.[0]?.label} items={daysOfTheWeekFromToday()} onChange={(v)=>{
+                    setChosenDay(v as any)
+            }} />
+              <View style={[styles.bottomDropdowns, {display: !viewDayDropdown ? "flex" : "none" }]} >
                 <View style={[styles.dropdown]} >
-                    <Dropdown key={times?.length} items={times} onChange={handlePickupTime} defaultValue={selectedTime} defaultAdditionalFilter={additionalFilter?.[0]} additionalFilter={additionalFilter} />
+                    <Dropdown key={times?.length}  items={times} onChange={handlePickupTime} defaultValue={times?.[0]?.label} defaultAdditionalFilter={isAm(times?.[0]?.value) ? "AM" : "PM"} additionalFilter={["AM", "PM"]} />
                 </View>
                 <View style={[styles.dropdown]} >
-                    <Dropdown key={times?.length} items={times} onChange={handleDropOffTime} defaultValue={selectedTime} defaultAdditionalFilter={additionalFilter?.[0]} additionalFilter={additionalFilter} />
+                    <Dropdown key={times?.length} items={times} onChange={handleDropOffTime} defaultValue={times?.[0]?.label} defaultAdditionalFilter={isAm(times?.[0]?.value) ? "AM" : "PM"} additionalFilter={["AM", "PM"]} />
                 </View>
             </View>
     </View>

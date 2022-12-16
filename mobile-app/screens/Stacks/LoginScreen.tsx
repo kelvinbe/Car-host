@@ -25,6 +25,9 @@ import useSocialAuth from '../../hooks/useSocialAuth';
 import { ResponseType } from 'expo-auth-session';
 const provider = new GoogleAuthProvider();
 import * as Facebook from 'expo-auth-session/providers/facebook';
+import useUserAuth from '../../hooks/useUserAuth';
+import { useAppDispatch } from '../../store/store';
+import { fetchUserData } from '../../store/slices/userSlice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
 
@@ -76,7 +79,7 @@ const useStyles = makeStyles((theme)=>{
             color: theme.colors.title,
             fontSize: 24,
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             marginBottom: 42
         },
         logoContainer: {
@@ -102,81 +105,17 @@ const useStyles = makeStyles((theme)=>{
 const LoginScreen = (props: Props) => {
     
     const [user, loading] = useAuthState(auth);
-    const [_loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const toast = useToast()
-    const {theme} = useTheme()
     const {  googleLogin, socialAuthLoading, socialAuthError, facebookLogin } = useSocialAuth()
-
-
-    const handleFirebaseAuthError = (e: any) =>{
-        setError(true)
-        switch(e.message){
-            case "Firebase: Error (auth/invalid-email).":
-                toast({
-                    message: "Invalid Email",
-                    type: "error",
-                    title: "Error",
-                    duration: 2000
-                })
-                break;
-            case "Firebase: Error (auth/user-disabled).":
-                toast({
-                    message: "User Disabled",
-                    type: "error",
-                    title: "Error",
-                    duration: 2000
-                })
-                break;
-            case "Firebase: Error (auth/user-not-found).":
-                toast({
-                    message: "User Not Found",
-                    type: "error",
-                    title: "Error",
-                    duration: 2000
-                })
-                break;
-            case "Firebase: Error (auth/wrong-password).":
-                toast({
-                    message: "Wrong Password",
-                    type: "error",
-                    title: "Error",
-                    duration: 2000
-                })
-                break;
-            default:
-                toast({
-                    message: e.message,
-                    type: "error",
-                    title: "Error",
-                    duration: 2000
-                })
-        }
-        
-    }
+    const { signIn: _signIn, signInLoading } = useUserAuth()
+    const reduxDispatch = useAppDispatch()
 
     const signIn = () => {
-        setLoading(true)
-        signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            toast({
-                message: "Login Successful",
-                type: "success",
-                title: "Success",
-                duration: 2000
-
-            })
-            setLoading(false)
-        }).catch((e)=>{
-            console.log(e.message);
-            setLoading(false)
-            handleFirebaseAuthError(e)
-        })
+        _signIn(email, password, false)
     };
-
 
     const toggleViewPassword = () => {
         setViewPassword(!viewPassword)
@@ -202,7 +141,7 @@ const LoginScreen = (props: Props) => {
 
     
    
-  return ( (loading || _loading || socialAuthLoading) ? <Loading/> :
+  return ( (signInLoading || socialAuthLoading || loading) ? <Loading/> :
         <View style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
@@ -230,7 +169,9 @@ const LoginScreen = (props: Props) => {
                         }
                         rightIcon={<Icon onPress={toggleViewPassword} name={ viewPassword  ? "eye" :"eye-slash"} type="font-awesome" />} 
                         />
-                    <Rounded disabled={isEmpty(password) || isEmpty(email)} loading={loading} onPress={signIn} fullWidth>
+                    <Rounded 
+                    // disabled={isEmpty(password) || isEmpty(email)} 
+                    loading={loading} onPress={signIn} fullWidth>
                         Login
                     </Rounded>
                     <Divider style={{marginTop: 20, marginBottom: 20}} >

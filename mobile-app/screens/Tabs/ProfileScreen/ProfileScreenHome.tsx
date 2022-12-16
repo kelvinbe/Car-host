@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   avatarImageStyle: {
     width: 70,
     height: 70,
+    resizeMode: "contain"
   },
   editButtonContainer: {
     flexDirection: "row",
@@ -175,10 +176,10 @@ const useStyles = makeStyles((theme, props: Props) => ({
 }))
 
 const ProfileScreenHome = (props: Props) => {
-  const { theme } = useTheme()
   const styles = useStyles(props)
-  const [ currentScreen, history] = useSelector(selectNavState)
-  const {logOut} = useUserAuth()
+  const { logOut : _logOut, userProfile } = useUserAuth()
+
+  console.log(userProfile)
   const goToEdit = () =>{
     props.navigation.navigate("ProfileScreenEdit")
   }
@@ -207,14 +208,9 @@ const ProfileScreenHome = (props: Props) => {
     })
   }
 
-  const logout = () =>{
-      logOut().then(()=>{
-
-      }).catch((e)=>{
-        console.log(e)
-      })
+  const logOut = () =>{
+    _logOut()
   }
-
 
   return (
     <ThemeConsumer>
@@ -228,7 +224,9 @@ const ProfileScreenHome = (props: Props) => {
             </View>
             <View style={styles.topBarCardStyle} >
               <View style={styles.avatarStyle} >
-                <Image source={require("../../../assets/images/user.png")} style={styles.avatarImageStyle} />
+                <Image source={{
+                  uri: userProfile?.profilePicUrl
+                }} style={styles.avatarImageStyle} />
               </View>
               <View style={styles.topEditSectionContainer} >
                 <TouchableOpacity onPress={goToEdit} style={styles.editButtonContainer} >
@@ -238,10 +236,14 @@ const ProfileScreenHome = (props: Props) => {
               </View>
               <View style={styles.profileInfoContainer} >
                     <Text style={styles.profileInfoTextStyle} >
-                      Sarah Lane
+                      {
+                        userProfile?.fname && userProfile?.lname ? `${userProfile?.fname} ${userProfile?.lname}` : "Welcome"
+                      }
                     </Text>
                     <Text style={styles.profileInfoSubTextStyle} >
-                      @lane_25
+                      {
+                        userProfile?.handle ? `@${userProfile?.handle}` : "Please update your profile"
+                      }
                     </Text>
               </View>
             </View>
@@ -316,7 +318,7 @@ const ProfileScreenHome = (props: Props) => {
             <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
-                onPress={logout}
+                onPress={logOut}
               >
                   <ListItem.Content  style={styles.listItemContent} >
                     <LogoutIcon fill={theme.colors.black}  />

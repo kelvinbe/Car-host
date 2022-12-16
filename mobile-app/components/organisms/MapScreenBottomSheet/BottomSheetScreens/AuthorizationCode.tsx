@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, {useRef} from 'react'
+import { StyleSheet, Text, View, KeyboardAvoidingView, Platform } from 'react-native'
+import React, {useRef, useState} from 'react'
 import BottomSheet from "@gorhom/bottom-sheet"
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import CashIcon from "../../../../assets/icons/cash.svg"
@@ -8,6 +8,10 @@ import VisaIcon from "../../../../assets/icons/visa.svg"
 import { Image } from '@rneui/base'
 import BaseInput from '../../../atoms/Input/BaseInput/BaseInput'
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded'
+import useBookingActions from '../../../../hooks/useBookingActions'
+import { useVerifyAuthCode } from '../../../../hooks'
+import Loading from '../../../molecules/Feedback/Loading/Loading'
+import Error from '../../../molecules/Feedback/Error/Error'
 
 interface IProps {
     closeBottomSheet?: () => void
@@ -31,18 +35,19 @@ const useStyles = makeStyles((theme, props: Props)=> {
         contentContainer: {
             width: "100%",
             height: "100%",
-            padding: 20
+            padding: 20,
+            textAlign: "center",
         },
         contentTitleStyle: {
             width: "100%",
             fontWeight: "700", 
  fontFamily: "Lato_700Bold",
             fontSize: 20,
-            marginBottom: 20
+            marginBottom: 20,
+            textAlign: "center",
         },
         cardsContainer: {
             width: "100%",
-            marginTop: 20
         },
         bottomTextContainer: {
             width: "100%",
@@ -61,14 +66,22 @@ const useStyles = makeStyles((theme, props: Props)=> {
         rightText: {
             color: theme.colors.link,
         },
+        errorText: {
+            color: theme.colors.error,
+            fontSize: 14,
+            fontWeight: "400", 
+            fontFamily: "Lato_400Regular",
+        }
     }
 })
 
 const AuthorizationBottomSheet = (props: Props) => {
-
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = ["40%"]
     const styles = useStyles(props)
+    const [verificationInput, setVerificationInput] = useState<string>("")
+
+    const { data, error, loading } = useVerifyAuthCode(verificationInput)
 
     const close = () =>{
         bottomSheetRef.current?.close()
@@ -91,31 +104,46 @@ const AuthorizationBottomSheet = (props: Props) => {
                 enablePanDownToClose 
                 onClose={props.closeBottomSheet}
             >
-                <View style={styles.contentContainer} >
-                    <Text style={styles.contentTitleStyle} >
-                        Authorization Code
-                    </Text>
-                    <View style={styles.cardsContainer} >
-                        <BaseInput
-                            label="Authorization Code"
-                            placeholder="Enter Authorization code"
-                            containerStyle={{
-                                marginBottom: 20
-                            }}
-                        />
-                        <Rounded onPress={handleVerify} >
-                            Verify
-                        </Rounded>
-                    </View>
-                    <View style={styles.bottomTextContainer} >
-                        <Text style={styles.leftText} >
-                            Don't have a code?
-                        </Text>
-                        <Text  style={styles.rightText} >
-                            Ask for One
-                        </Text>
-                </View>
-                </View>
+                    {
+                            <KeyboardAvoidingView 
+                            behavior={
+                                Platform.OS === "ios" ? "padding" : "height"
+                            }
+                            style={styles.contentContainer} >
+                                <Text style={styles.contentTitleStyle} >
+                                    Authorization Code
+                                </Text>
+                                <View style={styles.cardsContainer} >
+                                    {
+                                        error && <Text style={styles.errorText} >
+                                            Code not valid
+                                        </Text>
+                                    }
+                                    <BaseInput
+                                        // label="Authorization Code"
+                                        placeholder="Enter Authorization code"
+                                        containerStyle={{
+                                            marginBottom: 20
+                                        }}
+                                        onChangeText={setVerificationInput}
+                                        maxLength={6}
+                                    />
+                                    <Rounded 
+                                        loading={loading}
+                                        onPress={handleVerify} >
+                                        {(data && verificationInput.length  === 6 ) ? "Done" :"Verify"}
+                                    </Rounded>
+                                </View>
+                                <View style={styles.bottomTextContainer} >
+                                    <Text style={styles.leftText} >
+                                        Don't have a code?
+                                    </Text>
+                                    <Text  style={styles.rightText} >
+                                        Ask for One
+                                    </Text>
+                                </View>
+                            </KeyboardAvoidingView>
+                    }
             </BottomSheet>
         )}
     </ThemeConsumer>

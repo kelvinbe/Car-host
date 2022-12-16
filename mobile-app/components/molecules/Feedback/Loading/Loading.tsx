@@ -1,10 +1,13 @@
 import { View, ActivityIndicator, Text} from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 
 interface IProps {
     size?: number | "small" | "large" | undefined,
-    fontLoaded?: boolean
+    fontLoaded?: boolean,
+    promise?: Promise<any>,
+    onResolve?: () => void,
+    onReject?: () => void
 }
 
 type Props = IProps;
@@ -29,6 +32,10 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const Loading = (props: Props) => {
     const styles = useStyles(props)
+
+    useEffect(()=>{
+        props.promise && props.promise.then(props.onResolve).catch(props.onReject)
+    }, [props.promise])
   return (
     <ThemeConsumer>
         {({theme})=>(

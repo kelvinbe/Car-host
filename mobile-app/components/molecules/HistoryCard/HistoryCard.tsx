@@ -5,22 +5,15 @@ import LocationIcon from "../../../assets/icons/location.svg";
 import CalendarIcon from "../../../assets/icons/calendar.svg";
 import ClockIcon from "../../../assets/icons/clock.svg";
 import { Divider, Image } from '@rneui/base';
+import { IReservation } from '../../../types';
+import dayjs from 'dayjs';
 
 interface IProps {
-  rideDate?: string | Date;
-  pickupDate?: string | Date;
-  dropOffDate?: string | Date;
-  vehicleName?: string;
-  vehicleImage?: string;
-  pickupLocation?: string;
-  driverName?: string;
-  driverImage?: string;
-  hourlyRate?: number;
   customStyle?: StyleProp<ViewStyle>,
-  onDetailsPress?: () => void;
+  onDetailsPress?: (reservationId: string) => void;
 }
 
-type Props = IProps;
+type Props = IProps & IReservation;
 
 const useStyles = makeStyles((theme, props: Props)=>({
     container: {
@@ -79,6 +72,7 @@ const useStyles = makeStyles((theme, props: Props)=>({
     vehicleImage: {
       width: 70,
       height: 70,
+      resizeMode: "contain"
     },
     vehicleInfo: {
       alignItems: "flex-start",
@@ -167,7 +161,13 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const HistoryCard = (props: Props) => {
+  const { endDateTime, hostId, locationAddress, marketName, reservationId, startDateTime, status, total, vehicleId, vehicleMake, vehicleModel, vehiclePicUrl, customStyle, onDetailsPress } = props
   const styles = useStyles(props);
+
+  const onPress = () =>{
+    onDetailsPress && onDetailsPress(reservationId);
+  }
+
   return (
     <ThemeConsumer>
       {({theme})=>(
@@ -182,10 +182,12 @@ const HistoryCard = (props: Props) => {
               >
                 <CalendarIcon stroke={theme.colors.primary} fill={theme.colors.primary} width={12} height={12} color={theme.colors.primary}  /> 
                 <Text style={styles.dateText} > 
-                  23rd November 2022
+                  {
+                    dayjs(startDateTime).format("DD MMM YYYY")
+                  }
                 </Text>
               </View>
-              <TouchableOpacity onPress={props?.onDetailsPress} >
+              <TouchableOpacity onPress={onPress} >
                 <Text  style={styles.link}>
                     Details
                 </Text>
@@ -196,12 +198,14 @@ const HistoryCard = (props: Props) => {
               <View style={styles.rideInfoLeft} >
                   <View style={styles.vehicle} > 
                     <Image style={styles.vehicleImage} 
-                      source={require("../../../assets/images/car.png")}
+                      source={{
+                        uri: vehiclePicUrl
+                      }}
                     />
                   </View>
                   <View style={styles.vehicleInfo} >
                     <Text style={styles.vehicleName} >
-                      PROTON-X10  
+                      {vehicleMake} {vehicleModel}
                     </Text>
                     <View style={styles.driverInfo} >
                       <Image 
@@ -221,7 +225,7 @@ const HistoryCard = (props: Props) => {
 
                   </View>
                   <Text style={styles.ridePrice} >
-                    $20
+                    ${total}
                   </Text>
               </View>
             </View>
@@ -235,7 +239,9 @@ const HistoryCard = (props: Props) => {
                   </Text>
                 </View>
                 <Text style={styles.rideTimeInfoValue} >
-                  03:30PM
+                  {
+                    dayjs(startDateTime).format("hh:mm A")
+                  }
                 </Text>
               </View>
               <View style={styles.rideTimeInfo} >
@@ -246,7 +252,9 @@ const HistoryCard = (props: Props) => {
                   </Text>
                 </View>
                 <Text style={styles.rideTimeInfoValue} >
-                  03:40PM
+                  {
+                    dayjs(endDateTime).format("hh:mm A")
+                  }
                 </Text>
               </View>
             </View>

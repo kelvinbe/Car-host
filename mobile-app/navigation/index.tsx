@@ -3,7 +3,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme, useNavigationContainerRef
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Platform } from 'react-native';
-import StorybookScreen from '../screens/Tabs/StorybookScreen';
+// import StorybookScreen from '../screens/Tabs/StorybookScreen';
 import { BottomTabParamList, RootStackParamList } from '../types';
 import LoginScreen from '../screens/Stacks/LoginScreen';
 import RegisterScreen from '../screens/Stacks/RegisterScreen';
@@ -34,6 +34,7 @@ import ChangePasswordScreen from '../screens/Stacks/ChangePasswordScreen';
 import CustomSafeAreaView from '../components/common/CustomSafeAreaView/CustomSafeAreaView';
 import SupportScreen from '../screens/shared/SupportScreen';
 import { auth } from '../firebase/firebaseApp';
+import BookingDetailsScreen from '../screens/shared/BookingDetailsScreen';
 
 const ScreensWithNoBottomNav = [
     "BookingConfirmationScreen",
@@ -196,7 +197,7 @@ function BottomTabNavigator() {
               </>,
             }}
           />
-          <Tabs.Screen
+          {/* <Tabs.Screen
             name="Storybook"
             component={StorybookScreen}
             options={{
@@ -208,7 +209,7 @@ function BottomTabNavigator() {
               tabBarInactiveTintColor: theme.colors.grey0,
               
             }}
-          />
+          /> */}
           <Tabs.Screen
             name="History"
             component={HistoryScreen}
@@ -256,6 +257,15 @@ function BottomTabNavigator() {
               title: "Issues",
               header: (props) => <BaseTopBar {...props} title="Report Issues" />,
             }}
+          />
+          <Tabs.Screen
+            name="BookingDetails" 
+            options={{
+                header: (props) => <BaseTopBar home={false} chevronLeft {...props} title="Booking Details" />,
+                tabBarButton: () => <>
+                </>,
+            }}
+            component={BookingDetailsScreen}
           />
         </Tabs.Navigator>
       )}

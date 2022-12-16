@@ -10,6 +10,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SearchScreenParamList } from '../../../types'
 import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet'
 import { PROVIDER_GOOGLE } from 'react-native-maps'
+import useBookingActions from '../../../hooks/useBookingActions'
 
 
 interface IProps {
@@ -64,7 +65,8 @@ const useStyles = makeStyles((theme, props)=>({
 interface IState {
     location: Location.LocationObject | null,
     errorMessage: null |string;
-    loading?: boolean
+    loading?: boolean;
+    hostCode?: string;
 }
 // change initialState when location bug is dealt with
 const initialState: IState = {
@@ -75,7 +77,8 @@ const initialState: IState = {
         } as any
     } as any,
     errorMessage: null,
-    loading: false
+    loading: false,
+    hostCode: ""
 }
 
 const reducer = (state: IState, action: any) => {
@@ -103,7 +106,11 @@ const MapScreen = (props: Props) => {
     const [state, dispatchAction] = useReducer(reducer, initialState)
     const styles = useStyles()
     const [open, setOpen] = useState(false)
-    const opacity = useRef(new Animated.Value(0)).current
+    const { clearBookingState } = useBookingActions()
+    const {
+        setStartDateTime,
+        setEndDateTime
+    } = useBookingActions()
 
     const onOpen = () => {
         setOpen(true)
@@ -135,6 +142,10 @@ const MapScreen = (props: Props) => {
         // }).catch((e)=>{
         //     console.log(e)
         // })
+        return ()=>{
+            /* clearBookingState() */
+            clearBookingState()
+        }
     },[])
 
   return (
@@ -167,7 +178,6 @@ const MapScreen = (props: Props) => {
                             latitudeDelta: 0.005,
                             longitudeDelta: 0.005,
                         }}
-                        
                     >
                         <Circle 
                             center={{
@@ -186,7 +196,7 @@ const MapScreen = (props: Props) => {
                             />}
                     </MapView>}
                 </View>
-             { (props?.inReservation ? false : !open) && <TimeFilter/>}
+             { (props?.inReservation ? false : !open) && <TimeFilter setStartDateTime={setStartDateTime} setEndDateTime={setEndDateTime} />}
              <MapScreenBottomSheet
                 onClose={onClose}
                 onOpen={onOpen}

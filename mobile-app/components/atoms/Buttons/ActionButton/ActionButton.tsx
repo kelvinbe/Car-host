@@ -7,9 +7,10 @@ import ChevronRight from "../../../../assets/icons/chevron-right.svg"
 interface IProps {
     image?: ReactNode;
     title?: string;
-    onPress?: () => void;
+    onPress?: (id?: string | number) => void;
     customStyle?: StyleProp<ViewStyle>,
-    raised?: boolean
+    raised?: boolean,
+    id?: string | number
 }
 
 type Props = IProps
@@ -48,12 +49,16 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const ActionButton = (props: Props) => {
-    const { image, title, onPress } = props;
+    const { image, title, onPress, id } = props;
     const styles = useStyles(props)
+    const _onPress = () =>{
+        id && onPress && onPress(id)
+        onPress && onPress()
+    }
   return (
     <ThemeConsumer>
         {({theme})=>(
-            <TouchableOpacity onPress={onPress} style={[styles.buttonContainer,props.customStyle]} > 
+            <TouchableOpacity onPress={_onPress} style={[styles.buttonContainer,props.customStyle]} > 
                 <View style={styles.leftSection} >
                     {/* 
                         @todo: add functionality to switch between images

@@ -1,12 +1,31 @@
+import { vehiclesApi } from './slices/vehiclesSlice';
+import { historyApi } from './slices/historySlice';
 // import LogRocket from '@logrocket/react-native';
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './slices';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import rootReducer, { RootState } from './slices';
+import { reservationsApi } from './slices/reservationSlice';
+import { billingApi } from './slices/billingSlice';
 
 const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  .concat(historyApi.middleware)
+  .concat(reservationsApi.middleware)
+  .concat(vehiclesApi.middleware)
+  .concat(billingApi.middleware)
+  ,
   // middleware: [
   //   LogRocket.reduxMiddleware(),
   // ]
 });
 
 export default store;
+
+export const useAppDispatch = () => useDispatch<typeof store.dispatch>();
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+// store.subscribe(()=>{
+//   console.log("Changes in store state ::",store.getState())
+// })

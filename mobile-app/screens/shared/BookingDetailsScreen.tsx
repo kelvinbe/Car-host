@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ManageResParamList } from '../../../types'
+import { ManageResParamList } from '../../types'
 import { makeStyles } from '@rneui/themed'
-import MapScreen from '../SearchScreen/MapScreen'
+import MapScreen from '../Tabs/SearchScreen/MapScreen'
 
 type Props = NativeStackScreenProps<ManageResParamList, "BookingDetails">
 

@@ -6,6 +6,9 @@ import CashIcon from "../../../../assets/icons/cash.svg"
 import ActionButton from '../../../atoms/Buttons/ActionButton/ActionButton'
 import VisaIcon from "../../../../assets/icons/visa.svg"
 import { Image } from '@rneui/base'
+import { useGetPaymentMethodsQuery } from '../../../../store/slices/billingSlice'
+import { ScrollView } from 'react-native-gesture-handler'
+import useBookingActions from '../../../../hooks/useBookingActions'
 
 interface IProps {
     closeBottomSheet?: () => void
@@ -34,24 +37,24 @@ const useStyles = makeStyles((theme, props: Props)=> {
         contentTitleStyle: {
             width: "100%",
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             fontSize: 20,
             marginBottom: 20
         },
         cardsContainer: {
             width: "100%",
-            alignItems: "center",
-            justifyContent: "flex-start",
+            flex: 1
         }
     }
 })
 
 const PaymentBottomSheet = (props: Props) => {
 
+    const { data: paymentMethods, isLoading, error } = useGetPaymentMethodsQuery("")
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = ["50%"]
     const styles = useStyles(props)
-
+    const { setBillingInfo } = useBookingActions()
     
 
     const close = () =>{
@@ -59,9 +62,15 @@ const PaymentBottomSheet = (props: Props) => {
         props.closeBottomSheet && props.closeBottomSheet()
     }
 
-    const handlePaymentSelect = () =>{
+    const handlePaymentSelect = (id: any) =>{
+        const payMethod = id ?  paymentMethods?.filter(({entityId})=> entityId === id)?.[0] : null
+        payMethod && setBillingInfo(payMethod)
         close()
     }
+
+    /**
+     * Need more clarification on switching payment methods
+     */
 
   return (
     <ThemeConsumer>
@@ -79,8 +88,30 @@ const PaymentBottomSheet = (props: Props) => {
                     <Text style={styles.contentTitleStyle} >
                         Select payment
                     </Text>
-                    <View style={styles.cardsContainer} >
-                        <ActionButton
+                    <ScrollView style={styles.cardsContainer} >
+                        {
+                            paymentMethods?.map((paymentMethod, i)=>{
+                                return (
+                                    <ActionButton
+                                        key={i}
+                                        id={paymentMethod.entityId}
+                                        image={
+                                            <VisaIcon
+                                                width={24}
+                                                height={24}
+                                                fill={theme.colors.background4}
+                                            />
+                                        }
+                                        title={`**** ${paymentMethod.details.last4}`}
+                                        customStyle={{
+                                            marginBottom: 10
+                                        }}
+                                        onPress={handlePaymentSelect}
+                                    />
+                                )
+                            })
+                        }
+                        {/* <ActionButton
                             image={
                                 <CashIcon
                                     width={24}
@@ -93,8 +124,8 @@ const PaymentBottomSheet = (props: Props) => {
                                 marginBottom: 10
                             }}
                             onPress={handlePaymentSelect}
-                        />
-                        <ActionButton
+                        /> */}
+                        {/* <ActionButton
                             image={
                                 <VisaIcon
                                     width={24}
@@ -107,8 +138,8 @@ const PaymentBottomSheet = (props: Props) => {
                                 marginBottom: 10
                             }}
                             onPress={handlePaymentSelect}
-                        />
-                        <ActionButton
+                        /> */}
+                        {/* <ActionButton
                             image={
                                 <Image
                                     source={require("../../../../assets/images/mpesa.png")}
@@ -120,8 +151,8 @@ const PaymentBottomSheet = (props: Props) => {
                             }
                             title="M-PESA"
                             onPress={handlePaymentSelect}
-                        />
-                    </View>
+                        /> */}
+                    </ScrollView>
                 </View>
             </BottomSheet>
         )}

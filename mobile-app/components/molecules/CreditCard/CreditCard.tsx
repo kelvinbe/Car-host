@@ -2,14 +2,13 @@ import { Image, Text } from '@rneui/base';
 import { makeStyles } from '@rneui/themed'
 import React from 'react'
 import { TouchableOpacity, View } from "react-native"
+import { ICardPaymentMethod, IPaymentMethod } from '../../../types';
 
 interface IProps {
-    cardHolderName?: string;
-    last4Digits?: string;
-    cardType?: "visa" | "mastercard" | "americanexpress" | "discover" | "dinersclub" | "jcb" | "unionpay" | "maestro" | "unknown";
+    onCardPress?: (id?: string) => void;
 }
 
-export type CardProps = IProps;
+export type CardProps = IProps & IPaymentMethod<ICardPaymentMethod> ;
 
 const useStyles = makeStyles((theme, props: CardProps)=> {
     return ({
@@ -54,12 +53,17 @@ const useStyles = makeStyles((theme, props: CardProps)=> {
 })
 
 function CreditCard(props: CardProps) {
-    const { cardHolderName, cardType, last4Digits } = props;
+    const { nameOnCard, brand, last4 }  = props.details 
     const styles = useStyles(props)
+
+    const onPress = () =>{
+        props.onCardPress && props.onCardPress()
+    }
+
   return (
-    <TouchableOpacity style={styles.creditCardContainer} >
+    <TouchableOpacity onPress={onPress} style={styles.creditCardContainer} >
         <Text style={styles.creditCardName} >
-            { cardHolderName }
+            { nameOnCard }
         </Text>
         <View style={styles.rightSection} >
             {/* 
@@ -70,7 +74,7 @@ function CreditCard(props: CardProps) {
                 style={styles.creditCardIcon}
             />
             <Text style={styles.textStyle} >
-                ****{last4Digits}
+                ****{last4}
             </Text>
         </View>
     </TouchableOpacity>

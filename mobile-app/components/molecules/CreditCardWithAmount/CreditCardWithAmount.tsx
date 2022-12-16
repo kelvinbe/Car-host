@@ -2,12 +2,13 @@ import {  View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { makeStyles } from '@rneui/themed'
 import { Image, Text } from '@rneui/base';
+import { ICardPaymentMethod, IPaymentMethod } from '../../../types';
 
 interface IProps {
-
+    amount?: number | string;
 }
 
-type Props = IProps;
+type Props = IProps & IPaymentMethod<ICardPaymentMethod>;
 
 const useStyles = makeStyles((theme, props: Props)=>({
     container: {
@@ -46,11 +47,11 @@ const CreditCardWithAmount = (props: Props) => {
         <View style={styles.leftSection} >
             <Image source={require("../../../assets/images/visa.png")} style={styles.creditCardIcon} />
             <Text style={styles.textStyle} >
-                ****1234
+                ****{props.details.last4}
             </Text>
         </View>
         <Text style={styles.textStyle} >
-            $50
+            ${props.amount}
         </Text>
     </TouchableOpacity>
   )

@@ -6,6 +6,7 @@ import { Image } from '@rneui/base';
 import CarTypeIcon from "../../../assets/icons/car-type.svg"
 import CarSeatIcon from "../../../assets/icons/car-seat.svg"
 import CarIcon from "../../../assets/icons/car.svg"
+import useBookingActions from '../../../hooks/useBookingActions';
 
 
 interface IProps {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
         carImage: {
             width: 110,
             height: 80,
+            resizeMode: "contain"
         },
         extraCarInfo: {
             width: "100%",
@@ -86,6 +88,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const BookingCarDetails = (props: Props) => {
 
+    const { bookingDetails: { vehicle } } = useBookingActions()
     const styles = useStyles(props)
 
   return (
@@ -94,14 +97,16 @@ const BookingCarDetails = (props: Props) => {
             <View
             style={styles.container}
             >
-                <Text style={styles.headerTitle}>Car Name</Text>
+                <Text style={styles.headerTitle}> {vehicle?.vehicleMake} {vehicle?.vehicleModel} </Text>
                 <ScrollView style={styles.scrollView} horizontal  >
                     {
-                        [1,2,3,4, 5,6,7]?.map((_, index)=>(
+                        vehicle?.vehiclePictures?.map((image, index)=>(
                             <View key={index} style={styles.carSlide} >
                                 <Image
                                     style={styles.carImage}
-                                    source={require(`../../../assets/images/car1.png`)}
+                                    source={{
+                                        uri: image
+                                    }}
                                 />
                             </View>
                         ))
@@ -118,7 +123,9 @@ const BookingCarDetails = (props: Props) => {
                             </Text>
                         </View>
                         <Text style={styles.value} >
-                            SUV
+                            {
+                                vehicle?.vehicleType
+                            }
                         </Text>
                     </View>
 
@@ -130,7 +137,9 @@ const BookingCarDetails = (props: Props) => {
                             </Text>
                         </View>
                         <Text style={styles.value} >
-                            5
+                            {
+                                vehicle?.seats
+                            }
                         </Text>
                     </View>
 
@@ -142,7 +151,9 @@ const BookingCarDetails = (props: Props) => {
                             </Text>
                         </View>
                         <Text style={styles.value} >
-                            Blue Grey
+                            {
+                                vehicle?.color
+                            }
                         </Text>
                     </View>
                 </View>

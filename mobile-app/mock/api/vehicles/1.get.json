@@ -1,0 +1,94 @@
+[
+    {
+        "vehicleId": "1",
+        "vehicleType": "SUV",
+        "locationId": "1",
+        "color": "Red",
+        "seats": 5,
+        "transmission": "Automatic",
+        "year": 2018,
+        "status": "Available",
+        "hourlyRate": 10,
+        "vehiclePictures": [
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80"
+        ],
+        "location": "21964 Jim Rosa Lane, SF, CA 94132",
+        "coords": {
+            "latitude": 37.7749,
+            "longtitude": -122.4194
+        },
+        "vehicleMake": "BMW",
+        "vehicleModel": "X5"
+    },
+    {
+        "vehicleId": "2",
+        "vehicleType": "SUV",
+        "locationId": "1",
+        "color": "Red",
+        "seats": 5,
+        "transmission": "Automatic",
+        "year": 2018,
+        "status": "Available",
+        "hourlyRate": 10 ,
+        "vehiclePictures": [
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80"
+        ],
+        "location": "21964 Jim Rosa Lane, SF, CA 94132",
+        "coords": {
+            "latitude": 37.7749,
+            "longtitude": -122.4194
+        },
+        "vehicleMake": "BMW",
+        "vehicleModel": "X5"
+    },
+    {
+        "vehicleId": "3",
+        "vehicleType": "SUV",
+        "locationId": "1",
+        "color": "Red",
+        "seats": 5,
+        "transmission": "Automatic",
+        "year": 2018,
+        "status": "Available",
+        "hourlyRate": 10,
+        "vehiclePictures": [
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80"
+        ],
+        "location": "21964 Jim Rosa Lane, SF, CA 94132",
+        "coords": {
+            "latitude": 37.7749,
+            "longtitude": -122.4194
+        },
+        "vehicleMake": "BMW",
+        "vehicleModel": "X5"
+    },
+    {
+        "vehicleId": "4",
+        "vehicleType": "SUV",
+        "locationId": "1",
+        "color": "Red",
+        "seats": 5,
+        "transmission": "Automatic",
+        "year": 2018,
+        "status": "Available",
+        "hourlyRate": 10,
+        "vehiclePictures": [
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+            "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80"
+        ],
+        "location": "21964 Jim Rosa Lane, SF, CA 94132",
+        "coords": {
+            "latitude": 37.7749,
+            "longtitude": -122.4194
+        },
+        "vehicleMake": "BMW",
+        "vehicleModel": "X5"
+    }
+]

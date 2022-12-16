@@ -3,7 +3,7 @@ import React, {useRef, useReducer} from 'react'
 import { makeStyles } from '@rneui/themed'
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { BottomSheetParamList } from '../../../types'
+import { BottomSheetParamList, IVehicle } from '../../../types'
 import BookingScreen from './BottomSheetScreens/BookingScreen'
 import PaymentBottomSheet from './BottomSheetScreens/PaymentBottomSheet'
 import AuthorizationBottomSheet from './BottomSheetScreens/AuthorizationCode'
@@ -11,6 +11,7 @@ import DriveCardButton from '../../molecules/DriveCardButton/DriveCardButton'
 import AnimatedScrollList from '../AnimatedScrollList/AnimatedScrollList'
 import ModifyBookingBottomSheet from './BottomSheetScreens/ModifyBooking'
 import CancelBookingBottomSheet from './BottomSheetScreens/CancelBooking'
+import useBookingActions from '../../../hooks/useBookingActions'
 
 
 
@@ -43,10 +44,9 @@ const useStyles = makeStyles((theme, props: Props)=> ({
     },
     mapContainer: {
         width: "100%",
-        height: "100%",
         position: "absolute",
         alignItems: "center",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
     },
     vehiclesScrollContainer: {
         width: "80%",
@@ -129,6 +129,7 @@ const MapScreenBottomSheet = (props: Props) => {
     const snapPoints = ["90%"]
     const bottomSheetRef = useRef<BottomSheet>(null)
     const styles = useStyles(props)
+    const { setVehicle, bookingDetails: { vehicle } } = useBookingActions()
 
 
     const openAuthorizationCode = () => {
@@ -147,7 +148,8 @@ const MapScreenBottomSheet = (props: Props) => {
         dispatchAction({type: "closePaymentBottomSheet"})
     }
 
-    const openBottomSheet = (index: number) => {
+    const openBottomSheet = (vehicle: IVehicle | null) => {
+        setVehicle(vehicle)
         props.onOpen()
         dispatchAction({type: "openBottomSheet"})
         
@@ -176,7 +178,9 @@ const MapScreenBottomSheet = (props: Props) => {
 
   return (
     <View 
-        style={styles.mapContainer}
+        style={[styles.mapContainer, 
+            state.open ? {height: "100%"} : {bottom: 0}
+        ]}
      >
         { state.open && <BottomSheet
             ref={bottomSheetRef}

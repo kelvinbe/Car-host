@@ -245,8 +245,6 @@ const RegisterScreen = (props: Props) => {
         email,
         password,
         confirmPassword,
-        loading,
-        error,
         viewPassword,
         viewConfirmPassword,
         passwordsMatch,
@@ -258,11 +256,10 @@ const RegisterScreen = (props: Props) => {
     const { theme } = useTheme()
     const toast = useToast()
 
-    const {signUp} = useUserAuth()
+    const {signUp, signUpLoading, signUpError} = useUserAuth()
 
     useEffect(()=>{
         if(!isEmpty(socialAuthError)){
-            console.log(socialAuthError)
             toast({
                 title: "Error",
                 type: "error",
@@ -282,23 +279,8 @@ const RegisterScreen = (props: Props) => {
                 message: "Invalid email or password"
             })
         }else{
-            dispatchAction({type: 'SET_LOADING', payload: true})
-            signUp(email, password).then((res)=>{
-                console.log(res)
-                dispatchAction({type: 'SET_LOADING', payload: false})
-                props.navigation.navigate("Verification")
-            }).catch((e)=>{
-                console.log(e)
-                toast({
-                    title: "Error",
-                    type: "error",
-                    duration: 5000,
-                    message: e.code === 'auth/email-already-in-use' ? 'Email already in use' : e.code === 'auth/invalid-email' ? 'Invalid email' : e.code === 'auth/weak-password' ? 'Weak password' : 'Something went wrong'
-                })
-                dispatchAction({type: 'SET_LOADING', payload: false})
-            })
+            signUp(email, password)
         }
-        
     }
 
     const toggleViewPassword = () => {
@@ -325,7 +307,7 @@ const RegisterScreen = (props: Props) => {
         props.navigation.navigate("Login")
     }
 
-  return ( (loading || socialAuthLoading) ? <Loading/> :
+  return ( (signUpLoading || socialAuthLoading) ? <Loading/> :
         <View style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
@@ -461,7 +443,7 @@ const RegisterScreen = (props: Props) => {
                             rightIcon={<Icon onPress={toggleViewConfirmPassword} name={ viewConfirmPassword  ? "eye" :"eye-slash"} type="font-awesome" />} 
                         />
                     <Rounded 
-                        loading={loading}
+                        loading={signUpLoading}
                         onPress={handleRegister}
                         fullWidth>
                         Continue

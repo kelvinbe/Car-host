@@ -1,0 +1,7 @@
+{
+    "message": "Payment Method Added Successfully",
+    "data": {
+        "id": 1
+    },
+    "status": "success"
+}
