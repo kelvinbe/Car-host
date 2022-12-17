@@ -108,5 +108,5 @@ export const daysOfTheWeekFromToday = () => {
 
 
 export const isAm = (time: string) => {
-    return time?.includes('AM') || "AM"
+    return time?.includes('AM') 
 }

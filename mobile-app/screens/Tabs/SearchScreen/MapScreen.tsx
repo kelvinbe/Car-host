@@ -11,6 +11,9 @@ import { SearchScreenParamList } from '../../../types'
 import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet'
 import { PROVIDER_GOOGLE } from 'react-native-maps'
 import useBookingActions from '../../../hooks/useBookingActions'
+import { isUndefined } from 'lodash'
+import { timeTilEndOfDay } from '../../../utils/utils'
+import dayjs from 'dayjs'
 
 
 interface IProps {
@@ -135,6 +138,14 @@ const MapScreen = (props: Props) => {
             console.log(e)
         })
     }
+
+    useEffect(()=>{
+        if(isUndefined(props.inReservation)){
+            const times = timeTilEndOfDay()
+            setStartDateTime(dayjs(times?.[0]?.value).toISOString())
+            setEndDateTime(dayjs(times?.[0]?.value).toISOString())
+        }
+    }, [props.inReservation])
 
     useEffect(()=>{
         // getCoords().then(()=>{

@@ -1,5 +1,7 @@
 const RESERVE = "INSERT INTO users (id, createdAt, email, hash, salt) VALUES(?, ?, ?, ?, ?)";
 
+const ADD_STRIPE_CUSTOMER_ID = "UPDATE users SET stripeCustomerId = ? WHERE id = ?";
+
 const EDIT_PROFILE = "";
 
 const SET_PAYMENT = "";
@@ -12,7 +14,7 @@ const FORGOT_PASSWORD = "";
 
 const SET_SETTINGS = "";
 
-const ADD_CARD = "";
+const ADD_CARD = "INSERT INTO Payment_Types (paymentTypeId, entityId, details, status ) VALUES(?, ?, ?, ?)";
 
 const CREATE_PASSWORD = "";
 
@@ -31,5 +33,6 @@ export {
     ADD_CARD,
     CREATE_PASSWORD,
     MODIFY_BOOKING,
-    CANCEL_BOOKING
+    CANCEL_BOOKING,
+    ADD_STRIPE_CUSTOMER_ID
 };

@@ -4,10 +4,12 @@ const { manifest } = Constants;
 // Api Endpoints
 
 const _DOMAIN = (typeof manifest?.packagerOpts === `object`) && manifest.packagerOpts.dev
-? manifest?.debuggerHost?.split(`:`)?.shift()?.concat(`:3003`)
+? manifest?.debuggerHost?.split(`:`)?.shift()
 : `production domain `;
-export const DOMAIN = `http:${_DOMAIN}`
+export const DOMAIN = `http:${_DOMAIN}:3003`
+console.log(DOMAIN)
 
+export const BACKEND_DOMAIN = `http:${_DOMAIN}:3000`
 
 export const ADD_CARD_ENDPOINT = DOMAIN + "/api/card";
 

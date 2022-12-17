@@ -1,35 +1,13 @@
 [
     {
-        "entityId": "1",
+        "entityId": "card_1MFav3AoGqRfm1CG0263Wfqv",
         "paymentType": "Visa",
         "details": {
-            "last4": "1111",
+            "last4": "4242",
             "brand": "Visa",
-            "expMonth": "12",
-            "expYear": "2058",
-            "nameOnCard": "John Doe"
-        }
-    },
-    {
-        "entityId": "2",
-        "paymentType": "MC",
-        "details": {
-            "last4": "1211",
-            "brand": "MasterCard",
-            "expMonth": "12",
-            "expYear": "2068",
-            "nameOnCard": "Jane Doe"
-        }
-    },
-    {
-        "entityId": "3",
-        "paymentType": "Amex",
-        "details": {
-            "last4": "3421",
-            "brand": "Amex",
-            "expMonth": "12",
-            "expYear": "2058",
-            "nameOnCard": "June Doe"
+            "expMonth": "4",
+            "expYear": "2023",
+            "nameOnCard": "Jane Smith"
         }
     }
 ]

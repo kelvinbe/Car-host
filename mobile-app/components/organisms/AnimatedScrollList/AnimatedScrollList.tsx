@@ -34,7 +34,9 @@ const AnimatedScrollList = (props: Props) => {
     const styles = useStyles(props)
     const scrollY = useRef(new Animated.Value(0)).current
     const handlePress = (index: number) =>{
+        console.log(startDateTime, endDateTime)
         if(startDateTime && endDateTime){
+            console.log(calcDuration(startDateTime, endDateTime))
             if(calcDuration(startDateTime, endDateTime) > 0){
                 props.handleSelect && props.handleSelect(vehicles ? vehicles[index] : null);
             }else {

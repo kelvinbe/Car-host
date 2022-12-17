@@ -13,6 +13,7 @@ interface IProfileState {
         marketId: number | null;
         userType: string;
         status: string;
+        stripeCustomerId?: string;
     },
     providers?: string[],
     passwordChanged?: boolean
@@ -29,6 +30,7 @@ const initialState: IProfileState = {
         marketId: null,
         userType: "",
         status: "",
+        stripeCustomerId: ""
     },
     providers: [],
     passwordChanged: false
@@ -50,7 +52,9 @@ export const fetchUserData = createAsyncThunk("user/fetchdata", async (userId: s
             profilePicUrl: "https://picsum.photos/200",
             marketId: 1,
             userType: "normal",
-            status: "active"
+            status: "active",
+            //This is a test stripe customer id, this test user exists on stripe
+            stripeCustomerId: "cus_Mza47QlfK5fAG1"
         }
     }
 })
@@ -113,3 +117,4 @@ export const { clearUserState, setPasswordChanged } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user.data;
 export const selectAuthProviders = (state: RootState) => state.user.providers
 export const selectPasswordChanged = (state: RootState) => state.user.passwordChanged
+export const selectStripeCustomerId = (state: RootState) => state.user.data.stripeCustomerId
