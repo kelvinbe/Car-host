@@ -126,7 +126,6 @@ export interface IVehicle {
      latitude: number,
      longtitude: number
   } | null
-  
 }
 
 /**

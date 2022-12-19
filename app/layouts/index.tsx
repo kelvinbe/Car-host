@@ -86,6 +86,7 @@ function Layouts(props: IProps) {
         return dashboardRoutesRegex.test(pathname)
     }
 
+
   return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full ">
         {

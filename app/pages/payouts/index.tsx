@@ -1,8 +1,44 @@
+import { Flex } from '@chakra-ui/react'
 import React from 'react'
+import FilterableTable from '../../components/organism/Table/FilterableTable/FilterableTable'
+import { IPayout } from '../../globaltypes'
+import { PayoutsTableColumns } from '../../utils/tables/TableTypes'
+import { FlexColCenterStart } from '../../utils/theme/FlexConfigs'
+
+const examplePayoutsData: IPayout[] = [
+  {
+    payoutId: "xxxxx",
+    amount: 140,
+    status: "active",
+    payDate: "2021-01-01",
+  },
+  {
+    payoutId: "xxxxx",
+    amount: 100,
+    status: "active",
+    payDate: "2021-01-01",
+
+  },
+  {
+    payoutId: "xxxxx",
+    amount: 130,
+    status: "active",
+    payDate: "2021-01-01",
+  }
+]
 
 function Payouts() {
   return (
-    <div>Payouts</div>
+    <Flex w="full" h="full"  {...FlexColCenterStart} >
+      <FilterableTable
+        sortables={[{
+          columnName: "Amount",
+          columnKey: "amount"
+        }]}
+        columns={PayoutsTableColumns}
+        data={examplePayoutsData}
+      />
+    </Flex>
   )
 }
 

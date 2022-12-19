@@ -1,9 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { getAuth } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { app } from '../firebase/firebaseApp'
 import useDashboardRoutes from '../hooks/useDashboardRoutes'
 import { dashboardRoutes } from '../utils/routes'
+import { Flex, Grid, GridItem } from "@chakra-ui/react"
+import DashboardSidebar from '../components/organism/Bars/Sidebar/DashboardSidebar'
+import DashboardTopBar from '../components/organism/Bars/TopBar/DashboardTopBar'
+import LoadingComponent from '../components/molecules/feedback/LoadingComponent'
+import { FlexColCenterCenter } from '../utils/theme/FlexConfigs'
 
 interface IProps {
   children: React.ReactNode
@@ -17,8 +23,18 @@ const twStyles = {
 
 function Dashboardlayout(props: IProps) {
   const { children } = props 
-  const  {push} = useRouter()
+  const  {push, events } = useRouter()
   const [isAdmin, setIsAdmin] = useState(false)
+  const [changePageLoad, setChangePageLoad] = useState(false)
+
+  useEffect(()=>{
+    events.on("routeChangeStart", ()=>{
+      setChangePageLoad(true)
+    })
+    events.on("routeChangeComplete", ()=>setChangePageLoad(false))
+
+  }, [])
+
 
   useEffect(()=>{
     const admin = localStorage.getItem("admin")
@@ -39,35 +55,26 @@ function Dashboardlayout(props: IProps) {
     })
   }
 
+
+
   return (
-    <div className="grid grid-cols-6 w-screen h-screen ">
-        <div className="grid col-span-1 ">
-            <div className="flex flex-col bg-slate-200 items-center justify-start flex-1">
-                <h2 className="text-center font-bold text-lg">
-                    Dashboard
-                </h2>
-                <div className={twStyles.dashboardButtonsContainer} >
-                  {
-                    dashboardRoutes?.filter(({admin}) => (admin && isAdmin) || !admin ).map(({name, onClick}, i)=>(
-                      <button onClick={dashboardNavigation?.[onClick]} key={i} className={twStyles.dashboardButton} >
-                        {name}
-                      </button>
-                    ))
-                  }
-                    <div className='mt-5 w-full flex items-center justify-center ' >
-                      <button onClick={logout} className={twStyles.logoutButton} >
-                        Logout
-                      </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div className="grid bg-slate-50 col-span-5">
-          <div className="flex flex-col items-center justify-center flex-1">
-            {children}
-          </div>
-        </div>
-    </div>
+    <Grid w="100vw" minH="100vh" bg="background" templateColumns={"300px auto"} >
+      <GridItem  h="full" w="full" >
+        <DashboardSidebar/>
+      </GridItem>
+      <GridItem w="full"  padding="20px 20px" h="full">
+            <Grid gridTemplateRows={"50px full"} rowGap="20px" >
+              <GridItem w="full" alignItems={"center"}  >
+                <DashboardTopBar/>
+              </GridItem>
+              <GridItem justifyContent={"center"} height="full" >
+                { changePageLoad ? <Flex h="full" w="full" flex={1} {...FlexColCenterCenter} > 
+                  <LoadingComponent/>
+                </Flex> :  children}
+              </GridItem>
+            </Grid>
+      </GridItem>
+    </Grid>
   )
 }
 
