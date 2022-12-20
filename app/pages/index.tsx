@@ -7,47 +7,125 @@ import styles from '../styles/Home.module.css'
 import LoadingComponent from '../components/molecules/feedback/LoadingComponent';
 import ErrorComponent from '../components/molecules/feedback/ErrorComponent';
 import { app } from '../firebase/firebaseApp';
+import { Flex, useToast } from '@chakra-ui/react';
+import { FlexColCenterBetween, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter } from '../utils/theme/FlexConfigs';
+import Logo from '../components/atoms/Brand/Logo';
+import AuthForm from '../components/organism/Forms/AuthForm/AuthForm';
+import HelperLinkText from '../components/atoms/HelperLinkText/HelperLinkText';
+import React, { useState } from 'react';
+import useAppAuth from '../hooks/useAppAuth';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth(app);
 
 export default function Home() {
   const [user, loading, error] = useAuthState(auth);
-  const router = useRouter();
+  const [authState, setAuthState] = useState<"signup"|"signin"|"forgot">("signin")
+  const { push } = useRouter();
 
-  const signIn =  ( isAdmin?: boolean ) => {
-    signInWithPopup(auth, provider).then((result)=>{
-      if(isAdmin){
-        localStorage.setItem("admin", "true")
-        router.push("/dashboard")
-      }else{
-        router.push("/dashboard")
-      }
-    }).catch((e)=>{
-      console.log(e)
-    })
-  };
+  const toast = useToast({
+    position: "top",
+  })
+                                                                                                                                     
+  const {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signInWithEmailAndPasswordLoading,
+    createUserWithEmailAndPasswordLoading
+  } = useAppAuth() 
+
+  const onSubmitHandler = (email: string, password: string) => {
+    if(authState === "signin"){
+      signInWithEmailAndPassword(email, password).then(()=>{
+        toast({
+          description: "Logged in successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        })
+        console.log("Signed in")
+        push("/dashboard")
+      }).catch((e)=>{
+        console.log(e)
+        toast({
+          title: "Error",
+          description: "An Error Occured",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        })
+      })
+    }else if(authState === "signup"){
+      createUserWithEmailAndPassword(email, password).then(()=>{
+        push("/dashboard")
+        console.log("Signed up")
+      }).catch((e)=>{
+        console.log(e)
+        toast({
+          title: "Error",
+          description: "An Error Occured",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top"
+        })
+      })
+    }
+  }
 
   return (
-    <div className="flex flex-col items-center flex-1 h-full justify-center">
-        {
-          loading ? <LoadingComponent/> : error ? <ErrorComponent
-            error={error?.message}
-          /> : <div className="flex flex-col items-center justify-center">
-              <a 
-                onClick={()=>signIn()}
-                className="bg-blue-500 cursor-pointer mb-5 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Sign In with Google
-              </a>
-              <a 
-                onClick={()=>signIn(true)}
-                className="bg-blue-500 cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Sign In with Google as Admin
-              </a>
-          </div> 
-        }
-    </div>
+    <Flex 
+      w="100vw" 
+      h="100vh"
+      {...FlexRowCenterBetween} 
+    >
+      <Flex w="50%" h="full" {...FlexColCenterBetween} padding="40px 20px" >
+        <Flex {...FlexRowCenterCenter} w="full" >
+          <Logo/>
+        </Flex>
+        <Flex w="80%" {...FlexColCenterStart} >
+          <AuthForm
+            type={authState}
+            onSubmit={onSubmitHandler}
+            changeAuthState={setAuthState}
+            loading={
+              authState === "signin" ? signInWithEmailAndPasswordLoading : authState === "signup" ? createUserWithEmailAndPasswordLoading : false
+            }
+          />
+        </Flex>
+        <Flex 
+          w="full"
+          {...FlexRowCenterCenter}
+        >
+          <HelperLinkText
+            onClick={()=>{
+              if(authState === "signin"){
+                setAuthState("signup")
+              }else if(authState === "forgot"){
+                setAuthState("signin")
+              }else{
+                setAuthState("signin")
+              }
+            }}
+            linkText={
+              authState === "signin" ? "Sign Up" : authState === "forgot" ? "Back to Login" : "Sign In" 
+            }
+          >
+            {
+              authState === "signin" ? "Don't have an account?" : authState === "forgot" ? "Not you?" : "Already have an account?"
+            }
+          </HelperLinkText>
+        </Flex>
+      </Flex>
+
+      <Flex 
+        w="50%"
+        h="full"	 
+        {...FlexColCenterStart}
+        bgImage="/images/AuthForm.png"
+        bgSize="cover"
+        bgRepeat="no-repeat"
+      ></Flex>
+    </Flex>
   )
 }

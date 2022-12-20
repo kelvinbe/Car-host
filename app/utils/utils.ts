@@ -50,3 +50,57 @@ export const genGreetingBasedOnTime = (name: string): string => {
         return `Good Evening, ${name}`;
     }
 }
+
+/**
+ * @section Form helpers ====================================================================================================================================
+ * @description custom helpers for helping with input
+ */
+
+
+/**
+ * @name addSpacingAfterEveryFourDigits
+ * @description Adds a space after every four digits
+ * @param {string} str
+ * @returns {string}
+ * @example addSpacingAfterEveryFourDigits("1234567890123456") => "1234 5678 9012 3456"
+ */
+export const addSpacingAfterEveryFourDigits = (str: string) => {
+    return str.replace(/(.{4})/g, "$1 ").trim()
+}
+
+/**
+ * @name addSlashAfter2Digits
+ * @description Adds a slash after every two digits
+ * @param {string} str
+ * @returns {string}
+ * @example addSlashAfter2Digits("1234567890123456") => "12/34/56/78/90/12/34/56"
+ */
+export const addSlashAfter2Digits = (str: string) => {
+    return str.replace(/(.{2})/g, "$1/").trim()
+}
+
+
+/**
+ * @name removeSpaces
+ * @description Removes all spaces from a string
+ * @param {string} str
+ * @returns {string}
+ * @example removeSpaces("1234 5678 9012 3456") => 
+ * "1234567890123456"
+ */
+
+export const removeSpaces = (str: string) => {
+    return str.replace(/\s/g, "")
+}
+
+
+
+export const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+//password with atleast 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character
+export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+export const hasLowercase = (str: string) => /[a-z]/.test(str);
+export const hasUppercase = (str: string) => /[A-Z]/.test(str);
+export const hasNumber = (str: string) => /\d/.test(str);
+export const hasSpecialCharacter = (str: string) => /[@$!%*?&]/.test(str);
