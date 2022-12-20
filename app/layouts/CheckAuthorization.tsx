@@ -8,6 +8,7 @@ import ErrorComponent from '../components/molecules/feedback/ErrorComponent'
 import LoadingComponent from '../components/molecules/feedback/LoadingComponent'
 import { app } from '../firebase/firebaseApp'
 import { IStaticProps } from '../globaltypes'
+import { adminRoutesRegex, dashboardRoutesRegex, protectedRegex } from '../utils/regex'
 
 interface IProps {
     pageProps: IStaticProps,
@@ -19,40 +20,30 @@ function CheckAuthorization(props: IProps) {
     const { pageProps, checked } = props
     const { adminonly, authonly } = pageProps
     const [user, loading, error] = useAuthState(getAuth(app))
-    const { pathname } = useRouter()
+    const { pathname, push } = useRouter()
 
 
     useEffect(()=>{
         //using set timeout for loading effect
-    const timeoutRef = setTimeout(()=>{
-        console.log(`Checking authorization for ${pathname}`)
-        if(authonly){
-            if(!loading){
-                if(user){
-                    if(adminonly){
-                        console.log(typeof localStorage.getItem('admin'))
-                        if(localStorage.getItem('admin')){
-                            checked(true)
-                        }else{
-                            checked(false)
-                        }
-                    }else{
-                        checked(true)
-                    }
-                }else{
-                    checked(false)
-                }
-            }
-        }else{
+        
+        if(user){
             checked(true)
+            /**
+             * @todo check if user is admin
+             */
         }
-    }, 3000)
-
+        if(isEmpty(user)){
+            if(adminonly || authonly){
+                checked(false)
+                push('/')
+            }else{
+                checked(true)
+            }
+        }
     return ()=>{
-        clearTimeout(timeoutRef)
     }
         
-    }, [user, loading, pathname])
+    }, [pathname])
 
   return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 h-full">

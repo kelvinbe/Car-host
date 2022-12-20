@@ -22,7 +22,7 @@ export const loadEnv = (envVariableName: string): string => {
  * @returns {any} responseDto 
  */
 
-export const genResponseDto = (type: string, data: any, message: string): {
+export const genResponseDto = (type: "error" | "success", data: any, message: string): {
     type: "error" | "success",
     data: any,
     message: string
@@ -104,3 +104,17 @@ export const hasLowercase = (str: string) => /[a-z]/.test(str);
 export const hasUppercase = (str: string) => /[A-Z]/.test(str);
 export const hasNumber = (str: string) => /\d/.test(str);
 export const hasSpecialCharacter = (str: string) => /[@$!%*?&]/.test(str);
+
+
+
+/**
+ * @name getLocalStorage
+ * @description Gets a value from local storage returns null if in server side
+ */
+
+export const getLocalStorage = (key: string): string | null => {
+    if (typeof window === 'undefined') {
+        return null;
+    }
+    return localStorage.getItem(key);
+}

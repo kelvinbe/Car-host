@@ -7,6 +7,8 @@ import BaseTable from '../../components/organism/Table/BaseTable/BaseTable';
 import { app } from '../../firebase/firebaseApp';
 import { PayoutsTableColumns, ReservationTableColumns } from '../../utils/tables/TableTypes';
 import PreviewTableContainer from '../../components/organism/Table/TableContainer/TableContainer';
+import LiveMapComponent from '../../components/organism/Maps/LiveMapComponent/LiveMapComponent';
+import { IVehicle } from '../../globaltypes';
 
 const data = [
   {
@@ -95,6 +97,52 @@ const mockPayouts = [
   },
 ]
 
+const exampleVehicles: IVehicle[] = [
+  {
+    color: "red",
+    coords: {
+      latitude: 6.5244,
+      longitude: 3.3792
+    },
+    hourlyRate: 1000,
+    location: "Lagos",
+    locationId: "1",
+    seats: 4,
+    status: "active",
+    transmission: "automatic",
+    vehicleId: "1",
+    vehicleMake: "Toyota",
+    vehicleModel: "Camry",
+    vehicleType: "car",
+    year: 2019 ,
+    vehiclePictures: [
+      "https://images.unsplash.com/photo-1547143379-3374bbefa14a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=697&q=80"
+    ]
+  }, 
+  {
+    color: "red",
+    coords: {
+      latitude: 8.5244,
+      longitude: 4.3792
+    },
+    hourlyRate: 1000,
+    location: "Lagos",
+    locationId: "1",
+    seats: 4,
+    status: "active",
+    transmission: "automatic",
+    vehicleId: "2",
+    vehicleMake: "Toyota",
+    vehicleModel: "Camry",
+    vehicleType: "car",
+    vehiclePictures: [
+      "https://images.unsplash.com/photo-1512668023544-749964af467a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+    ],
+    year: 2019
+  }
+]
+
+
 
 
 export default function Dashboard() {
@@ -126,7 +174,10 @@ export default function Dashboard() {
           </PreviewTableContainer>
       </GridItem>
       <GridItem w="full" >
-        Vehicles and Reservations live view
+        <LiveMapComponent
+          marketId='someId'
+          vehicles={exampleVehicles}
+        />
       </GridItem>
       <GridItem w="full" >
         <PreviewTableContainer
@@ -147,9 +198,9 @@ export default function Dashboard() {
 export function getStaticProps (context: NextPageContext) {
   return {
     props: {
-      adminOnly: false,
+      adminonly: false,
       dashboard: true,
-      authOnly: true
+      authonly: true
     }
   }
 }

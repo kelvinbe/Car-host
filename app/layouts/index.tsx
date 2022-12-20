@@ -52,7 +52,7 @@ function Layouts(props: IProps) {
         proceed,
         hasBeenChecked
     }, dispatchAction] = useReducer(layoutReducer, initialState)
-    const [user] = useAuthState(getAuth(app))
+    const [user,loading,error] = useAuthState(getAuth(app))
     const { pageProps, children } = props
     console.log(pageProps)
     const { dashboard } = pageProps
@@ -66,14 +66,6 @@ function Layouts(props: IProps) {
         dispatchAction(setHasBeenCheched(false))
     }
 
-    useEffect(()=>{
-        if(!proceed && hasBeenChecked ){
-            push('/').then(()=>uncheck())
-        }else{
-            uncheck()
-        }
-    }, [hasBeenChecked])
-
     const isAdminOnly = () =>{
         return protectedRegex.test(pathname) && adminRoutesRegex.test(pathname)
     }
@@ -85,6 +77,15 @@ function Layouts(props: IProps) {
     const isDashboardRoute = () =>{
         return dashboardRoutesRegex.test(pathname)
     }
+
+    useEffect(()=>{
+        if(user){
+            user.getIdToken().then(tkn=>localStorage.setItem('idToken', tkn))
+        }else{
+            localStorage.removeItem('idToken')
+        }
+    }, [user,loading,error])
+
 
 
   return (

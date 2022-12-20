@@ -17,8 +17,10 @@ function ForgotPassword() {
         setIsEmailValid(email.includes("@") && email.includes("."))
     }, [email])
 
+    const submitEmail = () =>{
+        setStep(1)
+    }
 
-    
   return (
     <Flex flex="1" w="full" h="full" {...FlexColCenterCenter} >
         <Flex
@@ -52,9 +54,7 @@ function ForgotPassword() {
                     />
                     ) : step === 1 ? (
                         <Text w="full" textAlign="center"  >
-                            An email with instruction to Reset your password has been sent to {
-                                email
-                            }
+                            An email with instruction to Reset your password has been sent to <strong>{email}</strong> 
                         </Text>
                     ) : step === 2? (
                         <CreatePassword
@@ -65,7 +65,7 @@ function ForgotPassword() {
             </Flex>
             {
                 step === 0 ? (
-                    <Rounded variant="solid" fullWidth >
+                    <Rounded onClick={submitEmail} variant="solid" fullWidth >
                         Continue
                     </Rounded>
                 ) : step === 1 ? null : step === 2 ? (
