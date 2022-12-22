@@ -19,18 +19,18 @@ export const loadBookingDetailsFromReservation = createAsyncThunk<any, any>(
         //fetch reservation 
         return thunkAPI.dispatch(reservationsApi.endpoints.getReservation.initiate(reservationId as any)).unwrap().then((reservation)=>{
             // console.log(reservation)
-            const { endDateTime, total, vehicleId, paymentMethod, startDateTime, status, locationAddress } = reservation
+            const { end_date_time, start_date_time, total_cost, vehicle, payment_method_details, status } = reservation
             // now all we need to fetch is the vehicle info
-            return thunkAPI.dispatch(vehiclesApi.endpoints.getVehicle.initiate(vehicleId)).unwrap().then((vehicle)=>{
+            return thunkAPI.dispatch(vehiclesApi.endpoints.getVehicle.initiate(vehicle.vehicle_id)).unwrap().then((vehicle)=>{
                 // now we can return the vehicle info payment method and the rest of the info related to the reservation
                 return {
                     vehicle, 
-                    paymentMethod,
-                    endDateTime,
-                    total,
-                    startDateTime,
+                    paymentMethod: payment_method_details,
+                    endDateTime: end_date_time,
+                    total: total_cost,
+                    startDateTime: start_date_time,
                     status,
-                    locationAddress
+                    locationAddress: ""
                 }
             }).catch((e)=>{
                 return thunkAPI.rejectWithValue(e)

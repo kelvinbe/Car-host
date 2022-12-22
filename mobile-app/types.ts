@@ -87,20 +87,77 @@ export interface IToast {
  * @name IReservation
  * @description Reservation data type
  */
+// export interface IReservation {
+//   reservationId: string;
+//   hostId: string;
+//   startDateTime: string;
+//   endDateTime: string;
+//   vehicleId: string;
+//   vehicleModel: string;
+//   vehicleMake: string;
+//   vehiclePicUrl: string;
+//   locationAddress: string;
+//   marketName: string;
+//   total: string;
+//   status: string;
+//   paymentMethod?: IPaymentMethod<any>;
+// }
+
 export interface IReservation {
-  reservationId: string;
-  hostId: string;
-  startDateTime: string;
-  endDateTime: string;
-  vehicleId: string;
-  vehicleModel: string;
-  vehicleMake: string;
-  vehiclePicUrl: string;
-  locationAddress: string;
-  marketName: string;
-  total: string;
-  status: string;
-  paymentMethod?: IPaymentMethod<any>;
+  reservation_id?: string;
+  customer: {
+    userId?: string;
+    fname?: string;
+    lname?: string;
+    profile_pic_url?: string;
+  },
+  vehicle: {
+    vehicle_id?: number;
+    hourly_rate?: number;
+    vehicle_type?: string;
+    color?: string;
+    seats?: number;
+    plate?: string;
+    transmission?: "Manual" | "Automatic";
+    year?: number;
+    status?: "Available" | "Unavailable" | "Booked" | "Restricted";
+    make: string;
+    model: string;
+    userId?: string;
+    host: {
+      userId?: string;
+      fname?: string;
+      lname?: string;
+      profile_pic_url?: string;
+      handle?: string;
+      entityId?: string;
+    },
+    location: {
+      location_id?: number;
+      entity_id?: string;
+      market: {
+        market_id?: number;
+        country?: string;
+        name?: string;
+        latitude?: string;
+        longitude?: string;
+        status?: "Active" | "Nonactive";
+      },
+      address?: string;
+      picture_url?: string;
+      longitude?: string;
+      latitude?: string;
+      status?: "Active" | "Nonactive" | "Suspended";
+    },
+    vehicle_pictures?: string[];
+  }
+  start_date_time?: string;
+  end_date_time?: string;
+  total_cost?: number;
+  duration?: number;
+  payment_id?: string;
+  status?: "Complete" | "Active" | "Upcoming" | "Cancelled" | "Other";
+  payment_method_details: any
 }
 
 /**
@@ -109,23 +166,48 @@ export interface IReservation {
  */
 
 export interface IVehicle {
-  vehicleId: string,
-  vehicleType: string,
-  vehicleMake: string,
-  vehicleModel: string,
-  locationId: string,
-  color: string,
-  seats: number,
-  transmission: string,
-  year: number | string,
-  status: "Available" | "Unavailable" | "Intent",
-  hourlyRate: number,
-  vehiclePictures: string[],
-  location: string,
-  coords: {
-     latitude: number,
-     longtitude: number
-  } | null
+  vehicle_id?: number;
+  vehicle_type?: string;
+  location_id?: number;
+  color?: string;
+  seats?: number;
+  plate?: string;
+  transmission?: "Manual" | "Automatic";
+  year?: number;
+  longitude?: number;
+  latitude?: number;
+  status?: "Available" | "Unavailable" | "Booked" | "Restricted";
+  make: string;
+  model: string;
+  hourly_rate: number;
+  host: {
+    userId?: string;
+    fname?: string;
+    lname?: string;
+    profile_pic_url?: string;
+    handle?: string;
+  },
+  location: {
+    location_id?: number;
+    entity_id?: string;
+    market: {
+      market_id?: number;
+      country?: string;
+      name?: string;
+      latitude?: string;
+      longitude?: string;
+      status?: "Active" | "Nonactive";
+    },
+    address?: string;
+    building_name?: string;
+    picture_url?: string;
+    directions?: string;
+    longitude?: string;
+    latitude?: string;
+    status?: "Active" | "Nonactive" | "Suspended";
+  };
+  vehicle_pictures?: string[];
+  
 }
 
 /**
@@ -180,3 +262,31 @@ export interface IAPIDto<T> {
   data: T,
   status: "success" | "error"
 }
+
+/**
+ * @section data types for the objects being used around the app
+ */
+export interface dIUserProfile {
+  uid?: string;
+  fname: string;
+  lname: string;
+  email: string;
+  handle: string;
+  phone: string;
+  profile_pic_url: string;
+  settings?: {
+    notificationsEnabled?: boolean;
+  } | null,
+  user_type: "host" | "customer",
+  status?: "Active" | "NonActive" | "Banned" | "Suspended";
+  market?: {
+    market_id?: number;
+    country?: string;
+    name?: string;
+    latitude?: string;
+    longitude?: string;
+    status?: "Active" | "Nonactive";
+  } | null,
+  customer_id?: string;
+}
+

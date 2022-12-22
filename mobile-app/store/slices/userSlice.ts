@@ -1,20 +1,10 @@
+import { dIUserProfile } from './../../types';
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { auth } from '../../firebase/firebaseApp';
 
 interface IProfileState {
-    data: {
-        fname: string;
-        lname: string;
-        email: string;
-        handle: string;
-        phone: string;
-        profilePicUrl: string;
-        marketId: number | null;
-        userType: string;
-        status: string;
-        stripeCustomerId?: string;
-    },
+    data: dIUserProfile,
     providers?: string[],
     passwordChanged?: boolean
 }
@@ -26,11 +16,10 @@ const initialState: IProfileState = {
         email: "",
         handle: "",
         phone: "",
-        profilePicUrl: "",
-        marketId: null,
-        userType: "",
-        status: "",
-        stripeCustomerId: ""
+        profile_pic_url: "",
+        user_type: "customer",
+        status: "Active",
+        customer_id: ""
     },
     providers: [],
     passwordChanged: false
@@ -49,13 +38,13 @@ export const fetchUserData = createAsyncThunk("user/fetchdata", async (userId: s
             email: "john@email.com",
             handle: "john_doe",
             phone: "1234567890",
-            profilePicUrl: "https://picsum.photos/200",
-            marketId: 1,
-            userType: "normal",
-            status: "active",
+            profile_pic_url: "https://picsum.photos/200",
+            market: null,
+            user_type: "customer",
+            status: "Active",
             //This is a test stripe customer id, this test user exists on stripe
-            stripeCustomerId: "cus_Mza47QlfK5fAG1"
-        }
+            customer_id: "cus_Mza47QlfK5fAG1"
+        } as dIUserProfile
     }
 })
 
@@ -69,11 +58,11 @@ export const updateUserData = createAsyncThunk("user/updatedata", (data: {uid?: 
         email: "",
         handle: "john_doe",
         phone: "1234567890",
-        profilePicUrl: "https://picsum.photos/200",
-        marketId: 1,
-        userType: "normal",
-        status: "active"
-    }
+        profile_pic_url: "https://picsum.photos/200",
+        market: null,
+        user_type: "customer",
+        status: "Active"
+    } as dIUserProfile
 })
 
 
@@ -87,10 +76,10 @@ const userSlice = createSlice({
             state.data.email = "";
             state.data.handle = "";
             state.data.phone = "";
-            state.data.profilePicUrl = "";
-            state.data.marketId = null;
-            state.data.userType = "";
-            state.data.status = "";
+            state.data.profile_pic_url = "";
+            state.data.market = null;
+            state.data.user_type = "customer";
+            state.data.status = "NonActive";
         },
         setPasswordChanged: (state) =>{
             state.passwordChanged = true
@@ -117,4 +106,4 @@ export const { clearUserState, setPasswordChanged } = userSlice.actions;
 export const selectUser = (state: RootState) => state.user.data;
 export const selectAuthProviders = (state: RootState) => state.user.providers
 export const selectPasswordChanged = (state: RootState) => state.user.passwordChanged
-export const selectStripeCustomerId = (state: RootState) => state.user.data.stripeCustomerId
+export const selectStripeCustomerId = (state: RootState) => state.user.data.customer_id

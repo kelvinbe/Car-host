@@ -1,4 +1,4 @@
-import { genResponseDto } from './../../../../utils/utils';
+import { generateResponseDataTransferObject } from './../../../../utils/utils';
 import { IPaymentIntentRequest } from './../../../../globaltypes';
 import { withMethod } from './../../../../middleware/withMethod';
 import { withAuth } from './../../../../middleware/withAuth';
@@ -22,13 +22,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             enabled: true
         },
     }).then((paymentIntent)=>{
-        res.status(200).send(genResponseDto("success", {
+        res.status(200).send(generateResponseDataTransferObject("success", {
             ...paymentIntent,
             ephemeralKey: ephemeralKey.secret
         }, "Payment intent created"))
     }).catch((e)=>{
         console.log(e)
-        res.status(500).send(genResponseDto("error", e, "Error creating payment intent"))
+        res.status(500).send(generateResponseDataTransferObject("error", e, "Error creating payment intent"))
     })
 }
 

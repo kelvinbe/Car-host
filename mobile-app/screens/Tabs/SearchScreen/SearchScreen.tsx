@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme, props) => ({
     logoImage: {
       width: 100,
       height: 100,
-      resizeMode: "contain",
+      resizeMode: "cover",
       marginBottom: 20
     },
     heading: {

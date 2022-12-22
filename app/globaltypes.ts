@@ -1,3 +1,4 @@
+import { eIVehicle, eIReservation, eIPaymentType, eIMarket } from './entities';
 // Static props
 
 export interface IStaticProps {
@@ -28,13 +29,6 @@ export interface IPaymentIntentRequest {
     currency: string
 }
 
-
-
-
-
-/**
- * @section Types for data being piped into tables
- */
 
 /**
  * @name IVehicle 
@@ -107,3 +101,87 @@ export interface IUserProfile {
   status: string;
   stripeCustomerId?: string;
 }
+
+
+
+/**
+ * @name GenerateDataTransferObject
+ * @description - Generic data transfer object that is used to send data to the client. This is used to send data to the client in a consistent manner.
+ */
+export interface GenerateDataTransferObject<T> {
+  type: "success" | "error";
+  message: string;
+  data: T;
+}
+
+/**
+ * @section - Data transfer object definitions
+ * @description - These are the types that are used to define the data that is sent as responses from the server. Each of these interfaces is prefixed with "dI" to indicate that they are
+ *               data interfaces.
+ */
+
+export interface dIUserProfile {
+  uid?: string;
+  fname: string;
+  lname: string;
+  email: string;
+  handle: string;
+  phone: string;
+  profile_pic_url: string;
+  settings?: {
+    notificationsEnabled?: boolean;
+  },
+  user_type: "host" | "customer",
+  status?: "Active" | "NonActive" | "Banned" | "Suspended";
+  market: {
+    market_id?: number;
+    country?: string;
+    name?: string;
+    latitude?: string;
+    longitude?: string;
+    status?: "Active" | "Nonactive";
+  },
+  customer_id?: string;
+}
+
+//extending but not all properties will be present
+export interface dIVehicle extends eIVehicle {
+  host: {
+    userId?: string;
+    fname?: string;
+    lname?: string;
+    profile_pic_url?: string;
+    hourly_rate?: number;
+  },
+  location: {
+    location_id?: number;
+    entity_id?: string;
+    market: eIMarket,
+    address?: string;
+    building_name?: string;
+    picture_url?: string;
+    directions?: string;
+    longitude?: string;
+    latitude?: string;
+    status?: "Active" | "Nonactive" | "Suspended";
+  },
+  
+  vehicle_pictures?: string[];
+}
+
+//extending but not all properties will be present
+export interface dIReservation extends eIReservation {
+  customer: {
+    userId?: string;
+    fname?: string;
+    lname?: string;
+    profile_pic_url?: string;
+  },
+  vehicle: dIVehicle;
+  payment: eIPaymentType;
+}
+
+
+
+
+

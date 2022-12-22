@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         textInfo: {
             fontSize: 13,
-            fontWeight: "700", 
+            fontWeight: "700",
  fontFamily: "Lato_700Bold",
             color: theme.colors.black,
             marginLeft: 10
@@ -60,7 +60,7 @@ const BookingCarPaymentInfo = (props: Props) => {
 
     const calcAmount =( )=>{
         if(isNull(vehicle)) return 0
-        return calcDuration(startDateTime, endDateTime) * (vehicle?.hourlyRate / 2)
+        return calcDuration(startDateTime, endDateTime) * (vehicle?.hourly_rate)
     }
 
   return (

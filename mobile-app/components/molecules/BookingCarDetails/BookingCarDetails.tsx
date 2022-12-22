@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
         carImage: {
             width: 110,
             height: 80,
-            resizeMode: "contain"
+            resizeMode: "cover"
         },
         extraCarInfo: {
             width: "100%",
@@ -97,10 +97,10 @@ const BookingCarDetails = (props: Props) => {
             <View
             style={styles.container}
             >
-                <Text style={styles.headerTitle}> {vehicle?.vehicleMake} {vehicle?.vehicleModel} </Text>
+                <Text style={styles.headerTitle}> {vehicle?.make} {vehicle?.model} </Text>
                 <ScrollView style={styles.scrollView} horizontal  >
                     {
-                        vehicle?.vehiclePictures?.map((image, index)=>(
+                        vehicle?.vehicle_pictures?.map((image, index)=>(
                             <View key={index} style={styles.carSlide} >
                                 <Image
                                     style={styles.carImage}
@@ -124,7 +124,7 @@ const BookingCarDetails = (props: Props) => {
                         </View>
                         <Text style={styles.value} >
                             {
-                                vehicle?.vehicleType
+                                vehicle?.vehicle_type
                             }
                         </Text>
                     </View>

@@ -5,7 +5,7 @@ import { withAuth } from "../../../../middleware/withAuth";
 import { withMethod } from "../../../../middleware/withMethod";
 import { ADD_STRIPE_CUSTOMER_ID } from "../../../../mutations";
 import stripe from "../../../../stripe/init.config";
-import { genResponseDto } from "../../../../utils/utils";
+import { generateResponseDataTransferObject } from "../../../../utils/utils";
 
 
 function handler(req: NextApiRequest, res: NextApiResponse){
@@ -23,15 +23,15 @@ function handler(req: NextApiRequest, res: NextApiResponse){
                 query: ADD_STRIPE_CUSTOMER_ID,
                 values: [customer.id, req.headers.uid as string]
             }).then(()=>{
-                res.status(200).send(genResponseDto("success", customer, "Customer created"))
+                res.status(200).send(generateResponseDataTransferObject("success", customer, "Customer created"))
             }).catch((e)=>{
-                res.status(500).send(genResponseDto("error", e, "Error creating customer"))
+                res.status(500).send(generateResponseDataTransferObject("error", e, "Error creating customer"))
             })
         }).catch((e)=>{
-            res.status(400).send(genResponseDto("error", e, "Error creating customer"))
+            res.status(400).send(generateResponseDataTransferObject("error", e, "Error creating customer"))
         })
     }).catch((e)=>{
-        res.status(400).send(genResponseDto("error", e, "Error creating customer"))
+        res.status(400).send(generateResponseDataTransferObject("error", e, "Error creating customer"))
     })
 }
 

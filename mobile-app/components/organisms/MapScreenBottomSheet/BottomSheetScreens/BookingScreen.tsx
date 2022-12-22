@@ -78,19 +78,19 @@ const BookingScreen = (props: Props) => {
     if(!isEmpty(paymentOption)){
         addReservation({
             hostId: hostId as any,
-            vehicleId: vehicle?.vehicleId as any,
+            vehicleId: vehicle?.vehicle_id as any,
             startDateTime,
             endDateTime,
             paymentMethod: billingInfo as any,
             total: total as any,
-            vehicleMake: vehicle?.vehicleMake as any,
-            vehicleModel: vehicle?.vehicleModel as any,
-            vehiclePicUrl: vehicle?.vehiclePictures?.[0] as any,
+            vehicleMake: vehicle?.make as any,
+            vehicleModel: vehicle?.model as any,
+            vehiclePicUrl: vehicle?.vehicle_pictures?.[0] as any,
             /**Not sure about these */
             reservationId: '',
             locationAddress: '',
             marketName: '',
-            status: ''
+            status: 'Active'
         })
     }
   }, [paymentOption])

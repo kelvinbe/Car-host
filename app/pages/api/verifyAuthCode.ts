@@ -1,4 +1,4 @@
-import { genResponseDto } from './../../utils/utils';
+import { generateResponseDataTransferObject } from './../../utils/utils';
 import { withAuth } from './../../middleware/withAuth';
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -40,7 +40,7 @@ async function handler(
     //return result[0];
     return res.status(200).json({ });
   } catch (error: any) {
-    return res.status(500).json(genResponseDto("error", error, "Error verifying auth code") as any);
+    return res.status(500).json(generateResponseDataTransferObject("error", error, "Error verifying auth code") as any);
   }
 }
 

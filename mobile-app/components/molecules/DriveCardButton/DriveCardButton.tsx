@@ -30,12 +30,14 @@ const useStyles = makeStyles((theme, props: Props)=>{
         carImageContainer: {
             width: 80,
             height: 80,
-            marginRight: 10
+            borderRadius: 40,
+            marginRight: 10,
         },
         carImage: {
             width: 80,
             height: 80,
-            resizeMode: 'contain'
+            resizeMode: 'cover',
+            borderRadius: 40,
         },
         leftContainer:{ 
             flexDirection: "row",
@@ -61,6 +63,9 @@ const useStyles = makeStyles((theme, props: Props)=>{
         driverAvatarStyle: {
             width: 30,
             height: 30,
+            resizeMode: "cover",
+            borderRadius: 15,
+
         },
         driverNameText: {
             fontWeight: "700", 
@@ -122,19 +127,23 @@ const DriveCardButton = (props: Props) => {
                 <TouchableOpacity onPress={props.onPress} style={styles.leftContainer} >
                     <View style={styles.carImageContainer} >
                         <Image style={styles.carImage} source={{
-                            uri: props?.vehiclePictures?.[0]
+                            uri: props?.vehicle_pictures?.[0]
                         }} />
                     </View>
                     <View style={styles.driveInfoContainer} >
                         <Text style={styles.driveInfoText} >
-                            {props?.vehicleMake} {props?.vehicleModel}
+                            {props?.make} {props?.model}
                         </Text>
                         <View style={styles.driverInfoContainer} >
                             <View style={styles.driverAvatarStyle} >
-                                <Image style={styles.driverAvatarStyle} source={require("../../../assets/images/driver.png")} />
+                                <Image style={styles.driverAvatarStyle} source={{
+                                    uri: props?.host?.profile_pic_url
+                                }} />
                             </View>
                             <Text style={styles.driverNameText} >
-                                Jesse
+                                {
+                                    `${props?.host?.handle}`
+                                }
                             </Text>
                         </View>
                         <View style={styles.locationContainer} >
@@ -151,7 +160,7 @@ const DriveCardButton = (props: Props) => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={props.onPress} >
                     <Text style={styles.amountStyle} >
-                        ${props?.hourlyRate}/hr
+                        ${props?.hourly_rate}/hr
                     </Text>
                 </TouchableOpacity>
             </Animated.View>

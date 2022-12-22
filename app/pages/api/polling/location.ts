@@ -1,4 +1,4 @@
-import { genResponseDto } from './../../../utils/utils';
+import { generateResponseDataTransferObject } from './../../../utils/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withAuth } from '../../../middleware/withAuth';
 import { withMethod } from '../../../middleware/withMethod';
@@ -25,7 +25,7 @@ function handler (req: NextApiRequest, res: NextApiResponse) {
      * 
      */
 
-    res.status(200).send(genResponseDto("success", {
+    res.status(200).send(generateResponseDataTransferObject("success", {
         vehicleId,
         longitude: locations?.[
             Math.floor(Math.random() * locations.length)

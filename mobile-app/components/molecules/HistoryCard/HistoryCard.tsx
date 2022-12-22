@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme, props: Props)=>({
     vehicleImage: {
       width: 70,
       height: 70,
-      resizeMode: "contain"
+      resizeMode: "cover"
     },
     vehicleInfo: {
       alignItems: "flex-start",
@@ -161,11 +161,11 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const HistoryCard = (props: Props) => {
-  const { endDateTime, hostId, locationAddress, marketName, reservationId, startDateTime, status, total, vehicleId, vehicleMake, vehicleModel, vehiclePicUrl, customStyle, onDetailsPress } = props
+  const { customer, vehicle, duration, end_date_time, payment_id, start_date_time, status, total_cost , customStyle, reservation_id, onDetailsPress } = props
   const styles = useStyles(props);
 
   const onPress = () =>{
-    onDetailsPress && onDetailsPress(reservationId);
+    reservation_id && onDetailsPress && onDetailsPress(reservation_id);
   }
 
   return (
@@ -183,7 +183,7 @@ const HistoryCard = (props: Props) => {
                 <CalendarIcon stroke={theme.colors.primary} fill={theme.colors.primary} width={12} height={12} color={theme.colors.primary}  /> 
                 <Text style={styles.dateText} > 
                   {
-                    dayjs(startDateTime).format("DD MMM YYYY")
+                    dayjs(start_date_time).format("DD MMM YYYY")
                   }
                 </Text>
               </View>
@@ -199,33 +199,41 @@ const HistoryCard = (props: Props) => {
                   <View style={styles.vehicle} > 
                     <Image style={styles.vehicleImage} 
                       source={{
-                        uri: vehiclePicUrl
+                          uri: vehicle?.vehicle_pictures?.[0]
                       }}
                     />
                   </View>
                   <View style={styles.vehicleInfo} >
                     <Text style={styles.vehicleName} >
-                      {vehicleMake} {vehicleModel}
+                      {vehicle?.make} {vehicle?.model} {vehicle?.year}
                     </Text>
                     <View style={styles.driverInfo} >
                       <Image 
                         style={styles.driverImage}
-                        source={require("../../../assets/images/driver.png")}
+                        source={{
+                          uri: vehicle?.host?.profile_pic_url
+                        }}
                       />
                       <Text style={styles.driverName} >
-                        Jesse
+                        {
+                          `${vehicle?.host?.handle}`
+                        }
                       </Text>
                     </View>
                     <View style={styles.locationInfoContainer} >
                       <LocationIcon stroke={theme.colors.stroke} style={styles.locationIcon} />
                       <Text style={styles.locationInfo} >
-                        21964 Jim Rosa Lane, SF
+                        {
+                          `${vehicle?.location?.address}`
+                        }
                       </Text>
                     </View>
 
                   </View>
                   <Text style={styles.ridePrice} >
-                    ${total}
+                    ${
+                      total_cost
+                    }
                   </Text>
               </View>
             </View>
@@ -240,7 +248,7 @@ const HistoryCard = (props: Props) => {
                 </View>
                 <Text style={styles.rideTimeInfoValue} >
                   {
-                    dayjs(startDateTime).format("hh:mm A")
+                    dayjs(start_date_time).format("hh:mm A")
                   }
                 </Text>
               </View>
@@ -253,7 +261,7 @@ const HistoryCard = (props: Props) => {
                 </View>
                 <Text style={styles.rideTimeInfoValue} >
                   {
-                    dayjs(endDateTime).format("hh:mm A")
+                    dayjs(end_date_time).format("hh:mm A")
                   }
                 </Text>
               </View>

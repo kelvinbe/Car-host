@@ -1,4 +1,4 @@
-import { genResponseDto } from './../../utils/utils';
+import { generateResponseDataTransferObject } from './../../utils/utils';
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as admin from 'firebase-admin';
@@ -39,7 +39,7 @@ async function handler(
     //return result[0];
     return res.status(200).json({ });
   } catch (error: any) {
-    return res.status(401).json(genResponseDto("error", error, "Error modifying booking") as any);
+    return res.status(401).json(generateResponseDataTransferObject("error", error, "Error modifying booking") as any);
   }
 }
 

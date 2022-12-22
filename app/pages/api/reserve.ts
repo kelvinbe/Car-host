@@ -1,4 +1,4 @@
-import { genResponseDto } from './../../utils/utils';
+import { generateResponseDataTransferObject } from './../../utils/utils';
 import { withAuth } from './../../middleware/withAuth';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as admin from 'firebase-admin';
@@ -38,7 +38,7 @@ async function handler(
     //return result[0];
     return res.status(200).json({ });
   } catch (error: any) {
-    return res.status(500).json(genResponseDto("error", error, "Error creating reservation") as any);
+    return res.status(500).json(generateResponseDataTransferObject("error", error, "Error creating reservation") as any);
   }
 }
 

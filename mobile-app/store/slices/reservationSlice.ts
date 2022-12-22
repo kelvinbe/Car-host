@@ -33,7 +33,7 @@ export const reservationsApi = createApi({
                 return data
             }
         }),
-        addReservation: builder.mutation<IAPIDto<{reservationId: string}>, IReservation>({
+        addReservation: builder.mutation<IAPIDto<{reservationId: string}>, any>({
             query: (body) => ({
                 url: `/api/reservation`,
                 method: 'POST',

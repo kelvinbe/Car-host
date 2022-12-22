@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   avatarImageStyle: {
     width: 70,
     height: 70,
-    resizeMode: "contain"
+    resizeMode: "cover"
   },
   editButtonContainer: {
     flexDirection: "row",
@@ -225,7 +225,7 @@ const ProfileScreenHome = (props: Props) => {
             <View style={styles.topBarCardStyle} >
               <View style={styles.avatarStyle} >
                 <Image source={{
-                  uri: userProfile?.profilePicUrl
+                  uri: userProfile?.profile_pic_url
                 }} style={styles.avatarImageStyle} />
               </View>
               <View style={styles.topEditSectionContainer} >

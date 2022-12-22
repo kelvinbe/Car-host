@@ -1,44 +1,144 @@
 [
-    {
-        "reservationId": "1",
-        "hostId": "1",
-        "startDateTime": "2022-12-19T00:00:00",
-        "endDateTime": "2022-12-19T10:00:00",
-        "vehicleId": "1",
-        "vehicleModel": "X5",
-        "vehicleMake": "BMW",
-        "vehiclePicUrl": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-        "locationAddress": "1.3721, 103.8496",
-        "marketName": "Singapore",
-        "total": "100",
-        "status": "NotReserved"
+  {
+        "reservation_id": "1",
+        "customer": {
+          "userId": "1",
+          "fname": "John",
+          "lname": "Doe",
+          "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        },
+        "vehicle": {
+          "vehicle_id": "1",
+          "hourly_rate": 20,
+          "vehicle_type": "Sedan",
+          "color": "Red",
+          "seats": 4,
+          "plate": "ABC123",
+          "transmission": "Automatic",
+          "year": 2018,
+          "status": "Available",
+          "make": "Toyota",
+          "model": "Camry",
+          "userId": "1",
+          "host": {
+            "userId": "1",
+            "fname": "Judy",
+            "lname": "Deen",
+            "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "handle": "judydeen",
+            "entityId": "someEntityId"
+          },
+          "location": {
+            "location_id": "1",
+            "entity_id": "2",
+            "market": {
+              "market_id": "1",
+              "country": "US",
+              "name": "San Francisco",
+              "latitude": "37.7749",
+              "longitude": "-122.4194",
+              "status": "Active"
+            },
+            "address": "123 Main St",
+            "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "vehicle_pictures": [
+            "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          ]
+        },
+        "start_date_time": "2023-01-01T00:00:00.000Z",
+        "end_date_time": "2023-01-01T00:00:00.000Z",
+        "total_cost": 100,
+        "duration": 5,
+        "payment_id": "1",
+        "status": "Complete",
+        "payment_method_details": {
+          "entityId": "1",
+          "paymentType": "Visa",
+          "details": {
+              "last4": "1111",
+              "brand": "Visa",
+              "expMonth": "12",
+              "expYear": "2058",
+              "nameOnCard": "John Doe"
+          }
+        }
+  },
+  {
+    "reservation_id": "2",
+    "customer": {
+      "userId": "1",
+      "fname": "John",
+      "lname": "Doe",
+      "profile_pic_url": "https://images.pexels.com/photos/4662950/pexels-photo-4662950.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
-    {
-        "reservationId": "2",
-        "hostId": "1",
-        "startDateTime": "2022-12-19T00:00:00",
-        "endDateTime": "2022-12-19T10:00:00",
-        "vehicleId": "1",
-        "vehicleModel": "X5",
-        "vehicleMake": "BMW",
-        "vehiclePicUrl": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-        "locationAddress": "1.3721, 103.8496",
-        "marketName": "Singapore",
-        "total": "100",
-        "status": "NotReserved"
+    "vehicle": {
+      "vehicle_id": "1",
+      "hourly_rate": 20,
+      "vehicle_type": "Sedan",
+      "color": "Red",
+      "seats": 4,
+      "plate": "ABC123",
+      "transmission": "Automatic",
+      "year": 2018,
+      "status": "Available",
+      "make": "Toyota",
+      "model": "Camry",
+      "userId": "1",
+      "host": {
+        "userId": "1",
+        "fname": "Judy",
+        "lname": "Deen",
+        "profile_pic_url": "https://images.pexels.com/photos/842980/pexels-photo-842980.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "handle": "judydeen",
+        "entityId": "someEntityId"
+      },
+      "location": {
+        "location_id": "1",
+        "entity_id": "2",
+        "market": {
+          "market_id": "1",
+          "country": "US",
+          "name": "San Francisco",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "address": "123 Main St",
+        "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "latitude": "37.7749",
+        "longitude": "-122.4194",
+        "status": "Active"
+      },
+      "vehicle_pictures": [
+        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      ]
     },
-    {
-        "reservationId": "3",
-        "hostId": "1",
-        "startDateTime": "2022-12-19T00:00:00",
-        "endDateTime": "2022-12-19T10:00:00",
-        "vehicleId": "1",
-        "vehicleModel": "X5",
-        "vehicleMake": "BMW",
-        "vehiclePicUrl": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-        "locationAddress": "1.3721, 103.8496",
-        "marketName": "Singapore",
-        "total": "100",
-        "status": "NotReserved"
+    "start_date_time": "2023-01-01T00:00:00.000Z",
+    "end_date_time": "2023-01-01T00:00:00.000Z",
+    "total_cost": 100,
+    "duration": 5,
+    "payment_id": "1",
+    "status": "Complete",
+    "payment_method_details": {
+      "entityId": "1",
+      "paymentType": "Visa",
+      "details": {
+          "last4": "1111",
+          "brand": "Visa",
+          "expMonth": "12",
+          "expYear": "2058",
+          "nameOnCard": "John Doe"
+      }
     }
+  }
 ]

@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
         driverPic: {
             width: 30,
             height: 30,
+            resizeMode: "cover"
         },
         driverName: {
             fontWeight: "700", 
@@ -84,16 +85,20 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const BookingCarDetailsDriver = (props: Props) => {
     const styles = useStyles(props)
-    const { bookingDetails: { authCode } } = useBookingActions()
+    const { bookingDetails: { authCode, vehicle } } = useBookingActions()
   return (
     <ThemeConsumer>
         {({theme})=>(
             <View style={styles.container} >
                 <View style={styles.driverInfo}>
                     <View style={styles.driverPicContainer}>
-                        <Image style={styles.driverPic} source={require("../../../assets/images/driver.png")} />
+                        <Image style={styles.driverPic} source={{
+                            uri: vehicle?.host?.profile_pic_url
+                        }} />
                     </View>
-                    <Text style={styles.driverName}>Jesse</Text>
+                    <Text style={styles.driverName}>{
+                        vehicle?.host?.handle
+                    }</Text>
                 </View>
                 <View style={styles.locationInfoContainer}>
                     <LocationIcon 
@@ -105,7 +110,9 @@ const BookingCarDetailsDriver = (props: Props) => {
                             marginRight: 10
                         }}
                     />
-                    <Text style={styles.locationInfoTitle}>21964 Jim Rosa Lane, SF</Text>
+                    <Text style={styles.locationInfoTitle}>{
+                        vehicle?.location?.address
+                    }</Text>
                 </View>
                 { !props?.hasAuthorizationCode && <View style={styles.authCodeContainer} >
                     <Text style={styles.authCodeTitle}>Authorization Code:</Text>

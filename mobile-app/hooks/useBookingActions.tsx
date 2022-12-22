@@ -46,7 +46,7 @@ function useBookingActions() {
       auth?.currentUser?.getIdToken().then((token)=>{
         /**Stripe payment sheet */
         axios.post(`${BACKEND_DOMAIN}/api/stripe/actions/createPaymentIntent`, {
-            hourlyRate: bookingDetails?.vehicle?.hourlyRate,
+            hourlyRate: bookingDetails?.vehicle?.hourly_rate,
             hours: calcDuration(bookingDetails?.startDateTime, bookingDetails?.endDateTime),
             stripePaymentMethodId: bookingDetails?.billingInfo?.entityId,
             stripeCustomerId: customerId

@@ -55,7 +55,7 @@ export const hasSpecialCharacter = (str: string) => /[@$!%*?&]/.test(str);
 export const calcDuration = ( startDateTime: string, endDateTime: string ) => {
     const start = dayjs(startDateTime)
     const end = dayjs(endDateTime)
-    const duration = end.diff(start, 'minutes') / 30
+    const duration = end.diff(start, 'minutes') / 60
     return duration
 }
 

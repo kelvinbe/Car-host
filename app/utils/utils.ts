@@ -1,3 +1,4 @@
+import { GenerateDataTransferObject } from './../globaltypes';
 /**
  * @name loadEnv 
  * @params {string} envVariableName
@@ -15,18 +16,15 @@ export const loadEnv = (envVariableName: string): string => {
 
 
 /**
- * @name genResponseDto
+ * @name generateResponseDataTransferObject
  * @param {string} type
  * @param {any} data
  * @param {string} message
+ * @description Generates a consistent response data transfer object, making it easier for the consumer to know what to expect
  * @returns {any} responseDto 
  */
 
-export const genResponseDto = (type: "error" | "success", data: any, message: string): {
-    type: "error" | "success",
-    data: any,
-    message: string
-} => {
+export function generateResponseDataTransferObject<T>(type: "error" | "success", data: any, message: string): GenerateDataTransferObject<T> {
     return {
         type,
         data,

@@ -50,11 +50,11 @@ const BookingCarDetailsRate = (props: Props) => {
     <View style={styles.container} >
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Total Duration: </Text>
-            <Text style={styles.sectionValue}>{calcDuration(startDateTime, endDateTime)/2}hr(s)</Text>
+            <Text style={styles.sectionValue}>{calcDuration(startDateTime, endDateTime)}hr(s)</Text>
         </View>
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Rate</Text>
-            <Text style={styles.sectionValue}>${vehicle?.hourlyRate || 0} / hr</Text>
+            <Text style={styles.sectionValue}>${vehicle?.hourly_rate || 0} / hr</Text>
         </View>
     </View>
   )

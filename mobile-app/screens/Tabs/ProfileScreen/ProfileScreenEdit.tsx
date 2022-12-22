@@ -180,7 +180,7 @@ const ProfileScreenEdit = (props: Props) => {
                         <View style={styles.avatarSection} >
                             <View style={styles.avatarContainer} >
                                 <Image source={{
-                                    uri: userProfile?.profilePicUrl
+                                    uri: userProfile?.profile_pic_url
                                 }} style={{width: 70, height: 70}} />
                             </View>
                             <View style={styles.changeImageContainer} >

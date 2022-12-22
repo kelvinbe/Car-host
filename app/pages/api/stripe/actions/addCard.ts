@@ -1,4 +1,4 @@
-import { genResponseDto } from '../../../../utils/utils';
+import { generateResponseDataTransferObject } from '../../../../utils/utils';
 import { withAuth } from '../../../../middleware/withAuth';
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -60,15 +60,15 @@ export function handler(
       }).then((data)=>{
         res.status(200).json(data as any)
       }).catch((e)=>{
-        var response = genResponseDto("error", e, "Error adding card");
+        var response = generateResponseDataTransferObject("error", e, "Error adding card");
         res.status(500).json(response as any)
       })
     }).catch((e)=>{
-      res.status(500).send(genResponseDto("error", e, "Error adding card") as any)
+      res.status(500).send(generateResponseDataTransferObject("error", e, "Error adding card") as any)
     })
   }).catch((e)=>{
     console.log(e)
-    res.status(500).send(genResponseDto("error", e, "Error adding card") as any)
+    res.status(500).send(generateResponseDataTransferObject("error", e, "Error adding card") as any)
   })
 
   

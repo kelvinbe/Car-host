@@ -1,4 +1,4 @@
-import { loadEnv, genResponseDto } from './../../../../utils/utils';
+import { loadEnv, generateResponseDataTransferObject } from './../../../../utils/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withAuth } from '../../../../middleware/withAuth';
 import postMartkClient from '../../../../postmark/init.config';
@@ -27,10 +27,10 @@ function handler (req: NextApiRequest, res: NextApiResponse) {
         MessageStream: "outbound"
     }).then((msgRes)=>{
         console.log(msgRes);
-        res.status(200).json(genResponseDto("success", msgRes, "Email sent successfully"))
+        res.status(200).json(generateResponseDataTransferObject("success", msgRes, "Email sent successfully"))
     }).catch((e)=>{
         console.log(e);
-        res.status(500).json(genResponseDto("error", e, "Error sending email"))
+        res.status(500).json(generateResponseDataTransferObject("error", e, "Error sending email"))
     })
 }
 
