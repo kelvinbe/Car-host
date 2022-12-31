@@ -16,7 +16,7 @@ const db = mysql({
     port: 3306,
     database: 'divvly',
     user: 'divvly',
-    password: 'Divvly!1202'
+    password: 'DivvlyGlobal!1202'
   }
 });
 
