@@ -208,6 +208,10 @@ const ProfileScreenHome = (props: Props) => {
     })
   }
 
+  const goToDriverLicense = () => {
+    props.navigation.navigate('DriverLicenseScreen');
+  };
+
   const logOut = () =>{
     _logOut()
   }
@@ -258,6 +262,14 @@ const ProfileScreenHome = (props: Props) => {
                   <ListItem.Content style={styles.listItemContent} >
                     <ListItem.Title style={styles.listItemTitleStyle} >Payments</ListItem.Title>
                   </ListItem.Content>
+              </ListItem>
+              <ListItem
+                Component={TouchableOpacity}
+                containerStyle={styles.listItemContainerStyle}
+                onPress={goToDriverLicense}>
+                <ListItem.Content style={styles.listItemContent}>
+                  <ListItem.Title style={styles.listItemTitleStyle}>Driver License</ListItem.Title>
+                </ListItem.Content>
               </ListItem>
               <ListItem
                 Component={TouchableOpacity}

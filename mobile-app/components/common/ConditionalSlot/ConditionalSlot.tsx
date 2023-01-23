@@ -1,9 +1,9 @@
-import type { FC } from 'react';
+import { FunctionComponent, PropsWithChildren } from 'react';
 import * as React from 'react';
 
 export interface ConditionalSlotProps {
-    /** Controls the condition to render the component. Set to `false` to skip rendering  */
-    condition: boolean | null | undefined | string | number;
+  /** Controls the condition to render the component. Set to `false` to skip rendering  */
+  condition: boolean | null | undefined | string | number;
 }
 
 /**
@@ -28,7 +28,9 @@ export interface ConditionalSlotProps {
  *      Foo
  * </ConditionalSlot>
  */
-const ConditionalSlot: FC<ConditionalSlotProps> = ({ children, condition }) =>
-    condition ? <>{children}</> : null;
+const ConditionalSlot: FunctionComponent<PropsWithChildren<ConditionalSlotProps>> = ({
+  children,
+  condition,
+}) => (condition ? <>{children}</> : null);
 
 export default ConditionalSlot;

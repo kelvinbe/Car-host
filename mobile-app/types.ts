@@ -48,6 +48,7 @@ export type ProfileScreenParamList = {
   AboutScreen: undefined;
   PrivacyPolicy: undefined;
   UserAgreement: undefined;
+  DriverLicenseScreen: undefined;
   SupportScreen: {
     context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
   }

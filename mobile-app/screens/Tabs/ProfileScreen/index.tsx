@@ -15,8 +15,10 @@ import AboutScreen from './AboutScreen'
 import PrivacyPolicy from './PrivacyPolicy'
 import UserAgreement from './UserAgreement'
 import SupportScreen from '../../shared/SupportScreen'
+import { DriverLicenseScreen } from './DriverLicenseScreen'
 
 const ProfileScreenStackNavigator = createNativeStackNavigator<ProfileScreenParamList>();
+
 
 interface IProps {
 
@@ -69,6 +71,17 @@ const ProfileScreen = (props: Props) => {
                     name="ProfileSettingsScreen"
                     component={ProfileSettingsScreen}
                 />
+
+              <ProfileScreenStackNavigator.Screen
+                  options={{
+                    headerShown: true,
+                    header: props => (
+                      <BaseTopBar {...props} title="Driver License" home={false} chevronLeft />
+                    ),
+                  }}
+                  name="DriverLicenseScreen"
+                  component={DriverLicenseScreen}
+               />
                 <ProfileScreenStackNavigator.Screen
                     options={{
                         headerShown: true,
