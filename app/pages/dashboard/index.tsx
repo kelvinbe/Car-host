@@ -1,14 +1,20 @@
+import {useState, useRef} from 'react'
 import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
 import { NextPageContext } from 'next';
-import { Grid, GridItem, Text } from '@chakra-ui/react';
+import Link from 'next/link';
+import { Grid, GridItem, Box, Flex, Text } from '@chakra-ui/react';
 import BaseTable from '../../components/organism/Table/BaseTable/BaseTable';
 import { app } from '../../firebase/firebaseApp';
 import { PayoutsTableColumns, ReservationTableColumns } from '../../utils/tables/TableTypes';
 import PreviewTableContainer from '../../components/organism/Table/TableContainer/TableContainer';
 import LiveMapComponent from '../../components/organism/Maps/LiveMapComponent/LiveMapComponent';
 import { IVehicle } from '../../globaltypes';
+import {exampleVehicleManagementData} from '../vehicle-management'
+import { NextFetchEvent } from 'next/server';
+import VehiclePic from '../../components/atoms/images/VehiclePic';
+import Rounded from '../../components/molecules/Buttons/General/Rounded';
 
 const data = [
   {
@@ -142,50 +148,83 @@ const exampleVehicles: IVehicle[] = [
   }
 ]
 
-
-
-
 export default function Dashboard() {
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
-
+  const [viewButton, setViewButton] = useState('')
+  
   return (
-    <Grid w="full" gridTemplateColumns={"1fr 1fr"} gridTemplateRows={"1fr 1fr"} rowGap="30px" columnGap="30px" >
-      <GridItem w="full"  h="full" >
+    <Grid w="full" templateColumns={'1fr 1fr'} gridTemplateRows={"1fr 1fr"} rowGap="30px" columnGap="30px" >
+      <GridItem h="full" >
         <PreviewTableContainer
           title='Upcoming Reservations'
           link='/reservations'
         >
-          <BaseTable columns={ReservationTableColumns} data={data}    dataFetchFunction={(fetchStatus)=>{
-            console.log(fetchStatus)
+          <BaseTable columns={ReservationTableColumns} data={data} dataFetchFunction={(fetchStatus)=>{
+            fetchStatus
           }}   
           />
         </PreviewTableContainer>
       </GridItem>
-      <GridItem w="full"   >
+      <GridItem >
         <PreviewTableContainer
             title="Your Vehicles"
             link="/vehicle-management"
           >
-            <>
-              Component will go here
-            </>
+            <Flex w="full" h='full' align='center' justifyContent={'space-around'} wrap='wrap' rounded={'20px'} border="1px solid" bg='white' borderColor='gray.300'>
+              {exampleVehicleManagementData.map(vehicleInfo => (
+                <Flex w="40%" padding='18px 0px' align='center' justify={'center'} rounded={'5px'} m='22px 0px' border='1px solid' borderColor="gray.300"
+                _hover={{
+                  position:'relative',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  cursor: 'pointer',
+                }}
+                key={vehicleInfo.vehicleId}
+                onMouseEnter={() => {
+                  setViewButton(vehicleInfo.vehicleId)
+                }}
+                onMouseLeave={() => {
+                  setViewButton('')
+                }}
+                >
+                <Flex w="full"  h="full" align='center' justify='center' key={vehicleInfo.vehicleId}>
+                  <VehiclePic
+                    image={vehicleInfo.vehiclePictures[0]}
+                    size="mid"
+                  />
+                  {viewButton === vehicleInfo.vehicleId && <Box position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)'>
+                    <Rounded variant="solid" rounded='full'>
+                      <Link href={"/vehicle-management"} >
+                          <Text cursor="pointer" >
+                              Manage
+                          </Text>
+                      </Link>
+                    </Rounded>
+                  </Box>} 
+                </Flex>                       
+                </Flex>  
+              ))}
+            </Flex>
           </PreviewTableContainer>
       </GridItem>
-      <GridItem w="full" >
+      <GridItem >
         <LiveMapComponent
           marketId='someId'
           vehicles={exampleVehicles}
         />
       </GridItem>
-      <GridItem w="full" >
+      <GridItem>
         <PreviewTableContainer
           title="Last 10 Payouts"
           link="/reservations"
         >
-          <BaseTable columns={PayoutsTableColumns} data={mockPayouts}   dataFetchFunction={(fetchStatus)=>{
-            console.log(fetchStatus)
+          <BaseTable columns={PayoutsTableColumns} data={mockPayouts}  dataFetchFunction={(fetchStatus)=>{
+            fetchStatus
           }}   
           />
         </PreviewTableContainer>

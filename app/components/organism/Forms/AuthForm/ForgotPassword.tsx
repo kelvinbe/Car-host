@@ -65,11 +65,11 @@ function ForgotPassword() {
             </Flex>
             {
                 step === 0 ? (
-                    <Rounded onClick={submitEmail} variant="solid" fullWidth >
+                    <Rounded onClick={submitEmail} variant="solid" fullWidth rounded='full' >
                         Continue
                     </Rounded>
                 ) : step === 1 ? null : step === 2 ? (
-                    <Rounded variant="solid" fullWidth >
+                    <Rounded variant="solid" fullWidth rounded='full' >
                         Continue
                     </Rounded>
                 ) : null

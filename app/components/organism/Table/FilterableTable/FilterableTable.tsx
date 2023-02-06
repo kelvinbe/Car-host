@@ -1,4 +1,4 @@
-import { Button, Flex, Icon, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Icon, Text } from '@chakra-ui/react'
 import React, { useEffect, useReducer, useState } from 'react'
 import { FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter, FlexRowCenterEnd } from '../../../../utils/theme/FlexConfigs'
 import { BsChevronDown } from 'react-icons/bs'
@@ -8,7 +8,9 @@ import SortableDropdown from './SortableDropdown'
 import { ColumnsType } from 'antd/es/table'
 import { createSlice } from "@reduxjs/toolkit"
 import BaseTable from '../BaseTable/BaseTable'
-
+import { SearchIcon } from '@chakra-ui/icons'
+import Rounded from '../../../molecules/Buttons/General/Rounded'
+import { Input } from '@chakra-ui/react'
 interface IProps {
     /**
      * @sortables 👉 an array with the column keys of the sortable columns
@@ -20,6 +22,7 @@ interface IProps {
     data?: any[],
     columns?: ColumnsType<any>,
     dataFetchFunction?: ( fetchStatus: "pending" | "error" | "success" ) => void,
+    buttonName?: string
 
 }
 
@@ -53,7 +56,7 @@ const FilterableTableSlice = createSlice({
 const { setTableColumnDefinitions, initColumnDefinitions } = FilterableTableSlice.actions
 
 function FilterableTable(props: IProps) {
-    const { sortables, data, columns, dataFetchFunction } = props
+    const { sortables, data, columns, dataFetchFunction, buttonName } = props
     const [ {
         tableColumnDefinitions
     }, dispatchActions] = useReducer(FilterableTableSlice.reducer, initialState)
@@ -71,7 +74,19 @@ function FilterableTable(props: IProps) {
   return (
     <Flex w="full" {...FlexColCenterStart} >
         <Flex {...FlexRowCenterBetween} w="full" >
-            <div></div>
+            <Flex {...FlexRowCenterBetween}>
+                <Flex {...FlexRowCenterBetween} w='350px' bgColor={'white'} marginRight={'10px'}>
+                    <Flex {...FlexRowCenterCenter} w='50px' bgColor={'white'}>
+                        <SearchIcon/> 
+                    </Flex>
+                    <Input type='text' placeholder='Search' size='md'/>
+                </Flex>
+                <Rounded variant="solid" fullWidth={false} rounded='md'>
+                    <Text cursor="pointer" >
+                        {buttonName}
+                    </Text>
+                </Rounded>
+            </Flex>
             <Flex {...FlexRowCenterCenter} marginBottom="20px" >
                 <Text marginRight="20px" fontWeight={"semibold"}  >
                     Sort By:

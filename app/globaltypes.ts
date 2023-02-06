@@ -101,7 +101,11 @@ export interface IUserProfile {
   status: string;
   stripeCustomerId?: string;
 }
-
+export interface IAuthCode {
+  date:string;
+  code: string;
+  status:string;
+}
 
 
 /**
@@ -180,7 +184,6 @@ export interface dIReservation extends eIReservation {
   vehicle: dIVehicle;
   payment: eIPaymentType;
 }
-
 
 
 

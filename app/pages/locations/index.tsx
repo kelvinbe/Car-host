@@ -25,6 +25,7 @@ function Locations() {
   return (
     <Flex {...FlexColCenterStart} w="full" h="full" >
         <FilterableTable
+          buttonName='Create Location'
           sortables={[{
             columnKey: "locationId",	
             columnName: "Location Id",

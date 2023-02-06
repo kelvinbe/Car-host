@@ -66,6 +66,7 @@ function Reservations() {
   return (
     <Flex w="full" h="full"  >
       <FilterableTable
+        buttonName='Create Reservation'
         columns={columns}
         data={data}
         sortables={[

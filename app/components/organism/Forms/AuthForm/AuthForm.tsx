@@ -228,6 +228,7 @@ function AuthForm(props: IProps) {
       <Flex {...FlexRowCenterCenter} mt="20px" mb="20px" w="full"  >
           <Rounded
           loading={loading}
+          rounded='full'
           fullWidth variant="solid" onClick={onSubmitHandler}  >
             {
               type === "signup" ? "Sign Up" : "Log In"

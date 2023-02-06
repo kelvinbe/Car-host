@@ -23,7 +23,7 @@ function PreviewTableContainer(props: IProps) {
                 </Text>
             </Link>}
         </Flex>
-        <Flex w="full" >
+        <Flex w="full" h="full">
             {children}
         </Flex>
     </Flex>

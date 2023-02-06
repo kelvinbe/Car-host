@@ -1,8 +1,8 @@
 import { Flex, IconButton, Text } from "@chakra-ui/react"
 import { ColumnsType } from "antd/es/table"
-import { ILocation, IPayout, IReservation, IUserProfile, IVehicle } from "../../globaltypes"
+import { IAuthCode, ILocation, IPayout, IReservation, IUserProfile, IVehicle } from "../../globaltypes"
 import dayjs from "dayjs"
-import { FlexColCenterCenter } from "../theme/FlexConfigs"
+import { FlexColCenterCenter, FlexColStartStart } from "../theme/FlexConfigs"
 import VehiclePic from "../../components/atoms/images/VehiclePic"
 import StatusTag from "../../components/atoms/status/StatusTag"
 import { LinkIcon } from "@chakra-ui/icons"
@@ -143,8 +143,50 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     )
   }
 ]
-
-
+export const AuthCodeTableColumns: ColumnsType<IAuthCode> = [
+  {
+    title: "Date",
+    dataIndex: "date",
+    key: "date",
+    render: (v, { date }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500" >
+          {
+            dayjs(date).format("DD MMM YYYY")
+          }
+        </Text>
+      </Flex>
+    ),
+    sorter: (a: IAuthCode, b: IAuthCode) => a.date.length - b.date.length,
+    sortDirections: ["descend", "ascend"]
+  },
+  {
+    title: "Code",
+    dataIndex: "code",
+    key: "code",
+    render: (v, {code})=> (
+      <Flex {...FlexColStartStart} >
+        <Text fontSize="14px" fontWeight="500" >
+          {
+            code
+          }
+        </Text>
+      </Flex>
+    )
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart} >
+        <StatusTag status={status as any} >
+            {status}
+        </StatusTag>
+      </Flex>
+    )
+  }
+]
 export const LocationTableColumns: ColumnsType<ILocation> = [
   {
     title: "Vehicle",
@@ -227,7 +269,6 @@ export const LocationTableColumns: ColumnsType<ILocation> = [
   }
 ]
 
-
 export const VehicleManagementTableColumns: ColumnsType<IVehicle> = [
   {
     title: "Vehicle",
@@ -299,7 +340,6 @@ export const VehicleManagementTableColumns: ColumnsType<IVehicle> = [
     )
   }
 ]
-
 
 export const UserTableColumns: ColumnsType<IUserProfile> = [
   {

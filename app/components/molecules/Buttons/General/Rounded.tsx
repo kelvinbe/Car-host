@@ -9,10 +9,11 @@ interface IProps {
     customLoading?: ReactNode,
     variant?: "solid" | "outline",
     fullWidth?: boolean
+    rounded:'full' | 'md'
 }
 
 function Rounded(props: IProps) {
-    const { children, loading, onClick, disabled, variant, fullWidth } = props;
+    const { children, loading, onClick, disabled, variant, fullWidth, rounded} = props;
   return (
     <Button
     w={fullWidth ? "full" : "auto"}
@@ -27,11 +28,11 @@ function Rounded(props: IProps) {
     isLoading={loading}
     disabled={disabled} 
     onClick={onClick}  
-    rounded="full" 
+    rounded={rounded} 
     backgroundColor={variant === "solid" ? "primary.1000" : undefined} 
     alignItems="center"
     justifyContent="center"  >
-        <Text fontSize="20px" fontWeight="700" color={ variant === "outline" ? "primary.1000" :"white"} textAlign="center" >
+        <Text fontSize="18px" fontWeight="700" color={ variant === "outline" ? "primary.1000" :"white"} textAlign="center" >
             {
                 children
             }
@@ -39,5 +40,4 @@ function Rounded(props: IProps) {
     </Button>
   )
 }
-
 export default Rounded
