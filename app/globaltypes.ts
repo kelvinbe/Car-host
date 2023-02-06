@@ -1,4 +1,4 @@
-import { eIVehicle, eIReservation, eIPaymentType, eIMarket } from './entities';
+import { eIVehicle, eIReservation, eIPaymentType, eIMarket, eIIntergration } from './entities';
 // Static props
 
 export interface IStaticProps {
@@ -77,6 +77,12 @@ export interface IVehicle {
     amount: number;
     payDate: string;
     status: string
+  }
+
+
+  export interface IIntegrations {
+      integrationName: string;
+      status: string;
   }
 
 

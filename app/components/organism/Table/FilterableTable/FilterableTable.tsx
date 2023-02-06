@@ -11,6 +11,8 @@ import BaseTable from '../BaseTable/BaseTable'
 import { SearchIcon } from '@chakra-ui/icons'
 import Rounded from '../../../molecules/Buttons/General/Rounded'
 import { Input } from '@chakra-ui/react'
+import { HamburgerIcon} from '@chakra-ui/icons'
+
 interface IProps {
     /**
      * @sortables 👉 an array with the column keys of the sortable columns
@@ -105,6 +107,10 @@ function FilterableTable(props: IProps) {
                     }
                     
                 </Flex>
+                  <Flex {...FlexRowCenterEnd} w='50px' marginRight="30px">
+    <HamburgerIcon  />
+    </Flex>
+
             </Flex>
         </Flex>
         <Flex w="full" {...FlexColCenterStart} >

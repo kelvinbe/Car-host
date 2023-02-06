@@ -1,6 +1,6 @@
 import { Flex, IconButton, Text } from "@chakra-ui/react"
 import { ColumnsType } from "antd/es/table"
-import { IAuthCode, ILocation, IPayout, IReservation, IUserProfile, IVehicle } from "../../globaltypes"
+import { IAuthCode, ILocation, IPayout, IReservation, IUserProfile, IVehicle, IIntegrations } from "../../globaltypes"
 import dayjs from "dayjs"
 import { FlexColCenterCenter, FlexColStartStart } from "../theme/FlexConfigs"
 import VehiclePic from "../../components/atoms/images/VehiclePic"
@@ -399,4 +399,35 @@ export const UserTableColumns: ColumnsType<IUserProfile> = [
       </Flex>
     )
   }
+]
+
+export const IntegrationsTableColumns: ColumnsType<IIntegrations> = [
+  {
+    title: "Integration Name",
+    dataIndex: "integrationName",
+    key: "integrationName",
+    render: (v, { integrationName }) => (
+      <Flex {...FlexColStartStart} >
+        <Text fontSize="14px" fontWeight="500" >
+          {
+            integrationName
+          }
+        </Text>
+      </Flex>
+    )
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart} >
+        <StatusTag status={status as any}>
+          {
+            status
+          }
+        </StatusTag>
+      </Flex>
+    ),
+  },
 ]
