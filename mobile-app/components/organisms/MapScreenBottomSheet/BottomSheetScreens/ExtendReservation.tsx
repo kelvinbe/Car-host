@@ -1,12 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import React, { useRef, useEffect } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
-import CashIcon from '../../../../assets/icons/cash.svg';
-import ActionButton from '../../../atoms/Buttons/ActionButton/ActionButton';
-import VisaIcon from '../../../../assets/icons/visa.svg';
-import { Image } from '@rneui/base';
-import BaseInput from '../../../atoms/Input/BaseInput/BaseInput';
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import TimeFilter from '../../../molecules/TimeFilter/TimeFilter';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
@@ -58,7 +53,7 @@ const useStyles = makeStyles((theme, props: Props) => {
   };
 });
 
-const ModifyBookingBottomSheet = (props: Props) => {
+const ExtendReservation = (props: Props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['45%'];
   const styles = useStyles(props);
@@ -92,6 +87,7 @@ const ModifyBookingBottomSheet = (props: Props) => {
       endDateTime: bookingDetails.endDateTime,
       startDateTime: bookingDetails.startDateTime,
     } as any);
+    close();
   };
 
   return (
@@ -106,7 +102,7 @@ const ModifyBookingBottomSheet = (props: Props) => {
           enablePanDownToClose
           onClose={props.closeBottomSheet}>
           <View style={styles.contentContainer}>
-            <Text style={styles.contentTitleStyle}>Modify Booking</Text>
+            <Text style={styles.contentTitleStyle}>Extend reservation time</Text>
             <View style={styles.inputContainer}>
               <View style={styles.bottomButtonsContainer}>
                 <RoundedOutline
@@ -114,17 +110,17 @@ const ModifyBookingBottomSheet = (props: Props) => {
                     elevation: 0,
                   }}
                   onPress={handleCancel}
-                  width="45%">
+                  width="40%">
                   Cancel
                 </RoundedOutline>
-                <Rounded loading={isLoading} onPress={handleSave} width="45%">
+                <Rounded loading={isLoading} onPress={handleSave} width="40%">
                   Save
                 </Rounded>
               </View>
               <TimeFilter
-                displayDay={true}
-                displayPickup={true}
-                displayExtendText={false}
+                displayDay={false}
+                displayPickup={false}
+                displayExtendText={true}
                 customStyles={{
                   paddingVertical: 0,
                   elevation: 5,
@@ -140,4 +136,4 @@ const ModifyBookingBottomSheet = (props: Props) => {
   );
 };
 
-export default ModifyBookingBottomSheet;
+export default ExtendReservation;

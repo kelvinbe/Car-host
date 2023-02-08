@@ -16,12 +16,14 @@ export type BottomTabParamList = {
   SearchScreen: undefined;
   Storybook: undefined;
   History: undefined;
+  UpcomingReservationsHome: undefined;
   Upcoming: undefined;
   Profile: undefined;
   ManageRes: undefined;
   Issues: undefined;
   NotFound: undefined;
   BookingDetails: undefined;
+  ReservationDetails:undefined;
 };
 
 export type SearchScreenParamList = {
@@ -40,6 +42,10 @@ export type ManageResParamList = {
   BookingDetails?: undefined;
 }
 
+export type UpcomingParamList = {
+  UpcomingReservationsHome?: undefined;
+  ReservationDetails?: undefined;
+}
 export type ProfileScreenParamList = {
   ProfileScreenHome: undefined;
   ProfileScreenEdit: undefined;

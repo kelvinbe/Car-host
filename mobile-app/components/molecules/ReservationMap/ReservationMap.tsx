@@ -1,39 +1,14 @@
 import { Text, View } from 'react-native';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import MapView, { Circle } from 'react-native-maps';
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded';
 import * as Location from 'expo-location';
 import LocationMarker from '../../../components/atoms/GeoMarkers/LocationMarker/LocationMarker';
-import TimeFilter from '../../../components/molecules/TimeFilter/TimeFilter';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { SearchScreenParamList } from '../../../types';
-import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet';
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import useBookingActions from '../../../hooks/useBookingActions';
-import { isUndefined } from 'lodash';
-import { timeTilEndOfDay } from '../../../utils/utils';
-import dayjs from 'dayjs';
 
-interface IProps {
-  inReservation?: boolean;
-}
-
-type Props = IProps & NativeStackScreenProps<SearchScreenParamList, 'MapScreen'>;
-
-const useStyles = makeStyles((theme, props) => ({
-  container: {
-    width: '100%',
-    height: '100%',
-    position: 'relative',
-    backgroundColor: theme.colors.white,
-  },
-  mapContainer: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
+const useStyles = makeStyles(theme => ({
   map: {
     width: '100%',
     height: '100%',
@@ -103,20 +78,10 @@ const reducer = (state: IState, action: any) => {
   }
 };
 
-const MapScreen = (props: Props) => {
+const ReservationMap = () => {
   const [state, dispatchAction] = useReducer(reducer, initialState);
   const styles = useStyles();
   const { clearBookingState } = useBookingActions();
-  const { setStartDateTime, setEndDateTime } = useBookingActions();
-  const [open, setOpen] = useState(false);
-
-  const onOpen = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
 
   const getCoords = async () => {
     Location.getCurrentPositionAsync({
@@ -135,19 +100,13 @@ const MapScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    if (isUndefined(props.inReservation)) {
-      const times = timeTilEndOfDay();
-      setStartDateTime(dayjs(times?.[0]?.value).toISOString());
-      setEndDateTime(dayjs(times?.[0]?.value).toISOString());
-    }
-  }, [props.inReservation]);
-
-  useEffect(() => {
-    // getCoords().then(()=>{
-    //     console.log("Location fetched")
-    // }).catch((e)=>{
-    //     console.log(e)
-    // })
+    // getCoords()
+    //   .then(() => {
+    //     console.log('Location fetched');
+    //   })
+    //   .catch(e => {
+    //     console.log(e);
+    //   });
     return () => {
       /* clearBookingState() */
       clearBookingState();
@@ -167,8 +126,8 @@ const MapScreen = (props: Props) => {
             <Text style={styles.errorText}>{state.errorMessage}</Text>
           </View>
         ) : (
-          <View style={styles.container}>
-            <View style={styles.mapContainer}>
+          <View>
+            <View>
               {state?.location && (
                 <MapView
                   provider={PROVIDER_GOOGLE}
@@ -205,20 +164,6 @@ const MapScreen = (props: Props) => {
                 </MapView>
               )}
             </View>
-            {(props?.inReservation ? false : !open) && (
-              <TimeFilter
-                displayDay={true}
-                displayExtendText={false}
-                displayPickup={true}
-                setStartDateTime={setStartDateTime}
-                setEndDateTime={setEndDateTime}
-              />
-            )}
-            <MapScreenBottomSheet
-              onClose={onClose}
-              onOpen={onOpen}
-              inReservation={props.inReservation}
-            />
           </View>
         )
       }
@@ -226,4 +171,4 @@ const MapScreen = (props: Props) => {
   );
 };
 
-export default MapScreen;
+export default ReservationMap;
