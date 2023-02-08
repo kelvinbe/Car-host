@@ -8,7 +8,7 @@ import DivvlyLogo from "../../../public/images/Divvly.png";
 
 const Header = () => {
   return (
-    <Box w="full" margin="30px">
+    <Box w="full" margin="30px" bg="transparent" zIndex={2}>
       <Flex w="full" {...FlexRowStartBetween}>
         <div>
           <Heading paddingLeft="80px">
