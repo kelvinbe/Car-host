@@ -3,6 +3,7 @@ import Header from "../../components/organism/Header/Header";
 import Banner from "../../components/organism/Banner/Banner";
 import Footer from "../../components/organism/Footer/Footer";
 import AboutUs from "../../components/organism/AboutUs/AboutUs";
+import BookRide from "../../components/organism/BookRide/BookRide";
 import AppFeature from "../../components/organism/AppFeature/Appfeature";
 
 const LandingPage = () => {
@@ -11,6 +12,7 @@ const LandingPage = () => {
       <Header />
       <Banner />
       <AboutUs />
+      <BookRide />
       <AppFeature />
       <Footer />
     </div>
