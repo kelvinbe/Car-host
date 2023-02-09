@@ -105,13 +105,6 @@ export const Slide = ({ banner }) => {
         showText={false}
         spacing={4}
       />
-      <Box
-        position="absolute"
-        bottom="0px"
-        w="full"
-        h="500px"
-        bgGradient="linear(to-b, rgba(245, 246, 247, 0), rgba(245, 246, 247, 0.5), rgba(245, 246, 247, 0.75))"
-      ></Box>
     </Box>
   );
 };
