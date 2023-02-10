@@ -63,6 +63,8 @@ const ScreensWithNoBottomNav = [
   'SupportScreen',
   'PrivacyPolicy',
   'UserAgreement',
+  'VehicleInspection',
+  'OnboardingHome',
 ];
 
 const ScreensWithNoTopBar = ['SearchScreenHome'];

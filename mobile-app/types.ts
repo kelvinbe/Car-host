@@ -28,6 +28,7 @@ export type BottomTabParamList = {
 
 export type SearchScreenParamList = {
   SearchScreenHome: undefined;
+  OnboardingHome:undefined;
   MapScreen: undefined | {
     searchType?: "local" | "host",
     hostCode?: string

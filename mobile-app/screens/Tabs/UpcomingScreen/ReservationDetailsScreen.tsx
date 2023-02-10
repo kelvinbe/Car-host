@@ -12,7 +12,6 @@ import useBookingActions from '../../../hooks/useBookingActions';
 import ReservationMap from '../../../components/molecules/ReservationMap/ReservationMap';
 import EndReservation from '../../../components/organisms/MapScreenBottomSheet/BottomSheetScreens/EndReservation';
 import ExtendReservation from '../../../components/organisms/MapScreenBottomSheet/BottomSheetScreens/ExtendReservation';
-import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
 interface IProps {
   inReservation?: boolean;
   isCurrent?: boolean;
