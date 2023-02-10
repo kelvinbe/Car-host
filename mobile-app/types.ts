@@ -11,7 +11,6 @@ export type RootStackParamList = {
     context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
   }
 };
-
 export type BottomTabParamList = {
   SearchScreen: undefined;
   Storybook: undefined;
@@ -24,6 +23,7 @@ export type BottomTabParamList = {
   NotFound: undefined;
   BookingDetails: undefined;
   ReservationDetails:undefined;
+  VehicleInspection:undefined;
 };
 
 export type SearchScreenParamList = {
@@ -44,7 +44,10 @@ export type ManageResParamList = {
 
 export type UpcomingParamList = {
   UpcomingReservationsHome?: undefined;
-  ReservationDetails?: undefined;
+  ReservationDetails?:{
+    current:boolean;
+  };
+  VehicleInspection?:undefined;
 }
 export type ProfileScreenParamList = {
   ProfileScreenHome: undefined;

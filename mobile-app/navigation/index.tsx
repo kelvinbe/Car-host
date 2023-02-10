@@ -46,6 +46,8 @@ import { auth } from '../firebase/firebaseApp';
 import BookingDetailsScreen from '../screens/shared/BookingDetailsScreen';
 import ReservationDetailsScreen from '../screens/Tabs/UpcomingScreen/ReservationDetailsScreen';
 import UpcomingHomeScreen from '../screens/Tabs/UpcomingScreen/UpcomingHomeScreen';
+import UpcomingScreen from '../screens/Tabs/UpcomingScreen';
+import VehicleInspection from '../screens/Tabs/UpcomingScreen/VehicleInspection';
 
 const ScreensWithNoBottomNav = [
   'BookingConfirmationScreen',
@@ -249,8 +251,8 @@ function BottomTabNavigator() {
             }}
           />
           <Tabs.Screen
-            name="UpcomingReservationsHome"
-            component={UpcomingHomeScreen}
+            name="Upcoming"
+            component={UpcomingScreen}
             options={{
               tabBarIcon: ({ focused, color }) => (
                 <ClockIcon
@@ -260,7 +262,8 @@ function BottomTabNavigator() {
                 />
               ),
               title: 'Upcoming Reservations',
-              header: props => <BaseTopBar {...props} title="Upcoming Reservations" />,
+
+              headerShown: false,
             }}
           />
           <Tabs.Screen
@@ -322,12 +325,16 @@ function BottomTabNavigator() {
           <Tabs.Screen
             name="ReservationDetails"
             options={{
-              header: props => (
-                <BaseTopBar home={false} chevronLeft {...props} title="Your Reservation" />
-              ),
               tabBarButton: () => <></>,
             }}
             component={ReservationDetailsScreen}
+          />
+          <Tabs.Screen
+            name="VehicleInspection"
+            options={{
+              tabBarButton: () => <></>,
+            }}
+            component={VehicleInspection}
           />
         </Tabs.Navigator>
       )}

@@ -16,11 +16,9 @@ import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
 interface IProps {
   inReservation?: boolean;
   isCurrent?: boolean;
-  isUpcoming?: boolean;
 }
 
 interface IState {
-  upcoming: boolean;
   current: boolean;
   authorizationOpen: boolean;
   paymentOpen: boolean;
@@ -46,7 +44,6 @@ const useStyles = makeStyles((theme, props: Props) => ({
 }));
 
 const initialState: IState = {
-  upcoming: true,
   current: false,
   authorizationOpen: false,
   paymentOpen: false,
@@ -196,6 +193,9 @@ const ReservationDetailsScreen = (props: Props) => {
   const closeEndBooking = () => {
     dispatchAction({ type: 'closeEndBooking' });
   };
+  const navigateToVehicleInspection = () => {
+    props.navigation.navigate('VehicleInspection');
+  };
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
@@ -203,8 +203,7 @@ const ReservationDetailsScreen = (props: Props) => {
       </View>
       <ReservationScreen
         isReservation={props.inReservation}
-        isUpcoming={state.upcoming}
-        isCurrent={state.current}
+        isCurrent={props.route.params?.current}
         openAuthorization={openAuthorizationCode}
         openSelectPaymentMethod={openSelectPaymentMethod}
         startedJourney={startedJourney}
@@ -212,6 +211,7 @@ const ReservationDetailsScreen = (props: Props) => {
         openCancelReservation={openCancelBooking}
         openExtendReservation={openExtendBooking}
         openEndReservation={openEndBooking}
+        navigateToVehicleInspection={navigateToVehicleInspection}
       />
       {state.paymentOpen && <PaymentBottomSheet closeBottomSheet={closePaymentBottomSheet} />}
       {state.authorizationOpen && (

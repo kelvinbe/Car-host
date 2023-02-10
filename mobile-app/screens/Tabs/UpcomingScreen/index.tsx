@@ -5,6 +5,8 @@ import { BottomTabParamList, UpcomingParamList } from '../../../types';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import ReservationDetailsScreen from './ReservationDetailsScreen';
 import UpcomingHomeScreen from './UpcomingHomeScreen';
+import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
+import VehicleInspection from './VehicleInspection';
 
 type Props = BottomTabScreenProps<BottomTabParamList, 'Upcoming'>;
 
@@ -16,15 +18,26 @@ const UpcomingScreen = () => {
       <UpcomingReservationsStack.Navigator initialRouteName="UpcomingReservationsHome">
         <UpcomingReservationsStack.Screen
           name="UpcomingReservationsHome"
-          options={{ headerShown: false }}
+          options={{
+            header: props => <BaseTopBar home {...props} title="Upcoming Reservations" />,
+          }}
           component={UpcomingHomeScreen}
         />
         <UpcomingReservationsStack.Screen
           name="ReservationDetails"
           options={{
-            headerShown: false,
+            header: props => <BaseTopBar chevronLeft {...props} title="Your Reservation" />,
           }}
           component={ReservationDetailsScreen}
+        />
+        <UpcomingReservationsStack.Screen
+          name="VehicleInspection"
+          options={{
+            header: props => (
+              <BaseTopBar home={false} chevronLeft {...props} title="Vehicle Inspection" />
+            ),
+          }}
+          component={VehicleInspection}
         />
       </UpcomingReservationsStack.Navigator>
     </>
