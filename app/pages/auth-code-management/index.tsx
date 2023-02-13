@@ -30,7 +30,12 @@ const authcodeData: IAuthCode[] = [
 
 function AuthCodeManagement() {
   return (
-    <Flex {...FlexColCenterStart} w="full" h="full">
+    <Flex
+      {...FlexColCenterStart}
+      w="full"
+      h="full"
+      data-testid="auth-code-management-table"
+    >
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}

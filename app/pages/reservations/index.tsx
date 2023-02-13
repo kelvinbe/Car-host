@@ -67,7 +67,7 @@ const columns: ColumnsType<any> = [
 
 function Reservations() {
   return (
-    <Flex w="full" h="full">
+    <Flex w="full" h="full" data-testid="reservations-table">
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}

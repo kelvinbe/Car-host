@@ -26,7 +26,12 @@ export const exampleLocationData: ILocation[] = [
 
 function Locations() {
   return (
-    <Flex {...FlexColCenterStart} w="full" h="full">
+    <Flex
+      {...FlexColCenterStart}
+      w="full"
+      h="full"
+      data-testid="locations-table"
+    >
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}

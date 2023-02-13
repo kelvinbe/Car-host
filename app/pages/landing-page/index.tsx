@@ -12,8 +12,8 @@ const LandingPage = () => {
       <Header />
       <Banner />
       <AboutUs />
-      <BookRide />
       <AppFeature />
+      <BookRide />
       <Footer />
     </div>
   );

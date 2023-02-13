@@ -28,7 +28,7 @@ const examplePayoutsData: IPayout[] = [
 
 function Payouts() {
   return (
-    <Flex w="full" h="full" {...FlexColCenterStart}>
+    <Flex w="full" h="full" {...FlexColCenterStart} data-testid="payouts-table">
       <FilterableTable
         viewAddFieldButton={false}
         viewSearchField={false}

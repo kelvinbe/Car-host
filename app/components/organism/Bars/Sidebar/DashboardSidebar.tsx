@@ -80,6 +80,7 @@ function DashboardSidebar() {
       paddingRight={"15px"}
       paddingTop="20px"
       templateRows="repeat(13, 47px)"
+      data-testid="sidebar-on-dashboard-links"
     >
       <Flex w="full" {...FlexRowCenterCenter}>
         <Logo />

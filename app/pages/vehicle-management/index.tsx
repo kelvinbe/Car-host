@@ -1,9 +1,9 @@
-import { Flex } from '@chakra-ui/react'
-import React from 'react'
-import BaseTable from '../../components/organism/Table/BaseTable/BaseTable'
-import { IVehicle } from '../../globaltypes'
-import { VehicleManagementTableColumns } from '../../utils/tables/TableTypes'
-import { FlexColCenterStart } from '../../utils/theme/FlexConfigs'
+import { Flex } from "@chakra-ui/react";
+import React from "react";
+import BaseTable from "../../components/organism/Table/BaseTable/BaseTable";
+import { IVehicle } from "../../globaltypes";
+import { VehicleManagementTableColumns } from "../../utils/tables/TableTypes";
+import { FlexColCenterStart } from "../../utils/theme/FlexConfigs";
 
 export const exampleVehicleManagementData: IVehicle[] = [
   {
@@ -19,9 +19,9 @@ export const exampleVehicleManagementData: IVehicle[] = [
     ],
     coords: {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
     },
-    locationId: "xxxxx",	
+    locationId: "xxxxx",
     status: "active",
     location: "San Francisco",
     transmission: "Automatic",
@@ -40,9 +40,9 @@ export const exampleVehicleManagementData: IVehicle[] = [
     ],
     coords: {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
     },
-    locationId: "yxxxx",	
+    locationId: "yxxxx",
     status: "Unavailable",
     location: "San Francisco",
     transmission: "Automatic",
@@ -61,9 +61,9 @@ export const exampleVehicleManagementData: IVehicle[] = [
     ],
     coords: {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
     },
-    locationId: "xxxxx",	
+    locationId: "xxxxx",
     status: "active",
     location: "San Francisco",
     transmission: "Automatic",
@@ -82,37 +82,40 @@ export const exampleVehicleManagementData: IVehicle[] = [
     ],
     coords: {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
     },
-    locationId: "yxxxx",	
+    locationId: "yxxxx",
     status: "Intent",
     location: "San Francisco",
     transmission: "Automatic",
     year: 2015,
   },
-  
-]
+];
 
 function VehicleManagement() {
   return (
-    <Flex {...FlexColCenterStart} w="full" >
+    <Flex
+      {...FlexColCenterStart}
+      w="full"
+      data-testid="vehicle-management-table"
+    >
       <BaseTable
         columns={VehicleManagementTableColumns}
         data={exampleVehicleManagementData}
         dataFetchFunction={() => {}}
       />
     </Flex>
-  )
+  );
 }
 
-export default VehicleManagement
+export default VehicleManagement;
 
-export function getStaticProps () {
+export function getStaticProps() {
   return {
     props: {
-        authonly: true,
-        dashboard: true,
-        adminonly: false
-    }
-  }
+      authonly: true,
+      dashboard: true,
+      adminonly: false,
+    },
+  };
 }
