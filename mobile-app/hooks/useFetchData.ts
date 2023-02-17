@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { FETCH_DATA_ENDPOINT } from './constants';
+import { auth } from '../firebase/firebaseApp';
+
 
 type Error = any;
 
@@ -16,9 +18,15 @@ export default function useFetchData(){
             async function(){
                 try{
                     setLoading(true)
-                    const response = await axios.get( FETCH_DATA_ENDPOINT )
+        auth?.currentUser?.getIdToken().then(async token => {
+
+                    const response = await axios.get( FETCH_DATA_ENDPOINT, {
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      })
                     setData(response.data)
-                }catch(err){
+                }, )}catch(err){
                     setError(err)
                 }finally{
                     setLoading(false)

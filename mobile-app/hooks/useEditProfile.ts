@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { EDIT_PROFILE_ENDPOINT } from './constants';
+import { auth } from '../firebase/firebaseApp';
+
 
 interface Profile {
-    firstName: string,
-    lastName: string,
+    name: string
     email: string,
     pictureUrl: string
 };
@@ -13,8 +14,7 @@ type Error = any;
 export default function useEditProfile(props: Profile){
 
     const {
-        firstName,
-        lastName,
+        name,
         email,
         pictureUrl,
     } = props;
@@ -28,21 +28,26 @@ export default function useEditProfile(props: Profile){
             async function(){
                 try{
                     setLoading(true)
-                    const response = await axios.post(EDIT_PROFILE_ENDPOINT, {
-                        fname: firstName,
-                        lname: lastName,
-                        emal: email,
+        auth?.currentUser?.getIdToken().then(async token => {
+
+                    const response = await axios.put(EDIT_PROFILE_ENDPOINT, {
+                        name,
+                        email,
                         picture_url: pictureUrl
-                    });
+                    }, {
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      });
                     setData(response.data);
-                } catch(err){
+                })} catch(err){
                     setError(err)
                 } finally{
                     setLoading(false)
                 }
             }
         )()
-    }, [setError, firstName, lastName, email, pictureUrl])
+    }, [setError, name, email, pictureUrl])
 
     return { data, error, loading }
 

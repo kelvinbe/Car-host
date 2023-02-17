@@ -1,24 +1,19 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { REPORT_ISSUE_ENDPOINT } from './constants';
+import { SET_NOTIFICATION_ENDPOINT } from './constants';
 import { auth } from '../firebase/firebaseApp';
 
-
-interface iProps {
-  name: string;
-  email: string;
-  message: string
+interface Iprops {
+  notification: boolean;
 }
-
 type Error = any;
 
-export default function useReportIssue(props: iProps) {
+export default function useSetNotifications(props: Iprops) {
+  const { notification } = props;
+
   const [data, setData] = useState(null);
   const [error, setError] = <Error>useState(null);
   const [loading, setLoading] = useState(false);
-
-
-  const{name, email, message} = props
 
   useEffect(() => {
     (async function() {
@@ -26,9 +21,9 @@ export default function useReportIssue(props: iProps) {
         setLoading(true);
         auth?.currentUser?.getIdToken().then(async token => {
           const response = await axios.post(
-            REPORT_ISSUE_ENDPOINT,
+            SET_NOTIFICATION_ENDPOINT,
             {
-               name, email, message
+              notification
             },
             {
               headers: {
@@ -44,7 +39,6 @@ export default function useReportIssue(props: iProps) {
         setLoading(false);
       }
     })();
-  }, [setError,name, email, message]);
-
-  return { data, error, loading };
+  }, [setError, notification]);
+  return { data, error, loading }
 }

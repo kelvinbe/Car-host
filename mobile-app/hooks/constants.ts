@@ -45,6 +45,8 @@ export const SET_PAYMENT_ENDPOINT = DOMAIN + "/api/payment";
 
 export const FETCH_PAYMENT_METHODS_ENDPOINT = DOMAIN + "/api/paymentMethods";
 
+export const DELETE_PAYMENT_METHOD_ENDPOINT = DOMAIN + "/api/paymentMethods/1";
+
 export const SET_SETTINGS_ENDPOINT = DOMAIN + "/api/settings";
 
 export const VERIFY_AUTH_CODE_ENDPOINT = DOMAIN + "/api/authcode";
@@ -52,3 +54,14 @@ export const VERIFY_AUTH_CODE_ENDPOINT = DOMAIN + "/api/authcode";
 export const SEND_MAIL_ENDPOINT = DOMAIN + "/api/mail/send/message";
 
 export const SEND_TEMPLETE_MAIL_ENDPOINT = DOMAIN + "/api/mail/send/template"; 
+
+export const FETCH_UPCOMING_RESERVATIONS_ENDPOINT = DOMAIN + "/api/upcomingReservations"; 
+
+export const FETCH_HOSTS_VEHICLE_ENDPOINT = DOMAIN + "/api/host"; 
+
+export const SET_NOTIFICATION_ENDPOINT = DOMAIN + "/api/notifications"; 
+
+
+
+
+

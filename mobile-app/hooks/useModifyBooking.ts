@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { MODIFY_BOOKING_ENDPOINT } from './constants';
+import { auth } from '../firebase/firebaseApp';
+
 
 interface Booking {
     entityId: string,
@@ -16,7 +18,7 @@ interface Booking {
 };
 type Error = any;
 
-export default function useEditProfile(props: Booking){
+export default function useModifyBooking(props: Booking){
 
     const {
         entityId,
@@ -40,7 +42,9 @@ export default function useEditProfile(props: Booking){
             async function(){
                 try{
                     setLoading(true)
-                    const response = await axios.post(MODIFY_BOOKING_ENDPOINT, {
+        auth?.currentUser?.getIdToken().then(async token => {
+
+                    const response = await axios.put(MODIFY_BOOKING_ENDPOINT, {
                         entity_id: entityId,
                         host_id: hostId,
                         location_id: locationId,
@@ -51,9 +55,13 @@ export default function useEditProfile(props: Booking){
                         total_cost: totalCost,
                         payment_id: paymentId,
                         status
-                    });
+                    },{
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      } );
                     setData(response.data);
-                } catch(err){
+                })} catch(err){
                     setError(err)
                 } finally{
                     setLoading(false)

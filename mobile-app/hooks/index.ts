@@ -9,12 +9,16 @@ import useFetchHistory from "./useFetchHistory";
 import useForgotPassword from "./useForgotPassword";
 import useModifyBooking from "./useModifyBooking";
 import useSetPayment from "./useSetPayment";
-import useReportIssue from "./useReportIssue";
 import useReserve from "./useReserve";
 import useSearchHost from "./useSearchHost";
 import useSearchLocally from "./useSearchLocally";
 import useSetSettings from "./useSetSettings";
 import useVerifyAuthCode from "./useVerifyAuthCode";
+import useDeletePaymentMethod from "./useDeletePaymentMethod";
+import useFetchUpcomingReservations from "./useFetchUpcomingReservations";
+import useSetNotifications from "./useSetNotifications";
+import useReportIssue from "./useReportIssue";
+
 
 export {
     useAddCard,
@@ -28,10 +32,13 @@ export {
     useFetchHistory,
     useModifyBooking,
     useSetPayment,
-    useReportIssue,
     useReserve,
     useSearchHost,
     useSearchLocally,
     useSetSettings,
-    useVerifyAuthCode
+    useVerifyAuthCode,
+    useDeletePaymentMethod,
+    useFetchUpcomingReservations,
+    useSetNotifications,
+    useReportIssue
 };

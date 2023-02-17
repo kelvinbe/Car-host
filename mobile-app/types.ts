@@ -237,7 +237,8 @@ export interface ICardPaymentMethod {
 export interface IPaymentMethod<T> {
   paymentType: 'MC' | 'Visa' | 'AMEX' | 'Discover' | 'Paypal' | 'Mpesa',
   entityId?: string,
-  details: T
+  details: T,
+  paymentMethodId: string
 };
 
 export interface IRawCard {

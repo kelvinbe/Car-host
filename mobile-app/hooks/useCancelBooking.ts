@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { CANCEL_BOOKING_ENDPOINT } from './constants';
+import { auth } from '../firebase/firebaseApp';
+
 
 type Error = any;
 
@@ -16,9 +18,15 @@ export default function useCancelBooking(id: string){
             async function(){
                 try{
                     setLoading(true)
-                    const response = await axios.post(CANCEL_BOOKING_ENDPOINT, {id});
+        auth?.currentUser?.getIdToken().then(async token => {
+
+                    const response = await axios.put(CANCEL_BOOKING_ENDPOINT, {id}, {
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      });
                     setData(response.data);
-                } catch(err){
+                } )}catch(err){
                     setError(err)
                 } finally{
                     setLoading(false)

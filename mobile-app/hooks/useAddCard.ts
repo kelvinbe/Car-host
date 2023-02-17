@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ADD_CARD_ENDPOINT } from './constants';
+import { auth } from '../firebase/firebaseApp';
+
 
 interface Card {
     cardNum: string,
@@ -12,7 +14,7 @@ interface Card {
 };
 type Error = any;
 
-export default function useEditProfile(props: Card){
+export default function useAddCard(props: Card) {
 
     const {
         cardNum,
@@ -32,6 +34,8 @@ export default function useEditProfile(props: Card){
             async function(){
                 try{
                     setLoading(true)
+        auth?.currentUser?.getIdToken().then(async token => {
+                    
                     const response = await axios.post(ADD_CARD_ENDPOINT, {
                         fname: firstName,
                         lname: lastName,
@@ -39,9 +43,13 @@ export default function useEditProfile(props: Card){
                         card_exp: cardExp,
                         card_sec: cardSec,
                         billing_zip: billingZip
-                    });
+                    }, {
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      });
                     setData(response.data);
-                } catch(err){
+                })} catch(err){
                     setError(err)
                 } finally{
                     setLoading(false)

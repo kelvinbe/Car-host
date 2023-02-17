@@ -1,0 +1,99 @@
+[
+    {
+        "vehicle_id": "4",
+        "vehicle_type": "SUV",
+        "location_id": "1",
+        "color": "Red",
+        "seats": 5,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "longitude": "-122.4194",
+        "latitude": "37.7749",
+        "status": "Available",
+        "make": "BMW",
+        "model": "X5",
+        "hourly_rate": 10,
+        "host": {
+          "userId": "1",
+          "fname": "John",
+          "lname": "Doe",
+          "profile_pic_url": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+          "handle": "johndode"
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "1",
+          "market": {
+            "market_id": "1",
+            "country": "USA",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "21964 Jim Rosa Lane",
+          "building_name": "Building 1",
+          "picture_url": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+          "directions": "Go to the front door",
+          "longitude": "-122.4194",
+          "latitude": "37.7749",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+            "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+    },
+    {
+        "vehicle_id": "5",
+        "vehicle_type": "SUV",
+        "location_id": "1",
+        "color": "Red",
+        "seats": 5,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "longitude": "-122.4194",
+        "latitude": "37.7749",
+        "status": "Available",
+        "make": "BMW",
+        "model": "X5",
+        "hourly_rate": 10,
+        "host": {
+          "userId": "1",
+          "fname": "John",
+          "lname": "Doe",
+          "profile_pic_url": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+          "handle": "johndoe"
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "1",
+          "market": {
+            "market_id": "1",
+            "country": "USA",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "21964 Jim Rosa Lane",
+          "building_name": "Building 1",
+          "picture_url": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
+          "directions": "Go to the front door",
+          "longitude": "-122.4194",
+          "latitude": "37.7749",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+            "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+    }
+    
+]

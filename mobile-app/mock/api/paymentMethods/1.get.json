@@ -1,13 +1,43 @@
 [
-    {
-        "entityId": "card_1MFav3AoGqRfm1CG0263Wfqv",
-        "paymentType": "Visa",
-        "details": {
-            "last4": "4242",
-            "brand": "Visa",
-            "expMonth": "4",
-            "expYear": "2023",
-            "nameOnCard": "Jane Smith"
-        }
+  {
+    "entityId": "card_1MFav3AoGqRfm1CG0263Wfqv",
+    "paymentType": "Visa",
+    "details": {
+      "last4": "4242",
+      "brand": "Visa",
+      "expMonth": "4",
+      "expYear": "2023",
+      "nameOnCard": "Jane Smith"
     }
+  },
+  {
+    "entityId": "Mpesa_Fav3AoGqRfm1CG0263Wfqv",
+    "paymentType": "Mpesa",
+    "details": {
+      "TransactionType": "Pay Bill",
+      "TransID": "NCD81H87FU",
+      "TransTime": "20190313163806",
+      "TransAmount": "100.00",
+      "BusinessShortCode": "600364",
+      "BillRefNumber": "0000",
+      "InvoiceNumber": "",
+      "OrgAccountBalance": "129635.00",
+      "ThirdPartyTransID": "",
+      "MSISDN": "254708374149",
+      "FirstName": "John",
+      "MiddleName": "J.",
+      "LastName": "Doe"
+    }
+  },
+  {
+    "paymentId": "card_1MFav3AoGqRfm1CG0263Wfqv",
+    "paymentType": "Visa",
+    "details": {
+      "last4": "4242",
+      "brand": "Visa",
+      "expMonth": "4",
+      "expYear": "2023",
+      "nameOnCard": "Jane Smith"
+    }
+  }
 ]

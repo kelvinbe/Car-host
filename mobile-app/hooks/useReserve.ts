@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { RESERVE_ENDPOINT } from './constants';
+import { auth } from '../firebase/firebaseApp';
+
 
 interface Reservation {
     entityId: string,
@@ -36,6 +38,8 @@ export default function useReserve(props: Reservation){
             async function(){
                 try{
                     setLoading(true)
+        auth?.currentUser?.getIdToken().then(async token => {
+
                     const response = await axios.post(RESERVE_ENDPOINT, {
                         entity_id: entityId,
                         location_id: locationId,
@@ -45,9 +49,13 @@ export default function useReserve(props: Reservation){
                         hourly_rate: hourlyRate,
                         total_cost: totalCost,
                         payment_id: paymentId
-                    });
+                    }, {
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      });
                     setData(response.data);
-                } catch(err){
+                })} catch(err){
                     setError(err)
                 } finally{
                     setLoading(false)

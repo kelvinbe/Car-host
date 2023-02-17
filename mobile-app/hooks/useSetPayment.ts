@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SET_PAYMENT_ENDPOINT } from './constants';
 import { IPaymentMethod } from '../types';
+import { auth } from '../firebase/firebaseApp';
+
 
 
 
@@ -24,13 +26,19 @@ export default function useSetPayment(props: IPaymentMethod<any>){
             async function(){
                 try{
                     setLoading(true)
+        auth?.currentUser?.getIdToken().then(async token => {
+
                     const response = await axios.post(SET_PAYMENT_ENDPOINT, {
                         payment_type: paymentType,
                         entity_id: entityId,
                         details: details
-                    });
+                    }, {
+                        headers: {
+                          token: `Bearer ${token}`,
+                        },
+                      });
                     setData(response.data);
-                } catch(err){
+                })} catch(err){
                     setError(err)
                 } finally{
                     setLoading(false)

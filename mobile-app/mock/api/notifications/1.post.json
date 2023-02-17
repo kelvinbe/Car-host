@@ -1,0 +1,7 @@
+{
+  "message": "Notifications Activated",
+  "data": {
+    "notifications": true
+  },
+  "status": "success"
+}

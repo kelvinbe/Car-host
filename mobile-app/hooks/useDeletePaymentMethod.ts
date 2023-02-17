@@ -1,50 +1,43 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { REPORT_ISSUE_ENDPOINT } from './constants';
+
+import { DELETE_PAYMENT_METHOD_ENDPOINT } from './constants';
 import { auth } from '../firebase/firebaseApp';
-
-
-interface iProps {
-  name: string;
-  email: string;
-  message: string
-}
+import { IPaymentMethod } from '../types';
 
 type Error = any;
 
-export default function useReportIssue(props: iProps) {
+export default function useDeletePaymentMethod(props: IPaymentMethod<any>
+  ) {
   const [data, setData] = useState(null);
   const [error, setError] = <Error>useState(null);
   const [loading, setLoading] = useState(false);
 
-
-  const{name, email, message} = props
+  const {paymentMethodId} = props
 
   useEffect(() => {
     (async function() {
       try {
         setLoading(true);
         auth?.currentUser?.getIdToken().then(async token => {
-          const response = await axios.post(
-            REPORT_ISSUE_ENDPOINT,
-            {
-               name, email, message
+          const response = await axios.delete(DELETE_PAYMENT_METHOD_ENDPOINT, {
+            headers: {
+              token: `Bearer ${token}`,
             },
-            {
-              headers: {
-                token: `Bearer ${token}`,
-              },
+            params: {
+              payment_method_id: paymentMethodId
             }
-          );
+          });
           setData(response.data);
         });
       } catch (err) {
+        
         setError(err);
       } finally {
         setLoading(false);
       }
     })();
-  }, [setError,name, email, message]);
+  }, [setError]);
 
   return { data, error, loading };
 }

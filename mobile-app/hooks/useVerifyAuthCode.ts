@@ -4,6 +4,8 @@ import axios from 'axios';
 import { VERIFY_AUTH_CODE_ENDPOINT } from './constants';
 import { useDispatch } from 'react-redux';
 import { setAuthCode } from '../store/slices/bookingSlice';
+import { auth } from '../firebase/firebaseApp';
+
 
 type Error = any;
 
@@ -19,11 +21,16 @@ export default function useVerifyAuthCode(code: string){
                 async function(){
                     try{
                         setLoading(true)
+        auth?.currentUser?.getIdToken().then(async token => {
+                        
                         const response = await axios.get(VERIFY_AUTH_CODE_ENDPOINT, {
+                            headers: {
+                                token: `Bearer ${token}`,
+                            },
                             params: {
                                 code
-                            }
-                        })
+                            },
+                        }, )
                         if(response.data.status === "Valid"){
                             setData(response.data)
                             reduxDispatch(setAuthCode({authCode: code}))
@@ -32,7 +39,7 @@ export default function useVerifyAuthCode(code: string){
                                 message: "Invalid auth code"
                             })
                         }
-                    }catch(err){
+                    })}catch(err){
                         setError(err)
                     }finally{
                         setLoading(false)
