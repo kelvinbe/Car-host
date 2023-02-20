@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface Issues {
-    id: string;
-    message: string;
-    dateTime: string;
-    statue: string;
+    name: string;
+    email: string;
+    message: string
 }
 
 const initialState: {
