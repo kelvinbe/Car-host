@@ -302,3 +302,25 @@ export interface dIUserProfile {
   customer_id?: string;
 }
 
+
+/**
+ * @name vehicleInspection 
+ * @description Vehicle Inspection data type
+ * 
+ */
+export interface vehicleInspection {
+
+  vehicleId: number
+  vehicleAvailability: boolean;
+  vehicleAvailabiltyDetails: string;
+  vehicleAvailabilityPictures?: string[];
+  vehicleDamage: boolean;
+  vehicleDamageDetails: string;
+  vehicleDamagePictures?: string[];
+  vehicleCleanliness: boolean;
+  vehicleCleanlinessDetails: string;
+  vehicleCleanlinessPictures?: string[];
+  vehicleGas: number;
+
+}
+

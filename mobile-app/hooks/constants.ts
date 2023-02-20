@@ -61,6 +61,10 @@ export const FETCH_HOSTS_VEHICLE_ENDPOINT = DOMAIN + "/api/host";
 
 export const SET_NOTIFICATION_ENDPOINT = DOMAIN + "/api/notifications"; 
 
+export const SET_VEHICLE_INSPECTION_ENDPOINT = DOMAIN + "/api/vehicleInspection"; 
+
+
+
 
 
 
