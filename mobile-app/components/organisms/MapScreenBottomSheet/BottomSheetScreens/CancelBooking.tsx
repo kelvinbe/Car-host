@@ -10,12 +10,15 @@ import BaseInput from '../../../atoms/Input/BaseInput/BaseInput'
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded'
 import TimeFilter from '../../../molecules/TimeFilter/TimeFilter'
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline'
+import { useCancelBooking } from '../../../../hooks';
+import useToast from '../../../../hooks/useToast';
+import { IReservation } from '../../../../types'
 
 interface IProps {
-    closeBottomSheet?: () => void
+    closeBottomSheet?: () => void;
 }
 
-type Props = IProps;
+type Props = IProps & IReservation;
 
 const useStyles = makeStyles((theme, props: Props)=> {
     return {
@@ -62,7 +65,9 @@ const useStyles = makeStyles((theme, props: Props)=> {
 })
 
 const CancelBookingBottomSheet = (props: Props) => {
-
+    const { data, error, cancelBooking } = useCancelBooking(props?.reservation_id);
+    const toast = useToast();
+    
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = ["30%"]
     const styles = useStyles(props)
@@ -73,10 +78,25 @@ const CancelBookingBottomSheet = (props: Props) => {
     }
 
     const handleCancel = () =>{
-        /**
-         * @todo: handle cancel booking
-         */
-        close()
+        cancelBooking();
+        close();
+
+        if (data) {
+        toast({
+            type: 'success',
+            message: 'Your reservation has been cancelled.',
+            title: 'Success',
+            duration: 3000,
+        });
+        }
+        if (error) {
+        toast({
+            type: 'error',
+            message: 'Something went wrong',
+            title: 'Error',
+            duration: 3000,
+        });
+        }
     }
 
     const handleStop = () =>{
