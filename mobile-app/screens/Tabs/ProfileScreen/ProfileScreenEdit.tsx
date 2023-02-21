@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, Platform } from 'react-native'
-import React, { useReducer } from 'react'
+import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native'
+import React, { useReducer, useState, useEffect } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProfileScreenParamList } from '../../../types'
@@ -10,13 +10,14 @@ import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import { Image } from '@rneui/base'
 import CameraIcon from "../../../assets/icons/camera.svg"
 import useUserAuth from '../../../hooks/useUserAuth'
-import { createSlice } from '@reduxjs/toolkit'
 import Loading from '../../../components/molecules/Feedback/Loading/Loading'
+import { useEditProfile } from '../../../hooks';
+import { Profile } from '../../../hooks/useEditProfile';
+import { _setEmail, _setName, _setPictureUrl } from '../../../store/slices/editProfileSlice'
+import * as ImagePicker from 'expo-image-picker';
 
-interface IProps {
-}
 
-type Props = IProps & NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenEdit">
+type Props = Profile & NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenEdit">
 
 const useStyles = makeStyles((theme, props: Props)=>({
     container: {
@@ -91,84 +92,57 @@ const useStyles = makeStyles((theme, props: Props)=>({
     }
 }))
 
-interface IReducer {
-    email: string,
-    fname: string,
-    lname: string,
-    edited: boolean
-}
-
-const initialState: IReducer = {
-    email: "",
-    fname: "",
-    lname: "",
-    edited: false
-}
-
-const editSlice = createSlice({
-    name: "edit",
-    initialState,
-    reducers: {
-        _setEmail: (state, action) => {
-            state.email = action.payload.email
-            state.edited = action.payload.email !== action.payload.prev
-        },
-        _setFname: (state, action) => {
-            state.fname = action.payload.fname 
-            state.edited = action.payload.fname !== action.payload.prev
-        },
-        _setLname: (state, action) => {
-            state.lname = action.payload.lname
-            state.edited = action.payload !== action.payload.prev
-        }
-    }
-})
-
-const { _setEmail, _setFname, _setLname } = editSlice.actions
-
-export const editReducer = editSlice.reducer
-
 const ProfileScreenEdit = (props: Props) => {
     const styles = useStyles(props)
     const { userProfile, updateProfileError, updateProfileLoading, updateUserProfile } = useUserAuth()
-    const [{
-        email,
-        fname,
-        lname,
-        edited
-    }, dispatchAction] = useReducer(editReducer, {
-        ...initialState,
-        email: userProfile?.email,
-        fname: userProfile?.fname,
-        lname: userProfile?.lname
-    })
-    const setEmail = (email: string) => {
-        dispatchAction(_setEmail({email, prev: userProfile?.email}))
-    }
-    const setFname = (fname: string) => {
-        dispatchAction(_setFname({fname, prev: userProfile?.fname}))
-    }
-    const setLname = (lname: string) => {
-        dispatchAction(_setLname({lname, prev: userProfile?.lname}))
-    }
+    const { data, editUserProfile } = useEditProfile(props);
+
+    let userName = `${userProfile?.fname} ${userProfile?.lname}`;
+    const [name, setName] = useState(userName);
+    const [email, setEmail] = useState(userProfile?.email);
+    const [pictureUrl, setPictureUrl] = useState(userProfile?.profile_pic_url);
+
+    const getPermisssion = async () => {
+        if (Platform.OS !== 'web') {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Permission denied');
+          }
+        }
+      };
+      useEffect(() => {
+        getPermisssion();
+      });
+    
+      const chooseProfilePic = async () => {
+        let result = ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+        if (!(await result).canceled) {
+          setPictureUrl((await result)?.assets[0]?.uri);
+        }
+      };
 
     const update = () =>{
+        editUserProfile({ name, email });
         const currentData = Object.entries({
             email,
-            fname,
-            lname
+            name,
+            pictureUrl
         })
         const prevData: {
             [key: string]: string
         } = {
             email: userProfile?.email,
-            fname: userProfile?.fname,
-            lname: userProfile?.lname
+            name: userName,
+            pictureUrl:userProfile?.profile_pic_url
         }
         const updatedData = currentData.filter(([key, value]: [string , string]) => value !== prevData?.[key as string])
         updateUserProfile(updatedData)
     }
-
   return (updateProfileLoading ? <Loading /> :
     <ThemeConsumer>
         {({theme}) => (
@@ -183,9 +157,9 @@ const ProfileScreenEdit = (props: Props) => {
                                     uri: userProfile?.profile_pic_url
                                 }} style={{width: 70, height: 70}} />
                             </View>
-                            <View style={styles.changeImageContainer} >
+                            <TouchableOpacity style={styles.changeImageContainer} onPress={chooseProfilePic} >
                                 <CameraIcon stroke={theme.colors.primary} width={16} height={12} />
-                            </View>
+                            </TouchableOpacity>
                         </View>
                         <Text style={styles.handleText} >
                             {
@@ -194,13 +168,18 @@ const ProfileScreenEdit = (props: Props) => {
                         </Text>
                     </View>
                     <View style={styles.inputContainerStyle} >
+                    <BaseInput
+                        value={name}
+                        onChangeText={setName}
+                        label="Name"
+                        placeholder="John Doe"
+                        containerStyle={styles.baseInputStyle}
+                    />
                         <BaseInput  value={email} onChangeText={setEmail} label="Email" placeholder='email' containerStyle={styles.baseInputStyle}  />
-                        <BaseInput  value={fname} onChangeText={setFname} label="First Name" placeholder="John" containerStyle={styles.baseInputStyle} />
-                        <BaseInput  value={lname} onChangeText={setLname} label="Last Name" placeholder="Doe" containerStyle={styles.baseInputStyle} />
                     </View>
                 </View>
                 <View style={styles.bottomContainer} >
-                    <Rounded onPress={update} disabled={!edited} >
+                    <Rounded onPress={update}>
                         Save Changes
                     </Rounded>
                 </View>
