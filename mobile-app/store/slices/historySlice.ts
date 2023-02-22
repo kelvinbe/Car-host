@@ -37,8 +37,16 @@ export const {useGetHistoryQuery} = historyApi;
 const historySlice = createSlice({
     name: "history",
     initialState,
-    reducers: {},
+    reducers: {
+        setGetHistoryReservations:(state, action) => {
+            state.history = action.payload.history
+        }
+        
+    },
 })
 
 export default historySlice.reducer;
 
+export const {setGetHistoryReservations} = historySlice.actions
+
+export const selectHistory = (state:any) => {state.history.history}
