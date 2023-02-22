@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import playstore from "../../../public/images/play.png";
 import appstore from "../../../public/images/appstore.png";
+import Link from "next/link";
 
 interface iProps {
   letterSpacing?: string;
@@ -17,7 +18,7 @@ interface iProps {
   display: string;
   image: StaticImageData;
   textColor: string;
-  boxWidth: string;
+  boxWidth?: string;
   textWidth: string;
   flexDirection?: string;
   justifyContent?: string;
@@ -28,6 +29,11 @@ interface iProps {
   spacing: number;
   noStyleText: boolean;
   textAlign: ResponsiveValue<Property.TextAlign>;
+  boxPosition?: string;
+  right?: string;
+  imageWidth?: string;
+  vStackPosition?:string
+  left?: string;
 }
 
 const BannerInfo = (props: iProps) => {
@@ -48,7 +54,17 @@ const BannerInfo = (props: iProps) => {
     spacing,
     noStyleText,
     textAlign,
+    boxPosition,
+    right,
+    imageWidth,
+    vStackPosition,
+    left,
   } = props;
+
+  const imageStyle = {
+    position: boxPosition,
+    right: right
+  }
   return (
     <Box>
       <Box>
@@ -56,8 +72,9 @@ const BannerInfo = (props: iProps) => {
           flexDirection={flexDirection}
           alignItems={alignItems}
           justifyContent={justifyContent}
+          marginTop={marginTop}
         >
-          <VStack paddingTop="100px" align={align} spacing={spacing}>
+          <VStack paddingTop="100px" align={align} spacing={spacing} position={vStackPosition} left={left}>
             <Text
               textTransform="uppercase"
               letterSpacing={letterSpacing}
@@ -92,12 +109,16 @@ const BannerInfo = (props: iProps) => {
               nec fringilla accumsan, risus sem sollicitudin lacus.
             </Text>
             <Stack direction={direction} spacing={6}>
-              <Image src={playstore.src} />
-              <Image src={appstore.src} />
+              <Link href='https://www.apple.com/app-store/' target="blank">
+                <Image src={playstore.src} />
+              </Link>
+              <Link href='https://www.apple.com/app-store/' target="blank">
+                <Image src={appstore.src} />
+              </Link>             
             </Stack>
           </VStack>
-          <Box display={display} w={boxWidth} marginTop={marginTop}>
-            <Image src={image?.src} />
+          <Box display={display} width={boxWidth}>
+            <Image src={image?.src} w={imageWidth} position={boxPosition} right={right}/>
           </Box>
         </Flex>
       </Box>

@@ -14,6 +14,7 @@ export const SlideWithBgImage = ({ banner }) => {
       marginTop="-124px"
       top="0px"
       left="0px"
+      position="relative"
       bgRepeat="no-repeat"
       bgImage={banner.id === 3 ? banner.image : banner.image.src}
       bgSize={banner.id === 2 ? "" : "cover"}
@@ -27,13 +28,19 @@ export const SlideWithBgImage = ({ banner }) => {
           display="block"
           image={banner.disImage}
           textColor=""
-          boxWidth="1000px"
+          boxWidth="full"
+          imageWidth="1000px"
           textWidth="480px"
           align="start"
           showText={true}
           spacing={1}
           noStyleText={false}
           textAlign="left"
+          vStackPosition="absolute"
+          left = "200px"
+          boxPosition="absolute"
+          right="0px"
+          marginTop="-300"
         />
       ) : banner.id === 2 ? (
         <BannerInfo
@@ -43,6 +50,7 @@ export const SlideWithBgImage = ({ banner }) => {
           image={banner.disImage}
           textColor=""
           boxWidth="1000px"
+          imageWidth="1000px"
           textWidth="480px"
           align="start"
           showText={true}

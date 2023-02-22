@@ -11,6 +11,7 @@ import {
 import laptopMobile from "../../../public/images/laptopMobile.png";
 import availableOnAppStore from "../../../public/images/availableOnAppStore.png";
 import availableOnPlayStore from "../../../public/images/availableOnPlayStore.png";
+import Link from "next/link";
 
 const BookRide = () => {
   return (
@@ -44,8 +45,12 @@ const BookRide = () => {
 
                 <Box>
                   <HStack spacing={8}>
-                    <Image h="64px" src={availableOnAppStore.src} />
-                    <Image h="64px" src={availableOnPlayStore.src} />
+                    <Link href='https://www.apple.com/app-store/' target="blank">
+                      <Image h="64px" src={availableOnAppStore.src} />
+                    </Link>
+                    <Link href='https://www.apple.com/app-store/' target="blank">
+                      <Image h="64px" src={availableOnPlayStore.src} />
+                    </Link>
                   </HStack>
                 </Box>
 
@@ -73,18 +78,19 @@ const BookRide = () => {
                       Maecenas eget condimentum velit, sit amet feugiat lectus.
                       Class aptent taciti.
                     </Text>
-
-                    <Button
-                      color="white"
-                      bgColor="#E63B2E"
-                      size="lg"
-                      h="54px"
-                      borderRadius={10}
-                      fontWeight="bold"
-                      marginTop={5}
-                    >
-                      Get Started
-                    </Button>
+                    <Link href="getting-started">
+                      <Button
+                        color="white"
+                        bgColor="#E63B2E"
+                        size="lg"
+                        h="54px"
+                        borderRadius={10}
+                        fontWeight="bold"
+                        marginTop={5}
+                      >
+                        Get Started
+                      </Button>
+                    </Link>
                   </VStack>
                 </Box>
               </VStack>

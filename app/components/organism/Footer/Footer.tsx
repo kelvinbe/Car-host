@@ -5,6 +5,7 @@ import { FaFacebook } from "react-icons/fa";
 import { AiFillTwitterCircle } from "react-icons/ai";
 import InstagramImage from "../../../public/images/instagram.png";
 import LinkedInImage from "../../../public/images/linkedin.png";
+import Link from "next/link";
 
 const Footer = () => {
   const TextStyling = {
@@ -28,10 +29,18 @@ const Footer = () => {
               </Box>
               <Box>
                 <HStack spacing="20px" justifyContent="center">
-                  <Icon as={AiFillTwitterCircle} boxSize="24px" />
-                  <Icon as={FaFacebook} boxSize="24px" />
-                  <Image src={InstagramImage.src} boxSize="24px" />
-                  <Image src={LinkedInImage.src} boxSize="24px" />
+                  <Link href='https://twitter.com/' target="blank">
+                    <Icon as={AiFillTwitterCircle} boxSize="24px" />
+                  </Link>
+                  <Link href='https://www.facebook.com/' target="blank">
+                    <Icon as={FaFacebook} boxSize="24px" />
+                  </Link>
+                  <Link href='https://www.instagram.com/' target="blank">
+                    <Image src={InstagramImage.src} boxSize="24px" />
+                  </Link>
+                  <Link href='https://www.linkedin.com/' target="blank">
+                    <Image src={LinkedInImage.src} boxSize="24px" />
+                  </Link>
                 </HStack>
               </Box>
               <Box marginTop="45px">

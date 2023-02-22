@@ -11,9 +11,16 @@ const LandingPage = () => {
     <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full">
       <Header />
       <Banner />
-      <AboutUs />
-      <AppFeature />
-      <BookRide />
+      
+      <div id="about">
+        <AboutUs />
+      </div>
+      <div id="app-feature">
+        <AppFeature />
+      </div>
+      <div id="book-ride">
+        <BookRide/>
+      </div>    
       <Footer />
     </div>
   );

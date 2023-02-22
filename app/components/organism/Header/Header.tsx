@@ -5,6 +5,8 @@ import {
   FlexRowStartBetween,
 } from "../../../utils/theme/FlexConfigs";
 import DivvlyLogo from "../../../public/images/Divvly.png";
+// import Link from "next/link";
+import { Link } from "@chakra-ui/react";
 
 const Header = () => {
   return (
@@ -28,9 +30,14 @@ const Header = () => {
             </Text>
           </Box>
           <Box paddingLeft="40px" paddingRight="80px">
-            <Button fontStyle="normal" color="white" bg="#E63B2E">
-              Get Started
-            </Button>
+          <Link href='#about' paddingRight="20px">
+            About Us
+          </Link>
+            <Link href="getting-started">
+              <Button fontStyle="normal" color="white" bg="#E63B2E">
+                Get Started
+              </Button>
+            </Link>
           </Box>
         </Flex>
       </Flex>

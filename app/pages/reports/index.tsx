@@ -2,7 +2,11 @@ import React from 'react'
 
 function Reports() {
   return (
-    <div>Reports Page</div>
+    <div>
+      Reports Page
+      <div>
+      </div>
+    </div>
   )
 }
 

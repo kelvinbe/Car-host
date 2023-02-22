@@ -16,6 +16,7 @@ const Appfeature = () => {
       displaySecondButton: "block",
       showFirstButtonIcon: true,
       showSecondButtonIcon: true,
+      buttonLink: "https://www.apple.com/app-store/",
     },
     {
       title: "For Hosts",
@@ -27,11 +28,12 @@ const Appfeature = () => {
       displaySecondButton: "none !important",
       showFirstButtonIcon: false,
       showSecondButtonIcon: false,
+      buttonLink: "getting-started",
     },
   ];
 
   return (
-    <Box py="20">
+    <Box py="20" w="1500px">
       <VStack spacing={16}>
         <Flex
           flexDirection="column"
@@ -69,6 +71,7 @@ const Appfeature = () => {
                   displaySecondButton={card.displaySecondButton}
                   showFirstButtonIcon={card.showFirstButtonIcon}
                   showSecondButtonIcon={card.showSecondButtonIcon}
+                  buttonLink={card.buttonLink}
                 />
               );
             })}
