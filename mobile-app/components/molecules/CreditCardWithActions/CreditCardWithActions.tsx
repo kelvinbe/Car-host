@@ -5,14 +5,15 @@ import CreditCard, { CardProps } from '../CreditCard/CreditCard'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDeletePaymentMethodMutation } from '../../../store/slices/billingSlice';
 import useToast from '../../../hooks/useToast';
-
+import useDeleteCard from '../../../hooks/useDeleteCard';
+import { IRawCard } from '../../../types';
 interface IProps {
     onActionPress?: () => void,
     actionTitle?: string,
     customStyle?: StyleProp<ViewStyle>
 }
 
-type Props = IProps & CardProps;
+type Props = IProps & CardProps & IRawCard;
 const useStyles = makeStyles((theme, props)=>({
     container: {
         alignItems: "flex-end",
@@ -50,17 +51,14 @@ const useStyles = makeStyles((theme, props)=>({
 const CreditCardWithActions = (props: Props) => {
     const styles = useStyles()
     const { theme } = useTheme()
+    const {data, error, loading, deleteCard} = useDeleteCard()
+    const toast = useToast()
     const [deleteOption, setDeleteOption] = useState<boolean>(false)
 
-    const toast = useToast()
+    const {cardNumber} = props
 
-    const [ deletePaymentMethod, {
-        isLoading,
-        error,
-        data
-    } ] = useDeletePaymentMethodMutation()
-
-    useEffect(()=>{
+    const removePaymentMethod = () => {
+        deleteCard(cardNumber)
         if(data){
             toast({
                 type: "success",
@@ -72,16 +70,11 @@ const CreditCardWithActions = (props: Props) => {
         if(error){
             toast({
                 type: "error",
-                message: "Something went wrong",
+                message: error,
                 title: "Error",
                 duration: 3000,
             })
         }
-    }, [error, data])
-
-    const removePaymentMethod = () => {
-        props?.entityId && deletePaymentMethod(props.entityId)
-        props?.onActionPress && props?.onActionPress()
     }
 
   return (
@@ -96,7 +89,7 @@ const CreditCardWithActions = (props: Props) => {
         </View>
         { deleteOption && <View style={{width: "50%"}} >
             <TouchableOpacity  style={styles.buttonStyle}  onPress={removePaymentMethod} >
-                {isLoading ? <ActivityIndicator color={theme.colors.primary} size="large" /> :<Text style={styles.titleStyle} >
+                {loading ? <ActivityIndicator color={theme.colors.primary} size="large" /> :<Text style={styles.titleStyle} >
                     {
                         props.actionTitle
                     }

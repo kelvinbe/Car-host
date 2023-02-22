@@ -12,6 +12,8 @@ import resultsSlice from './resultsSlice';
 import userSlice from './userSlice';
 import { vehiclesApi } from './vehiclesSlice';
 import { billingApi } from './billingSlice';
+import addCardSlice from './addCardSlice';
+import deleteCardSlice from './deleteCardSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -28,7 +30,9 @@ const rootReducer = combineReducers({
   payments: paymentsSlice,
   results: resultsSlice,
   user: userSlice,
-  [vehiclesApi.reducerPath]: vehiclesApi.reducer
+  [vehiclesApi.reducerPath]: vehiclesApi.reducer,
+  addCard: addCardSlice,
+  deleteCard: deleteCardSlice
 });
 
 export default rootReducer;

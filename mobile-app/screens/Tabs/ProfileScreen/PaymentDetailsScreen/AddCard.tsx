@@ -1,23 +1,24 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { IRawCard, IRawPaymentMethodDetails, PaymentDetailsScreenParamList } from '../../../../types'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../../../components/atoms/Input/WithHelperText/WithHelperText'
 import { Icon } from '@rneui/base'
-import { addSlashAfter2Digits, addSpacingAfterEveryFourDigits, removeSpaces } from "../../../../utils/utils"
+import { removeSpaces } from "../../../../utils/utils"
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded'
 import Loading from '../../../../components/molecules/Feedback/Loading/Loading'
 import { useSetPaymentMethodMutation } from '../../../../store/slices/billingSlice'
 import { auth } from '../../../../firebase/firebaseApp'
 import useToast from '../../../../hooks/useToast'
+import { selectCardNum, selectIsCardNumValid, selectCardCvv, selectIsCvvValid, selectCardExp, selectIsExpDateValid, selectAttemptsToSubmit, selectCardName } from '../../../../store/slices/addCardSlice'
+import { setCard, setCardCvv, setCardName, setCardNum, setCardExp } from '../../../../store/slices/addCardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { useAddCard } from '../../../../hooks'
+import { Card } from '../../../../hooks/useAddCard'
 
-const ccNumberRegex = new RegExp("^[0-9]{16}$")
-const expDateRegex = new RegExp("^[0-9]{4}$")
-const cvvRegex = new RegExp("^[0-9]{3}$")
-
-type Props = NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
+type Props = Card & NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
 
 const useStyles = makeStyles((theme, props: Props)=>{
     return {
@@ -74,171 +75,67 @@ const useStyles = makeStyles((theme, props: Props)=>{
     }
 })
 
-interface IReducerState {
-    name: string,
-    cardNumber: string,
-    expDate: string,
-    cvv: string
-    isCardNumberValid: boolean,
-    isExpDateValid: boolean,
-    isCvvValid: boolean,
-    attemptsToSubmit: number,
-    loading: boolean
-    error: string
-}
-
-const initialState: IReducerState = {
-    name: "",
-    cardNumber: "",
-    expDate: "",
-    cvv: "",
-    isCardNumberValid: false,
-    isExpDateValid: false,
-    isCvvValid: false,
-    attemptsToSubmit: 0,
-    loading: false,
-    error: ""
-}
-
-const reducer = (state: IReducerState, action: any) => {
-    switch (action.type) {
-        case "SET_NAME":    
-            return {
-                ...state,
-                name: action.payload
-            }
-        case "SET_CARD_NUMBER":
-            return {
-                ...state,
-                cardNumber: addSpacingAfterEveryFourDigits(action.payload),
-                isCardNumberValid: ccNumberRegex.test(action.payload)
-            }
-        case "SET_EXP_DATE":
-            return {
-                ...state,
-                expDate: action?.payload?.length > 2 ? addSlashAfter2Digits(action.payload) : action.payload ,
-                isExpDateValid: expDateRegex.test(action.payload)   
-            }
-        case "SET_CVV":
-            return {
-                ...state,
-                cvv: action.payload,
-                isCvvValid: cvvRegex.test(action.payload)
-            }
-        case "SUBMIT":
-            return {
-                ...state,
-                attemptsToSubmit: state.attemptsToSubmit + 1
-            }
-        case "SET_LOADING":
-            return {
-                ...state,
-                loading: action.payload
-            }
-        case "SET_ERROR":
-            return {
-                ...state,
-                error: action.payload
-            }
-        default:
-            return state
-    }
-}
-
 const AddCard = (props: Props) => {
-    const [ addCard, {
-        isLoading: loading,
-        error: addCardError,
-        data
-    } ] = useSetPaymentMethodMutation()
     const toast = useToast()
-    const [{
-        name,
-        cardNumber,
-        expDate,
-        cvv,
-        isCardNumberValid,
-        isExpDateValid,
-        isCvvValid,
-        attemptsToSubmit,
-        error
-    }, dispatchAction] = useReducer(reducer, initialState)
-
+    const dispatch = useDispatch()
     const { theme } = useTheme()
+    const {data,error, loading, addPaymentCard} = useAddCard(props)
+
+    const name = useSelector(selectCardName)
+    const cardNumber = useSelector(selectCardNum)
+    const isCardNumberValid = useSelector(selectIsCardNumValid)
+    const cvv = useSelector(selectCardCvv)
+    const attemptsToSubmit = useSelector(selectAttemptsToSubmit)
+    const expDate = useSelector(selectCardExp)
+    const isExpDateValid = useSelector(selectIsExpDateValid)
+    const isCvvValid = useSelector(selectIsCvvValid)
 
     const handleNameChange = (text: string) => {
-        dispatchAction({
-            type: "SET_NAME",
+        dispatch(setCardName({
             payload: text
-        })
+        }))
     }
 
-    const handleCardNumberChange = (text: string) => {
-        dispatchAction({
-            type: "SET_CARD_NUMBER",
+    const handleCardNumberChange = (text:string) => {
+        dispatch(setCardNum({
             payload: removeSpaces(text)
-        })
+        }))
+        
     }
 
     const handleExpDateChange = (text: string) => {
-        dispatchAction({
-            type: "SET_EXP_DATE",
+        dispatch(setCardExp({
             payload: removeSpaces(text)?.replace("/", "")
-        })
+        }))
     }
 
     const handleCvvChange = (text: string) => {
-        dispatchAction({
-            type: "SET_CVV",
+        dispatch(setCardCvv({
             payload: removeSpaces(text)
-        })
+        }))
     }
 
     const handleAddCard = () => {
-        dispatchAction({
-            type: "SUBMIT"
-        })
-        addCard({
-            details: {
-                cardNumber,
-                cvc: cvv,
-                name,
-                expMonth: parseInt(expDate.slice(0, 2)),
-                expYear: parseInt(expDate.slice(3, 5)),
-                email: auth?.currentUser?.email
-            } as IRawCard
-        })
+        addPaymentCard({name, cardNumber, cvv, expDate})
 
-    }
-
-    useEffect(()=>{
-        if(addCardError){
+        if(error){
             toast({
-                title: "Error",
-                message: "Something went wrong.\n Please try again later",
                 type: "error",
-                duration: 5000
+                message: error,
+                title: "Error",
+                duration: 3000,
             })
         }
-
-        if(data){
+        else{
             toast({
-                title: "Success",
-                message: "Card added successfully",
-                type: "success",
-                duration: 5000
+            type: "success",
+            message: "Your card has been added",
+            title: "Success",
+            duration: 3000,
             })
-            props.navigation.goBack()
         }
-    }, [addCardError, data])
-
-    
-
-
-
-    const styles = useStyles(props)
-
-    
+    }
+    const styles = useStyles(props)   
 
     return (loading ? <Loading/> :
         <View style={styles.container} >
@@ -306,7 +203,7 @@ const AddCard = (props: Props) => {
                 </View>
             </View>
             <View style={styles.bottomSection} >
-                <Rounded onPress={handleAddCard} fullWidth >
+                <Rounded fullWidth onPress = {handleAddCard} >
                     Add Card
                 </Rounded>
             </View>

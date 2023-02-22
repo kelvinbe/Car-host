@@ -13,6 +13,8 @@ export const BACKEND_DOMAIN = `http:${_DOMAIN}:3000`
 
 export const ADD_CARD_ENDPOINT = DOMAIN + "/api/card";
 
+export const DELETE_CARD_ENDPOINT = DOMAIN + "/api/card/1";
+
 export const CANCEL_BOOKING_ENDPOINT = DOMAIN + "/api/cancel";
 
 export const CREATE_PASSWORD_ENDPOINT = DOMAIN + "/api/password";

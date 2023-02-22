@@ -238,14 +238,13 @@ export interface IPaymentMethod<T> {
   paymentType: 'MC' | 'Visa' | 'AMEX' | 'Discover' | 'Paypal' | 'Mpesa',
   entityId?: string,
   details: T,
-  paymentMethodId: string
+  paymentMethodId?: string
 };
 
 export interface IRawCard {
   cardNumber: string,
-  expMonth: number,
-  expYear: number,
-  cvc: string,
+  expDate: string,
+  cvv: string,
   name: string,
   email: string,
 }
