@@ -4,12 +4,14 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
-
+import useEndReservation from '../../../../hooks/useEndReservation';
+import { IReservation } from '../../../../types';
+import useToast from '../../../../hooks/useToast';
 interface IProps {
   closeBottomSheet?: () => void;
 }
 
-type Props = IProps;
+type Props = IProps & IReservation;
 
 const useStyles = makeStyles((theme, props: Props) => {
   return {
@@ -55,6 +57,10 @@ const useStyles = makeStyles((theme, props: Props) => {
 });
 
 const EndReservation = (props: Props) => {
+  const {data, error, endReservation} = useEndReservation(props.reservation_id)
+
+  const toast = useToast()
+
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['30%'];
   const styles = useStyles(props);
@@ -65,9 +71,23 @@ const EndReservation = (props: Props) => {
   };
 
   const handleCancel = () => {
-    /**
-     * @todo: handle cancel booking
-     */
+    endReservation()
+    if(data.status.Success === 'success'){
+      toast({
+        type: 'success',
+        message: 'Your reservation has been ended',
+        title: 'Success',
+        duration: 3000
+      })
+    }else if(error){
+      toast({
+        type: 'error',
+        message: 'Something went wrong',
+        title: 'Error',
+        duration: 3000
+      })
+    }
+    
     close();
   };
 

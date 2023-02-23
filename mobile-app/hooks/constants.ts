@@ -65,6 +65,8 @@ export const SET_NOTIFICATION_ENDPOINT = DOMAIN + "/api/notifications";
 
 export const SET_VEHICLE_INSPECTION_ENDPOINT = DOMAIN + "/api/vehicleInspection"; 
 
+export const END_RESERVATION_ENDPOINT = DOMAIN + "/api/endReservation/2"; 
+
 
 
 
