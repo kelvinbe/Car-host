@@ -12,12 +12,15 @@ import TimeFilter from '../../../molecules/TimeFilter/TimeFilter';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import useBookingActions from '../../../../hooks/useBookingActions';
 import { useUpdateBookingMutation } from '../../../../store/slices/reservationSlice';
+import { useModifyBooking } from '../../../../hooks';
+import { Booking } from '../../../../hooks/useModifyBooking';
+import useToast from '../../../../hooks/useToast';
 
 interface IProps {
   closeBottomSheet?: () => void;
 }
 
-type Props = IProps;
+type Props = IProps & Booking;
 
 const useStyles = makeStyles((theme, props: Props) => {
   return {
@@ -64,7 +67,9 @@ const ModifyBookingBottomSheet = (props: Props) => {
   const styles = useStyles(props);
 
   const { setStartDateTime, setEndDateTime, bookingDetails } = useBookingActions();
-  const [updateBooking, { isLoading, error, data }] = useUpdateBookingMutation();
+
+  const {data, error, loading, modifyReservation} = useModifyBooking(props)
+  const toast = useToast()
 
   const close = () => {
     bottomSheetRef.current?.close();
@@ -85,14 +90,24 @@ const ModifyBookingBottomSheet = (props: Props) => {
   };
 
   const handleSave = () => {
-    /**
-     * @todo: handle save booking
-     */
-    updateBooking({
-      endDateTime: bookingDetails.endDateTime,
-      startDateTime: bookingDetails.startDateTime,
-    } as any);
-  };
+    modifyReservation()
+  }
+  
+  if(data && data[0]?.status === 'Modified'){
+    toast({
+      type:'success',
+      title:'Success',
+      message:"Successfully modified your reservation",
+      duration:3000
+    })
+  }else if(error){
+    toast({
+      type:'error',
+      title:'Error',
+      message:"An error has occurred. Could not modify your reservation",
+      duration:3000
+    })
+  }
 
   return (
     <ThemeConsumer>
@@ -117,7 +132,7 @@ const ModifyBookingBottomSheet = (props: Props) => {
                   width="45%">
                   Cancel
                 </RoundedOutline>
-                <Rounded loading={isLoading} onPress={handleSave} width="45%">
+                <Rounded loading={loading} onPress={handleSave} width="45%">
                   Save
                 </Rounded>
               </View>

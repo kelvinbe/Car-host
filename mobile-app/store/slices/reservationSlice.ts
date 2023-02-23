@@ -4,7 +4,6 @@ import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
 import { auth } from '../../firebase/firebaseApp';
 
-
 export const reservationsApi = createApi({
     reducerPath: "reservationsApi",
     baseQuery: fetchBaseQuery({
@@ -59,11 +58,13 @@ export const reservationsApi = createApi({
 export const { useGetReservationsQuery, useGetReservationQuery, useAddReservationMutation, useUpdateBookingMutation } = reservationsApi
 
 interface IReservationState {
-    chosenReservation?: string
+    chosenReservation?: string,
+    modifyReservation?:boolean
 }
 
 const initialState: IReservationState = {
-    chosenReservation: undefined
+    chosenReservation: undefined,
+    modifyReservation:false,
 }
 
 const reservationSlice = createSlice({
@@ -73,6 +74,9 @@ const reservationSlice = createSlice({
         setChosenReservation: (state, action) => {
             state.chosenReservation = action.payload;
         },
+        setModifyReservation: (state) => {
+            state.modifyReservation = true
+        }
     }
 })
 
@@ -80,7 +84,7 @@ export default reservationSlice.reducer;
 
 // actions
 
-export const { setChosenReservation } = reservationSlice.actions;
+export const { setChosenReservation, setModifyReservation } = reservationSlice.actions;
 
 // selectors
 export const selectChosenReservation = (state: any) => state.reservation.chosenReservation;
