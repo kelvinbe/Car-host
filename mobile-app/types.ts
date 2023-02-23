@@ -305,21 +305,20 @@ export interface dIUserProfile {
 /**
  * @name vehicleInspection 
  * @description Vehicle Inspection data type
+ * added null type to pictures to allow for expo image picker default
  * 
  */
 export interface vehicleInspection {
-
   vehicleId: number
   vehicleAvailability: boolean;
-  vehicleAvailabiltyDetails: string;
-  vehicleAvailabilityPictures?: string[];
+  vehicleAvailabiltyDetails?: string;
+  vehicleAvailabilityPictures?: string | null;
   vehicleDamage: boolean;
-  vehicleDamageDetails: string;
-  vehicleDamagePictures?: string[];
+  vehicleDamageDetails?: string;
+  vehicleDamagePictures?: string | null;
   vehicleCleanliness: boolean;
-  vehicleCleanlinessDetails: string;
-  vehicleCleanlinessPictures?: string[];
+  vehicleCleanlinessDetails?: string;
+  vehicleCleanlinessPictures?: string | null;
   vehicleGas: number;
-
 }
 
