@@ -15,7 +15,7 @@ import useSearchLocally from "./useSearchLocally";
 import useSetSettings from "./useSetSettings";
 import useVerifyAuthCode from "./useVerifyAuthCode";
 import useDeletePaymentMethod from "./useDeletePaymentMethod";
-import useFetchUpcomingReservations from "./useFetchUpcomingReservations";
+import useFetchUpcoming from "./useFetchUpcoming";
 import useSetNotifications from "./useSetNotifications";
 import useReportIssue from "./useReportIssue";
 
@@ -38,7 +38,7 @@ export {
     useSetSettings,
     useVerifyAuthCode,
     useDeletePaymentMethod,
-    useFetchUpcomingReservations,
+    useFetchUpcoming,
     useSetNotifications,
     useReportIssue
 };

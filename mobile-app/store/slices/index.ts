@@ -12,6 +12,7 @@ import resultsSlice from './resultsSlice';
 import userSlice from './userSlice';
 import { vehiclesApi } from './vehiclesSlice';
 import { billingApi } from './billingSlice';
+import upcomingReservationSlice from './upcomingReservationSlice';
 import addCardSlice from './addCardSlice';
 import deleteCardSlice from './deleteCardSlice';
 
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   results: resultsSlice,
   user: userSlice,
   [vehiclesApi.reducerPath]: vehiclesApi.reducer,
+  upcoming:upcomingReservationSlice,
   addCard: addCardSlice,
   deleteCard: deleteCardSlice
 });

@@ -1,5 +1,5 @@
 import { View, FlatList } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UpcomingParamList } from '../../../types';
 import { makeStyles } from '@rneui/themed';
 import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard';
@@ -8,8 +8,10 @@ import { useGetReservationsQuery } from '../../../store/slices/reservationSlice'
 import Loading from '../../../components/molecules/Feedback/Loading/Loading';
 import Error from '../../../components/molecules/Feedback/Error/Error';
 import Empty from '../../../components/molecules/Feedback/Empty/Empty';
-import { useAppDispatch } from '../../../store/store';
+import { useAppDispatch} from '../../../store/store';
 import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice';
+import { useFetchUpcoming } from '../../../hooks';
+import { selectUpcoming } from '../../../store/slices/upcomingReservationSlice';
 
 type Props = NativeStackScreenProps<UpcomingParamList, 'UpcomingReservationsHome'>;
 
@@ -28,9 +30,9 @@ const useStyles = makeStyles((theme, props: Props) => ({
 }));
 
 const UpcomingHomeScreen = (props: Props) => {
-  const { data, isLoading, error } = useGetReservationsQuery('');
+  const {data, loading, error, fetchUpcoming} = useFetchUpcoming()
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
 
   const styles = useStyles(props);
@@ -55,6 +57,9 @@ const UpcomingHomeScreen = (props: Props) => {
       });
   };
 
+  useEffect(() => {
+    fetchUpcoming()
+  },[])
   return isLoading || loading ? (
     <Loading />
   ) : error || fetchError ? (
