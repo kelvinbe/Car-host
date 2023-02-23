@@ -7,7 +7,8 @@ import VisaIcon from '../../../../assets/icons/visa.svg';
 import { useGetPaymentMethodsQuery } from '../../../../store/slices/billingSlice';
 import { ScrollView } from 'react-native-gesture-handler';
 import useBookingActions from '../../../../hooks/useBookingActions';
-
+import useFetchPayments from '../../../../hooks/useFetchPayments';
+import useToast from '../../../../hooks/useToast';
 interface IProps {
   closeBottomSheet?: () => void;
   hasSelected?: Boolean;
@@ -46,11 +47,12 @@ const useStyles = makeStyles((theme, props: Props) => {
 });
 
 const PaymentBottomSheet = (props: Props) => {
-  const { data: paymentMethods, isLoading, error } = useGetPaymentMethodsQuery('');
+  const {data, error} = useFetchPayments()
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['50%'];
   const styles = useStyles(props);
   const { setBillingInfo } = useBookingActions();
+  const toast = useToast()
 
   const close = () => {
     bottomSheetRef.current?.close();
@@ -58,9 +60,19 @@ const PaymentBottomSheet = (props: Props) => {
   };
 
   const handlePaymentSelect = (id: any) => {
-    const payMethod = id ? paymentMethods?.filter(({ entityId }) => entityId === id)?.[0] : null;
-    payMethod && setBillingInfo(payMethod);
+    if(data){
+    const payMethod = id ? data?.filter(({ entityId }) => entityId === id)?.[0] : null;
+    payMethod && setBillingInfo(payMethod) 
     close();
+    }else if(error){
+      toast({
+        type: 'error',
+        message: 'Something went wrong',
+        title: 'Error',
+        duration: 3000
+      })
+    }
+       
   };
 
   /**
@@ -81,7 +93,7 @@ const PaymentBottomSheet = (props: Props) => {
           <View style={styles.contentContainer}>
             <Text style={styles.contentTitleStyle}>Select payment</Text>
             <ScrollView style={styles.cardsContainer}>
-              {paymentMethods?.map((paymentMethod, i) => {
+              {data?.map((paymentMethod, i) => {
                 return (
                   <ActionButton
                     key={i}
