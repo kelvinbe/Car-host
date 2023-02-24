@@ -44,7 +44,7 @@ export const reservationsApi = createApi({
         }),
         updateBooking: builder.mutation<IAPIDto<{reservationId: string}>, IReservation>({
             query: (body) => ({
-                url: `/api/reservation`,
+                url: `/api/extendReservation`,
                 method: 'PUT',
                 body
             }),
@@ -59,12 +59,14 @@ export const { useGetReservationsQuery, useGetReservationQuery, useAddReservatio
 
 interface IReservationState {
     chosenReservation?: string,
-    modifyReservation?:boolean
+    modifyReservation?:boolean,
+    extendReservation?:boolean
 }
 
 const initialState: IReservationState = {
     chosenReservation: undefined,
     modifyReservation:false,
+    extendReservation:false
 }
 
 const reservationSlice = createSlice({
@@ -76,7 +78,10 @@ const reservationSlice = createSlice({
         },
         setModifyReservation: (state) => {
             state.modifyReservation = true
-        }
+        },
+        setExtendReservation: (state) => {
+            state.extendReservation = true
+        },
     }
 })
 
@@ -84,7 +89,7 @@ export default reservationSlice.reducer;
 
 // actions
 
-export const { setChosenReservation, setModifyReservation } = reservationSlice.actions;
+export const { setChosenReservation, setModifyReservation, setExtendReservation } = reservationSlice.actions;
 
 // selectors
 export const selectChosenReservation = (state: any) => state.reservation.chosenReservation;

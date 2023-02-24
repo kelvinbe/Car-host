@@ -115,7 +115,7 @@ export interface IToast {
 // }
 
 export interface IReservation {
-  reservation_id?: string;
+  reservation_id: string;
   customer: {
     userId?: string;
     fname?: string;

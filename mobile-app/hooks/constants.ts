@@ -21,6 +21,8 @@ export const CREATE_PASSWORD_ENDPOINT = DOMAIN + "/api/password";
 
 export const EDIT_PROFILE_ENDPOINT = DOMAIN + "/api/profile";
 
+export const EXTEND_RESERVATION_ENDPOINT = DOMAIN + "/api/extendReservation";
+
 export const FETCH_DATA_ENDPOINT = DOMAIN + "/api/init";
 
 export const FETCH_HISTORY_ENDPOINT = DOMAIN + "/api/history";

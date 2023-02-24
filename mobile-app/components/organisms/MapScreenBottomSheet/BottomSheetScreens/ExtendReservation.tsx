@@ -7,12 +7,15 @@ import TimeFilter from '../../../molecules/TimeFilter/TimeFilter';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import useBookingActions from '../../../../hooks/useBookingActions';
 import { useUpdateBookingMutation } from '../../../../store/slices/reservationSlice';
+import useExtendBooking from '../../../../hooks/useExtendBooking';
+import useToast from '../../../../hooks/useToast';
+import { IReservation } from '../../../../types';
 
 interface IProps {
   closeBottomSheet?: () => void;
 }
 
-type Props = IProps;
+type Props = IProps & IReservation;
 
 const useStyles = makeStyles((theme, props: Props) => {
   return {
@@ -57,20 +60,16 @@ const ExtendReservation = (props: Props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['45%'];
   const styles = useStyles(props);
+  const toast = useToast()
 
   const { setStartDateTime, setEndDateTime, bookingDetails } = useBookingActions();
-  const [updateBooking, { isLoading, error, data }] = useUpdateBookingMutation();
+  const [ updateBooking ] = useUpdateBookingMutation();
+  const {extendBooking, data, error, loading} = useExtendBooking()
 
   const close = () => {
     bottomSheetRef.current?.close();
     props.closeBottomSheet && props.closeBottomSheet();
   };
-
-  useEffect(() => {
-    if (data) {
-      close();
-    }
-  }, [data]);
 
   const handleCancel = () => {
     /**
@@ -80,15 +79,31 @@ const ExtendReservation = (props: Props) => {
   };
 
   const handleSave = () => {
-    /**
-     * @todo: handle save booking
-     */
+    extendBooking(props?.reservation_id)
     updateBooking({
       endDateTime: bookingDetails.endDateTime,
       startDateTime: bookingDetails.startDateTime,
     } as any);
-    close();
   };
+  useEffect(() => {
+    if(data && data[0]?.status === "Extended"){
+      close();
+      toast({
+        type:"success",
+        title:"Extended",
+        message:"Your dropoff time has been extended",
+        duration:3000
+      })
+    }else if(error){
+      close();
+      toast({
+        type:"error",
+        title:"Failed",
+        message:"Something went wrong. Could not extend your ride",
+        duration:3000
+      })
+    }
+  },[data, error])
 
   return (
     <ThemeConsumer>
@@ -113,7 +128,7 @@ const ExtendReservation = (props: Props) => {
                   width="40%">
                   Cancel
                 </RoundedOutline>
-                <Rounded loading={isLoading} onPress={handleSave} width="40%">
+                <Rounded loading={loading} onPress={handleSave} width="40%">
                   Save
                 </Rounded>
               </View>
