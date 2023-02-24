@@ -15,6 +15,7 @@ import { billingApi } from './billingSlice';
 import upcomingReservationSlice from './upcomingReservationSlice';
 import addCardSlice from './addCardSlice';
 import deleteCardSlice from './deleteCardSlice';
+import startReservationSlice from './startReservationSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -34,7 +35,8 @@ const rootReducer = combineReducers({
   [vehiclesApi.reducerPath]: vehiclesApi.reducer,
   upcoming:upcomingReservationSlice,
   addCard: addCardSlice,
-  deleteCard: deleteCardSlice
+  deleteCard: deleteCardSlice,
+  startReservation: startReservationSlice
 });
 
 export default rootReducer;
