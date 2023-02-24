@@ -1,0 +1,7 @@
+{
+    "message": "Successfully requested an authcode",
+    "data": {
+        "reservationId": "1"
+    },
+    "status": "success"
+}

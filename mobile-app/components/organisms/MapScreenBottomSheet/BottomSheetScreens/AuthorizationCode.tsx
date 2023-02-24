@@ -12,12 +12,15 @@ import useBookingActions from '../../../../hooks/useBookingActions'
 import { useVerifyAuthCode } from '../../../../hooks'
 import Loading from '../../../molecules/Feedback/Loading/Loading'
 import Error from '../../../molecules/Feedback/Error/Error'
+import useRequestAuthCode from '../../../../hooks/useRequestAuthCode'
+import useToast from '../../../../hooks/useToast'
+import { requestAuthCode } from '../../../../hooks/useRequestAuthCode'
 
 interface IProps {
     closeBottomSheet?: () => void
 }
 
-type Props = IProps;
+type Props = IProps & requestAuthCode
 
 const useStyles = makeStyles((theme, props: Props)=> {
     return {
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
         contentTitleStyle: {
             width: "100%",
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             fontSize: 20,
             marginBottom: 20,
             textAlign: "center",
@@ -83,6 +86,10 @@ const AuthorizationBottomSheet = (props: Props) => {
 
     const { data, error, loading } = useVerifyAuthCode(verificationInput)
 
+    const {dataRequest, err, requestAuthorizationCode} = useRequestAuthCode(props)
+
+    const toast = useToast()
+
     const close = () =>{
         bottomSheetRef.current?.close()
         props.closeBottomSheet && props.closeBottomSheet()
@@ -90,6 +97,28 @@ const AuthorizationBottomSheet = (props: Props) => {
 
     const handleVerify = () =>{
         close()
+    }
+
+
+    const handleRequestAuthCode = () => {
+        requestAuthorizationCode()
+        
+        if(dataRequest?.status === 'success'){      
+            toast({
+            type: 'success',
+            message: 'Successfully requested an authcode.',
+            title: 'Success',
+            duration: 3000,
+            })
+            close()
+        }else if(err){
+            toast({
+                type: 'error',
+                message: 'Something went wrong',
+                title: 'Error',
+                duration: 3000
+            })
+        }
     }
 
   return (
@@ -138,7 +167,7 @@ const AuthorizationBottomSheet = (props: Props) => {
                                     <Text style={styles.leftText} >
                                         Don't have a code?
                                     </Text>
-                                    <Text  style={styles.rightText} >
+                                    <Text  style={styles.rightText} onPress={handleRequestAuthCode} >
                                         Ask for One
                                     </Text>
                                 </View>
