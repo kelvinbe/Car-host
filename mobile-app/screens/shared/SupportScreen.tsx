@@ -1,10 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { Image } from '@rneui/base'
 import Support from "../../assets/icons/feather/help-circle.svg"
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ActionButton from '../../components/atoms/Buttons/ActionButton/ActionButton'
+import useFetchDivvlyInfo from '../../hooks/useFetchDivvlyInfo'
+import { FETCH_SUPPORT_ENDPOINT } from '../../hooks/constants'
 
 type Props = NativeStackScreenProps<any, any>
 
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme, props)=>{
             height: '80%'
         },
         actionButton: {
-            marginBottom: 10
+            marginBottom: 10,
         }
     }
 })
@@ -68,7 +70,12 @@ const useStyles = makeStyles((theme, props)=>{
 const SupportScreen = (props: Props) => {
     const styles = useStyles()
     const { theme } = useTheme() 
+    const [toggleAnswer, setToggleAnswer] = useState<boolean>(false)
+    const {data, fetchDivvlyInfo} = useFetchDivvlyInfo(FETCH_SUPPORT_ENDPOINT)
 
+    useEffect(() => {
+        fetchDivvlyInfo()
+    },[])
   return (
     <View style={styles.container} >
         <View style={styles.topSection} >
@@ -86,7 +93,7 @@ const SupportScreen = (props: Props) => {
                     alignItems: "center",
                     justifyContent: "center"
                 }} >
-                    <Text style={[styles.titleText, {marginVertical: 10}]} >divvly</Text>
+                    <Text style={[styles.titleText, {marginVertical: 10}]} >{data?.[0]['title']}</Text>
                     <Text style={styles.subtitleText} >Need Help?</Text>
                     <Text style={[styles.normaltext, {
                         textAlign: "center",
@@ -99,31 +106,18 @@ const SupportScreen = (props: Props) => {
             </View>
             <View style={styles.centerContainer} >
                 <ScrollView style={styles.scrollView} >
-                    <ActionButton
-                        title='How to book a reservation'
+                    {data?.[0].questions?.map((question:{question_id:number,question:string, answer:string}) => (
+                        <ActionButton
+                        key={question.question_id}
+                        data = {data}
+                        id={question.question_id}
+                        title={question.question}
                         image={<Support stroke={theme.colors.primary} width={20} height={20}   />}
                         customStyle={styles.actionButton}
+                        onPress={() => setToggleAnswer(!toggleAnswer)}
                     />
-                    <ActionButton
-                        title='How to book a reservation'
-                        image={<Support stroke={theme.colors.primary} width={20} height={20}   />}
-                        customStyle={styles.actionButton}
-                    />
-                    <ActionButton
-                        title='How to book a reservation'
-                        image={<Support stroke={theme.colors.primary} width={20} height={20}   />}
-                        customStyle={styles.actionButton}
-                    />
-                    <ActionButton
-                        title='How to book a reservation'
-                        image={<Support stroke={theme.colors.primary} width={20} height={20}   />}
-                        customStyle={styles.actionButton}
-                    />
-                    <ActionButton
-                        title='How to book a reservation'
-                        image={<Support stroke={theme.colors.primary} width={20} height={20}   />}
-                        customStyle={styles.actionButton}
-                    />
+                    ))}
+                    
                 </ScrollView>
                 
             </View>

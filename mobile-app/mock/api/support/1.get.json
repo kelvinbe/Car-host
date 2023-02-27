@@ -1,0 +1,27 @@
+[
+    {
+        "title":"Divvly Support",
+        "questions":[
+            {
+                "question_id":1,
+                "question":"How to book a reservation",
+                "answer":"1.Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem eaque ad, est optio vel officia saepe dolore perferendis"
+            },
+            {
+                "question_id":2,
+                "question":"How to cancel a reservation",
+                "answer":"2.Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem eaque ad, est optio vel officia saepe dolore perferendis"
+            },
+            {
+                "question_id":3,
+                "question":"Can I communicate directly to customer support",
+                "answer":"3.Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem eaque ad, est optio vel officia saepe dolore perferendis"
+            },
+            {
+                "question_id":4,
+                "question":"How to add payment method",
+                "answer":"4.Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem eaque ad, est optio vel officia saepe dolore perferendis"
+            }
+        ]
+    }
+]

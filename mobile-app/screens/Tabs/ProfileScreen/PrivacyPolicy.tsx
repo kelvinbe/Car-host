@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@rneui/themed'
 import { Image } from '@rneui/base'
 import { ScrollView } from 'react-native-gesture-handler'
-
+import useFetchDivvlyInfo from '../../../hooks/useFetchDivvlyInfo'
+import { FETCH_PRIVACY_POLICY_ENDPOINT } from '../../../hooks/constants'
 
 const useStyles = makeStyles((theme, props)=>{
     return {
@@ -77,6 +78,11 @@ const useStyles = makeStyles((theme, props)=>{
 
 const PrivacyPolicy = () => {
   const styles = useStyles()
+  const {data, fetchDivvlyInfo} = useFetchDivvlyInfo(FETCH_PRIVACY_POLICY_ENDPOINT)
+
+  useEffect(() => {
+    fetchDivvlyInfo()
+  },[])
 
   return (
     <View style={styles.container} >
@@ -95,94 +101,36 @@ const PrivacyPolicy = () => {
                     alignItems: "center",
                     justifyContent: "center"
                 }} >
-                    <Text style={[styles.titleText, {marginVertical: 10}]} >divvly's privacy policy</Text>
-                    <Text style={styles.subtitleText} >Last Updated: Dec 12 2022</Text>
+                    <Text style={[styles.titleText, {marginVertical: 10}]} >{data?.[0]['title']}</Text>
+                    <Text style={styles.subtitleText} >Last Updated: {data?.[0]['last_updated']}</Text>
                     <Text style={[styles.normaltext, {
                         textAlign: "center",
                         marginTop: 10,
                         paddingHorizontal: 20
                     }]} >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus. 
+                        {data?.[0]['sub_title']} 
                     </Text>
                 </View>
             </View>
-            <View style={styles.centerContainer} >
+            <View style={styles.centerContainer}>
                 <ScrollView style={styles.policiesContainer} >
-                    <View style={styles.policyContainer} >
-                        <View style={styles.policyNumber} >
-                            <Text style={styles.titleText} >
-                                1
-                            </Text>
-                        </View>    
-                        <View style={styles.policyText} >
-                            <Text style={styles.subtitleText} >
-                                Policy No 1
-                            </Text>
-                            <Text style={[styles.normaltext]} >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                            </Text>
+                    {data?.[0]['policies'].map((policy:{number:number, title:string, description:string}) => (
+                        <View style={styles.policyContainer} key={policy.number}>
+                            <View style={styles.policyNumber} >
+                                <Text style={styles.titleText} >
+                                    {policy.number}
+                                </Text>
+                            </View>    
+                            <View style={styles.policyText} >
+                                <Text style={styles.subtitleText} >
+                                    {policy.title}
+                                </Text>
+                                <Text style={[styles.normaltext]} >
+                                    {policy.description}
+                                </Text>
+                            </View>
                         </View>
-                    </View>
-                    <View style={styles.policyContainer} >
-                        <View style={styles.policyNumber} >
-                            <Text style={styles.titleText} >
-                                1
-                            </Text>
-                        </View>    
-                        <View style={styles.policyText} >
-                            <Text style={styles.subtitleText} >
-                                Policy No 1
-                            </Text>
-                            <Text style={[styles.normaltext]} >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.policyContainer} >
-                        <View style={styles.policyNumber} >
-                            <Text style={styles.titleText} >
-                                1
-                            </Text>
-                        </View>    
-                        <View style={styles.policyText} >
-                            <Text style={styles.subtitleText} >
-                                Policy No 1
-                            </Text>
-                            <Text style={[styles.normaltext]} >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.policyContainer} >
-                        <View style={styles.policyNumber} >
-                            <Text style={styles.titleText} >
-                                1
-                            </Text>
-                        </View>    
-                        <View style={styles.policyText} >
-                            <Text style={styles.subtitleText} >
-                                Policy No 1
-                            </Text>
-                            <Text style={[styles.normaltext]} >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.policyContainer} >
-                        <View style={styles.policyNumber} >
-                            <Text style={styles.titleText} >
-                                1
-                            </Text>
-                        </View>    
-                        <View style={styles.policyText} >
-                            <Text style={styles.subtitleText} >
-                                Policy No 1
-                            </Text>
-                            <Text style={[styles.normaltext]} >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                            </Text>
-                        </View>
-                    </View>
+                    ))}
                 </ScrollView>
             </View>
         </View>

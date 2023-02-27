@@ -71,9 +71,8 @@ export const END_RESERVATION_ENDPOINT = DOMAIN + "/api/endReservation/2";
 
 export const REQUEST_AUTH_CODE_ENDPOINT = DOMAIN + "/api/requestAuthCode";
 
+export const FETCH_USER_AGREEMENT_ENDPOINT = DOMAIN + "/api/userAgreement";
 
+export const FETCH_PRIVACY_POLICY_ENDPOINT = DOMAIN + "/api/privacy_policy";
 
-
-
-
-
+export const FETCH_SUPPORT_ENDPOINT = DOMAIN + "/api/support";

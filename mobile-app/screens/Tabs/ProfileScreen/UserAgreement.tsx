@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@rneui/themed'
 import { Image } from '@rneui/base'
 import { ScrollView } from 'react-native-gesture-handler'
-
+import useFetchDivvlyInfo from '../../../hooks/useFetchDivvlyInfo'
+import { FETCH_USER_AGREEMENT_ENDPOINT } from '../../../hooks/constants'
 
 const useStyles = makeStyles((theme, props)=>{
     return {
@@ -77,7 +78,11 @@ const useStyles = makeStyles((theme, props)=>{
 
 const UserAgreement = () => {
   const styles = useStyles()
+  const {data, fetchDivvlyInfo} = useFetchDivvlyInfo(FETCH_USER_AGREEMENT_ENDPOINT)
 
+  useEffect(() => {
+    fetchDivvlyInfo()
+  },[]) 
   return (
     <View style={styles.container} >
         <View style={styles.topSection} >
@@ -95,14 +100,14 @@ const UserAgreement = () => {
                     alignItems: "center",
                     justifyContent: "center"
                 }} >
-                    <Text style={[styles.titleText, {marginVertical: 10}]} >divvly's user agreement</Text>
-                    <Text style={styles.subtitleText} >Last Updated: Dec 12 2022</Text>
+                    <Text style={[styles.titleText, {marginVertical: 10}]} >{data && data[0]['title']}</Text>
+                    <Text style={styles.subtitleText} >Last Updated: {data && data[0]['last_updated']}</Text>
                     <Text style={[styles.normaltext, {
                         textAlign: "center",
                         marginTop: 10,
                         paddingHorizontal: 20
                     }]} >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus. 
+                        {data && data[0]['sub_title']} 
                     </Text>
                 </View>
             </View>
@@ -111,13 +116,7 @@ const UserAgreement = () => {
                     <Text style={[styles.normaltext, {
                     }]} >
                         {`\t\t\t`}
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra posuere dapibus.
+                        {data && data[0]['user_agreement_description']}
                     </Text>
                 </ScrollView>
             </View>
