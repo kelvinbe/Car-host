@@ -10,6 +10,8 @@ import { IVehicle } from '../../../types';
 import useBookingActions from '../../../hooks/useBookingActions';
 import useToast from '../../../hooks/useToast';
 import { calcDuration } from '../../../utils/utils';
+import useVehicleData from '../../../hooks/useVehicleData';
+import { VehicleData } from '../../../hooks/useVehicleData';
 
 
 interface IProps {
@@ -17,7 +19,7 @@ interface IProps {
     items?: any[],
 }
 
-type Props = IProps;
+type Props = IProps & VehicleData
 
 const useStyles = makeStyles((theme, props)=>{
     return {
@@ -28,7 +30,9 @@ const useStyles = makeStyles((theme, props)=>{
 })
 
 const AnimatedScrollList = (props: Props) => {
-    const { data: vehicles, isLoading: vehiclesLoading, error: vehiclesFetchError } = useGetVehiclesQuery("")
+    const {data, loading, error} = useVehicleData(props)
+
+    let vehicles = data
     const { bookingDetails: { startDateTime, endDateTime } } = useBookingActions()
     const toast = useToast()
     const styles = useStyles(props)
@@ -67,7 +71,7 @@ const AnimatedScrollList = (props: Props) => {
     }}
     >
     {
-        vehiclesLoading ? <Loading/> : vehiclesFetchError ? <Error /> : (
+        loading ? <Loading/> : error ? <Error /> : (
             <Animated.FlatList
                 ListEmptyComponent={<Empty emptyText="No vehicles " />}
                 style={styles.container}
