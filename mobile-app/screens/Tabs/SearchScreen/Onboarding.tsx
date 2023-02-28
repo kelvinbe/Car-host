@@ -8,9 +8,12 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import PaymentBottomSheet from '../../../components/organisms/MapScreenBottomSheet/BottomSheetScreens/PaymentBottomSheet';
+import useDriversLicense, { driversLicense } from '../../../hooks/useDriversLicense';
+import useToast from '../../../hooks/useToast';
+import { useSelector } from 'react-redux';
+import { selectPaymentCardAdded } from '../../../store/slices/addCardSlice';
 
-type Props = NativeStackScreenProps<SearchScreenParamList, 'OnboardingHome'>;
+type Props = driversLicense & NativeStackScreenProps<SearchScreenParamList, 'OnboardingHome'>
 const useStyles = makeStyles(theme => {
   return {
     container: {
@@ -73,6 +76,10 @@ function Onboarding(props: Props) {
   const [image, setImage] = useState('');
   const [isPaymentSheetOpen, setIsPaymentSheetOpen] = useState(false);
   const [hasSelectedMethod, setHasSelectedMethod] = useState(false);
+  const {data, error, setDriversLicense} = useDriversLicense(props)
+  const hasAddedCard_ = useSelector(selectPaymentCardAdded)
+
+  const toast = useToast()
 
   const openPaymentSheet = () => {
     setIsPaymentSheetOpen(true);
@@ -91,7 +98,32 @@ function Onboarding(props: Props) {
   };
   useEffect(() => {
     getPermisssion();
-  });
+  }, []);
+
+
+  const storeDriversLicense = () => {
+    setDriversLicense()
+
+      if(data?.status === 'success'){
+        toast({
+          type: "success",
+          message: "Drivers License Added Successfuly.",
+          title: "Success",
+          duration: 3000,
+        })
+      }else if(error){
+        toast({
+          type: "error",
+          message: 'Something went wrong',
+          title: "Error",
+          duration: 3000,
+      })
+      }
+  }
+
+  const goToAddCardScreen = () => {
+    props.navigation.navigate('AddCardScreen');
+  };
 
   const PickImage = async () => {
     let result = ImagePicker.launchImageLibraryAsync({
@@ -103,6 +135,9 @@ function Onboarding(props: Props) {
     if (!(await result).canceled) {
       setImage((await result)?.assets[0]?.uri);
     }
+
+    storeDriversLicense()
+
   };
   return (
     <View style={styles.container}>
@@ -165,8 +200,8 @@ function Onboarding(props: Props) {
             <Text style={{ marginLeft: 25 }}>Payment method</Text>
           </View>
           <View>
-            {!hasSelectedMethod ? (
-              <TouchableOpacity onPress={openPaymentSheet}>
+            {!hasAddedCard_ ? (
+              <TouchableOpacity onPress={goToAddCardScreen}>
                 <Entypo name="chevron-small-right" size={28} color="#ADB5BD" />
               </TouchableOpacity>
             ) : (
@@ -190,13 +225,10 @@ function Onboarding(props: Props) {
         <Rounded
           fullWidth
           onPress={() => props.navigation.navigate('SearchScreenHome')}
-          disabled={hasSelectedMethod && image !== '' ? false : true}>
+          disabled={hasAddedCard_ && image !== '' ? false : true}>
           Get Started
         </Rounded>
       </View>
-      {isPaymentSheetOpen && (
-        <PaymentBottomSheet closeBottomSheet={closePaymentSheet} hasSelected={hasSelectedMethod} />
-      )}
     </View>
   );
 }

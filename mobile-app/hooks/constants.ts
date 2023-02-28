@@ -76,3 +76,5 @@ export const FETCH_USER_AGREEMENT_ENDPOINT = DOMAIN + "/api/userAgreement";
 export const FETCH_PRIVACY_POLICY_ENDPOINT = DOMAIN + "/api/privacy_policy";
 
 export const FETCH_SUPPORT_ENDPOINT = DOMAIN + "/api/support";
+
+export const SET_DRIVERS_LICENCE_ENDPOINT = DOMAIN + '/api/driversLicense'

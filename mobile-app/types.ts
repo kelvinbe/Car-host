@@ -29,6 +29,7 @@ export type BottomTabParamList = {
 export type SearchScreenParamList = {
   SearchScreenHome: undefined;
   OnboardingHome:undefined;
+  AddCardScreen: undefined;
   MapScreen: undefined | {
     searchType?: "local" | "host",
     hostCode?: string
@@ -68,6 +69,7 @@ export type PaymentDetailsScreenParamList = {
   PaymentDetailsScreenHome: undefined;
   MPesaDetailsScreen: undefined;
   AddCardScreen: undefined;
+
 }
 
 export type BottomSheetParamList = {

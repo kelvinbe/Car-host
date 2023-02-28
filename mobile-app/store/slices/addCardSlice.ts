@@ -11,6 +11,7 @@ interface Card{
     isCvvValid:boolean,
     card: [],
     attemptsToSubmit:number,
+    paymentCardAdded: boolean
 }
 
 export const initialState: Card = {
@@ -22,7 +23,8 @@ export const initialState: Card = {
     isExpDateValid: false,
     isCvvValid:false,
     card:[],
-    attemptsToSubmit:0
+    attemptsToSubmit:0,
+    paymentCardAdded: false
 }
 
 const ccNumberRegex = new RegExp("^[0-9]{16}$")
@@ -51,13 +53,17 @@ const addCardSlice = createSlice({
         setCard: (state, action) => {
             state.card = action.payload.card
             state.attemptsToSubmit = state.attemptsToSubmit + 1
+        },
+        setpaymentCardAdded: (state) => {
+            state.paymentCardAdded = true
+            
         }
     }
 })
 
 export default addCardSlice.reducer;
 
-export const {setCardName, setCardNum, setCardCvv, setCardExp, setCard} = addCardSlice.actions
+export const {setCardName, setCardNum, setCardCvv, setCardExp, setCard, setpaymentCardAdded} = addCardSlice.actions
 
 export const selectCardName = (state: any) => state.addCard.name;
 export const selectIsCardNumValid = (state: any) => state.addCard.isCardNumberValid;
@@ -67,3 +73,4 @@ export const selectIsCvvValid = (state: any) => state.addCard.isCvvValid;
 export const selectCardExp = (state: any) => state.addCard.exp;
 export const selectIsExpDateValid = (state: any) => state.addCard.isExpDateValid;
 export const selectAttemptsToSubmit = (state: any) => state.addCard.attemptsToSubmit;
+export const selectPaymentCardAdded = (state: any) => state.addCard.paymentCardAdded

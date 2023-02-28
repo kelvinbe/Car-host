@@ -12,8 +12,8 @@ import Loading from '../../../../components/molecules/Feedback/Loading/Loading'
 import { useSetPaymentMethodMutation } from '../../../../store/slices/billingSlice'
 import { auth } from '../../../../firebase/firebaseApp'
 import useToast from '../../../../hooks/useToast'
-import { selectCardNum, selectIsCardNumValid, selectCardCvv, selectIsCvvValid, selectCardExp, selectIsExpDateValid, selectAttemptsToSubmit, selectCardName } from '../../../../store/slices/addCardSlice'
-import { setCard, setCardCvv, setCardName, setCardNum, setCardExp } from '../../../../store/slices/addCardSlice'
+import { selectCardNum, selectIsCardNumValid, selectCardCvv, selectIsCvvValid, selectCardExp, selectIsExpDateValid, selectAttemptsToSubmit, selectCardName, selectPaymentCardAdded } from '../../../../store/slices/addCardSlice'
+import { setCard, setCardCvv, setCardName, setCardNum, setCardExp, setpaymentCardAdded } from '../../../../store/slices/addCardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAddCard } from '../../../../hooks'
 import { Card } from '../../../../hooks/useAddCard'
@@ -75,7 +75,8 @@ const useStyles = makeStyles((theme, props: Props)=>{
     }
 })
 
-const AddCard = (props: Props) => {
+
+function AddCard(props: Props){
     const toast = useToast()
     const dispatch = useDispatch()
     const { theme } = useTheme()
@@ -89,6 +90,8 @@ const AddCard = (props: Props) => {
     const expDate = useSelector(selectCardExp)
     const isExpDateValid = useSelector(selectIsExpDateValid)
     const isCvvValid = useSelector(selectIsCvvValid)
+    const paymentCardAdded = useSelector(selectPaymentCardAdded)
+
 
     const handleNameChange = (text: string) => {
         dispatch(setCardName({
@@ -115,6 +118,14 @@ const AddCard = (props: Props) => {
         }))
     }
 
+    const goBackToOnboarding = () => {
+        dispatch(setpaymentCardAdded())
+
+        props.navigation.navigate("OnboardingHome")
+    }
+
+
+
     const handleAddCard = () => {
         addPaymentCard({name, cardNumber, cvv, expDate})
 
@@ -125,14 +136,18 @@ const AddCard = (props: Props) => {
                 title: "Error",
                 duration: 3000,
             })
+
         }
-        else{
+        else if(data){
             toast({
-            type: "success",
-            message: "Your card has been added",
-            title: "Success",
-            duration: 3000,
+                type: "success",
+                message: "Your card has been added",
+                title: "Success",
+                duration: 3000,
             })
+
+
+            goBackToOnboarding()
         }
     }
     const styles = useStyles(props)   

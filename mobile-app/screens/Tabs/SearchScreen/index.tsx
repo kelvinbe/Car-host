@@ -8,7 +8,7 @@ import BookingConfirmationScreen from './BookingConfirmationScreen';
 import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
 import MapScreen from './MapScreen';
 import Onboarding from './Onboarding';
-
+import AddCard from '../ProfileScreen/PaymentDetailsScreen/AddCard';
 const SearchScreenStacks = createNativeStackNavigator<SearchScreenParamList>();
 
 const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchScreen'>) => {
@@ -40,6 +40,15 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
               }}
               name="OnboardingHome"
               component={Onboarding}
+            />
+            <SearchScreenStacks.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="AddCardScreen"
+              component={AddCard}
+              
+              
             />
             <SearchScreenStacks.Screen
               name="BookingConfirmationScreen"

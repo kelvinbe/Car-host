@@ -72,7 +72,6 @@ const PaymentBottomSheet = (props: Props) => {
         duration: 3000
       })
     }
-       
   };
 
   /**
