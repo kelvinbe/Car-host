@@ -11,6 +11,8 @@ import PasswordCreator from '../../../components/organisms/input/PasswordCreator
 import Loading from '../../../components/molecules/Feedback/Loading/Loading';
 import { isEmpty } from 'lodash';
 import useToast from '../../../hooks/useToast';
+import { _set_new_password, _toggle_current_password, _set_current_password, selectCurrentPassword, selectCurrentPasswordIsVisible, selectNewPassword } from '../../../store/slices/settingsSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 interface  IProps  {}
 
@@ -57,51 +59,17 @@ const useStyles = makeStyles((theme, props: Props)=>({
     }
 }))
 
-interface IReducerState {
-    currentPasswordIsVisible: boolean;
-    currentPassword: string;
-    newPassword: string;
-    usesPassword: boolean;
-}
 
-const initialState: IReducerState = {
-    currentPasswordIsVisible: false,
-    currentPassword: "",
-    newPassword: "",
-    usesPassword: false
-}
-
-const settingsSlice = createSlice({
-    name: "settings",
-    initialState,
-    reducers: {
-        _toggle_current_password: (state) => {
-            state.currentPasswordIsVisible = !state.currentPasswordIsVisible
-        },
-        _set_current_password: (state, action) => {
-            state.currentPassword = action.payload
-        },
-        _set_new_password: (state, action) => {
-            state.newPassword = action.payload
-        },
-        _set_uses_password: (state, action) => {
-            state.usesPassword = action.payload
-        }
-    }
-})
-
-const reducer = settingsSlice.reducer
-
-const { _set_current_password, _set_new_password, _toggle_current_password } = settingsSlice.actions
 
 const ProfileSettingsScreen = (props: Props) => {
     const styles = useStyles(props)
     const [isPasswordValid, setIsPasswordValid] = useState(false)
-    const [{
-        currentPasswordIsVisible,
-        currentPassword,
-        newPassword
-    }, dispatch] = useReducer(reducer, initialState)
+    const currentPasswordIsVisible = useSelector(selectCurrentPasswordIsVisible)
+    const currentPassword = useSelector(selectCurrentPassword)
+    const newPassword = useSelector(selectNewPassword)
+    const dispatch = useDispatch()
+
+
     const toast = useToast()
     const { userAuthProviders, loadingPasswordUpdate, passwordUpdateError, updateUserPassword, hasPasswordChanged } = useUserAuth()
     const toggleCurrentPasswordVisibility = () => {
