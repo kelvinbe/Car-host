@@ -1,14 +1,23 @@
-import { Text, View, Pressable } from 'react-native';
-import React, { FunctionComponent } from 'react';
+import { Text, View, Pressable, Platform } from 'react-native';
+import React, {useState,useEffect, FunctionComponent } from 'react';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded';
 
 import LicensePlaceHolderIcon from '../../../assets/icons/license-placeholder.svg';
 import UploadIcon from '../../../assets/icons/upload.svg';
+import * as ImagePicker from 'expo-image-picker';
+import { Image } from '@rneui/base'
+import useFetchDivvlyInfo from '../../../hooks/useFetchDivvlyInfo';
+import useToast from '../../../hooks/useToast';
+import { FETCH_DRIVERS_LICENSE_ENDPOINT } from '../../../hooks/constants';
+import useEditDriversLicense, {editDriversLicense} from '../../../hooks/useEditDriversLicense'
+import { useSelector } from 'react-redux';
+import { selectDriversLicense } from '../../../store/slices/driversLicenseSlice';
 
-interface IProps {}
-type Props = IProps;
+
+
+type Props = editDriversLicense 
 
 const useStyles = makeStyles((theme, props: Props) => ({
   container: {
@@ -68,13 +77,83 @@ const useStyles = makeStyles((theme, props: Props) => ({
 
 export const DriverLicenseScreen: FunctionComponent = (props: Props) => {
   const styles = useStyles(props);
+  const [image, setImage] = useState('')
+  const toast = useToast()
+  const {data, error, loading, fetchDivvlyInfo} = useFetchDivvlyInfo(FETCH_DRIVERS_LICENSE_ENDPOINT)
+  const {editedData, err, editDriversLicense} = useEditDriversLicense(props)
+  const driversLicenses = useSelector(selectDriversLicense)
 
-  const handleImageUpload = () => {
-    //TODO: open image picker and upload image
+  const getPermisssion = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission denied');
+      }
+    }
+  };
+
+  useEffect(() => {
+
+    if(data !== null){
+      setImage(data?.data[0]?.uri)
+      toast({
+        type: "success",
+        message: "Drivers License Fetched Successfully",
+        title: "Success",
+        duration: 3000,
+      })
+    }
+    else if(err){
+      toast({
+        type: "error",
+        message: "Something went wrong",
+        title: "Error",
+        duration: 3000,
+      })
+      
+    }  
+  },[data])
+
+
+
+  useEffect(() => {
+    getPermisssion();
+  }, []);
+
+
+  const handleImageUpload = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setImage((await result)?.assets[0]?.uri);
+      }
   };
 
   const handleSaveChanges = () => {
-    // TODO: save changes to firebase
+      editDriversLicense(image)
+      if(editedData !== null){
+        setImage(editedData[0]?.uri)
+        toast({
+          type: "success",
+          message: "Drivers License Updated Successfully",
+          title: "Success",
+          duration: 3000,
+        })
+      }
+      else if(error){
+        toast({
+          type: "error",
+          message: "Something went wrong",
+          title: "Error",
+          duration: 3000,
+        })
+        
+      }  
+
   };
 
   return (
@@ -83,7 +162,7 @@ export const DriverLicenseScreen: FunctionComponent = (props: Props) => {
         <View style={styles.container}>
           <View style={styles.contentWrapper}>
             <View style={styles.imageContainer}>
-              <LicensePlaceHolderIcon width={133} height={111} stroke={theme.colors.stroke} />
+            {image !== '' ? <Image source={{ uri: image}} style={{width: 325, height: 213, borderRadius: 30}}/> : <LicensePlaceHolderIcon width={133} height={111} stroke={theme.colors.stroke} />}
             </View>
 
             <Pressable onPress={handleImageUpload} style={styles.uploadViewContainer}>
