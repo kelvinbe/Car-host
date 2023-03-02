@@ -34,13 +34,13 @@ export const vehiclesApi = createApi({
 })
 
 
-export const { useGetVehiclesQuery, useGetVehicleQuery  } = vehiclesApi
+export const { useGetVehiclesQuery, useGetVehicleQuery } = vehiclesApi
 
 
 const initialState: {
-    vehicleData: IVehicle[]
+    vehicleData: IVehicle[],
 } = {
-    vehicleData: []
+    vehicleData: [],
 }
 
 
@@ -51,8 +51,7 @@ const vehicleDataSlice = createSlice({
     reducers: {
         setGetVehicleData:(state, action) => {
             state.vehicleData = action.payload.vehicleData
-        }
-        
+        },
     },
 })
 
@@ -60,4 +59,4 @@ export default vehicleDataSlice.reducer;
 
 export const {setGetVehicleData} = vehicleDataSlice.actions
 
-export const selectVehicleData = (state:any) => {state.vehicleData.vehicleData}
+export const selectVehicleData = (state:any) => state.vehicles.vehicleData

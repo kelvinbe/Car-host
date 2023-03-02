@@ -2,53 +2,53 @@ import { useEffect, useState } from 'react';
 import { auth } from '../firebase/firebaseApp';
 import axios from 'axios';
 import { FETCH_VEHICLES_ENDPOINT } from './constants';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setGetVehicleData } from '../store/slices/vehiclesSlice';
+import { isEmpty } from 'lodash';
+import { selectVehicleData } from '../store/slices/vehiclesSlice';
 
 
 export interface VehicleData {
 
-  hostId: string;
-  marketId: string
+  hostCode?: string;
+  marketId?: string
 
 }
 
 type Error = any;
-export default function useVehicleData(props: VehicleData) {
+export default function useVehicleData() {
   const [data, setData] = useState(null);
   const [error, setError] = useState<Error>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const vehicleData = useSelector(selectVehicleData)
+  const [token, setToken] = useState<string|null>(null)
 
-  const {hostId, marketId} = props
+  auth?.currentUser?.getIdToken().then((response) => {
+    setToken(response)
+})
 
-  const fetchVehicleData = () => {
-    try {
+
+  const fetchVehicleData = (props?: VehicleData | null) => {
       setLoading(true);
-      auth?.currentUser?.getIdToken().then(async token => {
-        const response = await axios.get(FETCH_VEHICLES_ENDPOINT, {
-          
-          headers: {
+      axios.get(FETCH_VEHICLES_ENDPOINT, {
+        headers: {
             token: `Bearer ${token}`,
-          },
-          params: {
-            host_id: hostId,
-            market_id: marketId
-          }
-        });
-        setData(response.data);
-        dispatch(setGetVehicleData(response.data));
-      });
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
+        },params: isEmpty(props) ? null : {
+          ...props
+        }
+    })
+    .then(({data}) => {
+        dispatch(setGetVehicleData({vehicleData: data}))        
+    }).catch (err => {
+      setError(err)
+    }) .finally( () => {
+      setLoading(false)
+  })
+
+
   };
 
-  useEffect(() => {
-    fetchVehicleData();
-  }, []);
 
-  return { data, error, loading, fetchVehicleData };
+  return { vehicleData, error, loading, fetchVehicleData };
 }

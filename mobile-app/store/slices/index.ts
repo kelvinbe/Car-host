@@ -16,6 +16,7 @@ import upcomingReservationSlice from './upcomingReservationSlice';
 import addCardSlice from './addCardSlice';
 import deleteCardSlice from './deleteCardSlice';
 import startReservationSlice from './startReservationSlice';
+import vehiclesSlice from './vehiclesSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -36,7 +37,9 @@ const rootReducer = combineReducers({
   upcoming:upcomingReservationSlice,
   addCard: addCardSlice,
   deleteCard: deleteCardSlice,
-  startReservation: startReservationSlice
+  startReservation: startReservationSlice,
+  vehicles: vehiclesSlice
+
 });
 
 export default rootReducer;

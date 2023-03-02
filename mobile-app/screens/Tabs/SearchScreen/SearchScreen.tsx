@@ -8,6 +8,9 @@ import { Icon, Image } from '@rneui/base';
 import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
 import { LinearGradient } from 'expo-linear-gradient';
+import useToast from '../../../hooks/useToast';
+import useVehicleData, {VehicleData} from '../../../hooks/useVehicleData';
+
 
 const useStyles = makeStyles((theme, props) => ({
   container: {
@@ -109,19 +112,26 @@ const useStyles = makeStyles((theme, props) => ({
 }));
 
 const SearchScreenHome = (
-  props: NativeStackScreenProps<SearchScreenParamList, 'SearchScreenHome'>
+  props: VehicleData & NativeStackScreenProps<SearchScreenParamList, 'SearchScreenHome'>
 ) => {
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
+  const {fetchVehicleData} = useVehicleData()
+
 
   const hostCodeSearch = (value: any) => {
+
+    fetchVehicleData(value)
+
     const GoToMapScreenHost = props.navigation.navigate('MapScreen', {
       searchType: 'host',
       hostCode: value,
     });
     return GoToMapScreenHost;
   };
-  const searchLocally = () => {
+  const searchLocally = (marketId: any) => {
+
+    fetchVehicleData(marketId)
     const GoToMapScreenLocal = props.navigation.navigate('MapScreen', {
       searchType: 'local',
     });

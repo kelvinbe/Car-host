@@ -1,5 +1,5 @@
 import { StyleSheet, Animated, FlatList, View } from 'react-native'
-import React, {useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { makeStyles } from '@rneui/themed'
 import DriveCardButton from '../../molecules/DriveCardButton/DriveCardButton'
 import { useGetVehiclesQuery } from '../../../store/slices/vehiclesSlice';
@@ -12,6 +12,8 @@ import useToast from '../../../hooks/useToast';
 import { calcDuration } from '../../../utils/utils';
 import useVehicleData from '../../../hooks/useVehicleData';
 import { VehicleData } from '../../../hooks/useVehicleData';
+import { useSelector } from 'react-redux';
+import { selectVehicleData } from '../../../store/slices/vehiclesSlice';
 
 
 interface IProps {
@@ -30,9 +32,7 @@ const useStyles = makeStyles((theme, props)=>{
 })
 
 const AnimatedScrollList = (props: Props) => {
-    const {data, loading, error} = useVehicleData(props)
-
-    let vehicles = data
+    const {vehicleData, loading, error} = useVehicleData()
     const { bookingDetails: { startDateTime, endDateTime } } = useBookingActions()
     const toast = useToast()
     const styles = useStyles(props)
@@ -42,7 +42,7 @@ const AnimatedScrollList = (props: Props) => {
         if(startDateTime && endDateTime){
             console.log(calcDuration(startDateTime, endDateTime))
             if(calcDuration(startDateTime, endDateTime) > 0){
-                props.handleSelect && props.handleSelect(vehicles ? vehicles[index] : null);
+                props.handleSelect && props.handleSelect(vehicleData ? vehicleData[index] : null);
             }else {
                 toast({
                     type: "primary",
@@ -80,7 +80,7 @@ const AnimatedScrollList = (props: Props) => {
                     marginTop: -40
                 }}
                 stickyHeaderHiddenOnScroll
-                data={vehicles ? [vehicles?.[0],...vehicles, vehicles?.[0]] : []}
+                data={vehicleData ? [vehicleData?.[0],...vehicleData, vehicleData?.[0]] : []}
                 showsVerticalScrollIndicator={false}
                 renderItem={
                     ({item, index})=>{
@@ -127,7 +127,7 @@ const AnimatedScrollList = (props: Props) => {
                         return index == 0 ? <View style={{
                             height: itemSize,
                             backgroundColor: "transparent"
-                        }} ></View> : index == vehicles?.length + 1  ? (
+                        }} ></View> : index == vehicleData?.length + 1  ? (
                             <View style={{
                                 height: itemSize,
                                 backgroundColor: "transparent"
