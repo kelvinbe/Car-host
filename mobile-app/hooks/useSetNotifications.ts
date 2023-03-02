@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { SET_NOTIFICATION_ENDPOINT } from './constants';
+import { SEND_NOTIFICATION_TOKEN_ENDPOINT } from './constants';
 import { auth } from '../firebase/firebaseApp';
 
 interface Iprops {
@@ -21,7 +21,7 @@ export default function useSetNotifications(props: Iprops) {
         setLoading(true);
         auth?.currentUser?.getIdToken().then(async token => {
           const response = await axios.post(
-            SET_NOTIFICATION_ENDPOINT,
+            SEND_NOTIFICATION_TOKEN_ENDPOINT,
             {
               notification
             },

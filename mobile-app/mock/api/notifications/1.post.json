@@ -1,5 +1,5 @@
 {
-  "message": "Notifications Activated",
+  "message": "Notification token sent",
   "data": {
     "notifications": true
   },

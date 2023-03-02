@@ -6,9 +6,12 @@ import { Button, Divider, Icon, Image, ListItem, Switch } from '@rneui/base';
 import LogoutIcon from '../../../assets/icons/logout.svg';
 import HomeIcon from '../../../assets/icons/home.svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAllowNotifications, selectNotification, setAllowNotifications } from '../../../store/slices/notificationsSlice';
 import { selectNavState } from '../../../store/slices/navigationSlice';
 import useUserAuth from '../../../hooks/useUserAuth';
+import useToast from '../../../hooks/useToast';
+import * as Notifications from 'expo-notifications'
 
 type Props = NativeStackScreenProps<ProfileScreenParamList, 'ProfileScreenHome'>;
 
@@ -180,6 +183,11 @@ const ProfileScreenHome = (props: Props) => {
   const styles = useStyles(props);
   const { logOut: _logOut, userProfile } = useUserAuth();
 
+  const allowNotifications = useSelector(selectAllowNotifications)
+  const notification = useSelector(selectNotification)
+  const dispatch = useDispatch()
+  const toast = useToast()
+
   const goToEdit = () => {
     props.navigation.navigate('ProfileScreenEdit');
   };
@@ -215,6 +223,29 @@ const ProfileScreenHome = (props: Props) => {
   const logOut = () => {
     _logOut();
   };
+
+  const cancelNotification = async(notifId:string) => {
+    await Notifications.cancelScheduledNotificationAsync(notifId);
+  }
+  const toggleNotifications = async() => {
+    dispatch(setAllowNotifications())
+    if(allowNotifications){
+      toast({
+        type:'success',
+        title:'Success',
+        message:'Divvly notifications have been turned on',
+        duration:3000
+      })
+    }else{
+      cancelNotification(notification.request.identifier)
+      toast({
+        type:'warning',
+        title:'Warning',
+        message:'Divvly notifications are now off',
+        duration:3000
+      })
+    }
+  }
 
   return (
     <ThemeConsumer>
@@ -287,8 +318,10 @@ const ProfileScreenHome = (props: Props) => {
               <View style={styles.notificationActionContainer}>
                 <Text style={styles.notificationText}>Notifications</Text>
                 <Switch
-                  trackColor={{ true: theme.colors.primary }}
+                  trackColor={{ false: theme.colors.primary }}
                   thumbColor={theme.colors.primary}
+                  value={allowNotifications}
+                  onValueChange={toggleNotifications}
                 />
               </View>
               <Divider style={styles.dividerStyle} />

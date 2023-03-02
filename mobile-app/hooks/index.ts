@@ -16,7 +16,7 @@ import useSetSettings from "./useSetSettings";
 import useVerifyAuthCode from "./useVerifyAuthCode";
 import useDeletePaymentMethod from "./useDeletePaymentMethod";
 import useFetchUpcoming from "./useFetchUpcoming";
-import useSetNotifications from "./useSetNotifications";
+import useSendNotificationToken from "./useSetNotifications";
 import useReportIssue from "./useReportIssue";
 
 
@@ -39,6 +39,6 @@ export {
     useVerifyAuthCode,
     useDeletePaymentMethod,
     useFetchUpcoming,
-    useSetNotifications,
+    useSendNotificationToken,
     useReportIssue
 };

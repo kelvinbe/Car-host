@@ -63,7 +63,9 @@ export const FETCH_UPCOMING_RESERVATIONS_ENDPOINT = DOMAIN + "/api/upcomingReser
 
 export const FETCH_HOSTS_VEHICLE_ENDPOINT = DOMAIN + "/api/host"; 
 
-export const SET_NOTIFICATION_ENDPOINT = DOMAIN + "/api/notifications"; 
+export const SEND_NOTIFICATION_TOKEN_ENDPOINT = DOMAIN + "/api/notifications"; 
+
+export const FETCH_NOTIFICATION_ENDPOINT = DOMAIN + "/api/notifications";
 
 export const SET_VEHICLE_INSPECTION_ENDPOINT = DOMAIN + "/api/vehicleInspection"; 
 

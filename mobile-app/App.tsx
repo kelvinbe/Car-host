@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState  } from 'react';
+import { View, Text, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from "@rneui/themed";
@@ -26,11 +27,117 @@ import Loading from './components/molecules/Feedback/Loading/Loading';
 import { LOGROCKET_ID, STRIPE_PUBLISHABLE_KEY } from '@env';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { auth } from './firebase/firebaseApp';
+import * as Notifications from 'expo-notifications'
+import * as Device from 'expo-device'
+import { useDispatch, useSelector } from 'react-redux';
+import { saveExpoToken, selectExpoToken } from './store/slices/notificationsSlice';
+import { setAddNotification } from './store/slices/notificationsSlice';
+import useFetchNotifications from './hooks/useFetchNotifications';
+import axios from 'axios';
+import { SEND_NOTIFICATION_TOKEN_ENDPOINT } from './hooks/constants';
+import useToast from './hooks/useToast';
 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
+
+  const registerForPushNotificationsAsync = async() => {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        sound:'default',
+        lightColor: "#FF231F7C",
+        lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+        bypassDnd: true,
+      });
+    }
+  
+    const toast = useToast()
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      toast({
+        type:"warning",
+        title:"Access denied",
+        message:"Cannot receive notifications",
+        duration:3000
+      })
+      
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    return token;
+  }
+
+  const StatefullApp = () => {
+    const colorScheme = useColorScheme();
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+    const dispatch = useDispatch()
+    const expoToken = useSelector(selectExpoToken)
+
+    const {data} = useFetchNotifications()
+
+    useEffect( () => {
+      data && Notifications.scheduleNotificationAsync({
+        content: {
+          title: data?.[0]?.title,
+          body: data?.[0]?.message,
+        },
+        trigger: null,
+      });
+  
+      if (expoToken === ''){
+        registerForPushNotificationsAsync()
+        .then(token => dispatch(saveExpoToken(token)))
+      }  
+      axios.post(
+        SEND_NOTIFICATION_TOKEN_ENDPOINT,
+        {
+          notificationToken:expoToken
+        },
+      )
+      .then((response) => {
+        return response.data.message
+      })
+      .catch(err => {
+        return err
+      })
+      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        dispatch(setAddNotification(notification))
+      });
+  
+      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        dispatch(setAddNotification(response.notification))
+      });
+  
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
+    }, [data]);
+  
+    return (
+      <Navigation colorScheme={colorScheme} />
+    )
+  }
 
  function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   useEffect(()=>{
     auth.signOut().then(()=>{
@@ -86,7 +193,7 @@ import { auth } from './firebase/firebaseApp';
           <SafeAreaProvider>
           {/* <StatusBar backgroundColor={theme.lightColors?.white} style="dark" /> */}
             {/* <SafeAreaView style={{width: "100%", height: "100%"}}> */}
-              <Navigation colorScheme={colorScheme} />
+              <StatefullApp/>
               
             {/* </SafeAreaView> */}
             <ToastContainer/>
