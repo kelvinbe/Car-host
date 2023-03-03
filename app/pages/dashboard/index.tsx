@@ -19,12 +19,12 @@ import { NextFetchEvent } from "next/server";
 import VehiclePic from "../../components/atoms/images/VehiclePic";
 import Rounded from "../../components/molecules/Buttons/General/Rounded";
 
-const data = [
+export const data = [
   {
     reservationId: "1",
     hostId: "1",
-    startDateTime: "2022-12-19T00:00:00",
-    endDateTime: "2022-12-19T10:00:00",
+    startDateTime: "2023-02-24T00:00:00",
+    endDateTime: "2023-02-24T10:00:00",
     vehicleId: "1",
     vehicleModel: "X5",
     vehicleMake: "BMW",
@@ -38,8 +38,8 @@ const data = [
   {
     reservationId: "2",
     hostId: "1",
-    startDateTime: "2022-12-19T00:00:00",
-    endDateTime: "2022-12-19T10:00:00",
+    startDateTime: "2023-02-24T08:00:00",
+    endDateTime: "2023-02-24T11:00:00",
     vehicleId: "1",
     vehicleModel: "X5",
     vehicleMake: "BMW",
@@ -53,8 +53,8 @@ const data = [
   {
     reservationId: "3",
     hostId: "1",
-    startDateTime: "2022-12-19T00:00:00",
-    endDateTime: "2022-12-19T10:00:00",
+    startDateTime: "2023-02-24T09:00:00",
+    endDateTime: "2023-02-24T10:00:00",
     vehicleId: "1",
     vehicleModel: "X5",
     vehicleMake: "BMW",
@@ -66,10 +66,10 @@ const data = [
     status: "active",
   },
   {
-    reservationId: "1",
+    reservationId: "4",
     hostId: "1",
-    startDateTime: "2022-12-19T00:00:00",
-    endDateTime: "2022-12-19T10:00:00",
+    startDateTime: "2023-02-24T09:00:00",
+    endDateTime: "2023-02-24T12:00:00",
     vehicleId: "1",
     vehicleModel: "X5",
     vehicleMake: "BMW",

@@ -5,7 +5,6 @@ import {
   FlexRowStartBetween,
 } from "../../../utils/theme/FlexConfigs";
 import DivvlyLogo from "../../../public/images/Divvly.png";
-// import Link from "next/link";
 import { Link } from "@chakra-ui/react";
 
 const Header = () => {
