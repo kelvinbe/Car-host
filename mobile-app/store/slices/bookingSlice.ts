@@ -161,3 +161,7 @@ export const {
 export const selectAuthenticated = (state: any) => state.authenticated;
 
 export const  selectBookingData = (state: RootState) => state.booking;
+
+export const selectStartDateTime = (state: RootState) => state.booking.startDateTime
+
+export const selectEndDateTime = (state: RootState) => state.booking.endDateTime

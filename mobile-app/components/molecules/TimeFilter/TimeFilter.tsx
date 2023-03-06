@@ -11,6 +11,11 @@ import {
   timeTilEndOfNewDay,
 } from '../../../utils/utils';
 
+import { selectStartDateTime, selectEndDateTime} from '../../../store/slices/bookingSlice';
+import { useSelector } from 'react-redux';
+import useVehicleData from '../../../hooks/useVehicleData';
+
+
 type Props = {
   customStyles?: StyleProp<ViewStyle>;
   setStartDateTime?: (date: string) => void;
@@ -47,15 +52,25 @@ const TimeFilter = (props: Props) => {
   const styles = useStyles(props);
   const [viewDayDropdown, setViewDayDropdown] = useState<boolean>(false);
   const [chosenDay, setChosenDay] = useState(0);
-  const [times, setTimes] = useState<{ label: string; value: string }[]>([]);
+  const [ times, setTimes] = useState<{ label: string; value: string }[]>([]);
+  const selectStartTime = useSelector(selectStartDateTime)
+  const {fetchAvailableVehicleData} = useVehicleData()
+  const selectEndDateTimes = useSelector(selectEndDateTime)
+  const [status, setStatus] = useState('Available')
+  
 
   const handlePickupTime = (v: any) => {
     props.setStartDateTime && props.setStartDateTime(dayjs(v?.[0]).toISOString());
+    fetchAvailableVehicleData({status, selectStartTime, selectEndDateTimes})
   };
+
 
   const handleDropOffTime = (v: any) => {
     props.setEndDateTime && props.setEndDateTime(dayjs(v?.[0]).toISOString());
+        fetchAvailableVehicleData({status, selectStartTime, selectEndDateTimes })
+    
   };
+
 
   useEffect(() => {
     if (chosenDay === 0) {

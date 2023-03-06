@@ -52,6 +52,7 @@ const vehicleDataSlice = createSlice({
         setGetVehicleData:(state, action) => {
             state.vehicleData = action.payload.vehicleData
         },
+
     },
 })
 

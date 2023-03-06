@@ -12,8 +12,8 @@ import useToast from '../../../hooks/useToast';
 import { calcDuration } from '../../../utils/utils';
 import useVehicleData from '../../../hooks/useVehicleData';
 import { VehicleData } from '../../../hooks/useVehicleData';
+import { selectStartDateTime, selectEndDateTime } from '../../../store/slices/bookingSlice';
 import { useSelector } from 'react-redux';
-import { selectVehicleData } from '../../../store/slices/vehiclesSlice';
 
 
 interface IProps {
@@ -37,6 +37,8 @@ const AnimatedScrollList = (props: Props) => {
     const toast = useToast()
     const styles = useStyles(props)
     const scrollY = useRef(new Animated.Value(0)).current
+
+
     const handlePress = (index: number) =>{
         console.log(startDateTime, endDateTime)
         if(startDateTime && endDateTime){
@@ -63,7 +65,7 @@ const AnimatedScrollList = (props: Props) => {
     }
     
 
-  return (
+return (
     <View 
     style={{
         width: "100%",
@@ -133,7 +135,7 @@ const AnimatedScrollList = (props: Props) => {
                                 backgroundColor: "transparent"
                             }} ></View>
                         ) : (
-                                    <DriveCardButton {...item} onPress={()=>{
+                            loading ? <Loading /> :  <DriveCardButton {...item} onPress={()=>{
                                         handlePress(index)
                                     }} index={index} opacity={opacity} scale={scale} translateY={translateY} customContainerStyle={{
                                         marginBottom: 20
@@ -162,7 +164,7 @@ const AnimatedScrollList = (props: Props) => {
     }
     
     </View>
-  )
+)
 
 }
 

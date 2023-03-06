@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase/firebaseApp';
 import axios from 'axios';
-import { FETCH_VEHICLES_ENDPOINT } from './constants';
+import { FETCH_VEHICLES_ENDPOINT, FETCH_AVAILABLE_VEHICLES } from './constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGetVehicleData } from '../store/slices/vehiclesSlice';
+import { setGetVehicleData} from '../store/slices/vehiclesSlice';
 import { isEmpty } from 'lodash';
-import { selectVehicleData } from '../store/slices/vehiclesSlice';
+import { selectVehicleData} from '../store/slices/vehiclesSlice';
 
 
 export interface VehicleData {
 
   hostCode?: string;
-  marketId?: string
+  marketId?: string;
+  status?: string;
+  startTime?: string;
+  endTime?: string;
 
 }
 
@@ -49,6 +52,29 @@ export default function useVehicleData() {
 
   };
 
+  const fetchAvailableVehicleData = (props?: VehicleData | null) => {
+    setLoading(true)
+    axios.get(FETCH_AVAILABLE_VEHICLES, {
+      headers: {
+          token: `Bearer ${token}`,
+      },params: {
+        status: props?.status,
+        start_time: props?.startTime,
+        end_time: props?.endTime
+      }
+  })
+  .then(({data}) => {
+      setLoading(true)
+      dispatch(setGetVehicleData({vehicleData: data}))        
+  }).catch (err => {
+    setError(err)
+  }) .finally( () => {
+    setLoading(false)
+})
 
-  return { vehicleData, error, loading, fetchVehicleData };
+
+};
+
+
+  return { vehicleData, error, loading, fetchVehicleData, fetchAvailableVehicleData };
 }

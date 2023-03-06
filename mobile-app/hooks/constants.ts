@@ -85,3 +85,6 @@ export const FETCH_DRIVERS_LICENSE_ENDPOINT = DOMAIN + '/api/driversLicense/1'
 
 export const EDIT_DRIVERS_LICENSE_ENDPOINT = DOMAIN + '/api/driversLicense/2'
 
+export const FETCH_AVAILABLE_VEHICLES = DOMAIN + '/api/availableVehicles'
+
+
