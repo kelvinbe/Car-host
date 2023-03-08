@@ -61,7 +61,7 @@ export default function EventModal({ isOpen, onClose, eventId}: any) {
             <Button colorScheme="blue" mr={3} onClick={onClose} variant={'outline'}>
               Close
             </Button>
-            {selectedReservation.status !== "Cancelled"? <Button variant="outline" colorScheme="red" onClick={()=>updateReservation({status: "Cancelled"})}>Cancel Booking</Button>: null}
+            {selectedReservation.status !== "Cancelled"? <Button variant="outline" colorScheme="red" onClick={()=>updateReservation({status: "Cancelled"}, "Cancell Reservation", "Reservation cancelled succesfully")}>Cancel Booking</Button>: null}
           </ModalFooter>
         </ModalContent>
       </Modal>

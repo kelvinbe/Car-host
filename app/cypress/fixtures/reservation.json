@@ -1,5 +1,4 @@
-{
-  "reservations": [
+[
     {
       "id": 1,
       "reservation_id": "1",
@@ -13,7 +12,7 @@
       "total_cost": 100,
       "duration": 5,
       "payment_id": "1",
-      "status": "Cancelled",
+      "status": "Active",
       "customer": {
         "userId": "1",
         "fname": "John",
@@ -85,7 +84,7 @@
       "location_id": 2,
       "vehicle_id": "2",
       "hourly_rate": 20,
-      "start_date_time": "2023-03-02T00:00:00",
+      "start_date_time": "2023-03-02T09:00:00",
       "end_date_time": "2023-03-02T14:40:00",
       "total_cost": 100,
       "duration": 5,
@@ -155,4 +154,3 @@
       }
     }
   ]
-}

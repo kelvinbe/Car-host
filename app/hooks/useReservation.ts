@@ -1,4 +1,5 @@
 import { useAppSelector } from "../redux/store";
+import { useToast } from "@chakra-ui/react";
 import {
   getReservations,
   selectActiveReservations,
@@ -11,7 +12,6 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { IReservation } from "../globaltypes";
-
 
 export default function useReservation(reservationId?: number) {
 
@@ -26,6 +26,7 @@ export default function useReservation(reservationId?: number) {
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [addErrors, setAddErrors] = useState<any>(null);
   const dispatch = useDispatch();
+  const toast = useToast()
   function fetchReservations() {
     setLoading(true);
     axios
@@ -42,7 +43,7 @@ export default function useReservation(reservationId?: number) {
       .catch(setErrors);
   }
 
-  function updateReservation(updatedBody: any) {
+  function updateReservation(updatedBody: any, title: string, description: string) {
     if(isEmpty(updatedBody)) return setUpdateErrors({
         message:"body is empty"
     })
@@ -60,8 +61,26 @@ export default function useReservation(reservationId?: number) {
       .then((res) => {
         fetchReservations();
         setLoadingUpdate(false);
+        toast({
+          position: "top",
+          title: title,
+          description: description,
+          duration: 3000,
+          isClosable: true,
+          status: "success",
+        })
       })
-      .catch(setUpdateErrors);
+      .catch(error=>{
+        setUpdateErrors(error)
+        toast({
+          position: "top",
+          title: title,
+          description: "An error occured",
+          duration: 3000,
+          isClosable: true,
+          status: "error",
+        })
+      });
   }
 
   function deleteReservation(id: string){
@@ -74,8 +93,26 @@ export default function useReservation(reservationId?: number) {
     .then((res)=>{
         fetchReservations()
         setLoadingRemove(false)
+        toast({
+          position: "top",
+          title: "Delete Reservation",
+          description: "Reservation deleted successfully",
+          duration: 3000,
+          isClosable: true,
+          status: "success",
+        })
     })
-    .catch(setRemoveErrors)
+    .catch(error=>{
+      setRemoveErrors(error)
+      toast({
+        position: "top",
+        title: "Delete Reservation",
+        description: "An error occured",
+        duration: 3000,
+        isClosable: true,
+        status: "error",
+      })
+    })
   }
 
   function addReservation(reservation: IReservation){
@@ -92,8 +129,26 @@ export default function useReservation(reservationId?: number) {
     .then((res)=>{
         fetchReservations()
         setLoadingAdd(false)
+        toast({
+          position: "top",
+          title: "Create Reservation",
+          description: "Reservation created succesfully",
+          duration: 3000,
+          isClosable: true,
+          status: "success",
+        })
     })
-    .catch(setAddErrors)
+    .catch(error=>{
+      setAddErrors(error)
+      toast({
+        position: "top",
+        title: "Create Reservation",
+        description: "Could not create a reservation",
+        duration: 3000,
+        isClosable: true,
+        status: "success",
+      })
+    })
 
   }
   
