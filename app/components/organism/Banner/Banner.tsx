@@ -8,21 +8,26 @@ import girl from "../../../public/images/girl.png";
 import joinedImage from "../../../public/images/joinedImage.png";
 import joined_2 from "../../../public/images/joined_2.png";
 import group from "../../../public/images/group.png";
+import { StaticImageData } from "next/image";
 
 const Banner = () => {
   const img = `linear-gradient(107.56deg, rgba(230, 59, 46, 0.75) 0%, rgba(255, 139, 131, 0.75) 100%), url(${girl.src})`;
 
   const [currentSlide, setCurrentSlide] = useState(1);
 
-  const data = [
+  const data:{
+    id:number;
+    image:string; 
+    disImage?:StaticImageData;
+  }[] = [
     {
       id: 1,
-      image: Vector,
+      image: Vector.src,
       disImage: joinedImage,
     },
     {
       id: 2,
-      image: Vector_2,
+      image: Vector_2.src,
       disImage: joined_2,
     },
     {
@@ -64,7 +69,7 @@ const Banner = () => {
       {data.length > 0 &&
         data.map((banner) => {
           return (
-            <div>
+            <div key={banner.id}>
               {banner.id === 1 && currentSlide === 1 ? (
                 <BannerSlides banner={banner} key={banner.id} />
               ) : banner.id === 2 && currentSlide === 2 ? (

@@ -25,10 +25,10 @@ function handler (req: NextApiRequest, res: NextApiResponse) {
         HtmlBody: htmlBody,
         TextBody: textBody,
         MessageStream: "outbound"
-    }).then((msgRes)=>{
+    }).then((msgRes:object)=>{
         console.log(msgRes);
         res.status(200).json(generateResponseDataTransferObject("success", msgRes, "Email sent successfully"))
-    }).catch((e)=>{
+    }).catch((e:object)=>{
         console.log(e);
         res.status(500).json(generateResponseDataTransferObject("error", e, "Error sending email"))
     })

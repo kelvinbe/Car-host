@@ -13,7 +13,7 @@ const AboutUs = () => {
     <Box w="full" py="20">
       <Flex justifyContent="center" alignItems="center">
         <Box>
-          <Image boxSize="2xl" padding={0} src={aboutImage.src} />
+          <Image boxSize="2xl" padding={0} src={aboutImage.src} alt='About us'/>
         </Box>
         <Box>
           <Text

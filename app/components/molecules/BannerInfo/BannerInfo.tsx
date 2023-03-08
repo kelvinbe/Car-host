@@ -14,25 +14,26 @@ import Link from "next/link";
 
 interface iProps {
   letterSpacing?: string;
-  direction: string;
+  direction: 'row'|'column';
   display: string;
-  image: StaticImageData;
+  image: {src:string};
+  disImage?:string,
   textColor: string;
   boxWidth?: string;
   textWidth: string;
-  flexDirection?: string;
+  flexDirection?: 'column'|'column-reverse'|'row'|'row-reverse'
   justifyContent?: string;
   alignItems?: string;
   align: string;
   marginTop?: string;
   showText: boolean;
   spacing: number;
-  noStyleText: boolean;
-  textAlign: ResponsiveValue<Property.TextAlign>;
-  boxPosition?: string;
+  noStyleText?: boolean;
+  textAlign?: 'left'|'right'|'center'|'justify';
+  boxPosition?: 'absolute'|'relative';
   right?: string;
   imageWidth?: string;
-  vStackPosition?:string
+  vStackPosition?: 'relative'|'absolute';
   left?: string;
 }
 
@@ -110,15 +111,15 @@ const BannerInfo = (props: iProps) => {
             </Text>
             <Stack direction={direction} spacing={6}>
               <Link href='https://www.apple.com/app-store/' target="blank">
-                <Image src={playstore.src} />
+                <Image src={playstore.src} alt='Download from PlayStore'/>
               </Link>
               <Link href='https://www.apple.com/app-store/' target="blank">
-                <Image src={appstore.src} />
+              <Image src={appstore.src} alt='Download from AppStore'/>
               </Link>             
             </Stack>
           </VStack>
           <Box display={display} width={boxWidth}>
-            <Image src={image?.src} w={imageWidth} position={boxPosition} right={right}/>
+            <Image src={image ? image?.src : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly'/>
           </Box>
         </Flex>
       </Box>

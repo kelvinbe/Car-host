@@ -18,16 +18,16 @@ interface IProps {
    * @sortables 👉 an array with the column keys of the sortable columns
    */
   sortables?: {
-    columnKey: string;
-    columnName: string;
+    columnKey?: string;
+    columnName?: string;
   }[];
   data?: any[];
   columns?: ColumnsType<any>;
   dataFetchFunction?: (fetchStatus: "pending" | "error" | "success") => void;
   buttonName?: string;
-  viewSearchField: Boolean;
-  viewAddFieldButton: Boolean;
-  viewSortablesField: Boolean;
+  viewSearchField?: Boolean;
+  viewAddFieldButton?: Boolean;
+  viewSortablesField?: Boolean;
 }
 
 interface IReducer {

@@ -19,6 +19,12 @@
   - `npm run cypress:run` - Runs the cypress tests in headless mode
   - `npm run storybook` - Runs the storybook
   - `npm run build-storybook` - Builds the storybook
+  - `npm run electron:serve` - Runs web and desktop applications concurrently
+  - `npm run electron:start` - Ensures control panel is running on port 3000 then starts the desktop application
+  - `npm run electron:package` - Creates an executable bundle for target OS eg .exe on Windows
+  - `npm run electron:dist` - Creates "distributables" from the executable bundles. This command packages and creates the distributables. Distributables are found in the /out/make folder
+  - `npm run electron:publish` - Takes the distributable build artifacts from the Make step and uploads for distribution to your app's end users. Publishing is an optional step in the Electron Forge pipeline, since the artifacts from the Make step are already in their final format.
+
 
 # HowTo Guides
 

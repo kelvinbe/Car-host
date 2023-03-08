@@ -30,7 +30,7 @@ function AllMapView() {
     lat: -1.2921,
     lng: 36.8219,
   };
-  const onLoad = (streetViewService) => {
+  const onLoad = (streetViewService:any) => {
     streetViewService.getPanorama({
       location: center,
       radius: 50,

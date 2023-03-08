@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import BannerInfo from "../../molecules/BannerInfo/BannerInfo";
 
-export const SlideWithBgImage = ({ banner }) => {
+export const SlideWithBgImage = ({ banner }:any) => {
   return (
     <Box
       w="full"
@@ -16,7 +16,7 @@ export const SlideWithBgImage = ({ banner }) => {
       left="0px"
       position="relative"
       bgRepeat="no-repeat"
-      bgImage={banner.id === 3 ? banner.image : banner.image.src}
+      bgImage={banner.image}
       bgSize={banner.id === 2 ? "" : "cover"}
       opacity={10}
       bgPosition={banner.id === 2 ? "right !important" : ""}
@@ -82,7 +82,7 @@ export const SlideWithBgImage = ({ banner }) => {
   );
 };
 
-export const Slide = ({ banner }) => {
+export const Slide = ({ banner }:any) => {
   return (
     <Box
       w="full"
@@ -117,7 +117,7 @@ export const Slide = ({ banner }) => {
   );
 };
 
-export const BannerSlides = ({ banner }) => {
+export const BannerSlides = ({ banner }:any) => {
   return (
     <div>
       <SlideWithBgImage banner={banner} />

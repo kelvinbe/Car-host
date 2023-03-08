@@ -20,7 +20,7 @@ import { IconType } from "react-icons";
 
 interface IProps {
   title: string;
-  icons: string;
+  icons: {src:string};
   description: string;
   buttonTitle: string;
   buttionIcon: IconType;
@@ -61,7 +61,7 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
       <CardHeader>
         <Flex>
           <HStack spacing={4}>
-            <Image src={icons.src} />
+            <Image src={icons?.src} alt='card icon' />
             <Text fontSize="24px" fontWeight="bold">
               {title}
             </Text>
@@ -93,9 +93,9 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
                 color="white"
                 bgColor="#E63B2E"
                 leftIcon={
-                  showFirstButtonIcon && (
-                    <Icon boxSize={6} color="white" as={SiApple} />
-                  )
+                  <div>
+                    {showFirstButtonIcon && <Icon boxSize={6} color="white" as={SiApple} />}
+                  </div>
                 }
                 size="lg"
                 h="58px"
@@ -113,13 +113,15 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
                 color="#E63B2E"
                 bgColor="white"
                 leftIcon={
-                  showSecondButtonIcon && (
-                    <Icon
-                      boxSize={6}
-                      color="#E63B2E"
-                      as={IoLogoGooglePlaystore}
-                    />
-                  )
+                  <div>
+                    {showSecondButtonIcon && (
+                      <Icon
+                        boxSize={6}
+                        color="#E63B2E"
+                        as={IoLogoGooglePlaystore}
+                      />
+                    )}
+                  </div>
                 }
                 size="lg"
                 h="58px"

@@ -46,10 +46,10 @@ const BookRide = () => {
                 <Box>
                   <HStack spacing={8}>
                     <Link href='https://www.apple.com/app-store/' target="blank">
-                      <Image h="64px" src={availableOnAppStore.src} />
+                      <Image h="64px" src={availableOnAppStore.src}  alt='Available on AppStore'/>
                     </Link>
                     <Link href='https://www.apple.com/app-store/' target="blank">
-                      <Image h="64px" src={availableOnPlayStore.src} />
+                      <Image h="64px" src={availableOnPlayStore.src}  alt='Available on PlayStore'/>
                     </Link>
                   </HStack>
                 </Box>
@@ -97,7 +97,7 @@ const BookRide = () => {
             </Box>
 
             <Box>
-              <Image src={laptopMobile.src} />
+              <Image src={laptopMobile.src} alt='App on mobile and laptop'/>
             </Box>
           </HStack>
         </Flex>

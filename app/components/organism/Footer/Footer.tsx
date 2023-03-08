@@ -25,7 +25,7 @@ const Footer = () => {
           <Box>
             <VStack spacing="25px" padding="60px">
               <Box>
-                <Image src={DivvlyDark.src} boxSize="118px" height="39px" />
+                <Image src={DivvlyDark.src} boxSize="118px" height="39px"  alt=''/>
               </Box>
               <Box>
                 <HStack spacing="20px" justifyContent="center">
@@ -36,10 +36,10 @@ const Footer = () => {
                     <Icon as={FaFacebook} boxSize="24px" />
                   </Link>
                   <Link href='https://www.instagram.com/' target="blank">
-                    <Image src={InstagramImage.src} boxSize="24px" />
+                    <Image src={InstagramImage.src} boxSize="24px"  alt='Go to Instagram'/>
                   </Link>
                   <Link href='https://www.linkedin.com/' target="blank">
-                    <Image src={LinkedInImage.src} boxSize="24px" />
+                    <Image src={LinkedInImage.src} boxSize="24px"  alt='Go to LinkedIn'/>
                   </Link>
                 </HStack>
               </Box>

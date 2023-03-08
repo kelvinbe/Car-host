@@ -63,6 +63,7 @@ const Appfeature = () => {
             {cardData.map((card) => {
               return (
                 <AppFeatureCard
+                  key={card.title}
                   title={card.title}
                   icons={card.icons}
                   description={card.description}

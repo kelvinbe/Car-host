@@ -2,22 +2,86 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "main":"./public/main.js",
+  "license":"Divvly",
+  "description": "Divvly, Rent a car application",
+  "author": "Divvly",
+  "build": {
+    "appId": "com.divvly.app",
+    "extends": null,
+    "productName": "Divvly",
+    "copyright": "Copyright @2022 Divvly"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "export": "next build && next export",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "cypress": "cypress open",
     "cypress:all": "cypress run",
     "test": "jest",
     "test:watch": "jest --watch",
+    "electron:start": "wait-on tcp:3000 && electron .",
+    "electron:serve": "concurrently 'npm run dev' 'npm run electron:start'",
+    "electron:package": "electron-forge package",
+    "electron:dist": "electron-forge make",
     "mock": "json-server --watch mock-apis/db.json --port 4000"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": ["darwin", "linux", "windows"]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "name":"Divvly"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config":  {
+            "name":"Divvly"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-pkg",
+          "config":  {
+            "name":"Divvly"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config":  {
+            "name":"Divvly"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config":  {
+            "name":"Divvly"
+          }
+        }
+      ]
+    }
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.14",
     "@chakra-ui/react": "^2.4.3",
+    "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-dmg": "^6.0.5",
+    "@electron-forge/maker-pkg": "^6.0.5",
+    "@electron-forge/maker-rpm": "^6.0.5",
+    "@electron-forge/maker-snap": "^6.0.5",
+    "@electron-forge/maker-squirrel": "^6.0.5",
+    "@electron-forge/maker-zip": "^6.0.5",
+    "@electron/remote": "^2.0.9",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fullcalendar/core": "^6.1.4",
@@ -33,12 +97,13 @@
     "@fullcalendar/timegrid": "^6.1.4",
     "@googlemaps/react-wrapper": "^1.1.35",
     "@reduxjs/toolkit": "^1.9.1",
-    "@types/node": "18.11.9",
-    "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.9",
     "antd": "^5.0.7",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
     "cypress": "^11.1.0",
     "dayjs": "^1.11.7",
+    "electron-is-dev": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.4",
     "firebase": "^9.14.0",
@@ -60,10 +125,12 @@
     "stripe": "^11.2.0",
     "swagger-ui-react": "^4.11.1",
     "typescript": "4.9.3",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "wait-on": "^7.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",
+    "@electron-forge/cli": "^6.0.5",
     "@react-google-maps/api": "^2.18.1",
     "@storybook/addon-actions": "^6.5.13",
     "@storybook/addon-essentials": "^6.5.13",
@@ -83,6 +150,7 @@
     "autoprefixer": "^10.4.13",
     "babel-jest": "^29.3.1",
     "babel-loader": "^8.3.0",
+    "electron": "^23.1.1",
     "eslint-plugin-storybook": "^0.6.7",
     "jest": "^29.3.1",
     "json-server": "^0.17.2",
