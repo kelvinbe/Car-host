@@ -34,7 +34,7 @@ function Availability() {
   if (!reservations) return null
   const resourcesData: ResourcesData [] = reservations.map((item: any)=>({id: item.reservation_id, title: `${item.vehicle.make} ${item.vehicle.model}`}))
   const eventData: EventData []  = activeReservations.map((item: any)=>({
-    id: item.reservation_id,
+    id: item.entity_id,
     resourceId: item.reservation_id,
     title: item.vehicle.location.market.name,
     start: item.start_date_time,

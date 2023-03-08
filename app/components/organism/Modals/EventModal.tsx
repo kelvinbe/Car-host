@@ -18,7 +18,6 @@ import { capitalize } from "lodash";
 
 export default function EventModal({ isOpen, onClose, eventId}: any) { 
   const {updateReservation, selectedReservation, loadingUpdate, updateErrors} = useReservation(eventId)
-
   if(!selectedReservation) return null  
   return (
     <>

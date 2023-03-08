@@ -24,12 +24,11 @@ function handleEventContent(eventInfo: any){
 }
 
 function FullCallender(props:IProps) {
-  console.log(props)
   const [eventId, setEventId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   function handleDateSelect(){
-    alert("Date select")
+    // return <EventModal isOpen={isOpen} onClose={onClose} eventId={eventId}/>
   }
 
   function handleClick(info: { event: { id: React.SetStateAction<string>; }; }){

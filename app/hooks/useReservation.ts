@@ -161,7 +161,7 @@ export default function useReservation(reservationId?: number) {
     updateReservation,
     loadingUpdate,
     updateErrors,
-    selectedReservation: reservations.find(({reservation_id})=>reservation_id?.toString()===reservationId),
+    selectedReservation: reservations.find(({entity_id})=>entity_id?.toString()===reservationId),
     removeErrors,
     loadingRemove,
     deleteReservation,
