@@ -2,8 +2,8 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
-  "main":"./public/main.js",
-  "license":"Divvly",
+  "main": "./public/main.js",
+  "license": "Divvly",
   "description": "Divvly, Rent a car application",
   "author": "Divvly",
   "build": {
@@ -36,36 +36,40 @@
       "makers": [
         {
           "name": "@electron-forge/maker-zip",
-          "platforms": ["darwin", "linux", "windows"]
+          "platforms": [
+            "darwin",
+            "linux",
+            "windows"
+          ]
         },
         {
           "name": "@electron-forge/maker-deb",
           "config": {
-            "name":"Divvly"
+            "name": "Divvly"
           }
         },
         {
           "name": "@electron-forge/maker-dmg",
-          "config":  {
-            "name":"Divvly"
+          "config": {
+            "name": "Divvly"
           }
         },
         {
           "name": "@electron-forge/maker-pkg",
-          "config":  {
-            "name":"Divvly"
+          "config": {
+            "name": "Divvly"
           }
         },
         {
           "name": "@electron-forge/maker-rpm",
-          "config":  {
-            "name":"Divvly"
+          "config": {
+            "name": "Divvly"
           }
         },
         {
           "name": "@electron-forge/maker-squirrel",
-          "config":  {
-            "name":"Divvly"
+          "config": {
+            "name": "Divvly"
           }
         }
       ]
@@ -126,7 +130,8 @@
     "swagger-ui-react": "^4.11.1",
     "typescript": "4.9.3",
     "uuid": "^9.0.0",
-    "wait-on": "^7.0.1"
+    "wait-on": "^7.0.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",

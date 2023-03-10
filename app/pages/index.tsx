@@ -1,18 +1,13 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
-import styles from '../styles/Home.module.css'
-import LoadingComponent from '../components/molecules/feedback/LoadingComponent';
-import ErrorComponent from '../components/molecules/feedback/ErrorComponent';
 import { app } from '../firebase/firebaseApp';
 import { Flex, useToast } from '@chakra-ui/react';
 import { FlexColCenterBetween, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter } from '../utils/theme/FlexConfigs';
 import Logo from '../components/atoms/Brand/Logo';
 import AuthForm from '../components/organism/Forms/AuthForm/AuthForm';
 import HelperLinkText from '../components/atoms/HelperLinkText/HelperLinkText';
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
 import useAppAuth from '../hooks/useAppAuth';
 
 const provider = new GoogleAuthProvider();
@@ -30,31 +25,15 @@ export default function Home() {
   const {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signInWithEmailAndPasswordLoading,
-    createUserWithEmailAndPasswordLoading
+    createUserWithEmailAndPasswordLoading,
+    signInLoading
   } = useAppAuth() 
+
+
 
   const onSubmitHandler = (email: string, password: string) => {
     if(authState === "signin"){
-      signInWithEmailAndPassword(email, password).then(()=>{
-        toast({
-          description: "Logged in successfully.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        })
-        console.log("Signed in")
-        push("/dashboard")
-      }).catch((e)=>{
-        console.log(e)
-        toast({
-          title: "Error",
-          description: "An Error Occured",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        })
-      })
+      signInWithEmailAndPassword({email, password})
     }else if(authState === "signup"){
       createUserWithEmailAndPassword(email, password).then(()=>{
         push("/dashboard")
@@ -89,7 +68,7 @@ export default function Home() {
             onSubmit={onSubmitHandler}
             changeAuthState={setAuthState}
             loading={
-              authState === "signin" ? signInWithEmailAndPasswordLoading : authState === "signup" ? createUserWithEmailAndPasswordLoading : false
+              authState === "signin" ? signInLoading : authState === "signup" ? createUserWithEmailAndPasswordLoading : false
             }
           />
         </Flex>

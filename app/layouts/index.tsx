@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { createSlice } from '@reduxjs/toolkit'
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { intersection, isEmpty } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { app } from '../firebase/firebaseApp'
 import { IStaticProps } from '../globaltypes'
@@ -36,55 +36,37 @@ const layoutMiniSlice = createSlice({
         setProceed: (state, action) => {
             state.proceed = action.payload
             state.hasBeenChecked = true
-        },
-        setHasBeenCheched: (state, action) => {
-            state.hasBeenChecked = action.payload
         }
     }
 })
 
-export const { setProceed, setHasBeenCheched } = layoutMiniSlice.actions
+export const { setProceed } = layoutMiniSlice.actions
 
 export const layoutReducer = layoutMiniSlice.reducer
 
 function Layouts(props: IProps) {
     const [{
-        proceed,
-        hasBeenChecked
+        proceed
     }, dispatchAction] = useReducer(layoutReducer, initialState)
-    const [user,loading,error] = useAuthState(getAuth(app))
     const { pageProps, children } = props
-    console.log(pageProps)
     const { dashboard } = pageProps
-    const { push, pathname } = useRouter()
-
-    const checked = (proceed: boolean) => {
+    const { pathname } = useRouter()
+    const check = (proceed: boolean) => {
         dispatchAction(setProceed(proceed))
     }
+    const [user, setUser] = useState<User|null>(null)
 
-    const uncheck = () => {
-        dispatchAction(setHasBeenCheched(false))
-    }
-
-    const isAdminOnly = () =>{
-        return protectedRegex.test(pathname) && adminRoutesRegex.test(pathname)
-    }
-
-    const isAuthOnly = () =>{
-        return protectedRegex.test(pathname)
-    }
-
-    const isDashboardRoute = () =>{
-        return dashboardRoutesRegex.test(pathname)
-    }
+    onAuthStateChanged(getAuth(app), (user)=>{
+        setUser(user)
+    })
 
     useEffect(()=>{
-        if(user){
-            user.getIdToken().then(tkn=>localStorage.setItem('idToken', tkn))
-        }else{
-            localStorage.removeItem('idToken')
+        if (isEmpty(user)){
+            check(false)
         }
-    }, [user,loading,error])
+    }, [pathname])
+
+    
 
 
 
@@ -103,12 +85,8 @@ function Layouts(props: IProps) {
                 )
             ) : (
                 <CheckAuthorization 
-                    checked={checked}
-                    pageProps={ !isEmpty(pageProps) ? pageProps : {
-                        adminonly: isAdminOnly(),
-                        authonly: isAuthOnly(),
-                        dashboard: isDashboardRoute()
-                    }}
+                    checked={check}
+                    pageProps={pageProps}
                 />
             ) 
         }

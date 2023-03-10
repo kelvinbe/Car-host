@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { isEmpty } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import ErrorComponent from '../components/molecules/feedback/ErrorComponent'
 import LoadingComponent from '../components/molecules/feedback/LoadingComponent'
@@ -17,33 +17,43 @@ interface IProps {
 
 
 function CheckAuthorization(props: IProps) {
-    const { pageProps, checked } = props
-    const { adminonly, authonly } = pageProps
-    const [user, loading, error] = useAuthState(getAuth(app))
+    const { pageProps: { adminonly, authonly, dashboard }, checked } = props
+    const [appUser, loading, error] = useAuthState(getAuth(app))
     const { pathname, push } = useRouter()
+    const [user, setUser] = useState<User | null>(null)
+
+    onAuthStateChanged(getAuth(app), (user) => {
+        setUser(user)
+    })
 
 
     useEffect(()=>{
-        //using set timeout for loading effect
-        
-        if(user){
-            checked(true)
-            /**
-             * @todo check if user is admin
-             */
-        }
-        if(isEmpty(user)){
-            if(adminonly || authonly){
-                checked(false)
-                push('/')
+            if (loading) return ()=>{}
+            if (error) return checked(false)
+            if(!isEmpty(user)){
+                if (!authonly) return checked(true)
+                if(adminonly){
+                    /**
+                     * @todo check if user is admin from db and redirect to dashboard
+                     */
+                }else {
+                    checked(true)
+                }
             }else{
-                checked(true)
+                if (authonly || adminonly) {
+                    push("/").then(()=>{
+                        checked(true)
+                    })
+                }else{
+                    checked(true)
+                }
             }
+
+        return ()=>{
+            // clearTimeout(timeout_ref)
         }
-    return ()=>{
-    }
         
-    }, [pathname])
+    }, [,loading, error, pathname, user])
 
   return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 h-full">

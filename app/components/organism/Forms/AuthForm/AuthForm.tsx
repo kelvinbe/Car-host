@@ -1,7 +1,7 @@
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { Flex, Icon, IconButton, SystemStyleObject, Text, useToast } from '@chakra-ui/react';
 import { createSlice } from '@reduxjs/toolkit';
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import { FlexColCenterStart, FlexRowCenterCenter } from '../../../../utils/theme/FlexConfigs';
 import DividerWithText from '../../../atoms/Display/DividerWithText/DividerWithText';
 import ValidityCheck from '../../../atoms/Feedback/ValidityCheck/ValidityCheck';
@@ -11,10 +11,8 @@ import CreatePassword from '../CreatePassword/CreatePassword';
 import { FcGoogle  } from 'react-icons/fc';	
 import { BsApple } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
-import HelperLinkText from '../../../atoms/HelperLinkText/HelperLinkText';
 import ForgotPassword from './ForgotPassword';
 import useAppAuth from '../../../../hooks/useAppAuth';
-import { loadPartialConfig } from '@babel/core';
 import { useRouter } from 'next/router';
 
 interface IProps {
@@ -71,7 +69,6 @@ function AuthForm(props: IProps) {
     appleSignIn,
     googleSignIn,
     facebookSignIn,
-    signInWithEmailAndPasswordLoading,
     createUserWithEmailAndPasswordLoading
   } = useAppAuth()
   const [{
@@ -226,6 +223,7 @@ function AuthForm(props: IProps) {
         ) : null
       }
       <Flex {...FlexRowCenterCenter} mt="20px" mb="20px" w="full"  >
+          
           <Rounded
           loading={loading}
           rounded='full'

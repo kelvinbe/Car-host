@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useReducer } from 'react'
 import { useCreateUserWithEmailAndPassword, useSignInWithApple, useSignInWithEmailAndPassword, useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { app } from '../firebase/firebaseApp'
+import z from "zod"
+import { useToast } from '@chakra-ui/react'
 
 interface IReducerState {
     signOutLoading: boolean,
@@ -59,22 +61,54 @@ const { setSignOutLoading, setSignOutError, setSignInError, setSignInLoading, se
 function useAppAuth() {
     const [ {
         signOutLoading,
-        signOutError
+        signOutError,
+        signInLoading
     } , dispatchAction] = useReducer(authMiniSlice.reducer, initialState)
     const [ appleSignIn, appleUser,  appleSignInLoading, appleSignInError ] = useSignInWithApple(getAuth(app))
     const [facebookSignIn, facebookUser, facebookSignInLoading, facebookSignInError] = useSignInWithFacebook(getAuth(app))
     const [ googleSignIn, googleUser, googleSignInLoading, googleSignInError ] = useSignInWithGoogle(getAuth(app))
     const [createUserWithEmailAndPassword,user,createUserWithEmailAndPasswordLoading, createUserWithEmailAndPasswordError] = useCreateUserWithEmailAndPassword(getAuth(app));
-    const [ 
-        signInWithEmailAndPassword,
-        s_user,
-        signInWithEmailAndPasswordLoading,
-        signInWithEmailAndPasswordError
-     ] = useSignInWithEmailAndPassword(getAuth(app))
+    const toast = useToast({
+        position: "top",
+        duration: 5000,
+    })
+     /**
+      * @name signInWithEmailAndPassword
+      * @description Sign in the user with email and password
+      * @param credentials {
+      *  email: string,
+      *  password: string
+      * }
+      */
+
+     const _signInWithEmailAndPassword = (credentials: any) => {
+        z.object({
+            email: z.string().email(),
+            password: z.string().min(8)
+        }).required().parseAsync(credentials).then((credentials)=>{
+            dispatchAction(setSignInLoading(true))
+            signInWithEmailAndPassword(getAuth(app), credentials.email, credentials.password).then(()=>{
+                dispatchAction(setSignInLoading(false))
+            }).catch((e)=>{
+                dispatchAction(setSignInError(e.message))
+                toast({
+                    title: "Error",
+                    description: "Invalid Credentials",
+                    status: "error",
+                })
+            })
+        }).catch((e)=>{
+            toast({
+                title: "Error",
+                description: "Invalid credentials",
+                status: "error",
+            })
+            dispatchAction(setSignInError(e.message))
+        })
+     }
 
 
      useEffect(()=>{
-        console.log({appleSignInError, facebookSignInError})
      }, [appleSignInError, facebookSignInError])
 
 
@@ -91,10 +125,8 @@ function useAppAuth() {
         signOut(getAuth(app)).then(()=>{
             dispatchAction(setSignOutLoading(false))
             push("/")
-            localStorage.removeItem('admin')
         }).catch((e)=>{
             dispatchAction(setSignOutError(e.message))
-            console.log(e)
         })
     }
 
@@ -119,9 +151,8 @@ function useAppAuth() {
     user,
     createUserWithEmailAndPasswordLoading,
     createUserWithEmailAndPasswordError,
-    signInWithEmailAndPassword,
-    signInWithEmailAndPasswordLoading,
-    signInWithEmailAndPasswordError,
+    signInWithEmailAndPassword: _signInWithEmailAndPassword,
+    signInLoading,
 
   }
 }

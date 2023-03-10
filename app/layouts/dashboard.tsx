@@ -46,18 +46,6 @@ function Dashboardlayout(props: IProps) {
 
   const dashboardNavigation = useDashboardRoutes();
 
-  const logout = () => {
-    getAuth(app)
-      .signOut()
-      .then(() => {
-        localStorage.removeItem("admin");
-        push("/");
-        //handle signout
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
 
   return (
     <Grid w="100vw" minH="100vh" bg="background" templateColumns={"300px auto"}>
