@@ -1,18 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dIReservation } from "../globaltypes";
+import { IReservation } from "../globaltypes";
 import { RootState } from ".";
 
-const reservations: dIReservation[] = []
+const reservations: IReservation[] = []
 const reservationsSlice = createSlice({
     name: 'reservations',
     initialState: {
         reservations: reservations,
-        loading: false,
     },
     reducers: {
         getReservations(state, action){
             state.reservations= action.payload;
-        }
+        },
     }
 })
 

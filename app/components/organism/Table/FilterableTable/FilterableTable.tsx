@@ -24,10 +24,12 @@ interface IProps {
   data?: any[];
   columns?: ColumnsType<any>;
   dataFetchFunction?: (fetchStatus: "pending" | "error" | "success") => void;
+  addValue?:() =>void;
   buttonName?: string;
-  viewSearchField?: Boolean;
+  viewSearchField: Boolean;
   viewAddFieldButton?: Boolean;
-  viewSortablesField?: Boolean;
+  viewSortablesField: Boolean;
+  modalComponent?: React.ReactNode;
 }
 
 interface IReducer {
@@ -73,6 +75,8 @@ function FilterableTable(props: IProps) {
     viewSearchField,
     viewAddFieldButton,
     viewSortablesField,
+    addValue,
+    modalComponent
   } = props;
   const [{ tableColumnDefinitions }, dispatchActions] = useReducer(
     FilterableTableSlice.reducer,
@@ -107,7 +111,7 @@ function FilterableTable(props: IProps) {
             </Flex>
           )}
           {viewAddFieldButton && (
-            <Rounded variant="solid" fullWidth={false} rounded="md">
+            <Rounded variant="solid" fullWidth={false} rounded="md" onClick={addValue}>
               <Text cursor="pointer">{buttonName}</Text>
             </Rounded>
           )}

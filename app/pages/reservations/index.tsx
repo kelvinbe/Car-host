@@ -1,93 +1,119 @@
-import React from "react";
-import { Flex } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Flex, IconButton } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { ColumnsType } from "antd/es/table";
-
-interface DType {
-  name: string;
-  age: number;
-  show: string;
-  description: string;
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import ReservationModal from "../../components/organism/Modals/ReservationModal";
+import {useDisclosure} from '@chakra-ui/react'
+import { selectReservations } from "../../redux/reservationSlice";
+import useReservation from "../../hooks/useReservation";
+import dayjs from "dayjs";
+import { insertTableActions } from "../../utils/tables/utils";
+import { FlexRowCenterBetween, FlexRowCenterStart } from "../../utils/theme/FlexConfigs";
+import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
+import { lowerCase } from "lodash";
+import { ReservationColumns } from "../../utils/tables/TableTypes";
+export interface DataType {
+  id:number | undefined,
+  reservationId:string,
+  vehiclePlate:string,
+  vehicleName:string,
+  startEndTime:string,
+  totalCost:number,
+  hostName:string,
+  location:string,
+  status:string,
 }
 
-const data: DType[] = [
-  {
-    name: "John Brown",
-    age: 32,
-    show: "New York No. 1 Lake Park",
-    description:
-      "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.",
-  },
-  {
-    name: "Jim Green",
-    age: 42,
-    show: "London No. 1 Lake Park",
-    description:
-      "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.",
-  },
-  {
-    name: "Joe Black",
-    age: 32,
-    show: "Sidney No. 1 Lake Park",
-    description:
-      "My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.",
-  },
-];
-
-const columns: ColumnsType<any> = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    sorter: (a: DType, b: DType) => a.name.length - b.name.length,
-    sortDirections: ["descend", "ascend"],
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-    sorter: (a: DType, b: DType) => a.age - b.age,
-    sortDirections: ["descend", "ascend"],
-  },
-  {
-    title: "Show",
-    dataIndex: "show",
-    key: "show",
-    sorter: (a: DType, b: DType) => a.show.length - b.show.length,
-    sortDirections: ["descend", "ascend"],
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-    sorter: (a: DType, b: DType) => a.description.length - b.description.length,
-    sortDirections: ["descend", "ascend"],
-  },
-];
-
 function Reservations() {
+  const dispatch = useAppDispatch()
+  const {isOpen, onClose, onOpen} = useDisclosure()
+  const reservations = useAppSelector(selectReservations)
+  const {fetchReservations, deleteReservation} = useReservation()
+  const [toggleViewReservationModal, setToggleViewReservationModal] = useState(false)
+  const [toggleEditReservationModal, setToggleEditReservationModal] = useState(false)
+  const [reservationData, setReservationData] = useState<DataType[]>([])
+  const [reservationId, setReservationId] = useState<null|number|string>(null)
+
+  useEffect(() => {
+    fetchReservations()
+  },[])
+
+
+  useEffect(()=>{
+    setReservationData(()=>reservations.map((reservation)=>({
+      id:reservation?.id,
+      reservationId: reservation?.reservation_id,
+      vehiclePlate:reservation?.plate,
+      vehicleName:`${reservation?.make} ${reservation?.model}`,
+      startEndTime:`${dayjs(reservation?.start_date_time).format("DD/MM/YYYY h:mm A")} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
+      totalCost:reservation?.total_cost,
+      hostName:reservation?.host_handle,
+      location:`${reservation?.address} ${reservation?.building_name}`,
+      status:lowerCase(reservation?.status),
+    })))
+  }, [reservations])
+  
+ 
+  const changeStateViewModal = () => {
+    setToggleViewReservationModal(!toggleViewReservationModal)
+  }
+  const changeStateEditModal = () => {
+    setToggleEditReservationModal(!toggleEditReservationModal)
+  }
+  const showViewReservationModal = (reservation_id:string) => {
+    onOpen()
+    changeStateViewModal()
+    setReservationId(reservation_id)
+  }
+  const showEditReservationModal = (id:number) => {
+    onOpen()
+    changeStateEditModal()
+    setReservationId(id)
+  }
   return (
     <Flex w="full" h="full" data-testid="reservations-table">
+      <ReservationModal isOpen={isOpen} onClose={onClose} toggleViewReservationModal = {toggleViewReservationModal} changeStateViewModal = {changeStateViewModal} toggleEditReservationModal = {toggleEditReservationModal} changeStateEditModal = {changeStateEditModal} reservationId={reservationId}/>
       <FilterableTable
-        viewAddFieldButton={true}
         viewSearchField={true}
         viewSortablesField={true}
-        buttonName="Create Reservation"
-        columns={columns}
-        data={data}
+        columns={insertTableActions(ReservationColumns, (i, data) => {
+          return (
+            <Flex {...FlexRowCenterBetween}>
+              <IconButton
+                aria-label="View"
+                icon={<ViewIcon />}
+                size="sm"
+                onClick={() => showViewReservationModal(data.reservationId)}
+                marginRight='4'
+              />
+              <IconButton
+                aria-label="Edit"
+                icon={<EditIcon />}
+                size="sm"
+                onClick={() => {
+                  showEditReservationModal(data.id)
+                }}
+                marginRight='4'
+              />
+              <IconButton
+                aria-label="Delete"
+                icon={<DeleteIcon />}
+                size="sm"
+                onClick={() => {
+                  deleteReservation(data.id)
+                }}
+                color="cancelled.1000"
+              />
+            </Flex>
+          );
+        })}
+        data={reservationData}
         sortables={[
           {
-            columnKey: "description",
-            columnName: "Description",
-          },
-          {
-            columnKey: "name",
-            columnName: "Name",
-          },
-          {
-            columnKey: "age",
-            columnName: "Age",
-          },
+            columnKey: "vehiclePlate",
+            columnName: "Vehicle Plate",
+          }
         ]}
       />
     </Flex>

@@ -24,6 +24,10 @@ export const theme = extendTheme({
             1000: "rgba(56, 176, 0, 1)",
             100: "rgba(56, 176, 0, 0.1)",
         },
+        upcoming: {
+            1000: "rgba(56, 176, 0, 1)",
+            100: "rgba(56, 176, 0, 0.1)",
+        },
         cancelled: {
             1000: "rgba(191, 6, 3, 1)",
             100: "rgba(191, 6, 3, 0.1)",

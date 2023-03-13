@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { IReservation } from "../globaltypes";
 
-export default function useReservation(reservationId?: number) {
+export default function useReservation(reservationId?: string|number) {
 
   const reservations = useAppSelector(selectReservations);
   const activeReservations = useAppSelector(selectActiveReservations);
@@ -83,7 +83,7 @@ export default function useReservation(reservationId?: number) {
       });
   }
 
-  function deleteReservation(id: string){
+  function deleteReservation(id: number){
     setLoadingRemove(true)
     axios.delete(`${RESERVATION_DOMAIN}/${id}`, {
         headers:{

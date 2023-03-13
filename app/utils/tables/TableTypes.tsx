@@ -15,6 +15,7 @@ import VehiclePic from "../../components/atoms/images/VehiclePic";
 import StatusTag from "../../components/atoms/status/StatusTag";
 import { LinkIcon } from "@chakra-ui/icons";
 import { Avatar } from "antd";
+import { DataType } from "../../pages/reservations";
 
 export const ReservationTableColumns: ColumnsType<IReservation> = [
   {
@@ -283,6 +284,55 @@ export const LocationTableColumns: ColumnsType<ILocation> = [
   },
 ];
 
+export const ReservationColumns: ColumnsType<any> = [
+  {
+    title: "Reservation Id",
+    dataIndex: "reservationId",
+    key: "reservationId",
+  },
+  {
+    title: "Vehicle Plate",
+    dataIndex: "vehiclePlate",
+    key: "vehiclePlate",
+    sorter: (a: DataType, b: DataType) => a.vehiclePlate.length - b.vehiclePlate.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Vehicle Name",
+    dataIndex: "vehicleName",
+    key: "vehicleName",
+  },
+  {
+    title: "Start and End time",
+    dataIndex: "startEndTime",
+    key: "startEndTime",
+  },
+  {
+    title: "Total cost",
+    dataIndex: "totalCost",
+    key: "totalCost",
+  },
+  {
+    title: "Host",
+    dataIndex: "hostName",
+    key: "hostName",
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart}>
+        <StatusTag status={status as any}>{status}</StatusTag>
+      </Flex>
+    ),
+  },
+];
 export const VehicleManagementTableColumns: ColumnsType<IVehicle> = [
   {
     title: "Vehicle",

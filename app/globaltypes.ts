@@ -56,18 +56,60 @@ export interface IVehicle {
     } | null
   }
 
+  export interface IVehicleDetails{
+    vehicle_id: number,       
+    entity_id: string,
+    vehicle_type:string,
+    location_id: number,
+    color: string,
+    seats: number,
+    plate: string,
+    transmission: "Automatic" | "Semi-Automatic" | "Manual" | "CVT",
+    year: number | string,
+    coords: {
+        latitude: number,
+        longitude: number
+    } | null,
+    status: "active" | "Unavailable" | "Available",
+    make: string,
+    model: string,
+    hourly_rate: number,
+    host: {
+      userId: string,
+      fname: string,
+      lname: string,
+      profile_pic_url: string,
+      handle: string,
+      hourly_rate: number
+    },
+    location: {
+      location_id: string,
+      entity_id: number,
+      market: {
+        market_id: string,
+        country: string,
+        name: string,
+      },
+      address: string,
+      building_name: string,
+      picture_url: string,
+    },
+    vehicle_pictures: string[]
+  }
   export interface IReservation {
-    reservationId: string;
-    hostId: string;
-    startDateTime: string;
-    endDateTime: string;
-    vehicleId: string;
-    vehicleModel: string;
-    vehicleMake: string;
-    vehiclePicUrl: string;
-    locationAddress: string;
-    marketName: string;
-    total: string;
+    id?:number;
+    reservation_id: string;
+    vehicle_id:string,
+    plate:string,
+    make:string,
+    model:string,
+    host_handle:string,
+    market_name:string,
+    address:string,
+    building_name:string
+    start_date_time: string;
+    end_date_time: string;
+    total_cost: number;
     status: string;
     // paymentMethod?: IPaymentMethod<any>;
   }
