@@ -1,56 +1,1220 @@
 {
-  "reservations": [
+  "resource-data": [
     {
-      "reservation_id": "e6a71b74-f0fe-4ede-8acd-1344e3b7b38e",
-      "start_date_time": "2023-03-13T10:00",
-      "end_date_time": "2023-03-13T12:30",
-      "vehicle_id": "3",
-      "plate": "CDE345",
-      "model": "Imprezza",
-      "make": "Subaru",
-      "host_handle": "judydeen",
-      "address": "123 Main St",
-      "building_name": "Falcon height",
-      "market_name": "San Francisco",
-      "total_cost": 62.5,
-      "status": "Upcoming",
-      "id": 3
+      "id": 1,
+      "title": "Toyota Camry"
     },
     {
-      "reservation_id": "0a27e104-c169-4f74-bcb6-17aa5442dff4",
-      "start_date_time": "2023-03-10T12:30",
-      "end_date_time": "2023-03-10T15:00",
-      "vehicle_id": "1",
-      "plate": "ABC123",
-      "model": "Camry",
-      "make": "Toyota",
-      "host_handle": "judydeen",
-      "address": "123 Main St",
-      "building_name": "Falcon height",
-      "market_name": "San Francisco",
-      "total_cost": 50,
-      "status": "Upcoming",
-      "id": 4
+      "id": 2,
+      "title": "Mazda CX5"
+    },
+    {
+      "id": 3,
+      "title": "BMW S9"
+    },
+    {
+      "id": 4,
+      "title": "Toyota Harrier"
+    },
+    {
+      "id": 5,
+      "title": "Toyota Camry"
     }
   ],
-  "vehicles": [
+  "event-data": [
     {
-      "vehicle_id": 1,
+      "id": 1,
+      "start": "2023-03-13T10:00:00",
+      "end": "2023-03-13T12:40:00",
+      "resourceId": "1",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 2,
+      "start": "2023-03-13T10:00:00",
+      "end": "2023-03-13T14:40:00",
+      "resourceId": "3",
+      "title": "Carlifornia",
+      "color": ""
+    },
+    {
+      "id": 3,
+      "start": "2023-03-13T10:00:00",
+      "end": "2023-03-13T12:00:00",
+      "resourceId": "2",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 4,
+      "start": "2023-03-13T12:00:00",
+      "end": "2023-03-13T14:40:00",
+      "resourceId": "5",
+      "title": "Manhattan",
+      "color": ""
+    },
+    {
+      "id": 5,
+      "start": "2023-03-14T10:00:00",
+      "end": "2023-03-14T11:30:00",
+      "resourceId": "3",
+      "title": "Quiverland",
+      "color": ""
+    },
+    {
+      "id": 6,
+      "start": "2023-03-14T10:00:00",
+      "end": "2023-03-14T12:40:00",
+      "resourceId": "1",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 7,
+      "start": "2023-03-14T10:00:00",
+      "end": "2023-03-14T14:40:00",
+      "resourceId": "4",
+      "title": "Carlifornia",
+      "color": ""
+    },
+    {
+      "id": 8,
+      "start": "2023-03-14T10:00:00",
+      "end": "2023-03-14T12:00:00",
+      "resourceId": "2",
+      "title": "San Francisco",
+      "color": "red"
+    },
+    {
+      "id": 9,
+      "start": "2023-03-13T12:00:00",
+      "end": "2023-03-13T14:40:00",
+      "resourceId": "5",
+      "title": "Manhattan",
+      "color": ""
+    },
+    {
+      "id": 10,
+      "start": "2023-03-15T10:00:00",
+      "end": "2023-03-15T11:30:00",
+      "resourceId": "3",
+      "title": "Quiverland",
+      "color": ""
+    },
+    {
+      "id": 11,
+      "start": "2023-04-02T10:00:00",
+      "end": "2023-04-02T12:40:00",
+      "resourceId": "2",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 12,
+      "start": "2023-04-03T10:00:00",
+      "end": "2023-04-03T14:40:00",
+      "resourceId": "3",
+      "title": "Carlifornia",
+      "color": ""
+    },
+    {
+      "id": 13,
+      "start": "2023-04-03T10:00:00",
+      "end": "2023-04-03T12:00:00",
+      "resourceId": "5",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 14,
+      "start": "2023-04-05T12:00:00",
+      "end": "2023-04-05T14:40:00",
+      "resourceId": "5",
+      "title": "Manhattan",
+      "color": ""
+    },
+    {
+      "id": 15,
+      "start": "2023-04-06T10:00:00",
+      "end": "2023-04-06T11:30:00",
+      "resourceId": "3",
+      "title": "Quiverland",
+      "color": ""
+    },
+    {
+      "id": 16,
+      "start": "2023-04-06T10:00:00",
+      "end": "2023-04-06T12:40:00",
+      "resourceId": "1",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 17,
+      "start": "2023-04-06T10:00:00",
+      "end": "2023-04-06T14:40:00",
+      "resourceId": "4",
+      "title": "Carlifornia",
+      "color": ""
+    },
+    {
+      "id": 18,
+      "start": "2023-04-06T10:00:00",
+      "end": "2023-04-06T12:00:00",
+      "resourceId": "2",
+      "title": "San Francisco",
+      "color": ""
+    },
+    {
+      "id": 19,
+      "start": "2023-04-07T12:00:00",
+      "end": "2023-04-07T14:40:00",
+      "resourceId": "5",
+      "title": "Manhattan",
+      "color": ""
+    },
+    {
+      "id": 20,
+      "start": "2023-04-07T10:00:00",
+      "end": "2023-04-07T11:30:00",
+      "resourceId": "3",
+      "title": "Quiverland",
+      "color": ""
+    }
+  ],
+  "reservations": [
+    {
+      "id": 1,
+      "reservation_id": "1",
+      "type": "Blocked",
       "entity_id": "1",
-      "vehicle_type": "Sedan",
+      "user_id": "1",
       "location_id": 1,
-      "color": "Red",
-      "seats": 4,
-      "plate": "ABC123",
-      "transmission": "Automatic",
-      "year": 2018,
-      "latitude": 37.7749,
-      "longitude": -122.4194,
-      "status": "Available",
-      "make": "Toyota",
-      "model": "Camry",
+      "vehicle_id": "1",
       "hourly_rate": 20,
-      "host": {
+      "start_date_time": "2023-03-13T10:00:00",
+      "end_date_time": "2023-03-13T12:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Blocked",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 1,
+        "entity_id": "1",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "1",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "1",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 2,
+      "reservation_id": "2",
+      "type": "Hourly",
+      "entity_id": "2",
+      "user_id": "2",
+      "location_id": 2,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-13T10:00:00",
+      "end_date_time": "2023-03-13T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Cancelled",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 2,
+        "type": "Hourly",
+        "entity_id": "2",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "2",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Carlifornia",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "2",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 3,
+      "reservation_id": "3",
+      "type": "Hourly",
+      "entity_id": "3",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "3",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-13T10:00:00",
+      "end_date_time": "2023-03-13T12:00:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 3,
+        "entity_id": "3",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "3",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "3",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 4,
+      "reservation_id": "4",
+      "type": "Hourly",
+      "entity_id": "4",
+      "user_id": "2",
+      "location_id": 2,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-13T12:00:00",
+      "end_date_time": "2023-03-13T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 2,
+        "entity_id": "4",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "4",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Manhattan",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "4",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 5,
+      "reservation_id": "5",
+      "type": "Hourly",
+      "entity_id": "5",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "4",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-14T10:00:00",
+      "end_date_time": "2023-03-14T11:30:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 4,
+        "entity_id": "5",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "5",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "Quiverland",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "5",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 6,
+      "reservation_id": "6",
+      "type": "Hourly",
+      "entity_id": "4",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "4",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-14T10:00:00",
+      "end_date_time": "2023-03-14T12:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Blocked",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 4,
+        "entity_id": "4",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "4",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "4",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 7,
+      "reservation_id": "7",
+      "type": "Hourly",
+      "entity_id": "3",
+      "user_id": "2",
+      "location_id": 3,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start": "2023-03-14T10:00:00",
+      "end": "2023-03-14T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 2,
+        "entity_id": "3",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "3",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Carlifornia",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "3",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 8,
+      "reservation_id": "8",
+      "type": "Blocked",
+      "entity_id": "2",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "1",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-14T10:00:00",
+      "end_date_time": "2023-03-14T12:00:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 1,
+        "entity_id": "2",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "2",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "1",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 9,
+      "reservation_id": "9",
+      "type": "Hourly",
+      "entity_id": "2",
+      "user_id": "2",
+      "location_id": 4,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-13T12:00:00",
+      "end_date_time": "2023-03-13T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 4,
+        "entity_id": "2",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "2",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Manhattan",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "2",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 10,
+      "reservation_id": "10",
+      "type": "Hourly",
+      "entity_id": "5",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "1",
+      "hourly_rate": 20,
+      "start_date_time": "2023-03-15T10:00:00",
+      "end_date_time": "2023-03-15T11:30:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 1,
+        "entity_id": "5",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "5",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "Quiverland",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "5",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 11,
+      "reservation_id": "11",
+      "type": "Hourly",
+      "entity_id": "1",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "1",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-02T10:00:00",
+      "end_date_time": "2023-04-02T12:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 1,
+        "entity_id": "1",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "1",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "1",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 12,
+      "reservation_id": "12",
+      "type": "Hourly",
+      "entity_id": "2",
+      "user_id": "2",
+      "location_id": 2,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-03T10:00:00",
+      "end_date_time": "2023-04-03T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 2,
+        "entity_id": "2",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "2",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Carlifornia",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "2",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 13,
+      "reservation_id": "13",
+      "type": "Hourly",
+      "entity_id": "3",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-03T10:00:00",
+      "end_date_time": "2023-04-03T12:00:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 3,
+        "entity_id": "3",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "3",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "3",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 14,
+      "reservation_id": "14",
+      "type": "Hourly",
+      "entity_id": "2",
+      "user_id": "2",
+      "location_id": 2,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-05T12:00:00",
+      "end_date_time": "2023-04-05T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
         "userId": "1",
         "fname": "Judy",
         "lname": "Deen",
@@ -61,10 +1225,41 @@
       "location": {
         "location_id": "1",
         "entity_id": "2",
-        "market": {
-          "market_id": "1",
-          "country": "US",
-          "name": "San Francisco",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "2",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Manhattan",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           "latitude": "37.7749",
           "longitude": "-122.4194",
           "status": "Active"
@@ -75,111 +1270,477 @@
         "latitude": "37.7749",
         "longitude": "-122.4194",
         "status": "Active"
-      },
-      "vehicle_pictures": [
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-      ]
+      }
     },
     {
-      "vehicle_id": 2,
-      "entity_id": "2",
-      "vehicle_type": "Sedan",
+      "id": 15,
+      "reservation_id": "15",
+      "type": "Hourly",
+      "entity_id": "5",
+      "user_id": "1",
       "location_id": 1,
-      "color": "Silver",
-      "seats": 4,
-      "plate": "BCD234",
-      "transmission": "Semi-Automatic",
-      "year": 2014,
-      "latitude": 37.7749,
-      "longitude": -122.4194,
-      "status": "Available",
-      "make": "Honda",
-      "model": "Civic",
-      "hourly_rate": 10,
-      "host": {
-        "userId": "2",
+      "vehicle_id": "1",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-06T10:00:00",
+      "end_date_time": "2023-04-06T11:30:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 1,
+        "entity_id": "5",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "5",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "Quiverland",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "5",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 16,
+      "reservation_id": "15",
+      "type": "Blocked",
+      "entity_id": "3",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "3",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-06T10:00:00",
+      "end_date_time": "2023-04-06T12:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
         "fname": "John",
         "lname": "Deen",
         "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
         "handle": "johndeen",
         "hourly_rate": 10
       },
-      "location": {
-        "location_id": "1",
-        "entity_id": "2",
-        "market": {
-          "market_id": "1",
-          "country": "US",
-          "name": "San Diego",
+      "vehicle": {
+        "vehicle_id": 3,
+        "entity_id": "3",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "3",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           "latitude": "37.7749",
           "longitude": "-122.4194",
           "status": "Active"
         },
-        "address": "123 Main St",
-        "building_name": "Fenesi Apartments",
-        "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "latitude": "37.7749",
-        "longitude": "-122.4194",
-        "status": "Active"
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
       },
-      "vehicle_pictures": [
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-      ]
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "3",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
     },
     {
-      "vehicle_id": 3,
+      "id": 17,
+      "reservation_id": "17",
+      "type": "Hourly",
       "entity_id": "3",
-      "vehicle_type": "Hatchback",
-      "location_id": 1,
-      "color": "Black",
-      "seats": 5,
-      "plate": "CDE345",
-      "transmission": "Automatic",
-      "year": 2019,
-      "latitude": 37.7749,
-      "longitude": -122.4194,
-      "status": "Available",
-      "make": "Subaru",
-      "model": "Imprezza",
-      "hourly_rate": 25,
-      "host": {
+      "user_id": "2",
+      "location_id": 2,
+      "vehicle_id": "3",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-06T10:00:00",
+      "end_date_time": "2023-04-06T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
         "userId": "1",
-        "fname": "Judy",
-        "lname": "Deen",
-        "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
-        "handle": "judydeen",
-        "hourly_rate": 25
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
       },
-      "location": {
-        "location_id": "1",
-        "entity_id": "2",
-        "market": {
-          "market_id": "1",
-          "country": "US",
-          "name": "San Francisco",
+      "vehicle": {
+        "vehicle_id": 3,
+        "entity_id": "3",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "3",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Carlifornia",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           "latitude": "37.7749",
           "longitude": "-122.4194",
           "status": "Active"
         },
-        "address": "123 Main St",
-        "building_name": "Falcon height",
-        "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "latitude": "37.7749",
-        "longitude": "-122.4194",
-        "status": "Active"
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
       },
-      "vehicle_pictures": [
-        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-      ]
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "3",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 18,
+      "reservation_id": "18",
+      "type": "Hourly",
+      "entity_id": "3",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-06T10:00:00",
+      "end_date_time": "2023-04-06T12:00:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 2,
+        "entity_id": "3",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "3",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "San Francisco",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "3",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 19,
+      "reservation_id": "19",
+      "type": "Hourly",
+      "entity_id": "1",
+      "user_id": "2",
+      "location_id": 2,
+      "vehicle_id": "2",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-07T12:00:00",
+      "end_date_time": "2023-04-07T14:40:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 2,
+        "entity_id": "1",
+        "vehicle_type": "Sedan",
+        "location_id": 2,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "2",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "2",
+          "entity_id": "1",
+          "market": {
+            "market_id": "2",
+            "country": "US",
+            "name": "Manhattan",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "1",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
+    },
+    {
+      "id": 20,
+      "reservation_id": "20",
+      "type": "Hourly",
+      "entity_id": "2",
+      "user_id": "1",
+      "location_id": 1,
+      "vehicle_id": "1",
+      "hourly_rate": 20,
+      "start_date_time": "2023-04-07T10:00:00",
+      "end_date_time": "2023-04-07T11:30:00",
+      "total_cost": 100,
+      "duration": 5,
+      "payment_id": "1",
+      "status": "Active",
+      "customer": {
+        "userId": "1",
+        "fname": "John",
+        "lname": "Doe",
+        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      },
+      "vehicle": {
+        "vehicle_id": 1,
+        "entity_id": "2",
+        "vehicle_type": "Sedan",
+        "location_id": 1,
+        "color": "Red",
+        "seats": 4,
+        "plate": "ABC123",
+        "transmission": "Automatic",
+        "year": 2018,
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "status": "Available",
+        "make": "Toyota",
+        "model": "Camry",
+        "hourly_rate": 20,
+        "host": {
+          "userId": "1",
+          "fname": "Judy",
+          "lname": "Deen",
+          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "handle": "judydeen",
+          "hourly_rate": 20
+        },
+        "location": {
+          "location_id": "1",
+          "entity_id": "2",
+          "market": {
+            "market_id": "1",
+            "country": "US",
+            "name": "Quiverland",
+            "latitude": "37.7749",
+            "longitude": "-122.4194",
+            "status": "Active"
+          },
+          "address": "123 Main St",
+          "building_name": "Falcon height",
+          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "vehicle_pictures": [
+          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ]
+      },
+      "payment": {
+        "payment_type_id": "1",
+        "entity_id": "2",
+        "payment_type": "Visa",
+        "details": "Payment details",
+        "status": "Active"
+      }
     }
   ]
 }

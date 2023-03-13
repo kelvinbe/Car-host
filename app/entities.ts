@@ -56,6 +56,7 @@ export interface eITracking {
 
 export interface eIReservation {
     reservation_id?: string;
+    type?: string,
     entity_id?: string;
     user_id?: string;
     location_id?: number;
@@ -66,7 +67,7 @@ export interface eIReservation {
     total_cost?: number;
     duration?: number;
     payment_id?: string;
-    status?: "Complete" | "Active" | "Upcoming" | "Cancelled" | "Other";
+    status?: "Complete" | "Active" | "Upcoming" | "Cancelled" | "Other" | "Blocked";
 }
 
 export interface eIPayout {

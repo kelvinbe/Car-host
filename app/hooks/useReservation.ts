@@ -128,11 +128,12 @@ export default function useReservation(reservationId?: string|number) {
         })
     .then((res)=>{
         fetchReservations()
+        console.log(res)
         setLoadingAdd(false)
         toast({
           position: "top",
-          title: "Create Reservation",
-          description: "Reservation created succesfully",
+          title: `${res.data.type==="Blocked"? "Blocked":"Create Reservation"}`,
+          description: `${res.data.type === "Blocked"? "Reservation blocked succesfully": "Reservation created succesfully"}`,
           duration: 3000,
           isClosable: true,
           status: "success",
@@ -161,7 +162,7 @@ export default function useReservation(reservationId?: string|number) {
     updateReservation,
     loadingUpdate,
     updateErrors,
-    selectedReservation: reservations.find(({entity_id})=>entity_id?.toString()===reservationId),
+    selectedReservation: reservations.find(({reservation_id})=>reservation_id?.toString()===reservationId),
     removeErrors,
     loadingRemove,
     deleteReservation,
