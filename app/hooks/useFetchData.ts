@@ -1,31 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useAppDispatch } from '../redux/store';
 
-type Url = string;
 type Error = any;
 
-export default function useFetchData(url: Url){
+export default function useFetchData(url:string, actionFunc:(responseData:[]) => void){
+    const [loading, setLoading] = useState<boolean>(false)
+    const [errors, setErrors] = useState<null|{}>(null)
+    const dispatch = useAppDispatch()
 
-    const [data, setData] = useState(null)
-    const [error, setError] = <Error>useState(null)
-    const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        (
-            async function(){
-                try{
-                    setLoading(true)
-                    const response = await axios.get(url)
-                    setData(response.data)
-                }catch(err){
-                    setError(err)
-                }finally{
-                    setLoading(false)
-                }
-            }
-        )()
-    }, [setError, url])
-
-    return { data, error, loading }
-
+    function fetchData() {
+        setLoading(true);
+        axios
+          .get(url, {
+            headers: {
+              Authorization: `Bearer token`,
+            },
+          })
+          .then(({ data }) => {
+            dispatch(actionFunc(data));
+            setLoading(false);
+            setErrors(null);
+          })
+          .catch(err => setErrors(err));
+    }
+    return {
+        fetchData,
+        loading,
+        errors
+    }
 }

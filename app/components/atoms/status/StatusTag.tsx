@@ -3,7 +3,7 @@ import React from 'react'
 import { FlexRowCenterCenter } from '../../../utils/theme/FlexConfigs'
 
 interface IProps {
-    status: "active" | "cancelled" | "reserved",
+    status: "active" | "cancelled" | "reserved" | "paid" | "pending",
     children: React.ReactNode | string
 }
 

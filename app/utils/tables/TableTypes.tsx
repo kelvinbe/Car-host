@@ -100,13 +100,13 @@ export const ReservationTableColumns: ColumnsType<IReservation> = [
 
 export const PayoutsTableColumns: ColumnsType<IPayout> = [
   {
-    title: "Pay Date",
-    dataIndex: "payDate",
-    key: "payDate",
-    render: (v, { payDate }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Payout Date",
+    dataIndex: "payout_date",
+    key: "payout_date",
+    render: (v, { payout_date }) => (
+      <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {dayjs(payDate).format("DD MMM YYYY")}
+          {payout_date}
         </Text>
       </Flex>
     ),
@@ -116,9 +116,9 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     dataIndex: "amount",
     key: "amount",
     render: (v, { amount }) => (
-      <Flex {...FlexColCenterCenter}>
+      <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {amount}
+          ${amount}
         </Text>
       </Flex>
     ),
@@ -130,7 +130,7 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     dataIndex: "status",
     key: "status",
     render: (v, { status }) => (
-      <Flex {...FlexColCenterCenter}>
+      <Flex {...FlexColStartStart}>
         <StatusTag status={status as any}>{status}</StatusTag>
       </Flex>
     ),

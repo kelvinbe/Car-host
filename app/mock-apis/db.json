@@ -1739,6 +1739,22 @@
       }
     }
   ],
+
+  "payouts":[
+    {
+      "payout_id":1,
+      "payout_date":"12th August, 2022",
+      "amount":120,
+      "status":"paid"
+    },
+    {
+      "payout_id":2,
+      "payout_date":"12th September, 2022",
+      "amount":160,
+      "status":"pending"
+    }
+  ],
+
   "vehicles": [
     {
       "vehicle_id": 1,
@@ -1801,6 +1817,7 @@
       "hourly_rate": "15",
       "status": "available",
       "vehicle_id": 2
+
     }
   ]
 }

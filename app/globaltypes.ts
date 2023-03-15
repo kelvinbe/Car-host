@@ -85,10 +85,10 @@ export interface IVehicle {
   }
 
   export interface IPayout {
-    payoutId: string;
+    payout_id: number;
     amount: number;
-    payDate: string;
-    status: string
+    payout_date: string;
+    status: "paid"|"pending"
   }
 
 
