@@ -1223,18 +1223,17 @@
         "hourly_rate": 20
       },
       "location": {
-        "location_id": "1",
+        "location_id": 2,
         "entity_id": "2",
         "vehicle_type": "Sedan",
-        "location_id": 2,
         "color": "Red",
         "seats": 4,
         "plate": "ABC123",
         "transmission": "Automatic",
         "year": 2018,
-        "latitude": 37.7749,
-        "longitude": -122.4194,
-        "status": "Available",
+        "latitude": "37.7749",
+        "longitude": "-122.4194",
+        "status": "Active",
         "make": "Toyota",
         "model": "Camry",
         "hourly_rate": 20,
@@ -1266,10 +1265,7 @@
         },
         "address": "123 Main St",
         "building_name": "Falcon height",
-        "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "latitude": "37.7749",
-        "longitude": "-122.4194",
-        "status": "Active"
+        "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
       }
     },
     {
@@ -1741,6 +1737,70 @@
         "details": "Payment details",
         "status": "Active"
       }
+    }
+  ],
+  "vehicles": [
+    {
+      "vehicle_id": 1,
+      "entity_id": "1",
+      "vehicle_type": "Sedan",
+      "location_id": 1,
+      "color": "Red",
+      "seats": 4,
+      "plate": "ABC-123",
+      "transmission": "auto",
+      "year": "2016",
+      "latitude": 37.7749,
+      "longitude": -122.4194,
+      "status": "active",
+      "make": "Toyota",
+      "model": "Premio",
+      "hourly_rate": "30",
+      "host": {
+        "userId": "1",
+        "fname": "Judy",
+        "lname": "Deen",
+        "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "handle": "judydeen",
+        "hourly_rate": 20
+      },
+      "location": {
+        "location_id": "1",
+        "entity_id": "2",
+        "market": {
+          "market_id": "1",
+          "country": "US",
+          "name": "San Francisco",
+          "latitude": "37.7749",
+          "longitude": "-122.4194",
+          "status": "Active"
+        },
+        "address": "123 Main St",
+        "building_name": "Falcon height",
+        "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "latitude": "37.7749",
+        "longitude": "-122.4194",
+        "status": "Active"
+      },
+      "vehicle_pictures": [
+        "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      ]
+    },
+    {
+      "plate": "DEF-456",
+      "vehicle_pictures": [
+        "blob:http://localhost:3000/df476194-7113-4a17-86ba-c032cf7941be"
+      ],
+      "make": "Mazda",
+      "model": "Demio",
+      "year": "2016",
+      "transmission": "cvt",
+      "hourly_rate": "15",
+      "status": "available",
+      "vehicle_id": 2
     }
   ]
 }

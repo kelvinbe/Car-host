@@ -28,8 +28,10 @@ interface IProps {
   buttonName?: string;
   viewSearchField: Boolean;
   viewAddFieldButton?: Boolean;
-  viewSortablesField: Boolean;
+  viewSortablesField?: Boolean;
+  openCreateModal?:() => void
   modalComponent?: React.ReactNode;
+
 }
 
 interface IReducer {
@@ -75,7 +77,7 @@ function FilterableTable(props: IProps) {
     viewSearchField,
     viewAddFieldButton,
     viewSortablesField,
-    addValue,
+    openCreateModal,
     modalComponent
   } = props;
   const [{ tableColumnDefinitions }, dispatchActions] = useReducer(
@@ -111,7 +113,7 @@ function FilterableTable(props: IProps) {
             </Flex>
           )}
           {viewAddFieldButton && (
-            <Rounded variant="solid" fullWidth={false} rounded="md" onClick={addValue}>
+            <Rounded variant="solid" fullWidth={false} rounded="md" onClick = {openCreateModal}>
               <Text cursor="pointer">{buttonName}</Text>
             </Rounded>
           )}

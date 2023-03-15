@@ -15,6 +15,7 @@ import VehiclePic from "../../components/atoms/images/VehiclePic";
 import StatusTag from "../../components/atoms/status/StatusTag";
 import { LinkIcon } from "@chakra-ui/icons";
 import { Avatar } from "antd";
+import { IVehicleDetails } from "../../globaltypes";
 import { DataType } from "../../pages/reservations";
 
 export const ReservationTableColumns: ColumnsType<IReservation> = [
@@ -333,65 +334,103 @@ export const ReservationColumns: ColumnsType<any> = [
     ),
   },
 ];
-export const VehicleManagementTableColumns: ColumnsType<IVehicle> = [
+export const VehicleManagementTableColumns: ColumnsType<IVehicleDetails> = [
   {
     title: "Vehicle",
     dataIndex: "vehicle",
     key: "vehicle",
-    render: (v, { vehiclePictures }) => (
-      <Flex alignItems={"center"} justifyContent="center" w="full">
-        <VehiclePic image={vehiclePictures[0]} size="small" />
+    render: (v, { vehicle_pictures }) => (
+      <Flex {...FlexColStartStart} w="full">
+        <VehiclePic image={vehicle_pictures[0]} size="small" />
       </Flex>
     ),
   },
   {
-    title: "Vehicle Id",
-    dataIndex: "vehicleId",
-    key: "vehicleId",
-    render: (v, { vehicleId }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Plate",
+    dataIndex: "plate",
+    key: "plate",
+    render: (v, { plate }) => (
+      <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {vehicleId}
+          {plate}
         </Text>
       </Flex>
     ),
   },
   {
-    title: "Vehicle Type",
-    dataIndex: "vehicleType",
-    key: "vehicleType",
-    render: (v, { vehicleType }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Make",
+    dataIndex: "make",
+    key: "make",
+    render: (v, { make }) => (
+      <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {vehicleType}
+          {make}
         </Text>
       </Flex>
     ),
   },
   {
-    title: "Vehicle Model",
-    dataIndex: "vehicleModel",
-    key: "vehicleModel",
-    render: (v, { vehicleModel }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Model",
+    dataIndex: "model",
+    key: "model",
+    render: (v, { model }) => (
+      <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {vehicleModel}
+          {model}
         </Text>
       </Flex>
     ),
   },
   {
-    title: "LocationId",
-    dataIndex: "locationId",
-    key: "locationId",
-    render: (v, { locationId }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Year",
+    dataIndex: "year",
+    key: "year",
+    render: (v, { year }) => (
+      <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {locationId}
+          {year}
         </Text>
       </Flex>
     ),
   },
+  {
+    title: "Transmission",
+    dataIndex: "transmission",
+    key: "transmission",
+    render: (v, { transmission }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500" textTransform={'capitalize'}>
+          {transmission}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Rate",
+    dataIndex: "rate",
+    key: "rate",
+    render: (v, { hourly_rate }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          ${hourly_rate}/hr
+        </Text>
+      </Flex>
+    ),
+    sorter: (a: IVehicleDetails, b: IVehicleDetails) => a.hourly_rate - b.hourly_rate,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart}>
+        <StatusTag status={status as any}>
+          {status}
+        </StatusTag>
+      </Flex>
+    ),
+  }
 ];
 
 export const UserTableColumns: ColumnsType<IUserProfile> = [

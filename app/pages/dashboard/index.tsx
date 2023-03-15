@@ -14,7 +14,6 @@ import {
 import PreviewTableContainer from "../../components/organism/Table/TableContainer/TableContainer";
 import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
 import { IVehicle } from "../../globaltypes";
-import { exampleVehicleManagementData } from "../vehicle-management";
 import { NextFetchEvent } from "next/server";
 import VehiclePic from "../../components/atoms/images/VehiclePic";
 import Rounded from "../../components/molecules/Buttons/General/Rounded";
@@ -195,7 +194,7 @@ export default function Dashboard() {
             bg="white"
             borderColor="gray.300"
           >
-            {exampleVehicleManagementData.map((vehicleInfo) => (
+            {exampleVehicles.map((vehicleInfo) => (
               <Flex
                 w="40%"
                 padding="18px 0px"

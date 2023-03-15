@@ -18,6 +18,3 @@ const vehiclesSlice = createSlice({
 export const selectVehicles = (state: RootState)=>state.vehicles.vehicles
 export const { getVehicles } = vehiclesSlice.actions;
 export default vehiclesSlice.reducer;
-
-
-

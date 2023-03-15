@@ -1,107 +1,129 @@
-import { Flex } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Flex, IconButton } from "@chakra-ui/react";
+import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import React from "react";
-import BaseTable from "../../components/organism/Table/BaseTable/BaseTable";
-import { IVehicle } from "../../globaltypes";
+import { IVehicleDetails } from "../../globaltypes";
 import { VehicleManagementTableColumns } from "../../utils/tables/TableTypes";
 import { FlexColCenterStart } from "../../utils/theme/FlexConfigs";
-
-export const exampleVehicleManagementData: IVehicle[] = [
-  {
-    vehicleId: "xxxxx",
-    vehicleType: "Sedan",
-    vehicleMake: "Tesla",
-    vehicleModel: "Model 3",
-    color: "Black",
-    hourlyRate: 10,
-    seats: 4,
-    vehiclePictures: [
-      "https://images.unsplash.com/photo-1553260202-d1f2ce03298b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-    ],
-    coords: {
-      latitude: 0,
-      longitude: 0,
-    },
-    locationId: "xxxxx",
-    status: "active",
-    location: "San Francisco",
-    transmission: "Automatic",
-    year: 2020,
-  },
-  {
-    vehicleId: "xyxxx",
-    vehicleType: "Hatchback",
-    vehicleMake: "Subaru",
-    vehicleModel: "Imprezza",
-    color: "Black",
-    hourlyRate: 6,
-    seats: 5,
-    vehiclePictures: [
-      "https://images.unsplash.com/photo-1553260202-d1f2ce03298b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-    ],
-    coords: {
-      latitude: 0,
-      longitude: 0,
-    },
-    locationId: "yxxxx",
-    status: "Unavailable",
-    location: "San Francisco",
-    transmission: "Automatic",
-    year: 2015,
-  },
-  {
-    vehicleId: "xxyxx",
-    vehicleType: "Sedan",
-    vehicleMake: "Tesla",
-    vehicleModel: "Model 3",
-    color: "Black",
-    hourlyRate: 10,
-    seats: 4,
-    vehiclePictures: [
-      "https://images.unsplash.com/photo-1553260202-d1f2ce03298b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-    ],
-    coords: {
-      latitude: 0,
-      longitude: 0,
-    },
-    locationId: "xxxxx",
-    status: "active",
-    location: "San Francisco",
-    transmission: "Automatic",
-    year: 2020,
-  },
-  {
-    vehicleId: "xxxyx",
-    vehicleType: "Hatchback",
-    vehicleMake: "Subaru",
-    vehicleModel: "Imprezza",
-    color: "Black",
-    hourlyRate: 6,
-    seats: 5,
-    vehiclePictures: [
-      "https://images.unsplash.com/photo-1553260202-d1f2ce03298b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-    ],
-    coords: {
-      latitude: 0,
-      longitude: 0,
-    },
-    locationId: "yxxxx",
-    status: "Intent",
-    location: "San Francisco",
-    transmission: "Automatic",
-    year: 2015,
-  },
-];
+import { useAppSelector } from "../../redux/store";
+import { selectVehicles } from "../../redux/vehiclesSlice";
+import { insertTableActions } from "../../utils/tables/utils";
+import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
+import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
+import ViewVehicleModal from "../../components/organism/Modals/ViewVehicleModal";
+import { useDisclosure } from "@chakra-ui/react";
+import CreateVehicleModal from "../../components/organism/Modals/CreateVehicleModal";
+import useVehicles from "../../hooks/useVehicles";
+import EditVehicleModal from "../../components/organism/Modals/EditVehicleModal";
 
 function VehicleManagement() {
+  const [vehiclesData, setVehicleData] = useState<IVehicleDetails[]>([])
+  const [vehicleId, setVehicleId] = useState<number|null>(null)
+  const [isCreateModalOpen ,setIsCreateModalOpen] = useState<boolean>(false)
+  const [isViewModalOpen ,setIsViewModalOpen] = useState<boolean>(false)
+  const [isEditModalOpen ,setIsEditModalOpen] = useState<boolean>(false)
+  const {isOpen, onClose, onOpen} = useDisclosure()
+  const {fetchVehicles,deleteVehicle} = useVehicles()
+  const vehicles = useAppSelector(selectVehicles)
+
+  useEffect(() => {
+    fetchVehicles()
+  },[])
+  useEffect(() => {
+    setVehicleData(() => vehicles.map(vehicle => ({
+      vehicle_pictures:vehicle.vehicle_pictures,
+      vehicle_id:vehicle.vehicle_id,
+      make:vehicle.make,
+      model:vehicle.model,
+      year:vehicle.year,
+      transmission:vehicle.transmission,
+      hourly_rate:vehicle.hourly_rate,
+      status:vehicle.status,
+      plate:vehicle.plate
+    })))
+  },[vehicles])
+
+  const viewVehicle = (id:number) => {
+    setVehicleId(id)
+    setIsViewModalOpen(true)
+    onOpen()
+  }
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true)
+    onOpen()
+  }
+  const closeViewModal = () => {
+    setIsViewModalOpen(false)
+    setVehicleId(null)
+    onClose()
+  }
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false)
+    onClose()
+  }
+  const openEditModal = (id:number) => {
+    setVehicleId(id)
+    setIsEditModalOpen(true)
+    onOpen()
+  }
+  const closeEditModal = () => {
+    setIsEditModalOpen(false)
+    setVehicleId(null)
+    onClose()
+  }
   return (
     <Flex
       {...FlexColCenterStart}
       w="full"
       data-testid="vehicle-management-table"
     >
-      <BaseTable
-        columns={VehicleManagementTableColumns}
-        data={exampleVehicleManagementData}
+      {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles = {vehicles}/>}
+      {isCreateModalOpen && <CreateVehicleModal isOpen ={isOpen} onClose={closeCreateModal}/>}
+      {isEditModalOpen && <EditVehicleModal isOpen ={isOpen} onClose={closeEditModal} vehicleId={vehicleId} vehicles = {vehicles}/>}
+      <FilterableTable
+        viewAddFieldButton={true}
+        viewSearchField={true}
+        viewSortablesField={true}
+        openCreateModal= {openCreateModal}
+        buttonName="Add new vehicle"
+        sortables={[
+          {
+            columnKey: "rate",
+            columnName: "Rate",
+          },
+        ]}
+        columns={insertTableActions(VehicleManagementTableColumns, (i, data) => {
+          return (
+            <Flex {...FlexRowCenterBetween}>
+              <IconButton
+                aria-label="View"
+                icon={<ViewIcon />}
+                size="sm"
+                onClick={() => viewVehicle(data.vehicle_id)}
+                marginRight='4'
+              />
+              <IconButton
+                aria-label="Edit"
+                icon={<EditIcon />}
+                size="sm"
+                onClick={() => {
+                  openEditModal(data.vehicle_id)
+                }}
+                marginRight='4'
+              />
+              <IconButton
+                aria-label="Delete"
+                icon={<DeleteIcon />}
+                size="sm"
+                onClick={() => {
+                  deleteVehicle(data.vehicle_id)
+                }}
+                color="cancelled.1000"
+              />
+            </Flex>
+          );
+        })}
+        data={vehiclesData}
         dataFetchFunction={() => {}}
       />
     </Flex>

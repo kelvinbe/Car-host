@@ -55,47 +55,17 @@ export interface IVehicle {
        longitude: number
     } | null
   }
-
   export interface IVehicleDetails{
-    vehicle_id: number,       
-    entity_id: string,
-    vehicle_type:string,
-    location_id: number,
-    color: string,
-    seats: number,
-    plate: string,
+    vehicle_id?:number,       
     transmission: "Automatic" | "Semi-Automatic" | "Manual" | "CVT",
-    year: number | string,
-    coords: {
-        latitude: number,
-        longitude: number
-    } | null,
-    status: "active" | "Unavailable" | "Available",
+    year: number,
+    status: "active" | "unavailable" | "available",
     make: string,
     model: string,
+    plate:string,
     hourly_rate: number,
-    host: {
-      userId: string,
-      fname: string,
-      lname: string,
-      profile_pic_url: string,
-      handle: string,
-      hourly_rate: number
-    },
-    location: {
-      location_id: string,
-      entity_id: number,
-      market: {
-        market_id: string,
-        country: string,
-        name: string,
-      },
-      address: string,
-      building_name: string,
-      picture_url: string,
-    },
-    vehicle_pictures: string[]
-  }
+    vehicle_pictures?: []|string[]
+ }
   export interface IReservation {
     id?:number;
     reservation_id: string;

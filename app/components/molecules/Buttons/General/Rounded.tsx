@@ -9,14 +9,15 @@ interface IProps {
     customLoading?: ReactNode,
     variant?: "solid" | "outline",
     fullWidth?: boolean
-    rounded:'full' | 'md'
+    rounded:'full' | 'md',
+    setWidth?:number
 }
 
 function Rounded(props: IProps) {
-    const { children, loading, onClick, disabled, variant, fullWidth, rounded} = props;
+    const { children, loading, onClick, disabled, variant, fullWidth, rounded, setWidth} = props;
   return (
     <Button
-    w={fullWidth ? "full" : "auto"}
+    w={fullWidth ? "full" : setWidth}
     _hover={{
         backgroundColor: variant === "solid" ? "primary.1000" : "transparent",
     }}
