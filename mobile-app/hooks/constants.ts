@@ -7,7 +7,6 @@ const _DOMAIN = (typeof manifest?.packagerOpts === `object`) && manifest.package
 ? manifest?.debuggerHost?.split(`:`)?.shift()
 : `production domain `;
 export const DOMAIN = `http:${_DOMAIN}:3003`
-console.log(DOMAIN)
 
 export const BACKEND_DOMAIN = `http:${_DOMAIN}:3000`
 
@@ -83,8 +82,35 @@ export const SET_DRIVERS_LICENCE_ENDPOINT = DOMAIN + '/api/driversLicense'
 
 export const FETCH_DRIVERS_LICENSE_ENDPOINT = DOMAIN + '/api/driversLicense/1'
 
-export const EDIT_DRIVERS_LICENSE_ENDPOINT = DOMAIN + '/api/driversLicense/2'
+/**
+ * @descrtiption - for all driver credentials related endpoints
+ */
+export const DRIVER_CREDENTIALS_ENDPOINT = DOMAIN + '/api/users/drivercredentials'
 
-export const FETCH_AVAILABLE_VEHICLES = DOMAIN + '/api/availableVehicles'
+/**
+ * @description - for tracking the user's onboarding flow 
+ *                I'm thinking of using this single endpoint for tracking what steps are complete and what are not
+ */
+export const FETCH_ONBOARDING = DOMAIN + '/api/users/onboarding'
 
+
+/**
+ * @description - markets(countries) this endpoint will fetch the markets(countries) the user can choose from
+ */
+export const FETCH_MARKETS = DOMAIN + '/api/location/markets'
+
+/**
+ * @description - submarkets(cities) this endpoint will fetch the submarkets(cities) the user can choose from
+ */
+export const FETCH_SUBMARKETS = DOMAIN + '/api/location/submarkets'
+
+/**
+ * @description - this is the base enpoint for the user related endpoints
+ */
+export const USER_ENDPOINT = DOMAIN + '/api/users'
+
+/**
+ * @description - add payment method
+ */
+export const PAYMENT_METHOD_ENDPOINT = DOMAIN + '/api/paymenttypes'
 

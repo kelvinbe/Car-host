@@ -226,13 +226,12 @@ function useUserAuth() {
     const signIn = (email: string, password: string, silent?: boolean) => {
       dispatchAction(setSignInLoading(true))
       signInWithEmailAndPassword(auth, email, password).then((credentials)=>{
-        reduxDispatch(fetchUserData(credentials?.user?.uid)).then((info)=>{
+        reduxDispatch(fetchUserData(null)).then((info)=>{
           handleSuccess("signIn", silent || true)
         }).catch((e)=>{
           dispatchAction(setSignInError("Error Fetching User Data"))
         })
       }).catch((e)=>{
-        console.log(e)
         dispatchAction(setSignInError(e.message))
       })
     }

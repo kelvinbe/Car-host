@@ -1,7 +1,10 @@
 import { dIUserProfile } from './../../types';
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { auth } from '../../firebase/firebaseApp';
+import { app, auth } from '../../firebase/firebaseApp';
+import axios from 'axios';
+import { getAuth } from 'firebase/auth';
+import { USER_ENDPOINT } from '../../hooks/constants';
 
 interface IProfileState {
     data: dIUserProfile,
@@ -19,34 +22,44 @@ const initialState: IProfileState = {
         profile_pic_url: "",
         user_type: "customer",
         status: "Active",
-        customer_id: ""
+        customer_id: "",
+        DriverCredentials: {
+          drivers_licence_front: "",
+          drivers_licence_back: "",
+        }
     },
     providers: [],
     passwordChanged: false
 }
 
-export const fetchUserData = createAsyncThunk("user/fetchdata", async (userId: string)=>{
-    /**
-     * @todo fetch user data from server
-     */
-    const providers = auth?.currentUser?.providerData.map((provider)=>provider.providerId);
-    return {
-        providers,
-        data: {
-            fname: "John",
-            lname: "Doe",
-            email: "john@email.com",
-            handle: "john_doe",
-            phone: "1234567890",
-            profile_pic_url: "https://picsum.photos/200",
-            market: null,
-            user_type: "customer",
-            status: "Active",
-            //This is a test stripe customer id, this test user exists on stripe
-            customer_id: "cus_Mza47QlfK5fAG1"
-        } as dIUserProfile
-    }
-})
+export const fetchUserData = createAsyncThunk<any, any>(
+  'user/fetchdata',
+  async (_args, { rejectWithValue }) => {
+    return await getAuth(app)
+      ?.currentUser?.getIdToken(true)
+      .then(async (token) => {
+        return await axios
+          .get(USER_ENDPOINT, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(({ data }) => {
+            const providers = auth?.currentUser?.providerData.map(provider => provider.providerId);
+            return {
+              providers,
+              data: data.data,
+            };
+          })
+          .catch(e => {
+            return rejectWithValue(e);
+          });
+      })
+      .catch(e => {
+        return rejectWithValue(e);
+      });
+  }
+);
 
 export const updateUserData = createAsyncThunk("user/updatedata", (data: {uid?: string, data: {[key: string]: any}} | null, thunkApi)=>{
     /**

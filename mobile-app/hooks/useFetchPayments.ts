@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FETCH_PAYMENT_METHODS_ENDPOINT } from './constants';
 import { auth } from '../firebase/firebaseApp';
 import { useDispatch } from 'react-redux';
-import { setPaymentMethods } from '../store/slices/paymentMethodSlice';
+// import { setPaymentMethods } from '../store/slices/paymentMethodSlice';
 
 type Error = any;
 
@@ -26,7 +26,7 @@ export default function useFetchPayments() {
           },
         });
         setData(response.data);
-        dispatch(setPaymentMethods(response.data))
+        // dispatch(setPaymentMethods(response.data))
 
       });
     } catch (err) {

@@ -18,12 +18,14 @@ const theme = createTheme({
         subText: "#6C757D",
         link: "#1877F2",
         backdrop: "rgba(0, 0, 0, 0.5)",
-        disabled: "#CED4DA"
+        disabled: "#CED4DA",
+        appBlue: "#0B449D"
     },
     mode: 'light',
     components: {
         
     },
+    
 })
 
 export {

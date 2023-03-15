@@ -1,3 +1,5 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
 // Navigation types
 export type RootStackParamList = {
   Root: undefined;
@@ -9,7 +11,8 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   SupportScreen: {
     context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
-  }
+  },
+  Onboarding: undefined;
 };
 export type BottomTabParamList = {
   SearchScreen: undefined;
@@ -77,6 +80,19 @@ export type BottomSheetParamList = {
   ChoosePayment: undefined;
   PaymentAuthorization: undefined;
 }
+
+
+export type UserOnboardingParamList = {
+  OnboardingHome: undefined;
+  DriversLicense: undefined;
+  Location: undefined;
+  SelectPaymentMethod: {
+    payment_method_added?: boolean
+  };
+  SelectedPaymentMethod: {
+    payment_method?: "mpesa" | "card" | "cash"
+  };
+};
 
 
 
@@ -301,6 +317,10 @@ export interface dIUserProfile {
     status?: "Active" | "Nonactive";
   } | null,
   customer_id?: string;
+  DriverCredentials?: {
+    drivers_licence_front?: string;
+    drivers_licence_back?: string;
+  }
 }
 
 

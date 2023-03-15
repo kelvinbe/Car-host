@@ -13,5 +13,6 @@ declare module '@rneui/themed' {
         link: string;
         backdrop: string;
         background4: string;
+        appBlue: string;
   }
 }

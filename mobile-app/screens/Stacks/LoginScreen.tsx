@@ -28,6 +28,8 @@ import * as Facebook from 'expo-auth-session/providers/facebook';
 import useUserAuth from '../../hooks/useUserAuth';
 import { useAppDispatch } from '../../store/store';
 import { fetchUserData } from '../../store/slices/userSlice';
+import Logo from '../../components/atoms/Brand/Logo';
+import useOnBoarding from '../../hooks/useOnBoarding';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
 
@@ -104,7 +106,7 @@ const useStyles = makeStyles((theme)=>{
 
 const LoginScreen = (props: Props) => {
     
-    const [user, loading] = useAuthState(auth);
+    const [user, loading, signInError] = useAuthState(auth);
     const styles = useStyles(props)
     const [viewPassword, setViewPassword] = useState(false)
     const [email, setEmail] = useState('')
@@ -112,6 +114,9 @@ const LoginScreen = (props: Props) => {
     const {  googleLogin, socialAuthLoading, socialAuthError, facebookLogin } = useSocialAuth()
     const { signIn: _signIn, signInLoading } = useUserAuth()
     const reduxDispatch = useAppDispatch()
+    const { completed, loading: onBoardingLoading, error: onBoardingError } = useOnBoarding()
+
+    const toast = useToast()
 
     const signIn = () => {
         _signIn(email, password, false)
@@ -133,25 +138,34 @@ const LoginScreen = (props: Props) => {
         props.navigation.navigate("Root")
     }
 
+    const navigateToOnBoarding = () => {
+        props.navigation.navigate("Onboarding")
+    }
+
     useEffect(()=>{
-        if(user){
-            navigateToHome()
+        if (isEmpty(user) || socialAuthLoading || loading || onBoardingLoading) return;
+        if (socialAuthError || signInError) {
+            toast({
+                message: "An error occured while signing you in",
+                type: "error",
+                title: "Error",
+                duration: 5000
+            })
+        } else {
+            if (completed?.drivers_license && completed?.location && completed?.payment_method) {
+                navigateToHome()
+            } else {
+                navigateToOnBoarding()
+            }
         }
-    }, [user, socialAuthError, socialAuthLoading])
+    }, [user, socialAuthError, socialAuthLoading, loading, onBoardingLoading, signInError])
 
     
    
   return ( (signInLoading || socialAuthLoading || loading) ? <Loading/> :
         <View style={styles.container} >
             <View style={styles.logoContainer}>
-                <Image 
-                    source={require('../../assets/images/logo.png')}
-                    style={{
-                        height: 100,
-                        width: 100,
-                    }}
-                    resizeMode="contain"
-                />
+              <Logo />
             </View>
             <View style={styles.contentContainer} >
                 <View style={styles.topContent} >

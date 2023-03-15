@@ -15,7 +15,7 @@ import AboutScreen from './AboutScreen';
 import PrivacyPolicy from './PrivacyPolicy';
 import UserAgreement from './UserAgreement';
 import SupportScreen from '../../shared/SupportScreen';
-import { DriverLicenseScreen } from './DriverLicenseScreen';
+import DriverLicenseScreen  from './DriverLicenseScreen';
 
 const ProfileScreenStackNavigator = createNativeStackNavigator<ProfileScreenParamList>();
 

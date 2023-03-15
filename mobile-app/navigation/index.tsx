@@ -6,11 +6,11 @@ import {
   useNavigationContainerRef,
   useNavigation,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Platform } from 'react-native';
 // import StorybookScreen from '../screens/Tabs/StorybookScreen';
-import { BottomTabParamList, RootStackParamList } from '../types';
+import { BottomTabParamList, RootStackParamList, UserOnboardingParamList } from '../types';
 import LoginScreen from '../screens/Stacks/LoginScreen';
 import RegisterScreen from '../screens/Stacks/RegisterScreen';
 import ForgotPasswordScreen from '../screens/Stacks/ForgotPasswordScreen';
@@ -48,6 +48,15 @@ import ReservationDetailsScreen from '../screens/Tabs/UpcomingScreen/Reservation
 import UpcomingHomeScreen from '../screens/Tabs/UpcomingScreen/UpcomingHomeScreen';
 import UpcomingScreen from '../screens/Tabs/UpcomingScreen';
 import VehicleInspection from '../screens/Tabs/UpcomingScreen/VehicleInspection';
+import Onboarding from '../screens/Stacks/Onboarding';
+import DriversLicense from '../screens/Stacks/Onboarding/DriversLicense';
+import Location from '../screens/Stacks/Onboarding/Location';
+import SelectPaymentMethod from '../screens/Stacks/Onboarding/SelectPaymentMethod';
+import SelectedPaymentMethod from '../screens/Stacks/Onboarding/SelectedPaymentMethod';
+import { onAuthStateChanged } from 'firebase/auth';
+import { isNull } from 'lodash';
+import { fetchUserData } from '../store/slices/userSlice';
+import { useAppDispatch } from '../store/store';
 
 const ScreensWithNoBottomNav = [
   'BookingConfirmationScreen',
@@ -65,6 +74,7 @@ const ScreensWithNoBottomNav = [
   'UserAgreement',
   'VehicleInspection',
   'OnboardingHome',
+  'DriverLicenseScreen'
 ];
 
 const ScreensWithNoTopBar = ['SearchScreenHome'];
@@ -100,6 +110,49 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   );
 }
 
+const UserOnboardingNavigator = createNativeStackNavigator<UserOnboardingParamList>()
+type onBoardingScreenProps = NativeStackScreenProps<RootStackParamList, "Onboarding">
+export function UserOnboardingNavigation(props: onBoardingScreenProps) {
+
+  /**
+   * @description, to prevent a new reference of these functions being created on every render, we use React.useCallback
+   *                it also ensures the components that receive these functions as props don't re-render unnecessarily
+   */
+  const goToApp = React.useCallback(() =>{
+    props.navigation.navigate("Root")
+  }, [])
+
+  const goToLogin = React.useCallback(() =>{
+    props.navigation.navigate("Login")
+  }, [])
+
+  onAuthStateChanged(auth, (user)=>{
+    if(isNull(user)){
+      goToLogin()
+    }
+  })
+  return (
+    <UserOnboardingNavigator.Navigator initialRouteName='OnboardingHome' >
+      <UserOnboardingNavigator.Screen name="OnboardingHome" options={{ headerShown: false }}  children={(props) => (<Onboarding goToApp={goToApp} goToLogin={goToLogin} {...props} />)} />
+    
+      <UserOnboardingNavigator.Screen name="DriversLicense" options={{ header(props){
+        return <BaseTopBar {...props} title="Upload Drivers License" chevronLeft home={false} />
+      }}} component={DriversLicense} />
+      <UserOnboardingNavigator.Screen  name="Location" component={Location} options={{headerShown: true, header(props){
+        return <BaseTopBar {...props} title="Location" chevronLeft home={false} />
+      }}} />
+      <UserOnboardingNavigator.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} options={{headerShown: true, header(props){
+        return <BaseTopBar {...props} title="Select Payment Method" chevronLeft home={false} />
+      }}} />
+      <UserOnboardingNavigator.Screen name="SelectedPaymentMethod" component={SelectedPaymentMethod} options={{headerShown: true, header(props: any){
+        return <BaseTopBar {...props} title={
+          props?.route?.params?.payment_method === "card" ? "Add Card" : "Add M-Pesa"
+        } chevronLeft home={false} />
+      }}} />
+    </UserOnboardingNavigator.Navigator>
+  )
+}
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -126,6 +179,7 @@ function RootNavigator() {
     <CustomSafeAreaView>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Onboarding"  component={UserOnboardingNavigation} options={{ headerShown: false }} />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen
@@ -162,11 +216,11 @@ function RootNavigator() {
 }
 
 const Tabs = createBottomTabNavigator<BottomTabParamList>();
-
-function BottomTabNavigator() {
+type Props = NativeStackScreenProps<RootStackParamList, "Root">
+function BottomTabNavigator(props: Props) {
   const displayBottomNav = useSelector(selectDisplayBottomNav);
   const [currentScreen, previousScreen] = useSelector(selectNavState);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   let theme: Theme;
   makeStyles((_theme: Theme) => {
@@ -195,8 +249,10 @@ function BottomTabNavigator() {
   const [user] = useAuthState(auth);
 
   React.useEffect(() => {
-    if (!user) {
-      navigate('Login', {});
+    if (isNull(user)) {
+      props.navigation.navigate('Login')
+    }else {
+      dispatch(fetchUserData(null))
     }
   }, [user]);
 
@@ -301,6 +357,9 @@ function BottomTabNavigator() {
           />
           <Tabs.Screen
             name="Issues"
+            /**
+             * @todo - Broken implementation needs to be fixed
+             */
             component={IssuesScreen}
             options={{
               tabBarIcon: ({ focused, color }) => (
@@ -336,6 +395,9 @@ function BottomTabNavigator() {
             options={{
               tabBarButton: () => <></>,
             }}
+            /**
+             * @todo Broken implementation, needs to be fixed
+             */
             component={VehicleInspection}
           />
         </Tabs.Navigator>

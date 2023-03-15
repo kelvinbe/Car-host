@@ -2,22 +2,20 @@ import {  Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { makeStyles, ThemeConsumer} from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ProfileScreenParamList, UserOnboardingParamList } from '../../../types'
+import { UserOnboardingParamList } from '../../../types'
 import ImageUploader from '../../../components/atoms/ImageUploader'
 import useOnBoarding from '../../../hooks/useOnBoarding'
 import { FontAwesome } from '@expo/vector-icons'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import { isEmpty } from 'lodash'
 import StepIndicator from 'react-native-step-indicator'
-import useUserAuth from '../../../hooks/useUserAuth'
-import useEditDriversLicense from '../../../hooks/useEditDriversLicense'
 
 
 interface Props {
 
 }
 
-type IProps = Props & NativeStackScreenProps<ProfileScreenParamList, "DriverLicenseScreen">
+type IProps = Props & NativeStackScreenProps<UserOnboardingParamList, "DriversLicense">
 
 
 const useStyles = makeStyles((theme, props: IProps) => {
@@ -88,23 +86,23 @@ const useStyles = makeStyles((theme, props: IProps) => {
 })
 
 const DriversLicense = (props: IProps) => {
-
-  const { userProfile  } = useUserAuth()
+  const { setLicence, driversLicense, setCompleted } = useOnBoarding()
 
   const styles = useStyles()
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [init_image, setInitImage] = useState<string>("")
-
-  const { updateDriverCredentials, loading, error } = useEditDriversLicense()
   const handleSave = () => {
-      props.navigation.navigate("ProfileScreenHome")
+    setCompleted({
+      drivers_license: true
+    })
+    props.navigation.navigate("OnboardingHome")
   }
 
   useEffect(() => {
     if (currentStep === 0) {
-      setInitImage(userProfile?.DriverCredentials?.drivers_licence_front ?? "")
+      setInitImage(driversLicense.front)
     } else if (currentStep === 1) {
-      setInitImage(userProfile?.DriverCredentials?.drivers_licence_back ?? "") 
+      setInitImage(driversLicense.back)
     }
   }, [currentStep])
 
@@ -118,7 +116,10 @@ const DriversLicense = (props: IProps) => {
           <View style={styles.topContainer} >
             <ImageUploader
               getImage={(image) => {
-                updateDriverCredentials(currentStep === 0 ? "front" : "back", image)
+                setLicence(image, currentStep === 0 ? "front" : "back")
+                if (currentStep === 0) {
+                  setCurrentStep(1)
+                }
               }}
               customIcon={
                 <FontAwesome
@@ -167,10 +168,10 @@ const DriversLicense = (props: IProps) => {
               </View>
             </View>
             <Rounded
+              disabled={isEmpty(driversLicense.back) || isEmpty(driversLicense.front)}
               onPress={handleSave}
-              loading={loading}
             >
-              Done
+              Save Changes
             </Rounded>
           </View>
 

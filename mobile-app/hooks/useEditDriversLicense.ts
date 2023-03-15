@@ -1,54 +1,48 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import axios from 'axios';
-import { auth } from '../firebase/firebaseApp'
-import { EDIT_DRIVERS_LICENSE_ENDPOINT } from "./constants";
-import { editDriversLicenseUrl } from "../store/slices/driversLicenseSlice";
+import { app } from '../firebase/firebaseApp'
+import { DRIVER_CREDENTIALS_ENDPOINT} from "./constants";
+import { getAuth } from "firebase/auth";
+import useToast from "./useToast";
 
 
-export interface editDriversLicense{
-    driversLicense: string
-}
 
-type Error = any
+export default function useEditDriversLicense() {
 
-export default function useEditDriversLicense(props: editDriversLicense) {
-
-    const [editedData, setEditedData] = useState(null);
-    const [err, setError] = <Error>useState(null);
     const [loading, setLoading] = useState(false);
-    const dispatch = useDispatch()
+    const [error, setError] = useState(null);
+    const toast = useToast()
 
-    const {driversLicense} = props
+    /**
+     * @name updateDriverCredentials 
+     * @description updates the driver's credentials
+     * @param {"front"| "back"} side - the side of the drivers license to update
+     * @param {string} license - the url of the drivers license
+     */
 
-
-    const editDriversLicense = (image: string) => {
-
-        try {
-            auth.currentUser?.getIdToken().then(async token => {
-                const response = await axios.put(
-                    EDIT_DRIVERS_LICENSE_ENDPOINT,{
-                    drivers_license: image
-                },
-                {
-                    headers: {
-                        token: `Bearer ${token}`
-                    }
-                }    
-
-                );
-                setEditedData(response.data)
-                dispatch(editDriversLicenseUrl(image))
+    async function updateDriverCredentials( side: string, license: string ) {
+        await getAuth(app)?.currentUser?.getIdToken().then(async (token)=>{
+            setLoading(true)
+            await axios.put(DRIVER_CREDENTIALS_ENDPOINT, {
+                [side]: license
+            }).then(()=>{
+                setLoading(false);
+            }).catch((e)=>{
+                toast({
+                    message: "There was an error updating your drivers license. Please try again later.",
+                    type: "error"
+                })
+                setError(e);
+            }).finally(()=>{
+                setLoading(false);
             })
-            
-        } catch (error) {
-            setError(error)
-            
-        }finally{
-            setLoading(false)
-        }
+        })
     }
 
-    return {editedData, err, loading, editDriversLicense}
+    return {
+        updateDriverCredentials,
+        loading,
+        error
+    }
 
 }

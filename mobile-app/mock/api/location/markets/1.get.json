@@ -1,0 +1,42 @@
+{
+    "data": [
+        {
+            "country": "Kenya",
+            "name": "Kenya",
+            "status": "ACTIVE",
+            "id": "32644c16-7c87-465c-89cd-8eec6e0b3309"
+        },
+        {
+            "country": "United Status",
+            "name": "United States",
+            "status": "ACTIVE",
+            "id": "32644c16-7c87-465c-89cd-8eec6e0b3305"
+        },
+        {
+            "country": "United Kingdom",
+            "name": "United Kingdom",
+            "status": "ACTIVE",
+            "id": "32644c16-7c87-465c-89cd-8eec6e0b3306"
+        },
+        {
+            "country": "Canada",
+            "name": "Canada",
+            "status": "ACTIVE",
+            "id": "32644c16-7c87-465c-89cd-8eec6e0b3306"
+        },
+        {
+            "country": "Thailand",
+            "name": "Thailand",
+            "status": "INACTIVE",
+            "id": "32644c16-7c87-465c-89cd-8eec6e0b3306"
+        },
+        {
+            "country": "South Africa",
+            "name": "South Africa",
+            "status": "ACTIVE",
+            "id": "32644c16-7c87-465c-89cd-8eec6e0b3306"
+        }
+    ],
+    "status": "success",
+    "message": "Successfully fetched markets"
+}

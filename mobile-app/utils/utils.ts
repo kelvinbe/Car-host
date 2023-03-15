@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import { z } from "zod"
 
 /**
  * @name addSpacingAfterEveryFourDigits
@@ -8,7 +9,7 @@ import dayjs from "dayjs"
  * @example addSpacingAfterEveryFourDigits("1234567890123456") => "1234 5678 9012 3456"
  */
  export const addSpacingAfterEveryFourDigits = (str: string) => {
-    return str.replace(/(.{4})/g, "$1 ").trim()
+    return str?.replace(/(.{4})/g, "$1 ").trim()
 }
 
 /**
@@ -19,7 +20,7 @@ import dayjs from "dayjs"
  * @example addSlashAfter2Digits("1234567890123456") => "12/34/56/78/90/12/34/56"
  */
 export const addSlashAfter2Digits = (str: string) => {
-    return str.replace(/(.{2})/g, "$1/").trim()
+    return str?.replace(/(.{2})/g, "$1/").trim()
 }
 
 
@@ -109,4 +110,46 @@ export const daysOfTheWeekFromToday = () => {
 
 export const isAm = (time: string) => {
     return time?.includes('AM') 
+}
+
+/**
+ * @name isValidPassword
+ * @param password 
+ * @returns {boolean}
+ */
+export const isValidPassword = (password: string) => {
+  const passwordSchema = z
+  .string()
+  .min(8, { message: 'Password must be at least 8 characters long' })
+  .max(50, { message: 'Password must be less than 50 characters long' })
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]+$/,
+    { message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one of the following special characters: @ $ ! % * ? & .' }
+  );
+
+    try {
+        passwordSchema.parse(password)
+        return true
+    }catch (e){
+        return false
+    }
+}
+
+/**
+ * @name isValidEmail
+ * @param email 
+ * @returns  {boolean}
+ */
+export const isValidEmail = (email: string) => {
+    const emailSchema = z
+    .string()
+    .email({ message: 'Please enter a valid email address' })
+    .max(50, { message: 'Email must be less than 50 characters long' });
+
+    try {
+        emailSchema.parse(email)
+        return true
+    }catch (e){
+        return false
+    }
 }

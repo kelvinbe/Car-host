@@ -36,6 +36,8 @@ import useFetchNotifications from './hooks/useFetchNotifications';
 import axios from 'axios';
 import { SEND_NOTIFICATION_TOKEN_ENDPOINT } from './hooks/constants';
 import useToast from './hooks/useToast';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { isNull } from 'lodash';
 
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -45,52 +47,51 @@ import useToast from './hooks/useToast';
     }),
   });
 
-  const registerForPushNotificationsAsync = async() => {
-    let token;
-  
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        sound:'default',
-        lightColor: "#FF231F7C",
-        lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
-        bypassDnd: true,
-      });
-    }
-  
-    const toast = useToast()
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
+  const registerForPushNotificationsAsync = () => {
 
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      toast({
-        type:"warning",
-        title:"Access denied",
-        message:"Cannot receive notifications",
-        duration:3000
-      })
-      
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    return token;
+    return new Promise(async (resolve, reject)=>{
+      let token;
+    
+      if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          sound:'default',
+          lightColor: "#FF231F7C",
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+          bypassDnd: true,
+        });
+      }
+    
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        return reject('Permission denied!');
+        
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      return resolve(token)
+    })
+    
   }
 
   const StatefullApp = () => {
     const colorScheme = useColorScheme();
-    const notificationListener = useRef();
-    const responseListener = useRef();
+    // the return type of either of these functions doesnt seem to be explicitly exported so will use this instead
+    const notificationListener = useRef<ReturnType<typeof Notifications.addNotificationReceivedListener>>();
+    const responseListener = useRef<ReturnType<typeof Notifications.addNotificationResponseReceivedListener>>();
 
     const dispatch = useDispatch()
     const expoToken = useSelector(selectExpoToken)
 
     const {data} = useFetchNotifications()
+    const toast = useToast()
 
     useEffect( () => {
       data && Notifications.scheduleNotificationAsync({
@@ -104,6 +105,11 @@ import useToast from './hooks/useToast';
       if (expoToken === ''){
         registerForPushNotificationsAsync()
         .then(token => dispatch(saveExpoToken(token)))
+        .catch(err => toast({
+          message: err,
+          type: 'error',
+          duration: 3000,
+        }))
       }  
       axios.post(
         SEND_NOTIFICATION_TOKEN_ENDPOINT,
@@ -126,8 +132,8 @@ import useToast from './hooks/useToast';
       });
   
       return () => {
-        Notifications.removeNotificationSubscription(notificationListener.current);
-        Notifications.removeNotificationSubscription(responseListener.current);
+        notificationListener.current && Notifications.removeNotificationSubscription(notificationListener.current);
+        responseListener.current && Notifications.removeNotificationSubscription(responseListener.current);
       };
     }, [data]);
   
@@ -138,27 +144,8 @@ import useToast from './hooks/useToast';
 
  function App() {
   const isLoadingComplete = useCachedResources();
-
-  useEffect(()=>{
-    auth.signOut().then(()=>{
-      console.log("signed out")
-    }).catch((e)=>{
-      console.log("error signing out: ", e)
-    })
-  }, [])
   
-  // useEffect(()=>{
-  //   if(!isEmpty(user)){
-  //     LogRocket.identify(user.uid, {
-  //       name: user.displayName || "user",
-  //       email: user.email || "user",
-  //     })
-  //   }
-  // }, [user])
-
-  // useEffect(()=>{
-  //   LogRocket.init(LOGROCKET_ID)
-  // }, [])
+  
 
   let [fontsLoaded] = useFonts({
     Lato_300Light,

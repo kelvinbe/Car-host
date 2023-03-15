@@ -6,6 +6,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import rootReducer, { RootState } from './slices';
 import { reservationsApi } from './slices/reservationSlice';
 import { billingApi } from './slices/billingSlice';
+import { onBoardingApi } from './slices/onBoardingSlice';
 
 const store = configureStore({
   reducer: rootReducer,
@@ -14,6 +15,7 @@ const store = configureStore({
   .concat(reservationsApi.middleware)
   .concat(vehiclesApi.middleware)
   .concat(billingApi.middleware)
+  .concat(onBoardingApi.middleware)
   ,
   // middleware: [
   //   LogRocket.reduxMiddleware(),

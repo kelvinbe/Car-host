@@ -21,7 +21,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
             height: '100%',
           }}>
           <SearchScreenStacks.Navigator
-            initialRouteName="OnboardingHome"
+            initialRouteName="SearchScreenHome"
             screenOptions={{
               headerStyle: {
                 backgroundColor: theme.colors.background,
@@ -33,22 +33,6 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
               }}
               name="SearchScreenHome"
               component={SearchScreenHome}
-            />
-            <SearchScreenStacks.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="OnboardingHome"
-              component={Onboarding}
-            />
-            <SearchScreenStacks.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="AddCardScreen"
-              component={AddCard}
-              
-              
             />
             <SearchScreenStacks.Screen
               name="BookingConfirmationScreen"

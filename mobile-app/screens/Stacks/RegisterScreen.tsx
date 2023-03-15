@@ -20,11 +20,8 @@ import AppleIcon from "../../assets/icons/apple.svg"
 import GoogleIcon from "../../assets/icons/google.svg"
 import useSocialAuth from '../../hooks/useSocialAuth'
 import { isEmpty } from 'lodash'
+import { isValidEmail, isValidPassword } from '../../utils/utils'
 
-const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-//password with atleast 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const hasLowercase = (str: string) => /[a-z]/.test(str);
 const hasUppercase = (str: string) => /[A-Z]/.test(str);
@@ -182,13 +179,13 @@ const reducer = (state: IReducerState, action: any) => {
             return {
                 ...state,
                 email: action.payload,
-                emailValid: action.payload.length > 0 ? emailRegex.test(action.payload) : false
+                emailValid: isValidEmail(action.payload)
             }
         case 'SET_PASSWORD':
             return {
                 ...state,
                 password: action.payload,
-                passwordValid: action.payload.length > 0 ? passwordRegex.test(action.payload) : false
+                passwordValid: isValidPassword(action.payload)
             }
         case 'SET_CONFIRM_PASSWORD':
             return {
@@ -252,6 +249,7 @@ const RegisterScreen = (props: Props) => {
         passwordValid
     }, dispatchAction] = useReducer(reducer, initialState)
 
+
     const styles = useStyles(props)
     const { theme } = useTheme()
     const toast = useToast()
@@ -308,7 +306,7 @@ const RegisterScreen = (props: Props) => {
     }
 
   return ( (signUpLoading || socialAuthLoading) ? <Loading/> :
-        <View style={styles.container} >
+        <KeyboardAvoidingView style={styles.container} >
             <View style={styles.logoContainer}>
                 <Image 
                     source={require('../../assets/images/logo.png')}
@@ -420,7 +418,7 @@ const RegisterScreen = (props: Props) => {
                                </View> : ""
                             }
                         />
-                        <WithHelperText value={confirmPassword} onChangeText={setConfirmPassword} label="Confirm Password" secureTextEntry={!viewConfirmPassword} container={{marginBottom: 20}} 
+                        <WithHelperText  value={confirmPassword} onChangeText={setConfirmPassword} label="Confirm Password" secureTextEntry={!viewConfirmPassword} container={{marginBottom: 20}} 
                             fullWidth 
                             placeholder="Confirm Password" 
                             helperText={
@@ -476,7 +474,7 @@ const RegisterScreen = (props: Props) => {
                     </Text>
                 </View>
             </View>
-        </View>
+        </KeyboardAvoidingView>
   )
 }
 

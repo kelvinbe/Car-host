@@ -1,0 +1,20 @@
+{
+    "data": {
+        "id": "43654c16-7657-465c-89cd-8eec6e0b3309",
+        "email": "johndoe@email.com",
+        "fname": "john",
+        "lname": "doe",
+        "phone": "1234567890",
+        "market_id": "43654c16-7687-465c-89cd-8eec6e0b3309",
+        "sub_market_id": "43654c16-7c87-465c-89cd-8eec6e0b3309",
+        "customer_id": "cs_JQ7sjdljsldjslsd",
+        "profile_pic_url": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "DriverCredentials": {
+            "drivers_licence_front": "https://images.pexels.com/photos/1386649/pexels-photo-1386649.jpeg?auto=compress&cs=tinysrgb&w=400",
+            "drivers_licence_back": "https://images.pexels.com/photos/543605/pexels-photo-543605.jpeg?auto=compress&cs=tinysrgb&w=400",
+            "id": "some id"
+        }
+    },
+    "message": "Successfully fetched user",
+    "status": "success"
+}

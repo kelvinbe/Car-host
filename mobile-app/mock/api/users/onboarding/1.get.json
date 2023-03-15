@@ -1,0 +1,11 @@
+{
+    "data": {
+        "completed": {
+            "drivers_license": true,
+            "payment_method": true,
+            "location": true
+        }
+    },
+    "message": "success",
+    "status": "success"
+}

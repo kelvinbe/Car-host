@@ -21,7 +21,10 @@ export default function useFetchNotifications(){
         })
     }
     useEffect(() => {
-        fetchNotification().then(setData).catch(err => setError(err))
+        /**
+         * the notifications will be sent to the expo endpoint, which will then send them to the user's device
+         */
+        // fetchNotification().then(setData).catch(err => setError(err))
     },[])
     return { data, error, loading}
 }

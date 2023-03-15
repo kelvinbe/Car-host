@@ -12,7 +12,13 @@
     "userInterfaceStyle": "automatic",
     "plugins": [
       "expo-apple-authentication",
-      "@logrocket/react-native"
+      "@logrocket/react-native",
+       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Divvly uses yor photos for profile verification."
+        }
+       ]
     ],
     "splash": {
       "image": "./assets/images/splash.png",
