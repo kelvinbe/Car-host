@@ -12,6 +12,7 @@ import {
   FlexColStartEnd,
 } from "../../utils/theme/FlexConfigs";
 import { MdEdit } from "react-icons/md";
+import ComingSoon from "../../components/molecules/ComingSoon/ComingSoon";
 
 const IntegrationsData: IIntegrations[] = [
   {
@@ -31,7 +32,8 @@ const IntegrationsData: IIntegrations[] = [
 function Integrations() {
   return (
     <Flex w="full" h="full" data-testid="integrations-table">
-      <FilterableTable
+      <ComingSoon/>
+      {/* <FilterableTable
         buttonName="Create Integration"
         sortables={[
           {
@@ -65,7 +67,7 @@ function Integrations() {
           );
         })}
         data={IntegrationsData}
-      />
+      /> */}
     </Flex>
   );
 }
