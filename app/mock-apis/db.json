@@ -1739,22 +1739,20 @@
       }
     }
   ],
-
-  "payouts":[
+  "payouts": [
     {
-      "payout_id":1,
-      "payout_date":"12th August, 2022",
-      "amount":120,
-      "status":"paid"
+      "payout_id": 1,
+      "payout_date": "12th August, 2022",
+      "amount": 120,
+      "status": "paid"
     },
     {
-      "payout_id":2,
-      "payout_date":"12th September, 2022",
-      "amount":160,
-      "status":"pending"
+      "payout_id": 2,
+      "payout_date": "12th September, 2022",
+      "amount": 160,
+      "status": "pending"
     }
   ],
-
   "vehicles": [
     {
       "vehicle_id": 1,
@@ -1808,16 +1806,55 @@
     {
       "plate": "DEF-456",
       "vehicle_pictures": [
-        "blob:http://localhost:3000/df476194-7113-4a17-86ba-c032cf7941be"
+        "https://images.unsplash.com/photo-1566008885218-90abf9200ddb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80"
       ],
       "make": "Mazda",
-      "model": "Demio",
-      "year": "2016",
-      "transmission": "cvt",
-      "hourly_rate": "15",
+      "model": "CX5",
+      "year": "2018",
+      "transmission": "semi-auto",
+      "hourly_rate": "45",
       "status": "available",
-      "vehicle_id": 2
-
+      "location_id": 2
+    },
+    {
+      "plate": "EFG-567",
+      "vehicle_pictures": [
+        "blob:http://localhost:3000/34677cac-4327-47e3-98d3-0171ee4ec58c"
+      ],
+      "make": "Audi",
+      "model": "Q5",
+      "year": "2016",
+      "transmission": "auto",
+      "hourly_rate": "45",
+      "status": "available",
+      "location_id": 3
+    }
+  ],
+  "locations": [
+    {
+      "location_id": 1,
+      "address": "19307 Bennett Rd, North Royalton, Ohio(OH), 44133",
+      "market_name": "North Royalton",
+      "status": "active",
+      "vehicle": {
+        "vehicle_id": 1,
+        "vehicle_pictures": [
+          "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80"
+        ],
+        "vehicle_name": "Toyota Camry (ABC-123)"
+      }
+    },
+    {
+      "address": "19307 Bennett Rd, East Royalton, Ohio(OH), 33455",
+      "market_name": "East Royalton",
+      "status": "available",
+      "vehicle": {
+        "vehicle_pictures": [
+          "https://images.unsplash.com/photo-1566008885218-90abf9200ddb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80"
+        ],
+        "vehicle_name": "Mazda CX5 (DEF-456)"
+      },
+      "location_id": 2
     }
   ]
 }

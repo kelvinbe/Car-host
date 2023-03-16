@@ -25,8 +25,8 @@ export const theme = extendTheme({
             100: "rgba(56, 176, 0, 0.1)",
         },
         available: {
-            1000: "rgba(24, 119, 242, 1)",
-            100: "rgba(24, 119, 242, 0.1)",
+            1000: "rgba(251, 188, 5, 1)",
+            100: "rgba(251, 188, 5, 0.1)",
         },
         unavailable: {
             1000: "rgba(191, 6, 3, 1)",

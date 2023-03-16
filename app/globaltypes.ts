@@ -99,10 +99,12 @@ export interface IVehicle {
 
 
 export interface ILocation {
-    locationId: string;
-    vehicle: IVehicle;
+    location_id: number;
+    vehicle: {
+      vehicle_name:string
+    };
     address: string;
-    marketName: string;
+    market_name: string;
     status: string;
 }
 

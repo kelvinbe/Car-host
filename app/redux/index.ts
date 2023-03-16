@@ -1,4 +1,4 @@
-import { locationsApi } from './locationsSlice';
+import locationsSlice, { locationsApi } from './locationsSlice';
 import { combineReducers } from "redux";
 import reservationSlice from './reservationSlice';
 import eventSlice from './eventSlice';
@@ -8,6 +8,7 @@ import payoutSlice from './payoutSlice';
 
 export const reducers = combineReducers({
     [locationsApi.reducerPath]: locationsApi.reducer,
+    locations:locationsSlice,
     reservations: reservationSlice,
     events: eventSlice,
     resources: resourceSlice,

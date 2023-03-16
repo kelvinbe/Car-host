@@ -3,6 +3,26 @@ import { isUndefined } from 'lodash';
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase/firebaseApp';
+import { createSlice } from "@reduxjs/toolkit";
+import { ILocation } from "../globaltypes";
+import { RootState } from ".";
+
+const locations:ILocation[] = []
+const locationsSlice = createSlice({
+    name: 'locations',
+    initialState: {
+        locations: locations,
+    },
+    reducers: {
+        getLocations(state, action){
+            state.locations= action.payload;
+        },
+    }
+})
+
+export const selectLocations = (state: RootState)=>state.locations.locations
+export const { getLocations } = locationsSlice.actions;
+export default locationsSlice.reducer;
 
 export const locationsApi = createApi({
     reducerPath: "locationsApi",
