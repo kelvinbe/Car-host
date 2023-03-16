@@ -7,7 +7,8 @@ import {
   IReservation,
   IUserProfile,
   IVehicle,
-  IIntegrations
+  IIntegrations,
+  IStation
 } from "../../globaltypes";
 import dayjs from "dayjs";
 import { FlexColCenterCenter, FlexColStartStart, FlexRowStartStart } from "../theme/FlexConfigs";
@@ -211,51 +212,51 @@ export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
     ),
   },
 ];
-export const LocationTableColumns: ColumnsType<ILocation> = [
+export const StationTableColumns: ColumnsType<IStation> = [
   {
-    title: "Vehicle",
-    dataIndex: "vehicle",
-    key: "vehicle",
-    render: (v, { vehicle: { vehicle_pictures } }) => (
+    title: "Station Image",
+    dataIndex: "station_image",
+    key: "station_image",
+    render: (v, { station_images }) => (
       <Flex {...FlexRowStartStart}>
-        {vehicle_pictures && <VehiclePic image={vehicle_pictures[0]} size="small" />}
+        {station_images && <VehiclePic image={station_images[0]} size="small" />}
       </Flex>
     ),
   },
   {
-    title: "Location Id",
-    dataIndex: "locationId",
-    key: "locationId",
-    render: (v, { location_id }) => (
+    title: "Station Name",
+    dataIndex: "station_name",
+    key: "station_name",
+    render: (v, { station_name }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {location_id}
+          {station_name}
         </Text>
       </Flex>
     ),
-    sorter: (a: ILocation, b: ILocation) => a.location_id - b.location_id,
+    sorter: (a: IStation, b: IStation) => a.station_name.length - b.station_name.length,
     sortDirections: ["descend", "ascend"],
   },
   {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-    render: (v, { address }) => (
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    render: (v, { description }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {address}
+          {description}
         </Text>
       </Flex>
     ),
   },
   {
-    title: "Market Name",
-    dataIndex: "marketName",
-    key: "marketName",
-    render: (v, { market_name }) => (
+    title: "Sub-Market",
+    dataIndex: "sub_market_name",
+    key: "sub_market_name",
+    render: (v, { sub_market_name }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {market_name}
+          {sub_market_name}
         </Text>
       </Flex>
     ),

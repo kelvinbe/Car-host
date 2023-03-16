@@ -1,13 +1,13 @@
 import axios from "axios";
-import { LOCATIONS_DOMAIN } from "./constants";
+import { STATIONS_DOMAIN } from "./constants";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import useFetchData from "./useFetchData";
-import { getLocations } from "../redux/locationsSlice";
+import { getStations } from "../redux/stationSlice";
 
 export default function useDeleteData(url:string) {
   const toast = useToast()
-  const {fetchData} = useFetchData(LOCATIONS_DOMAIN, getLocations)
+  const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null|{message:string}>(null);

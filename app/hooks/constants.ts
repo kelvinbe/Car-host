@@ -8,4 +8,4 @@ export const RESOURCE_DATA_DOMAIN = `${DOMAIN}/resource-data`
 export const VEHICLES_DOMAIN = `${DOMAIN}/vehicles`
 export const PAYOUT_DOMAIN = `${DOMAIN}/payouts`
 export const LOCATIONS_DOMAIN = `${DOMAIN}/locations`
-
+export const STATIONS_DOMAIN = `${DOMAIN}/stations`

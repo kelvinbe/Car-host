@@ -1,15 +1,14 @@
 import axios from "axios";
-import { LOCATIONS_DOMAIN } from "./constants";
+import { STATIONS_DOMAIN } from "./constants";
 import { useState } from "react";
-import { ILocation } from "../globaltypes";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 import useFetchData from "./useFetchData";
-import { getLocations } from "../redux/locationsSlice";
+import { getStations } from "../redux/stationSlice";
 
 export default function useEditData(url:string, id:number) {
   const toast = useToast()
-  const {fetchData} = useFetchData(LOCATIONS_DOMAIN, getLocations)
+  const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null|{message:string}>(null);
@@ -34,8 +33,8 @@ export default function useEditData(url:string, id:number) {
         setLoading(false);
         toast({
           position: "top",
-          title: 'Updated Location',
-          description: "Location updated successfully",
+          title: 'Updated Station',
+          description: "Station updated successfully",
           duration: 3000,
           isClosable: true,
           status: "success",
@@ -46,7 +45,7 @@ export default function useEditData(url:string, id:number) {
         toast({
           position: "top",
           title: 'An error occurred',
-          description: "Could not update location",
+          description: "Could not update station",
           duration: 3000,
           isClosable: true,
           status: "error",

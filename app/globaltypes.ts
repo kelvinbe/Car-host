@@ -108,6 +108,14 @@ export interface ILocation {
     status: string;
 }
 
+export interface IStation {
+  station_id: number;
+  station_name: string;
+  description:string,
+  station_images:[],
+  sub_market_name:string,
+  status: "active" | "inactive";
+}
 
 export interface IUserProfile {
   fname: string;

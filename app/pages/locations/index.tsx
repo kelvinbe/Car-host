@@ -2,23 +2,24 @@ import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { Flex, IconButton } from "@chakra-ui/react";
 import React, { useEffect, useReducer, useState } from "react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { LocationTableColumns } from "../../utils/tables/TableTypes";
 import { insertTableActions } from "../../utils/tables/utils";
 import {
   FlexColCenterStart,
   FlexRowCenterAround,
 } from "../../utils/theme/FlexConfigs";
 import { useFetchData } from "../../hooks";
-import { LOCATIONS_DOMAIN } from "../../hooks/constants";
-import { getLocations } from "../../redux/locationsSlice";
-import { selectLocations } from "../../redux/locationsSlice";
+import { STATIONS_DOMAIN } from "../../hooks/constants";
 import { useAppSelector } from "../../redux/store";
 import { useDisclosure } from "@chakra-ui/react";
-import CreateLocationModal from "../../components/organism/Modals/CreateLocationModal";
 import useDeleteData from "../../hooks/useDeleteData";
-import ViewLocationModal from "../../components/organism/Modals/ViewLocationModal";
-import EditLocationModal from "../../components/organism/Modals/EditLocationModal";
-import { ILocation } from "../../globaltypes";
+import { IStation } from "../../globaltypes";
+import { getStations } from "../../redux/stationSlice";
+import { selectStations } from "../../redux/stationSlice";
+import { StationTableColumns } from "../../utils/tables/TableTypes";
+import CreateStationModal from "../../components/organism/Modals/CreateStationModal"
+import EditStationModal from "../../components/organism/Modals/EditStationModal"
+import ViewStationModal from "../../components/organism/Modals/ViewStationModal"
+
 
 type IReducerState = {
   isCreateModalOpen:boolean,
@@ -45,27 +46,26 @@ const reducer = (state:IReducerState, action:{type:string, key:string, value:boo
   }
 }
 
-function Locations() {
-  const {fetchData} = useFetchData(LOCATIONS_DOMAIN,getLocations)
-  const LocationsData = useAppSelector(selectLocations)
-  const [selectedLocation, setSelectedLocation] = useState<ILocation>({
-    location_id: 0,
-    vehicle: {
-      vehicle_name:""
-    },
-    address: "",
-    market_name: "",
-    status: ""
+function Stations() {
+  const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
+  const StationsData = useAppSelector(selectStations)
+  const [selectedStation, setSelectedStation] = useState<IStation>({
+    station_id:0,
+    station_name:'',
+    status:'active',
+    description:"",
+    sub_market_name:"",
+    station_images:[]
   })
   const {onClose, isOpen, onOpen} = useDisclosure()
   const [state,dispatch] = useReducer(reducer, initialState)
-  const {deleteData} = useDeleteData(LOCATIONS_DOMAIN)
+  const {deleteData} = useDeleteData(STATIONS_DOMAIN)
 
   useEffect(() => {
     fetchData()
   }, [])
 
-  const showCreateLocationModal = () => {
+  const showCreateStationModal = () => {
     dispatch({
       type:'toggle_modal_state',
       key:"isCreateModalOpen",
@@ -73,27 +73,27 @@ function Locations() {
     })
     onOpen()
   }
-  const showViewLocationModal = (locationId:number) => {
+  const showViewStationModal = (stationId:number) => {
     dispatch({
       type:'toggle_modal_state',
       key:"isViewModalOpen",
       value:true
     })
-    let location = LocationsData.find(location => location.location_id === locationId)
-    location && setSelectedLocation(location)
+    let station = StationsData.find(station => station.station_id === stationId)
+    station && setSelectedStation(station)
     onOpen()
   }
-  const showEditLocationModal = (locationId:number) => {
+  const showEditStationModal = (stationId:number) => {
     dispatch({
       type:'toggle_modal_state',
       key:"isEditModalOpen",
       value:true
     })
-    let location = LocationsData.find(location => location.location_id === locationId)
-    location && setSelectedLocation(location)
+    let station = StationsData.find(station => station.station_id === stationId)
+    station && setSelectedStation(station)
     onOpen()
   }
-  const closeCreateLocationModal = () => {
+  const closeCreateStationModal = () => {
     dispatch({
       type:'toggle_modal_state',
       key:"isCreateModalOpen",
@@ -101,7 +101,7 @@ function Locations() {
     })
     onClose()
   }
-  const closeViewLocationModal = () => {
+  const closeViewStationModal = () => {
     dispatch({
       type:'toggle_modal_state',
       key:"isViewModalOpen",
@@ -109,7 +109,7 @@ function Locations() {
     })
     onClose()
   }
-  const closeEditLocationModal = () => {
+  const closeEditStationModal = () => {
     dispatch({
       type:'toggle_modal_state',
       key:"isEditModalOpen",
@@ -122,24 +122,24 @@ function Locations() {
       {...FlexColCenterStart}
       w="full"
       h="full"
-      data-testid="locations-table"
+      data-testid="stations-table"
     >
-      {state.isCreateModalOpen && <CreateLocationModal isOpen={isOpen} onClose={closeCreateLocationModal}/>}
-      {state.isViewModalOpen && <ViewLocationModal isOpen={isOpen} onClose={closeViewLocationModal} location={selectedLocation}/>}
-      {state.isEditModalOpen && location &&<EditLocationModal isOpen={isOpen} onClose={closeEditLocationModal} location={selectedLocation}/>}
+      {state.isCreateModalOpen && <CreateStationModal isOpen={isOpen} onClose={closeCreateStationModal}/>}
+      {state.isViewModalOpen && <ViewStationModal isOpen={isOpen} onClose={closeViewStationModal} station={selectedStation}/>}
+      {state.isEditModalOpen && <EditStationModal isOpen={isOpen} onClose={closeEditStationModal} station={selectedStation}/>}
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}
         viewSortablesField={true}
-        buttonName="Create Location"
-        openCreateModal={showCreateLocationModal}
+        buttonName="Create Station"
+        openCreateModal={showCreateStationModal}
         sortables={[
           {
-            columnKey: "locationId",
-            columnName: "Location Id",
+            columnKey: "station_name",
+            columnName: "Station Name",
           },
         ]}
-        columns={insertTableActions(LocationTableColumns, (i, data) => {
+        columns={insertTableActions(StationTableColumns, (i, data) => {
           return (
             <Flex {...FlexRowCenterAround}>
               <IconButton
@@ -147,7 +147,7 @@ function Locations() {
                 icon={<ViewIcon />}
                 size="sm"
                 onClick={() => {
-                  showViewLocationModal(data.location_id)
+                  showViewStationModal(data.station_id)
                 }}
               />
               <IconButton
@@ -155,7 +155,7 @@ function Locations() {
                 icon={<EditIcon />}
                 size="sm"
                 onClick={() => {
-                  showEditLocationModal(data.location_id)
+                  showEditStationModal(data.station_id)
                 }}
               />
               <IconButton
@@ -163,21 +163,21 @@ function Locations() {
                 icon={<DeleteIcon />}
                 size="sm"
                 onClick={() => {
-                  deleteData(data.location_id)
+                  deleteData(data.station_id)
                 }}
                 color="cancelled.1000"
               />
             </Flex>
           );
         })}
-        data={LocationsData}
+        data={StationsData}
         dataFetchFunction={() => {}}
       />
     </Flex>
   );
 }
 
-export default Locations;
+export default Stations;
 
 export function getStaticProps() {
   return {
