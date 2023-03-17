@@ -13,7 +13,7 @@ import { FiUsers } from "react-icons/fi"
 // dashboard routes
 export const dashboardRoutes: {
     name: string;
-    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toLocations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView",
+    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView",
     admin: boolean,
     icon?: IconType,
     link?: string,
@@ -34,11 +34,11 @@ export const dashboardRoutes: {
       link: "/reservations"
     },
     {
-      name: "locations",
-      onClick: "toLocations",
+      name: "stations",
+      onClick: "toStations",
       admin: false,
       icon: SlLocationPin,
-      link: "/locations"
+      link: "/stations"
     },
     {
       name: "vehicle management",

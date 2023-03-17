@@ -8,6 +8,8 @@ import { STATIONS_DOMAIN } from "../../../hooks/constants";
 import useEditData from "../../../hooks/useEditData";
 import { IStation } from "../../../globaltypes";
 import UploadImage from "../../molecules/UploadImage/UploadImage";
+import { useFetchData } from "../../../hooks";
+import { getStations } from "../../../redux/stationSlice";
 
 type IReducerState = {
     station_name:string,
@@ -78,8 +80,9 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
             return state;
     }
 }
+    const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
     const [state, dispatch] = useReducer(reducer, initialState)
-    const {updateData} = useEditData(STATIONS_DOMAIN, station.station_id)
+    const {updateData} = useEditData(STATIONS_DOMAIN, station.station_id,'Updated Station','Station Updated Successfully', 'An error occurred', "Could not update station", fetchData)
     const [images, setImages] = useState<string[]>(state.station_images)
 
     const handleSelectImages = (e: ChangeEvent) => {

@@ -1,14 +1,10 @@
 import axios from "axios";
-import { STATIONS_DOMAIN } from "./constants";
 import { useState } from "react";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
-import useFetchData from "./useFetchData";
-import { getStations } from "../redux/stationSlice";
 
-export default function useAddNewData(url:string) {
+export default function useAddNewData(url:string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
-  const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null|{message:string}>(null);
@@ -25,12 +21,12 @@ export default function useAddNewData(url:string) {
             }
         })
     .then((res)=>{
-        fetchData()
+        fetchDataFunc()
         setLoading(false)
         toast({
           position: "top",
-          title: "Create Station",
-          description: "Station created succesfully",
+          title: successTitle,
+          description: successDescription,
           duration: 3000,
           isClosable: true,
           status: "success",
@@ -40,8 +36,8 @@ export default function useAddNewData(url:string) {
       setError({message:error})
       toast({
         position: "top",
-        title: "Create Station",
-        description: "Could not create a station",
+        title: errorTitle,
+        description: errorDescription,
         duration: 3000,
         isClosable: true,
         status: "error",

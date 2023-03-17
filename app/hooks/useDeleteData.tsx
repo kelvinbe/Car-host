@@ -1,13 +1,9 @@
 import axios from "axios";
-import { STATIONS_DOMAIN } from "./constants";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import useFetchData from "./useFetchData";
-import { getStations } from "../redux/stationSlice";
 
-export default function useDeleteData(url:string) {
+export default function useDeleteData(url:string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
-  const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null|{message:string}>(null);
@@ -20,12 +16,12 @@ export default function useDeleteData(url:string) {
         }
     })
     .then((res)=>{
-        fetchData()
+        fetchDataFunc()
         setLoading(false)
         toast({
           position: "top",
-          title: "Delete Location",
-          description: "Location deleted successfully",
+          title: successTitle,
+          description: successDescription,
           duration: 3000,
           isClosable: true,
           status: "success",
@@ -35,8 +31,8 @@ export default function useDeleteData(url:string) {
       setError({message:error})
       toast({
         position: "top",
-        title: "Delete Location",
-        description: "An error occured. Could not delete location",
+        title: errorTitle,
+        description: errorDescription,
         duration: 3000,
         isClosable: true,
         status: "error",

@@ -7,6 +7,8 @@ import { isUndefined } from "lodash";
 import useAddNewData from "../../../hooks/useAddNewData";
 import { STATIONS_DOMAIN } from "../../../hooks/constants";
 import UploadImage from "../../molecules/UploadImage/UploadImage";
+import { useFetchData } from "../../../hooks";
+import { getStations } from "../../../redux/stationSlice";
 
 type IReducerState = {
     station_name:string,
@@ -83,7 +85,8 @@ interface Props {
 }
 export default function CreateStationModal({isOpen, onClose}:Props) {
     const [state, dispatch] = useReducer(reducer, initialState)
-    const {addData} = useAddNewData(STATIONS_DOMAIN)
+    const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
+    const {addData} = useAddNewData(STATIONS_DOMAIN, 'Success','Created station successfully', 'An error occurred', 'Could not create a station',fetchData )
     const [images, setImages] = useState<string[]>([])
 
     const handleSelectImages = (e:ChangeEvent) => {

@@ -1863,8 +1863,7 @@
       "station_name": "West Royalton station",
       "description": "West Royalton station, Opposite Royalton Church",
       "station_images": [
-        "blob:http://localhost:3000/f1a25f7b-bff5-49f8-9751-9ca7506e83c5",
-        "blob:http://localhost:3000/42da12e0-a861-48fd-b20d-0154175bcc84"
+        "blob:http://localhost:3000/203dd894-e71d-475e-bd44-574c177ba27c"
       ],
       "status": "active",
       "user_id": "User2",
@@ -1875,31 +1874,11 @@
       "station_name": "West RoyalTown Station",
       "sub_market_name": "RoyalTown",
       "status": "active",
-      "description": "19307 Bennett Rd, North Royaltown,\nOhio(OH), 44133",
+      "description": "19307 Bennett Rd, West Royaltown,\nOhio(OH), 44133",
       "station_images": [
-        "blob:http://localhost:3000/eb6f6d24-a384-4d5a-9952-a5ab4d92961c"
+        "blob:http://localhost:3000/b1c8f988-22fd-45d4-99b1-7ca9c72a47d2"
       ],
       "station_id": 3
-    },
-    {
-      "station_name": "West Royalton station",
-      "sub_market_name": "Royalton",
-      "status": "active",
-      "description": "874 West Royalton Av. Shinjuing Street",
-      "station_images": [
-        "blob:http://localhost:3000/1b7204af-ddb2-4047-a838-2c3b9de43379"
-      ],
-      "station_id": 4
-    },
-    {
-      "station_name": "North",
-      "sub_market_name": "Royalton",
-      "status": "active",
-      "description": "7494",
-      "station_images": [
-        "blob:http://localhost:3000/37b88a75-283f-420c-bff2-0040146c7ee0"
-      ],
-      "station_id": 5
     }
   ]
 }

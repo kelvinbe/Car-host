@@ -59,11 +59,12 @@ function Stations() {
   })
   const {onClose, isOpen, onOpen} = useDisclosure()
   const [state,dispatch] = useReducer(reducer, initialState)
-  const {deleteData} = useDeleteData(STATIONS_DOMAIN)
-
+  
   useEffect(() => {
     fetchData()
   }, [])
+  
+  const {deleteData} = useDeleteData(STATIONS_DOMAIN, 'Deleted Station', 'Station has been deleted successfully', 'An error occurred', 'Could not delete station',fetchData)
 
   const showCreateStationModal = () => {
     dispatch({
