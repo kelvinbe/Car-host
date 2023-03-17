@@ -99,13 +99,23 @@ export interface IVehicle {
 
 
 export interface ILocation {
-    locationId: string;
-    vehicle: IVehicle;
+    location_id: number;
+    vehicle: {
+      vehicle_name:string
+    };
     address: string;
-    marketName: string;
+    market_name: string;
     status: string;
 }
 
+export interface IStation {
+  station_id: number;
+  station_name: string;
+  description:string,
+  station_images:[],
+  sub_market_name:string,
+  status: "active" | "inactive";
+}
 
 export interface IUserProfile {
   fname: string;

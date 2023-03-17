@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
 import { GoogleMap } from "@react-google-maps/api";
 import { StreetViewService } from "@react-google-maps/api";
-import Locations, { exampleLocationData } from "../locations";
+import { selectStations } from "../../redux/stationSlice";
+import { useAppSelector } from "../../redux/store";
+import Locations from "../stations";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { LocationVehicleMapTableColumns } from "../../utils/tables/TableTypes";
 import VehicleManagement from "../vehicle-management";
@@ -14,6 +16,7 @@ function AllMapView() {
   const [viewLocation, setViewLocation] = useState(false);
   const [viewVehicle, setViewVehicle] = useState(false);
   const [noneSelected, setNoneSelected] = useState(true);
+  const StationsData = useAppSelector(selectStations)
 
   const mapContainerStyle = {
     height: "400px",
@@ -60,7 +63,7 @@ function AllMapView() {
           viewSearchField={false}
           viewSortablesField={false}
           columns={LocationVehicleMapTableColumns}
-          data={exampleLocationData}
+          data={StationsData}
           dataFetchFunction={() => {}}
         />
       </GridItem>

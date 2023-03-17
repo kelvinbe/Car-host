@@ -7,10 +7,11 @@ import {
   IReservation,
   IUserProfile,
   IVehicle,
-  IIntegrations
+  IIntegrations,
+  IStation
 } from "../../globaltypes";
 import dayjs from "dayjs";
-import { FlexColCenterCenter, FlexColStartStart } from "../theme/FlexConfigs";
+import { FlexColCenterCenter, FlexColStartStart, FlexRowStartStart } from "../theme/FlexConfigs";
 import VehiclePic from "../../components/atoms/images/VehiclePic";
 import StatusTag from "../../components/atoms/status/StatusTag";
 import { LinkIcon } from "@chakra-ui/icons";
@@ -211,49 +212,51 @@ export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
     ),
   },
 ];
-export const LocationTableColumns: ColumnsType<ILocation> = [
+export const StationTableColumns: ColumnsType<IStation> = [
   {
-    title: "Vehicle",
-    dataIndex: "vehicle",
-    key: "vehicle",
-    render: (v, { vehicle: { vehiclePictures } }) => (
-      <Flex alignItems={"center"} justifyContent="center" w="full">
-        <VehiclePic image={vehiclePictures[0]} size="small" />
+    title: "Station Image",
+    dataIndex: "station_image",
+    key: "station_image",
+    render: (v, { station_images }) => (
+      <Flex {...FlexRowStartStart}>
+        {station_images && <VehiclePic image={station_images[0]} size="small" />}
       </Flex>
     ),
   },
   {
-    title: "Location Id",
-    dataIndex: "locationId",
-    key: "locationId",
-    render: (v, { locationId }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Station Name",
+    dataIndex: "station_name",
+    key: "station_name",
+    render: (v, { station_name }) => (
+      <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {locationId}
+          {station_name}
+        </Text>
+      </Flex>
+    ),
+    sorter: (a: IStation, b: IStation) => a.station_name.length - b.station_name.length,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    render: (v, { description }) => (
+      <Flex{...FlexRowStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {description}
         </Text>
       </Flex>
     ),
   },
   {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-    render: (v, { address }) => (
-      <Flex {...FlexColCenterCenter}>
+    title: "Sub-Market",
+    dataIndex: "sub_market_name",
+    key: "sub_market_name",
+    render: (v, { sub_market_name }) => (
+      <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {address}
-        </Text>
-      </Flex>
-    ),
-  },
-  {
-    title: "Market Name",
-    dataIndex: "marketName",
-    key: "marketName",
-    render: (v, { marketName }) => (
-      <Flex {...FlexColCenterCenter}>
-        <Text fontSize="14px" fontWeight="500">
-          {marketName}
+          {sub_market_name}
         </Text>
       </Flex>
     ),
@@ -263,23 +266,8 @@ export const LocationTableColumns: ColumnsType<ILocation> = [
     dataIndex: "status",
     key: "status",
     render: (v, { status }) => (
-      <Flex {...FlexColCenterCenter}>
+      <Flex{...FlexRowStartStart}>
         <StatusTag status={status as any}>{status}</StatusTag>
-      </Flex>
-    ),
-  },
-  {
-    title: "Link",
-    dataIndex: "link",
-    key: "link",
-    render: (v, { locationId }) => (
-      <Flex {...FlexColCenterCenter}>
-        <IconButton
-          rounded="full"
-          bg="transparent"
-          icon={<LinkIcon />}
-          aria-label="link"
-        />
       </Flex>
     ),
   },
