@@ -1,3 +1,6 @@
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase/firebaseApp";
+
 import { GenerateDataTransferObject } from './../globaltypes';
 /**
  * @name loadEnv 
@@ -116,3 +119,54 @@ export const getLocalStorage = (key: string): string | null => {
     }
     return localStorage.getItem(key);
 }
+
+/**
+ * @name isYearStringValid
+ * @description Checks if a year string is valid
+ */
+
+export const isYearStringValid = (year: string): boolean => {
+    const yearInt = parseInt(year);
+    if (yearInt < 1900) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @name isValidNumberString
+ * @description Checks if a number string is valid using regex
+ */
+export const isValidNumberString = (str: string): boolean => {
+    const regex = /^[0-9]*$/;
+    return regex.test(str);
+}
+
+
+/**
+  * @name upload to firebase
+  * @returns a Promise that resolves to a url
+  * @param blob_url
+  * @param file_name
+  * @param file_type
+  */
+
+export const uploadToFirebase = async (blob_url: string, file_name: string, file_type: string): Promise<string> => new Promise(async (res,rej)=>{
+    if(blob_url?.includes("https://firebasestorage.googleapis.com")){
+        res(blob_url);
+    }else{
+        const file = await fetch(blob_url).then(r => r.blob());
+        const _ref  = ref(storage, file_name);
+        uploadBytes(_ref, file, {
+            contentType: file_type
+        }).then((r)=>{
+            getDownloadURL(_ref).then((url)=>{
+                res(url);
+            }).catch((e)=>{
+                rej(e)
+            })
+        }).catch((e)=>{
+            rej(e)
+        })
+    }
+ })

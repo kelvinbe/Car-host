@@ -3,7 +3,7 @@ import { useState } from "react";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 
-export default function useAddNewData(url:string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
+export default function useAddNewData(url:string, fetchDataFunc: () => void, showToast?:boolean, successTitle?:string, successDescription?:string, errorTitle?:string, errorDescription?:string) {
   const toast = useToast()
 
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ export default function useAddNewData(url:string, successTitle:string, successDe
   function addData(data:{}){
     setLoading(true)
     if(isEmpty(data)) return setError({
-        message: "location data is empty"
+        message: "data is empty"
     })
     axios.post(url, {...data},
         {
@@ -23,7 +23,7 @@ export default function useAddNewData(url:string, successTitle:string, successDe
     .then((res)=>{
         fetchDataFunc()
         setLoading(false)
-        toast({
+        showToast && toast({
           position: "top",
           title: successTitle,
           description: successDescription,
@@ -34,7 +34,7 @@ export default function useAddNewData(url:string, successTitle:string, successDe
     })
     .catch(error=>{
       setError({message:error})
-      toast({
+      showToast && toast({
         position: "top",
         title: errorTitle,
         description: errorDescription,

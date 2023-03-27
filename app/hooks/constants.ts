@@ -9,3 +9,6 @@ export const VEHICLES_DOMAIN = `${DOMAIN}/vehicles`
 export const PAYOUT_DOMAIN = `${DOMAIN}/payouts`
 export const LOCATIONS_DOMAIN = `${DOMAIN}/locations`
 export const STATIONS_DOMAIN = `${DOMAIN}/stations`
+export const AUTHCODE_DOMAIN = `${DOMAIN}/authcodes`
+export const REQUESTED_AUTHCODE_DOMAIN = `${DOMAIN}/requested-authcodes`
+export const USERS_DOMAIN = `${DOMAIN}/users`

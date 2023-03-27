@@ -77,9 +77,9 @@ function VehicleManagement() {
       w="full"
       data-testid="vehicle-management-table"
     >
-      {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles = {vehicles}/>}
+      {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId as number} vehicles = {vehicles }/>}
       {isCreateModalOpen && <CreateVehicleModal isOpen ={isOpen} onClose={closeCreateModal}/>}
-      {isEditModalOpen && <EditVehicleModal isOpen ={isOpen} onClose={closeEditModal} vehicleId={vehicleId} vehicles = {vehicles}/>}
+      {isEditModalOpen && <EditVehicleModal isOpen ={isOpen} onClose={closeEditModal} vehicleId={vehicleId as number} vehicles = {vehicles}/>}
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}

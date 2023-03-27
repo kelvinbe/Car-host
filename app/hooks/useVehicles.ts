@@ -3,7 +3,7 @@ import { getVehicles, selectVehicles } from "../redux/vehiclesSlice";
 import axios from "axios";
 import { VEHICLES_DOMAIN } from "./constants";
 import { useState } from "react";
-import { IVehicleDetails } from "../globaltypes";
+import { IVehicleDetails, IapiResponseData } from "../globaltypes";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 
@@ -137,11 +137,39 @@ export default function useVehicles(vehicleId?:number) {
       })
     })
   }
+
+  type IfetchApiVehicles = {
+    query:string,
+    setApiData: React.Dispatch<React.SetStateAction<IapiResponseData>>
+    loading: React.Dispatch<React.SetStateAction<boolean>>
+  }
+  function fetchApiVehicles(params:IfetchApiVehicles){
+    const { query, setApiData, loading } = params
+    const url = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=${query}&facet=make&facet=model&facet=year`
+    loading(true)
+    axios.get(url)
+    .then((res)=>{
+        setApiData(res)
+    })
+    .catch(error=>{
+      loading(false)
+      setError({message:error})
+      toast({
+        position: "top",
+        title: "Error fetching API",
+        description: "An error occured",
+        duration: 3000,
+        isClosable: true,
+        status: "error",
+      })
+    })
+  }
   return {
     allVehicles,
     fetchVehicles,
     addVehicle,
     deleteVehicle,
-    updateVehicle
+    updateVehicle,
+    fetchApiVehicles
   };
 }

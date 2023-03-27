@@ -89,6 +89,7 @@ function useAppAuth() {
             dispatchAction(setSignInLoading(true))
             signInWithEmailAndPassword(getAuth(app), credentials.email, credentials.password).then(()=>{
                 dispatchAction(setSignInLoading(false))
+                push("/dashboard")
             }).catch((e)=>{
                 dispatchAction(setSignInError(e.message))
                 toast({

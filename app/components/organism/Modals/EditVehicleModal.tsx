@@ -23,7 +23,7 @@ import {
     isOpen:boolean,
     onClose:() => void,
     vehicleId:number,
-    vehicles:[]
+    vehicles:IVehicleDetails[]
 }
   
   export default function EditVehicleModal(props:Props) { 
@@ -37,14 +37,14 @@ import {
     const [isRateError, setIsRateError] = useState(false)
 
     const initialstate:IVehicleDetails= {
-        plate:selectedVehicle['plate'],
-        make:selectedVehicle['make'],
-        model:selectedVehicle['model'],
-        year:selectedVehicle['year'],
-        transmission:selectedVehicle['transmission'],
-        hourly_rate:selectedVehicle['hourly_rate'],
-        status:selectedVehicle['status'],
-        vehicle_pictures: selectedVehicle['vehicle_pictures']
+        plate:selectedVehicle?.['plate'] as string,
+        make:selectedVehicle?.['make'] as string,
+        model:selectedVehicle?.['model'] as string,
+        year:selectedVehicle?.['year'] as number,
+        transmission:selectedVehicle?.['transmission'] as "Automatic" | "Semi-Automatic" | "Manual" | "CVT",
+        hourly_rate:selectedVehicle?.['hourly_rate'] as number,
+        status:selectedVehicle?.['status'] as "active" | "unavailable" | "available",
+        vehicle_pictures: selectedVehicle?.['vehicle_pictures']
     }
     const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:null|string|number|string[]}) => {
         switch (action.type) {

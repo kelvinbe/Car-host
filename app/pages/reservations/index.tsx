@@ -9,16 +9,17 @@ import { selectReservations } from "../../redux/reservationSlice";
 import useReservation from "../../hooks/useReservation";
 import dayjs from "dayjs";
 import { insertTableActions } from "../../utils/tables/utils";
-import { FlexRowCenterBetween, FlexRowCenterStart } from "../../utils/theme/FlexConfigs";
+import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import { lowerCase } from "lodash";
 import { ReservationColumns } from "../../utils/tables/TableTypes";
 export interface DataType {
-  id:number | undefined,
-  reservationId:string,
+  reservationId:number,
   vehiclePlate:string,
   vehicleName:string,
   startEndTime:string,
+  startDateTime?:string,
+  endDateTime?:string,
   totalCost:number,
   hostName:string,
   location:string,
@@ -39,17 +40,15 @@ function Reservations() {
     fetchReservations()
   },[])
 
-
   useEffect(()=>{
     setReservationData(()=>reservations.map((reservation)=>({
-      id:reservation?.id,
       reservationId: reservation?.reservation_id,
-      vehiclePlate:reservation?.plate,
-      vehicleName:`${reservation?.make} ${reservation?.model}`,
+      vehiclePlate:reservation?.vehicle?.plate,
+      vehicleName:`${reservation?.vehicle?.make} ${reservation?.vehicle?.model}`,
       startEndTime:`${dayjs(reservation?.start_date_time).format("DD/MM/YYYY h:mm A")} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
       totalCost:reservation?.total_cost,
-      hostName:reservation?.host_handle,
-      location:`${reservation?.address} ${reservation?.building_name}`,
+      hostName:reservation?.vehicle?.host?.handle,
+      location:`${reservation?.vehicle?.location?.address} ${reservation?.vehicle?.location?.building_name}`,
       status:lowerCase(reservation?.status),
     })))
   }, [reservations])
@@ -92,7 +91,7 @@ function Reservations() {
                 icon={<EditIcon />}
                 size="sm"
                 onClick={() => {
-                  showEditReservationModal(data.id)
+                  showEditReservationModal(data.reservationId)
                 }}
                 marginRight='4'
               />
@@ -101,7 +100,7 @@ function Reservations() {
                 icon={<DeleteIcon />}
                 size="sm"
                 onClick={() => {
-                  deleteReservation(data.id)
+                  deleteReservation(data.reservationId)
                 }}
                 color="cancelled.1000"
               />
@@ -111,8 +110,8 @@ function Reservations() {
         data={reservationData}
         sortables={[
           {
-            columnKey: "vehiclePlate",
-            columnName: "Vehicle Plate",
+            columnKey: "totalCost",
+            columnName: "Total Cost",
           }
         ]}
       />

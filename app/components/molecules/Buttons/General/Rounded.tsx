@@ -19,7 +19,7 @@ function Rounded(props: IProps) {
     <Button
     w={fullWidth ? "full" : setWidth}
     _hover={{
-        backgroundColor: variant === "solid" ? "primary.1000" : "transparent",
+        backgroundColor: variant === "solid" ? "primary.900" : "transparent",
     }}
     _active={{
         backgroundColor: variant === "solid" ? "primary.1000" : "transparent",

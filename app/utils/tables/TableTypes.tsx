@@ -1,4 +1,4 @@
-import { Flex, IconButton, Text } from "@chakra-ui/react";
+import { Flex, IconButton, Text, Avatar } from "@chakra-ui/react";
 import { ColumnsType } from "antd/es/table";
 import {
   IAuthCode,
@@ -8,18 +8,88 @@ import {
   IUserProfile,
   IVehicle,
   IIntegrations,
-  IStation
+  IStation,
+  IRequestedAuthCode
 } from "../../globaltypes";
 import dayjs from "dayjs";
 import { FlexColCenterCenter, FlexColStartStart, FlexRowStartStart } from "../theme/FlexConfigs";
 import VehiclePic from "../../components/atoms/images/VehiclePic";
 import StatusTag from "../../components/atoms/status/StatusTag";
 import { LinkIcon } from "@chakra-ui/icons";
-import { Avatar } from "antd";
 import { IVehicleDetails } from "../../globaltypes";
 import { DataType } from "../../pages/reservations";
+import { useEffect, useState } from "react";
+import ViewVehicleModal from "../../components/organism/Modals/ViewVehicleModal";
+import { useDisclosure } from "@chakra-ui/react";
+import { selectVehicles } from "../../redux/vehiclesSlice";
+import { useAppSelector } from "../../redux/store";
+import useVehicles from "../../hooks/useVehicles";
+import { useFetchData } from "../../hooks";
+import { getUsers, selectUsers } from "../../redux/userSlice";
+import { USERS_DOMAIN } from "../../hooks/constants";
+import ViewUserModal from "../../components/organism/Modals/ViewUserModal";
 
-export const ReservationTableColumns: ColumnsType<IReservation> = [
+interface IProps{
+  vehicle_id:number,
+}
+
+interface IUserProps{
+  user_id:number,
+  profilePicUrl:string
+}
+const GetVehicleDetails = ({vehicle_id}:IProps) => {
+  const {isOpen, onClose, onOpen} = useDisclosure()
+  const vehicles = useAppSelector(selectVehicles)
+  const {fetchVehicles} = useVehicles()
+
+  useEffect(() => {
+    fetchVehicles()
+  },[])
+
+  return (
+    <>
+    <ViewVehicleModal isOpen={isOpen} onClose={onClose} vehicleId={vehicle_id} vehicles={vehicles}/>
+    <Flex {...FlexColStartStart}>
+      <button onClick={onOpen}>
+        <Text
+          cursor="pointer"
+          borderBottom="1px solid"
+          borderBottomColor={"link"}
+          fontSize="14px" 
+          fontWeight="500"
+        >
+          {vehicle_id}
+        </Text>
+      </button>
+      
+    </Flex>
+    </>
+  )
+}
+const GetCustomerDetails = ({user_id, profilePicUrl}:IUserProps) => {
+  const {isOpen, onClose, onOpen} = useDisclosure()
+  const {fetchData} = useFetchData(USERS_DOMAIN, getUsers)
+  const users = useAppSelector(selectUsers)
+  let selectedUser = users.find(user => user.user_id === user_id)
+
+  useEffect(() => {
+    fetchData()
+  },[])
+
+  return (
+    <>
+      {selectedUser && <ViewUserModal isOpen={isOpen} onClose={onClose} user={selectedUser}/>}
+      <Flex {...FlexColStartStart} onClick={onOpen}>
+        <Avatar
+          src={profilePicUrl}
+          size={'sm'}
+        />
+      </Flex>
+    </>
+  )
+}
+
+export const ReservationTableColumns: ColumnsType<DataType> = [
   {
     title: "Pickup",
     dataIndex: "startDateTime",
@@ -54,21 +124,11 @@ export const ReservationTableColumns: ColumnsType<IReservation> = [
     title: "Total",
     dataIndex: "total",
     key: "total",
-    render: (v, { total }) => (
+    render: (v, { totalCost }) => (
       <Flex {...FlexColCenterCenter}>
         <Text fontSize="14px" fontWeight="500">
-          {total}
+          {totalCost}
         </Text>
-      </Flex>
-    ),
-  },
-  {
-    title: "Vehicle",
-    dataIndex: "vehiclePicUrl",
-    key: "vehiclePicUrl",
-    render: (v, { vehiclePicUrl }) => (
-      <Flex alignItems={"center"} justifyContent="center" w="full">
-        <VehiclePic image={vehiclePicUrl} size="small" />
       </Flex>
     ),
   },
@@ -81,22 +141,7 @@ export const ReservationTableColumns: ColumnsType<IReservation> = [
         <StatusTag status={status as any}>{status}</StatusTag>
       </Flex>
     ),
-  },
-  {
-    title: "Link",
-    dataIndex: "link",
-    key: "link",
-    render: (v, { hostId }) => (
-      <Flex {...FlexColCenterCenter}>
-        <IconButton
-          rounded="full"
-          bg="transparent"
-          icon={<LinkIcon />}
-          aria-label="link"
-        />
-      </Flex>
-    ),
-  },
+  }
 ];
 
 export const PayoutsTableColumns: ColumnsType<IPayout> = [
@@ -139,27 +184,21 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
 ];
 export const AuthCodeTableColumns: ColumnsType<IAuthCode> = [
   {
-    title: "Date",
-    dataIndex: "date",
-    key: "date",
-    render: (v, { date }) => (
-      <Flex {...FlexColStartStart}>
-        <Text fontSize="14px" fontWeight="500">
-          {dayjs(date).format("DD MMM YYYY")}
-        </Text>
-      </Flex>
-    ),
-    sorter: (a: IAuthCode, b: IAuthCode) => a.date.length - b.date.length,
-    sortDirections: ["descend", "ascend"],
+    title: "Customer Image",
+    dataIndex: "user_image",
+    key: "user_image",
+    render: (v, { user_image, user_id }) => (
+      <GetCustomerDetails user_id={user_id} profilePicUrl={user_image}/>
+    )
   },
   {
-    title: "Code",
+    title: "AuthCode",
     dataIndex: "code",
     key: "code",
-    render: (v, { code }) => (
+    render: (v, { authcode }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {code}
+          {`${authcode.substring(0, 3)}***${authcode.substring(6,9)}`}
         </Text>
       </Flex>
     ),
@@ -174,6 +213,25 @@ export const AuthCodeTableColumns: ColumnsType<IAuthCode> = [
       </Flex>
     ),
   },
+];
+export const RequestedAuthCodeTableColumns: ColumnsType<IRequestedAuthCode> = [
+  
+  {
+    title: "Customer Image",
+    dataIndex: "user_image",
+    key: "user_image",
+    render: (v, { user_image, user_id }) => (
+      <GetCustomerDetails user_id={user_id} profilePicUrl={user_image}/>
+    )
+  },
+  {
+    title: "Vehicle ID",
+    dataIndex: "vehicle_id",
+    key: "vehicle_id",
+    render: (v, { vehicle_id }) => (
+      <GetVehicleDetails vehicle_id={vehicle_id}/>
+    ),
+  }
 ];
 export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
   {
@@ -283,8 +341,6 @@ export const ReservationColumns: ColumnsType<any> = [
     title: "Vehicle Plate",
     dataIndex: "vehiclePlate",
     key: "vehiclePlate",
-    sorter: (a: DataType, b: DataType) => a.vehiclePlate.length - b.vehiclePlate.length,
-    sortDirections: ["descend", "ascend"],
   },
   {
     title: "Vehicle Name",
@@ -300,6 +356,8 @@ export const ReservationColumns: ColumnsType<any> = [
     title: "Total cost",
     dataIndex: "totalCost",
     key: "totalCost",
+    sorter: (a: DataType, b: DataType) => a.totalCost - b.totalCost,
+    sortDirections: ["descend", "ascend"],
   },
   {
     title: "Host",

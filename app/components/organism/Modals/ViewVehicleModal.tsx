@@ -9,11 +9,12 @@ import {
 } from "@chakra-ui/react";
 import useVehicleFilter from "../../../hooks/useVehicleFilter"
 import { capitalize} from "lodash";
+import { IVehicleDetails } from "../../../globaltypes";
 interface Props{
   isOpen:boolean,
   onClose:() => void,
   vehicleId:number,
-  vehicles:[]
+  vehicles:IVehicleDetails[]
 }
 
 export default function ViewVehicleModal(props:Props) { 

@@ -85,15 +85,10 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
     const {updateData} = useEditData(STATIONS_DOMAIN, station.station_id,'Updated Station','Station Updated Successfully', 'An error occurred', "Could not update station", fetchData)
     const [images, setImages] = useState<string[]>(state.station_images)
 
-    const handleSelectImages = (e: ChangeEvent) => {
-        const fileList = (e.target as HTMLInputElement).files
-
-        const fileListArray = fileList && Array.from(fileList)
-
-        let imagesArray = fileListArray?.map(file => {
-            return URL.createObjectURL(file)
-        })
-        imagesArray && setImages(imagesArray)
+    const handleSelectImages = (images: string | string[]) => {
+        if(isArray(images)) {
+            setImages(images)
+        }
     }
 
     useEffect(() => {
@@ -176,7 +171,7 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
                                 <option value="inactive">Inactive</option>
                             </Select>
                         </FormControl>
-                        <UploadImage isError={state.isImageError === 'Error'} handleSelectImages={handleSelectImages} images={state.station_images} setter={setImages}/>
+                        <UploadImage multiple onChange={handleSelectImages} images={images} />
 
                         <Flex w='100%' {...FlexRowCenterCenter} marginBottom={5}>
                             <Rounded variant='outline' setWidth={240} rounded='full' onClick={handleEditLocation}>Edit</Rounded>

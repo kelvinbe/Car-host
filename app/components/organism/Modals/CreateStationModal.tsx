@@ -89,14 +89,9 @@ export default function CreateStationModal({isOpen, onClose}:Props) {
     const {addData} = useAddNewData(STATIONS_DOMAIN, 'Success','Created station successfully', 'An error occurred', 'Could not create a station',fetchData )
     const [images, setImages] = useState<string[]>([])
 
-    const handleSelectImages = (e:ChangeEvent) => {
-        const fileList = (e.target as HTMLInputElement).files
-        const fileListArray = fileList && Array.from(fileList)
-
-        let imagesArray = fileListArray?.map(file => {
-            return URL.createObjectURL(file)
-        })
-        imagesArray && setImages(imagesArray)
+    const handleSelectImages = (images: string | string[]) => {
+        // when we use multiple prop, it we can expect an array
+        setImages(images as string[])
     }
 
     useEffect(() => {
@@ -232,7 +227,7 @@ export default function CreateStationModal({isOpen, onClose}:Props) {
                                 <option value="inactive">Inactive</option>
                             </Select>
                         </FormControl>
-                        <UploadImage isError={state.isImageError === 'Error'} handleSelectImages={handleSelectImages} images={images} setter={setImages}/>
+                        <UploadImage multiple onChange={handleSelectImages} />
                         <Flex w='100%' {...FlexRowCenterCenter} marginBottom={5}>
                             <Rounded variant='solid' setWidth={240} rounded='full' onClick={handleCreateStation}>Create</Rounded>
                         </Flex>

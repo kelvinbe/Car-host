@@ -10,7 +10,7 @@ function useFilter(reservationId:string|number) {
 
   useEffect(() => {
     let reservationToView = reservations.filter(reservation => reservation.reservation_id === reservationId)
-    let reservationToEdit = reservations.filter(reservation => reservation.id === Number(reservationId))
+    let reservationToEdit = reservations.filter(reservation => reservation.reservation_id === reservationId)
     setViewReservation(reservationToView)
     setEditReservation(reservationToEdit)
   },[reservations, reservationId])

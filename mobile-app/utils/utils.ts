@@ -1,5 +1,7 @@
 import dayjs from "dayjs"
 import { z } from "zod"
+import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage"
+import { app } from "../firebase/firebaseApp"
 
 /**
  * @name addSpacingAfterEveryFourDigits
@@ -153,3 +155,48 @@ export const isValidEmail = (email: string) => {
         return false
     }
 }
+
+/**
+ * @name uploadToFirebase
+ * @param uri
+ * @param filename
+ * @param file_type
+ * @description uploads a file to firebase storage  
+ */
+
+export const uploadToFirebase = (uri: string, filename: string, file_type: string): Promise<string> => {
+    const blob =  new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function() {
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      })
+    return new Promise((res, rej) => {
+        blob.then((file)=>{
+            const _ref  = ref(getStorage(app), filename);
+            uploadBytes(_ref, file as File, {
+                contentType: file_type
+            }).then(()=>{
+                getDownloadURL(_ref).then((url)=>{
+                    res(url);
+                }).catch((e)=>{
+                    rej(e)
+                })
+            }).catch((e)=>{
+                rej(e)
+            })
+        }).catch((e)=>{
+            rej(e)
+        })
+    })
+    
+
+    
+    
+  }

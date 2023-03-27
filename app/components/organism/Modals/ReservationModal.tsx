@@ -90,9 +90,9 @@ export default function ReservationModal({ isOpen, onClose, toggleViewReservatio
                 <Text fontWeight={'bold'} marginBottom={15}>Reservation Number:{viewReservation?.[0]?.reservation_id}</Text>
                 <Text marginBottom={15}>Pickup time: {`${new Date(viewReservation[0]?.start_date_time)}`}</Text>
                 <Text marginBottom={15}>Drop-off time: {`${new Date(viewReservation?.[0]?.end_date_time)}`}</Text>
-                <Text marginBottom={15}>Vehicle details: {`${viewReservation?.[0]?.make} ${viewReservation?.[0]?.model} - ${viewReservation?.[0]?.plate}`}</Text>
-                <Text marginBottom={15}>Host handle: {viewReservation?.[0]?.host_handle}</Text>
-                <Text marginBottom={15}>Pickup location: {`${viewReservation?.[0]?.building_name}, ${viewReservation?.[0]?.address}, ${viewReservation?.[0]?.market_name}`}</Text>
+                <Text marginBottom={15}>Vehicle details: {`${viewReservation?.[0]?.vehicle?.make} ${viewReservation?.[0]?.vehicle?.model} - ${viewReservation?.[0]?.vehicle?.plate}`}</Text>
+                <Text marginBottom={15}>Host handle: {viewReservation?.[0]?.vehicle?.host?.handle}</Text>
+                <Text marginBottom={15}>Pickup location: {`${viewReservation?.[0]?.vehicle?.location?.building_name}, ${viewReservation?.[0]?.vehicle?.location?.address}, ${viewReservation?.[0]?.vehicle?.location?.market?.name}`}</Text>
                 <Text marginBottom={15}>Total cost: {viewReservation?.[0]?.total_cost}</Text>
               </div>
             }

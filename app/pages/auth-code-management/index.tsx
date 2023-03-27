@@ -1,34 +1,52 @@
-import React from "react";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Flex, IconButton } from "@chakra-ui/react";
+import React, {useEffect, useState} from "react";
+import { Flex, Text } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { IAuthCode } from "../../globaltypes";
 import { insertTableActions } from "../../utils/tables/utils";
 import {
   FlexColCenterStart,
   FlexRowCenterStart,
 } from "../../utils/theme/FlexConfigs";
-import { AuthCodeTableColumns } from "../../utils/tables/TableTypes";
-
-const authcodeData: IAuthCode[] = [
-  {
-    date: "02/01/2023",
-    code: "AduoDOUYWvz",
-    status: "active",
-  },
-  {
-    date: "02/02/2023",
-    code: "CipoDOUYWvz",
-    status: "cancelled",
-  },
-  {
-    date: "02/03/2023",
-    code: "fuoIDOUYWvz",
-    status: "reserved",
-  },
-];
+import { AuthCodeTableColumns, RequestedAuthCodeTableColumns } from "../../utils/tables/TableTypes";
+import { AUTHCODE_DOMAIN, REQUESTED_AUTHCODE_DOMAIN } from "../../hooks/constants";
+import { getAuthcode, selectAuthcode } from "../../redux/authcodeSlice";
+import { useFetchData } from "../../hooks";
+import useFetchRequestedAuthCode from "../../hooks/useFetchRequestedAuthCode";
+import { getRequestedAuthCode, selectRequestedAuthCode } from "../../redux/requestedAuthCodeSlice";
+import { useAppSelector } from "../../redux/store";
+import { useDisclosure } from "@chakra-ui/react";
+import Rounded from "../../components/molecules/Buttons/General/Rounded";
+import CreateAuthCodeModal from "../../components/organism/Modals/CreateAuthCodeModal";
 
 function AuthCodeManagement() {
+  const [showRequestsTable, setShowRequestsTable] = useState<boolean>(false)
+  const {fetchData} = useFetchData(AUTHCODE_DOMAIN, getAuthcode)
+  const {fetchRequests} = useFetchRequestedAuthCode(REQUESTED_AUTHCODE_DOMAIN, getRequestedAuthCode)
+  const authcodeData = useAppSelector(selectAuthcode)
+  const requestsData = useAppSelector(selectRequestedAuthCode)
+  const [createAuthCodeModal, setCreateAuthCodeModal] = useState<boolean>(false)
+  const {isOpen, onOpen, onClose} = useDisclosure()
+  const [authcodeId, setAuthcodeId] = useState<number>()
+  const [userId, setUserId] = useState<number>()
+
+  useEffect(() => {
+    fetchData()
+  },[])
+
+  const toggleRequestsTable = () => {
+    setShowRequestsTable(!showRequestsTable)
+    fetchRequests()
+  }
+
+  const openCreateAuthCodeModal = (id:number, userId:number) => {
+    setCreateAuthCodeModal(true)
+    setAuthcodeId(id)
+    setUserId(userId)
+    onOpen()
+  }
+  const closeCreateAuthCodeModal = () => {
+    setCreateAuthCodeModal(false)
+    onClose()
+  }
   return (
     <Flex
       {...FlexColCenterStart}
@@ -36,42 +54,23 @@ function AuthCodeManagement() {
       h="full"
       data-testid="auth-code-management-table"
     >
+      {createAuthCodeModal && authcodeId && userId && <CreateAuthCodeModal isOpen={isOpen} onClose={closeCreateAuthCodeModal} authcodeId={authcodeId} showRequestsTable={toggleRequestsTable} userId={userId}/>}
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}
-        viewSortablesField={true}
-        buttonName="Create AuthCode"
-        sortables={[
-          {
-            columnKey: "date",
-            columnName: "Date",
-          },
-        ]}
-        columns={insertTableActions(AuthCodeTableColumns, (i, data) => {
+        viewSortablesField={false}
+        buttonName={showRequestsTable ? 'View All Authcodes': 'View Requests'}
+        openCreateModal={toggleRequestsTable}
+        columns={!showRequestsTable? AuthCodeTableColumns : insertTableActions(RequestedAuthCodeTableColumns, (i, data) => {
           return (
             <Flex {...FlexRowCenterStart}>
-              <IconButton
-                aria-label="Edit"
-                icon={<EditIcon />}
-                size="sm"
-                onClick={() => {
-                  console.log(i, data);
-                }}
-                marginRight="10"
-              />
-              <IconButton
-                aria-label="Delete"
-                icon={<DeleteIcon />}
-                size="sm"
-                onClick={() => {
-                  console.log(i, data);
-                }}
-                color="cancelled.1000"
-              />
+              <Rounded variant="solid" setWidth={200} rounded="md" onClick = {() => openCreateAuthCodeModal(data.authcode_id, data.user_id)}>
+                <Text cursor="pointer">Create</Text>
+              </Rounded>
             </Flex>
           );
         })}
-        data={authcodeData}
+        data={showRequestsTable ? requestsData : authcodeData}
         dataFetchFunction={() => {}}
       />
     </Flex>

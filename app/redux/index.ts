@@ -6,6 +6,9 @@ import resourceSlice from './resourceSlice';
 import vehiclesSlice from './vehiclesSlice';
 import payoutSlice from './payoutSlice';
 import stationSlice from './stationSlice';
+import authcodeSlice from './authcodeSlice';
+import requestedAuthCodeSlice from './requestedAuthCodeSlice';
+import userSlice from './userSlice';
 
 export const reducers = combineReducers({
     [locationsApi.reducerPath]: locationsApi.reducer,
@@ -15,7 +18,10 @@ export const reducers = combineReducers({
     resources: resourceSlice,
     vehicles:vehiclesSlice,
     payout:payoutSlice,
-    stations:stationSlice
+    stations:stationSlice,
+    authcode:authcodeSlice,
+    requestedAuthCode: requestedAuthCodeSlice,
+    users:userSlice,
 })
 
 export type RootState = ReturnType<typeof reducers>

@@ -186,17 +186,17 @@
   "reservations": [
     {
       "id": 1,
-      "reservation_id": "1",
+      "reservation_id": 1,
       "type": "Blocked",
       "entity_id": "1",
       "user_id": "1",
       "location_id": 1,
       "vehicle_id": "1",
       "hourly_rate": 20,
-      "start_date_time": "2023-03-13T10:00:00",
-      "end_date_time": "2023-03-13T12:40:00",
-      "total_cost": 100,
-      "duration": 5,
+      "start_date_time": "2023-03-21T10:00",
+      "end_date_time": "2023-03-21T13:30",
+      "total_cost": 20,
+      "duration": 1,
       "payment_id": "1",
       "status": "Blocked",
       "customer": {
@@ -264,7 +264,7 @@
     },
     {
       "id": 2,
-      "reservation_id": "2",
+      "reservation_id": 2,
       "type": "Hourly",
       "entity_id": "2",
       "user_id": "2",
@@ -273,8 +273,8 @@
       "hourly_rate": 20,
       "start_date_time": "2023-03-13T10:00:00",
       "end_date_time": "2023-03-13T14:40:00",
-      "total_cost": 100,
-      "duration": 5,
+      "total_cost": 60,
+      "duration": 3,
       "payment_id": "1",
       "status": "Cancelled",
       "customer": {
@@ -342,86 +342,8 @@
       }
     },
     {
-      "id": 3,
-      "reservation_id": "3",
-      "type": "Hourly",
-      "entity_id": "3",
-      "user_id": "1",
-      "location_id": 1,
-      "vehicle_id": "3",
-      "hourly_rate": 20,
-      "start_date_time": "2023-03-13T10:00:00",
-      "end_date_time": "2023-03-13T12:00:00",
-      "total_cost": 100,
-      "duration": 5,
-      "payment_id": "1",
-      "status": "Active",
-      "customer": {
-        "userId": "1",
-        "fname": "John",
-        "lname": "Doe",
-        "profile_pic_url": "https://images.pexels.com/photos/4571943/pexels-photo-4571943.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-      },
-      "vehicle": {
-        "vehicle_id": 3,
-        "entity_id": "3",
-        "vehicle_type": "Sedan",
-        "location_id": 1,
-        "color": "Red",
-        "seats": 4,
-        "plate": "ABC123",
-        "transmission": "Automatic",
-        "year": 2018,
-        "latitude": 37.7749,
-        "longitude": -122.4194,
-        "status": "Available",
-        "make": "Toyota",
-        "model": "Camry",
-        "hourly_rate": 20,
-        "host": {
-          "userId": "1",
-          "fname": "Judy",
-          "lname": "Deen",
-          "profile_pic_url": "https://images.pexels.com/photos/1844547/pexels-photo-1844547.jpeg?auto=compress&cs=tinysrgb&w=600",
-          "handle": "judydeen",
-          "hourly_rate": 20
-        },
-        "location": {
-          "location_id": "1",
-          "entity_id": "3",
-          "market": {
-            "market_id": "1",
-            "country": "US",
-            "name": "San Francisco",
-            "latitude": "37.7749",
-            "longitude": "-122.4194",
-            "status": "Active"
-          },
-          "address": "123 Main St",
-          "building_name": "Falcon height",
-          "picture_url": "https://images.pexels.com/photos/457418/pexels-photo-457418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          "latitude": "37.7749",
-          "longitude": "-122.4194",
-          "status": "Active"
-        },
-        "vehicle_pictures": [
-          "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          "https://images.pexels.com/photos/305070/pexels-photo-305070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        ]
-      },
-      "payment": {
-        "payment_type_id": "1",
-        "entity_id": "3",
-        "payment_type": "Visa",
-        "details": "Payment details",
-        "status": "Active"
-      }
-    },
-    {
       "id": 4,
-      "reservation_id": "4",
+      "reservation_id": 4,
       "type": "Hourly",
       "entity_id": "4",
       "user_id": "2",
@@ -430,8 +352,8 @@
       "hourly_rate": 20,
       "start_date_time": "2023-03-13T12:00:00",
       "end_date_time": "2023-03-13T14:40:00",
-      "total_cost": 100,
-      "duration": 5,
+      "total_cost": 80,
+      "duration": 4,
       "payment_id": "1",
       "status": "Active",
       "customer": {
@@ -499,7 +421,7 @@
     },
     {
       "id": 5,
-      "reservation_id": "5",
+      "reservation_id": 5,
       "type": "Hourly",
       "entity_id": "5",
       "user_id": "1",
@@ -577,7 +499,7 @@
     },
     {
       "id": 6,
-      "reservation_id": "6",
+      "reservation_id": 6,
       "type": "Hourly",
       "entity_id": "4",
       "user_id": "1",
@@ -586,8 +508,8 @@
       "hourly_rate": 20,
       "start_date_time": "2023-03-14T10:00:00",
       "end_date_time": "2023-03-14T12:40:00",
-      "total_cost": 100,
-      "duration": 5,
+      "total_cost": 120,
+      "duration": 6,
       "payment_id": "1",
       "status": "Blocked",
       "customer": {
@@ -655,7 +577,7 @@
     },
     {
       "id": 7,
-      "reservation_id": "7",
+      "reservation_id": 7,
       "type": "Hourly",
       "entity_id": "3",
       "user_id": "2",
@@ -664,8 +586,8 @@
       "hourly_rate": 20,
       "start": "2023-03-14T10:00:00",
       "end": "2023-03-14T14:40:00",
-      "total_cost": 100,
-      "duration": 5,
+      "total_cost": 20,
+      "duration": 1,
       "payment_id": "1",
       "status": "Active",
       "customer": {
@@ -733,7 +655,7 @@
     },
     {
       "id": 8,
-      "reservation_id": "8",
+      "reservation_id": 8,
       "type": "Blocked",
       "entity_id": "2",
       "user_id": "1",
@@ -742,8 +664,8 @@
       "hourly_rate": 20,
       "start_date_time": "2023-03-14T10:00:00",
       "end_date_time": "2023-03-14T12:00:00",
-      "total_cost": 100,
-      "duration": 5,
+      "total_cost": 30,
+      "duration": 1.5,
       "payment_id": "1",
       "status": "Active",
       "customer": {
@@ -811,7 +733,7 @@
     },
     {
       "id": 9,
-      "reservation_id": "9",
+      "reservation_id": 9,
       "type": "Hourly",
       "entity_id": "2",
       "user_id": "2",
@@ -889,7 +811,7 @@
     },
     {
       "id": 10,
-      "reservation_id": "10",
+      "reservation_id": 10,
       "type": "Hourly",
       "entity_id": "5",
       "user_id": "1",
@@ -967,7 +889,7 @@
     },
     {
       "id": 11,
-      "reservation_id": "11",
+      "reservation_id": 11,
       "type": "Hourly",
       "entity_id": "1",
       "user_id": "1",
@@ -1045,7 +967,7 @@
     },
     {
       "id": 12,
-      "reservation_id": "12",
+      "reservation_id": 12,
       "type": "Hourly",
       "entity_id": "2",
       "user_id": "2",
@@ -1123,7 +1045,7 @@
     },
     {
       "id": 13,
-      "reservation_id": "13",
+      "reservation_id": 13,
       "type": "Hourly",
       "entity_id": "3",
       "user_id": "1",
@@ -1201,7 +1123,7 @@
     },
     {
       "id": 14,
-      "reservation_id": "14",
+      "reservation_id": 14,
       "type": "Hourly",
       "entity_id": "2",
       "user_id": "2",
@@ -1270,7 +1192,7 @@
     },
     {
       "id": 15,
-      "reservation_id": "15",
+      "reservation_id": 15,
       "type": "Hourly",
       "entity_id": "5",
       "user_id": "1",
@@ -1348,7 +1270,7 @@
     },
     {
       "id": 16,
-      "reservation_id": "15",
+      "reservation_id": 16,
       "type": "Blocked",
       "entity_id": "3",
       "user_id": "1",
@@ -1428,7 +1350,7 @@
     },
     {
       "id": 17,
-      "reservation_id": "17",
+      "reservation_id": 17,
       "type": "Hourly",
       "entity_id": "3",
       "user_id": "2",
@@ -1506,7 +1428,7 @@
     },
     {
       "id": 18,
-      "reservation_id": "18",
+      "reservation_id": 18,
       "type": "Hourly",
       "entity_id": "3",
       "user_id": "1",
@@ -1584,7 +1506,7 @@
     },
     {
       "id": 19,
-      "reservation_id": "19",
+      "reservation_id": 19,
       "type": "Hourly",
       "entity_id": "1",
       "user_id": "2",
@@ -1662,7 +1584,7 @@
     },
     {
       "id": 20,
-      "reservation_id": "20",
+      "reservation_id": 20,
       "type": "Hourly",
       "entity_id": "2",
       "user_id": "1",
@@ -1828,6 +1750,19 @@
       "hourly_rate": "45",
       "status": "available",
       "location_id": 3
+    },
+    {
+      "plate": "asdasda",
+      "vehicle_pictures": [
+        "blob:http://localhost:3000/0e6202cd-7ee5-4e92-976a-fe6dab2d25c5"
+      ],
+      "make": "Toyota",
+      "model": "Corolla XSE",
+      "year": "2020",
+      "transmission": "Manual",
+      "hourly_rate": "20",
+      "status": "available",
+      "vehicle_id": 2
     }
   ],
   "locations": [
@@ -1879,6 +1814,75 @@
         "blob:http://localhost:3000/b1c8f988-22fd-45d4-99b1-7ca9c72a47d2"
       ],
       "station_id": 3
+    }
+  ],
+  "authcodes": [
+    {
+      "authcode_id": 1,
+      "user_id": 1,
+      "user_image": "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?size=338&ext=jpg&ga=GA1.1.490751833.1679032583&semt=ais",
+      "authcode": "1234567890",
+      "status": "active"
+    },
+    {
+      "user_id": 2,
+      "user_image": "https://img.freepik.com/free-icon/user_318-219680.jpg?size=338&ext=jpg&ga=GA1.2.490751833.1679032583&semt=ais",
+      "authcode": "bft7tNK9dsr4",
+      "status": "reserved",
+      "authcode_id": 2
+    },
+    {
+      "user_id": 1,
+      "user_image": "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?size=338&ext=jpg&ga=GA1.1.490751833.1679032583&semt=ais",
+      "authcode": "JdN5sO7HUxUg",
+      "status": "reserved",
+      "authcode_id": 3
+    },
+    {
+      "user_id": 2,
+      "user_image": "https://img.freepik.com/free-icon/user_318-219680.jpg?size=338&ext=jpg&ga=GA1.2.490751833.1679032583&semt=ais",
+      "authcode": "54mXC9lALZFy",
+      "status": "reserved",
+      "authcode_id": 4
+    },
+    {
+      "authcode": "2lLT5ofjF6k8",
+      "status": "reserved",
+      "authcode_id": 5
+    }
+  ],
+  "requested-authcodes": [
+    {
+      "authcode_id": 1,
+      "user_id": 1,
+      "user_image": "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?size=338&ext=jpg&ga=GA1.1.490751833.1679032583&semt=ais",
+      "vehicle_id": 1
+    }
+  ],
+  "users": [
+    {
+      "user_id": 1,
+      "profilePicUrl": "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?size=338&ext=jpg&ga=GA1.1.490751833.1679032583&semt=ais",
+      "fname": "John",
+      "lname": "Doe",
+      "handle": "JDoe",
+      "email": "johndoe@email.com",
+      "phone": "+254712345678",
+      "marketId": "Kenya",
+      "userType": "Customer",
+      "status": "active"
+    },
+    {
+      "user_id": 2,
+      "profilePicUrl": "https://img.freepik.com/free-icon/user_318-219680.jpg?size=338&ext=jpg&ga=GA1.2.490751833.1679032583&semt=ais",
+      "fname": "Judy",
+      "lname": "Doe",
+      "handle": "JudDoe",
+      "email": "judydoe@email.com",
+      "phone": "+1712345678",
+      "marketId": "USA",
+      "userType": "Customer",
+      "status": "active"
     }
   ]
 }
