@@ -36,7 +36,10 @@ export const REPORT_ISSUE_ENDPOINT = DOMAIN + "/api/issues";
 
 export const FETCH_RESERVATIONS_ENDPOINT = DOMAIN + "/api/reservations";
 
-export const FETCH_VEHICLES_ENDPOINT = DOMAIN + "/api/vehicles";
+/**
+ * @description - base route for all vehicle related endpoints
+ */
+export const VEHICLES_ENDPOINT = DOMAIN + '/api/vehicles';
 
 export const RESERVE_ENDPOINT = DOMAIN + "/api/reserve";
 
@@ -50,9 +53,21 @@ export const FETCH_PAYMENT_METHODS_ENDPOINT = DOMAIN + "/api/paymentMethods";
 
 export const DELETE_PAYMENT_METHOD_ENDPOINT = DOMAIN + "/api/paymentMethods/1";
 
-export const SET_SETTINGS_ENDPOINT = DOMAIN + "/api/settings";
+/**
+ * @description - for all settings related endpoints
+ */
+export const SETTINGS_ENDPOINT = DOMAIN + '/api/settings';
 
-export const VERIFY_AUTH_CODE_ENDPOINT = DOMAIN + "/api/authcode";
+/**
+ * @description - for all auth code related endpoints
+ */
+export const AUTH_CODE_ENDPOINT = DOMAIN + '/api/authcodes';
+
+/**
+ * @description - request a new auth code
+ */
+export const REQUEST_AUTH_CODE_ENDPOINT = AUTH_CODE_ENDPOINT + '/request';
+
 
 export const SEND_MAIL_ENDPOINT = DOMAIN + "/api/mail/send/message";
 
@@ -70,47 +85,54 @@ export const SET_VEHICLE_INSPECTION_ENDPOINT = DOMAIN + "/api/vehicleInspection"
 
 export const END_RESERVATION_ENDPOINT = DOMAIN + "/api/endReservation/2"; 
 
-export const REQUEST_AUTH_CODE_ENDPOINT = DOMAIN + "/api/requestAuthCode";
+export const FETCH_USER_AGREEMENT_ENDPOINT = DOMAIN + '/api/userAgreement';
 
-export const FETCH_USER_AGREEMENT_ENDPOINT = DOMAIN + "/api/userAgreement";
+export const FETCH_PRIVACY_POLICY_ENDPOINT = DOMAIN + '/api/privacy_policy';
 
-export const FETCH_PRIVACY_POLICY_ENDPOINT = DOMAIN + "/api/privacy_policy";
+export const FETCH_SUPPORT_ENDPOINT = DOMAIN + '/api/support';
 
-export const FETCH_SUPPORT_ENDPOINT = DOMAIN + "/api/support";
+export const SET_DRIVERS_LICENCE_ENDPOINT = DOMAIN + '/api/driversLicense';
 
-export const SET_DRIVERS_LICENCE_ENDPOINT = DOMAIN + '/api/driversLicense'
-
-export const FETCH_DRIVERS_LICENSE_ENDPOINT = DOMAIN + '/api/driversLicense/1'
+export const FETCH_DRIVERS_LICENSE_ENDPOINT = DOMAIN + '/api/driversLicense/1';
 
 /**
  * @descrtiption - for all driver credentials related endpoints
  */
-export const DRIVER_CREDENTIALS_ENDPOINT = DOMAIN + '/api/users/drivercredentials'
+export const DRIVER_CREDENTIALS_ENDPOINT = DOMAIN + '/api/users/drivercredentials';
 
 /**
- * @description - for tracking the user's onboarding flow 
+ * @description - for tracking the user's onboarding flow
  *                I'm thinking of using this single endpoint for tracking what steps are complete and what are not
  */
-export const FETCH_ONBOARDING = DOMAIN + '/api/users/onboarding'
-
+export const FETCH_ONBOARDING = DOMAIN + '/api/users/onboarding';
 
 /**
  * @description - markets(countries) this endpoint will fetch the markets(countries) the user can choose from
  */
-export const FETCH_MARKETS = DOMAIN + '/api/location/markets'
+export const FETCH_MARKETS = DOMAIN + '/api/location/markets';
 
 /**
  * @description - submarkets(cities) this endpoint will fetch the submarkets(cities) the user can choose from
  */
-export const FETCH_SUBMARKETS = DOMAIN + '/api/location/submarkets'
+export const FETCH_SUBMARKETS = DOMAIN + '/api/location/submarkets';
 
 /**
  * @description - this is the base enpoint for the user related endpoints
  */
-export const USER_ENDPOINT = DOMAIN + '/api/users'
+export const USER_ENDPOINT = DOMAIN + '/api/users';
 
 /**
  * @description - add payment method
  */
-export const PAYMENT_METHOD_ENDPOINT = DOMAIN + '/api/paymenttypes'
+export const PAYMENT_METHOD_ENDPOINT = DOMAIN + '/api/paymenttypes';
+
+/**
+ * @description - add a push notification token to a user
+ */
+export const PUSH_NOTIFICATION_TOKEN_ENDPOINT = DOMAIN + '/api/settings/tokens';
+
+/**
+ * @description - this endpoint will be removed eventually, however, since some parts of the application still use it, it will remain for now
+ */
+export const FETCH_AVAILABLE_VEHICLES = DOMAIN + '/api/availableVehicles'
 

@@ -69,7 +69,7 @@ const Banner = () => {
       {data.length > 0 &&
         data.map((banner) => {
           return (
-            <div key={banner.id}>
+            <section key={banner.id}>
               {banner.id === 1 && currentSlide === 1 ? (
                 <BannerSlides banner={banner} key={banner.id} />
               ) : banner.id === 2 && currentSlide === 2 ? (
@@ -79,7 +79,7 @@ const Banner = () => {
               ) : banner.id === 4 && currentSlide === 4 ? (
                 <Slide banner={banner} key={banner.id} />
               ) : null}
-            </div>
+            </section>
           );
         })}
     </Box>

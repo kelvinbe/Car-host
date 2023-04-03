@@ -5,24 +5,36 @@ import Footer from "../../components/organism/Footer/Footer";
 import AboutUs from "../../components/organism/AboutUs/AboutUs";
 import BookRide from "../../components/organism/BookRide/BookRide";
 import AppFeature from "../../components/organism/AppFeature/Appfeature";
+import Head from "next/head";
 
 const LandingPage = () => {
   return (
-    <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full">
-      <Header />
-      <Banner />
+    <html lang="en">
+      <Head>
+        <title>Divvly. Rent a car</title>
+        <meta name="description" content="Divvly allows AirBnB hosts rent cars to their tenants." />
+        <meta property="og:title" content="Divvly. Rent a car" />
+        <meta property="og:description" content="Divvly allows AirBnB hosts rent cars to their tenants." />
+        {/* <meta property="og:image" content="https://example.com/my-image.jpg" /> */}
+      </Head>
+      <body className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full" >
+        <Header />
+        <Banner />
+        <section id="about">
+          <AboutUs />
+        </section>
+        <section id="app-feature">
+          <AppFeature />
+        </section>
+        <section id="book-ride">
+          <BookRide/>
+        </section>  
+        <footer className="w-full">
+          <Footer />
+        </footer>  
+      </body>
       
-      <div id="about">
-        <AboutUs />
-      </div>
-      <div id="app-feature">
-        <AppFeature />
-      </div>
-      <div id="book-ride">
-        <BookRide/>
-      </div>    
-      <Footer />
-    </div>
+    </html>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, StatusBar } from 'react-native';
+import { Text, View, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { makeStyles, ThemeConsumer, useTheme } from '@rneui/themed';
 import { ProfileScreenParamList } from '../../../types';
@@ -8,10 +8,11 @@ import HomeIcon from '../../../assets/icons/home.svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllowNotifications, selectNotification, setAllowNotifications } from '../../../store/slices/notificationsSlice';
-import { selectNavState } from '../../../store/slices/navigationSlice';
 import useUserAuth from '../../../hooks/useUserAuth';
 import useToast from '../../../hooks/useToast';
-import * as Notifications from 'expo-notifications'
+import { useAppSelector } from '../../../store/store';
+import { selectUserProfile } from '../../../store/slices/userSlice';
+import useNotifications from '../../../hooks/useNotifications';
 
 type Props = NativeStackScreenProps<ProfileScreenParamList, 'ProfileScreenHome'>;
 
@@ -150,6 +151,11 @@ const useStyles = makeStyles((theme, props: Props) => ({
     justifyContent: 'space-between',
     paddingVertical: 10,
   },
+  notificationsLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
   notificationText: {
     color: theme.colors.title,
     fontSize: 16,
@@ -183,6 +189,8 @@ const ProfileScreenHome = (props: Props) => {
   const styles = useStyles(props);
   const { logOut: _logOut, userProfile } = useUserAuth();
 
+  const profile = useAppSelector(selectUserProfile)
+  const { togglePushNotifications, updateSettingsFeedback } = useNotifications()
   const allowNotifications = useSelector(selectAllowNotifications)
   const notification = useSelector(selectNotification)
   const dispatch = useDispatch()
@@ -224,28 +232,7 @@ const ProfileScreenHome = (props: Props) => {
     _logOut();
   };
 
-  const cancelNotification = async(notifId:string) => {
-    await Notifications.cancelScheduledNotificationAsync(notifId);
-  }
-  const toggleNotifications = async() => {
-    dispatch(setAllowNotifications())
-    if(allowNotifications){
-      toast({
-        type:'success',
-        title:'Success',
-        message:'Divvly notifications have been turned on',
-        duration:3000
-      })
-    }else{
-      cancelNotification(notification.request.identifier)
-      toast({
-        type:'warning',
-        title:'Warning',
-        message:'Divvly notifications are now off',
-        duration:3000
-      })
-    }
-  }
+  
 
   return (
     <ThemeConsumer>
@@ -316,12 +303,16 @@ const ProfileScreenHome = (props: Props) => {
                 </ListItem.Content>
               </ListItem>
               <View style={styles.notificationActionContainer}>
-                <Text style={styles.notificationText}>Notifications</Text>
+                <View style={styles.notificationsLeft}>
+                  { updateSettingsFeedback.loading && <ActivityIndicator
+                    color={theme.colors.primary}
+                  />}
+                  <Text style={styles.notificationText}>Notifications</Text>
+                </View>
                 <Switch
-                  trackColor={{ false: theme.colors.primary }}
                   thumbColor={theme.colors.primary}
-                  value={allowNotifications}
-                  onValueChange={toggleNotifications}
+                  value={profile.user_settings?.notifications_enabled}
+                  onValueChange={togglePushNotifications}
                 />
               </View>
               <Divider style={styles.dividerStyle} />

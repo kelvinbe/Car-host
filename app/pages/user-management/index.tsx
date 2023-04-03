@@ -12,7 +12,7 @@ const exampleUserManagementData: IUserProfile[] = [
     lname: "Squarepants",
     handle: "spongebob",
     marketId: "xxxxx",
-    profilePicUrl: "https://pngimg.com/uploads/spongebob/spongebob_PNG1.png",
+    profile_pic_url: "https://pngimg.com/uploads/spongebob/spongebob_PNG1.png",
     status: "active",
     userType: "admin",
     phone: "1234567890",

@@ -16,8 +16,7 @@ import { IStation } from "../../globaltypes";
 import { getStations } from "../../redux/stationSlice";
 import { selectStations } from "../../redux/stationSlice";
 import { StationTableColumns } from "../../utils/tables/TableTypes";
-import CreateStationModal from "../../components/organism/Modals/CreateStationModal"
-import EditStationModal from "../../components/organism/Modals/EditStationModal"
+import StationActionModal from "../../components/organism/Modals/StationActionModal"
 import ViewStationModal from "../../components/organism/Modals/ViewStationModal"
 
 
@@ -49,14 +48,7 @@ const reducer = (state:IReducerState, action:{type:string, key:string, value:boo
 function Stations() {
   const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
   const StationsData = useAppSelector(selectStations)
-  const [selectedStation, setSelectedStation] = useState<IStation>({
-    station_id:0,
-    station_name:'',
-    status:'active',
-    description:"",
-    sub_market_name:"",
-    station_images:[]
-  })
+  const [selectedStation, setSelectedStation] = useState<IStation | null>(null)
   const {onClose, isOpen, onOpen} = useDisclosure()
   const [state,dispatch] = useReducer(reducer, initialState)
   
@@ -74,23 +66,23 @@ function Stations() {
     })
     onOpen()
   }
-  const showViewStationModal = (stationId:number) => {
+  const showViewStationModal = (stationId:string) => {
     dispatch({
       type:'toggle_modal_state',
       key:"isViewModalOpen",
       value:true
     })
-    let station = StationsData.find(station => station.station_id === stationId)
+    let station = StationsData.find(station => station.id === stationId)
     station && setSelectedStation(station)
-    onOpen()
+    station && onOpen()
   }
-  const showEditStationModal = (stationId:number) => {
+  const showEditStationModal = (stationId:string) => {
     dispatch({
       type:'toggle_modal_state',
       key:"isEditModalOpen",
       value:true
     })
-    let station = StationsData.find(station => station.station_id === stationId)
+    let station = StationsData.find(station => station.id === stationId)
     station && setSelectedStation(station)
     onOpen()
   }
@@ -125,9 +117,9 @@ function Stations() {
       h="full"
       data-testid="stations-table"
     >
-      {state.isCreateModalOpen && <CreateStationModal isOpen={isOpen} onClose={closeCreateStationModal}/>}
+      {state.isCreateModalOpen && <StationActionModal isOpen={isOpen} onClose={closeCreateStationModal} />}
       {state.isViewModalOpen && <ViewStationModal isOpen={isOpen} onClose={closeViewStationModal} station={selectedStation}/>}
-      {state.isEditModalOpen && <EditStationModal isOpen={isOpen} onClose={closeEditStationModal} station={selectedStation}/>}
+      {state.isEditModalOpen && <StationActionModal isOpen={isOpen} onClose={closeEditStationModal} station={selectedStation}/>}
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}
@@ -148,7 +140,7 @@ function Stations() {
                 icon={<ViewIcon />}
                 size="sm"
                 onClick={() => {
-                  showViewStationModal(data.station_id)
+                  showViewStationModal(data.id)
                 }}
               />
               <IconButton
@@ -156,7 +148,7 @@ function Stations() {
                 icon={<EditIcon />}
                 size="sm"
                 onClick={() => {
-                  showEditStationModal(data.station_id)
+                  showEditStationModal(data.id)
                 }}
               />
               <IconButton
@@ -164,13 +156,16 @@ function Stations() {
                 icon={<DeleteIcon />}
                 size="sm"
                 onClick={() => {
-                  deleteData(data.station_id)
+                  deleteData(data.id)
                 }}
                 color="cancelled.1000"
               />
             </Flex>
           );
         })}
+        pagination={{
+          position: ["bottomCenter"],
+        }}
         data={StationsData}
         dataFetchFunction={() => {}}
       />

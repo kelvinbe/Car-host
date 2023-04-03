@@ -31,8 +31,8 @@ function VehicleManagement() {
   },[])
   useEffect(() => {
     setVehicleData(() => vehicles.map(vehicle => ({
-      vehicle_pictures:vehicle.vehicle_pictures,
-      vehicle_id:vehicle.vehicle_id,
+      ...vehicle,
+      vehicle_id: vehicle.id,
       make:vehicle.make,
       model:vehicle.model,
       year:vehicle.year,
@@ -123,6 +123,9 @@ function VehicleManagement() {
             </Flex>
           );
         })}
+        pagination={{
+          position: ["bottomCenter"],
+        }}
         data={vehiclesData}
         dataFetchFunction={() => {}}
       />

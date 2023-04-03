@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IVehicle } from "../../types";
 import { vehiclesApi } from './vehiclesSlice';
 import { reservationsApi } from './reservationSlice';
-import dayjs from 'dayjs';
+import { isNull } from 'lodash';
 
 
 /**
@@ -41,12 +41,18 @@ export const loadBookingDetailsFromReservation = createAsyncThunk<any, any>(
     }
 )
 
+type tNotification = {
+    vehicle_id: string,
+    code: string,
+    host_id: string
+}
+
 const initialState: {
     status: 'Ready' | 'Complete' | 'Incomplete',
     /**
      * The authcode provided to the user by the host, is a requirement for booking
      */
-    authCode: string | null,
+    code: string | null,
     rate: string | null,
     tax: string | null,
     total: string | null,
@@ -61,7 +67,7 @@ const initialState: {
     endDateTime: string,
     duration: number,
     locationId: number | null,
-    hostId: number | null,
+    host_id: string | null,
     /**
      * Billing info is the payment method selected by the user is a requirement for booking
      */
@@ -71,10 +77,11 @@ const initialState: {
      * 1 = one of the checks either authCode or billingInfo is missing
      * 2 = both checks are present so the booking can be made
      */
-    canBookChecks: number
+    canBookChecks: number,
+    notification: tNotification | null
 } = {
     status: 'Incomplete',
-    authCode: null,
+    code: null,
     rate: null,
     tax: null,
     total: null,
@@ -83,9 +90,10 @@ const initialState: {
     endDateTime: "",
     duration: 1,
     locationId: null,
-    hostId: null,
+    host_id: null,
     billingInfo: null,
-    canBookChecks: 0
+    canBookChecks: 0,
+    notification: null
 }
 
 const bookingSlice = createSlice({
@@ -96,8 +104,8 @@ const bookingSlice = createSlice({
             state.status = action.payload.status
         },
         setAuthCode: (state, action) => {
-            state.authCode = action.payload.authCode
-            state.canBookChecks = state.authCode ?state.canBookChecks + 1 : state.canBookChecks - 1
+            state.code = action.payload.authCode
+            state.canBookChecks = state.code ?state.canBookChecks + 1 : state.canBookChecks - 1
         },
         setStartDateTime: (state, action) => {
             state.startDateTime = action.payload.startDateTime
@@ -106,10 +114,17 @@ const bookingSlice = createSlice({
             state.endDateTime = action.payload.endDateTime
         },
         setHostId: (state, action) => {
-            state.hostId = action.payload.hostId
+            state.host_id = action.payload.hostId
         },
         setVehicle: (state, action) => {
             state.vehicle = action.payload.vehicle
+            /**
+             * @todo - on mock data update, change vehicle_id to vehicle.id
+             */
+            if (!isNull(state.notification) && action.payload.vehicle?.vehicle_id === state.notification?.vehicle_id) {
+                state.code = state.notification.code
+                state.host_id = state.notification.host_id
+            }
         },
         setBillingInfo: (state, action) => {
             state.billingInfo = action.payload.billingInfo
@@ -117,7 +132,7 @@ const bookingSlice = createSlice({
         },
         clearBookingState: (state)=>{
             state.status = 'Incomplete'
-            state.authCode = null
+            state.code = null
             state.rate = null
             state.tax = null
             state.total = null
@@ -126,9 +141,12 @@ const bookingSlice = createSlice({
             state.endDateTime = ""
             state.duration = 1
             state.locationId = null
-            state.hostId = null
+            state.host_id = null
             state.billingInfo = null
             state.canBookChecks = 0
+        },
+        setNotification: (state, action)=>{
+            state.notification = action.payload
         }
     },
     extraReducers(builder) {
@@ -154,7 +172,8 @@ export const {
     setHostId,
     setVehicle,
     setBillingInfo,
-    clearBookingState
+    clearBookingState,
+    setNotification
 } = bookingSlice.actions;
 
 // selectors

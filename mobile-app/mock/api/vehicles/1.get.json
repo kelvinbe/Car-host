@@ -15,7 +15,7 @@
         "model": "X5",
         "hourly_rate": 10,
         "host": {
-          "userId": "1",
+          "id": "1",
           "fname": "John",
           "lname": "Doe",
           "profile_pic_url": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
@@ -63,7 +63,7 @@
         "model": "X5",
         "hourly_rate": 10,
         "host": {
-          "userId": "1",
+          "id": "1",
           "fname": "John",
           "lname": "Doe",
           "profile_pic_url": "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",

@@ -111,7 +111,7 @@ function FullCallender() {
       plugins={[resourceTimeGridPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin]}
       resources={resources}
       headerToolbar={{
-        right: "prev,next today",
+        right: "prev,next,today",
       }}
       initialView="resourceTimeGridDay"
       events={events}

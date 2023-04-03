@@ -18,7 +18,9 @@ export default function useResourceData(){
         })
         .then(({data})=>{
             setLoadingResources(false)
-            dispatch(getResources(data))
+            dispatch(getResources(data.data))
+        }).catch((e)=>{
+            setLoadingResources(false)
         })
     }
 

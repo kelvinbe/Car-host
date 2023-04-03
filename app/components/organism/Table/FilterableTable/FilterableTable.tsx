@@ -7,7 +7,7 @@ import {
   FlexRowCenterEnd,
 } from "../../../../utils/theme/FlexConfigs";
 import SortableDropdown from "./SortableDropdown";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { createSlice } from "@reduxjs/toolkit";
 import BaseTable from "../BaseTable/BaseTable";
 import { SearchIcon } from "@chakra-ui/icons";
@@ -31,7 +31,7 @@ interface IProps {
   viewSortablesField?: Boolean;
   openCreateModal?:() => void
   modalComponent?: React.ReactNode;
-
+  pagination?: TablePaginationConfig | false;
 }
 
 interface IReducer {
@@ -78,7 +78,8 @@ function FilterableTable(props: IProps) {
     viewAddFieldButton,
     viewSortablesField,
     openCreateModal,
-    modalComponent
+    modalComponent,
+    pagination
   } = props;
   const [{ tableColumnDefinitions }, dispatchActions] = useReducer(
     FilterableTableSlice.reducer,
@@ -148,6 +149,7 @@ function FilterableTable(props: IProps) {
           columns={tableColumnDefinitions as any}
           data={data || []}
           dataFetchFunction={dataFetchFunction}
+          pagination={props.pagination ? props.pagination : false}
         />
       </Flex>
     </Flex>

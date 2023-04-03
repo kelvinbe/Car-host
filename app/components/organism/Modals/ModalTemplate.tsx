@@ -9,7 +9,7 @@ ModalCloseButton,
 
 interface Props{
     isOpen:boolean,
-    headerTitle:string,
+    headerTitle?:string,
     modalSize?:string,
     children:JSX.Element,
     onClose:() => void
@@ -18,18 +18,16 @@ interface Props{
     const {isOpen, onClose, headerTitle, children, modalSize} = props
     
     return (
-      <>
-        <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size={modalSize} isCentered motionPreset="slideInBottom">
+        <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size={modalSize || "2xl"}  isCentered motionPreset="slideInBottom">
           <ModalOverlay />
-          <ModalContent>
-            <ModalHeader textAlign={'center'}>{headerTitle}</ModalHeader>
+          <ModalContent >
+            <ModalHeader textAlign={'center'}>{headerTitle ?? ""}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
                 {children}
             </ModalBody>
           </ModalContent>
         </Modal>
-      </>
     );
     
   }

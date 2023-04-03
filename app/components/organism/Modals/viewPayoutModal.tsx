@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import { IPayout } from "../../../globaltypes";
 import StatusTag from "../../atoms/status/StatusTag";
 
@@ -26,7 +27,7 @@ export default function ViewPayoutModal(props:Props) {
         <ModalHeader textAlign={'center'}>Payout details</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text marginBottom={5}>Payout Date: {payout['payout_date']}</Text>
+            <Text marginBottom={5}>Payout Date: {dayjs(payout?.date).format()}</Text>
             <Text marginBottom={5}>Amount paid: ${payout['amount']}</Text>
             <StatusTag status={payout.status}>{payout.status}</StatusTag>
           </ModalBody>

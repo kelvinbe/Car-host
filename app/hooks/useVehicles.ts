@@ -24,21 +24,21 @@ export default function useVehicles(vehicleId?:number) {
         },
       })
       .then(({ data }) => {
-        dispatch(getVehicles(data));
+        dispatch(getVehicles(data.data));
         setLoading(false);
         setError(null);
       })
       .catch(setError);
   }
 
-  function updateVehicle(updatedBody: IVehicleDetails) {
+  function updateVehicle(updatedBody: Partial<IVehicleDetails>) {
     setLoading(true);
     if(isEmpty(updatedBody)) return setError({
         message:"body is empty"
     })
     axios
       .patch(
-        `${VEHICLES_DOMAIN}/${vehicleId}`,
+        `${VEHICLES_DOMAIN}?vehicle_id=${vehicleId}`,
         { ...updatedBody },
         {
           headers: {
@@ -108,7 +108,7 @@ export default function useVehicles(vehicleId?:number) {
   }
   function deleteVehicle(id: number){
     setLoading(true)
-    axios.delete(`${VEHICLES_DOMAIN}/${id}`, {
+    axios.delete(`${VEHICLES_DOMAIN}?vehicle_id=${id}`, {
         headers:{
             Authorization: `Bearer token`,
         }

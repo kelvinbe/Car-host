@@ -3,10 +3,13 @@ import { reducers } from './index';
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { stationsApi } from './stationSlice';
 
 const store = configureStore({
     reducer: reducers,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(locationsApi.middleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+    .concat(locationsApi.middleware)
+    .concat(stationsApi.middleware)
 })
 
 export type AppDispatch = typeof store.dispatch

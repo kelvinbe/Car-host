@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SearchScreenParamList } from '../../../types';
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
@@ -10,6 +10,7 @@ import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOut
 import { LinearGradient } from 'expo-linear-gradient';
 import useToast from '../../../hooks/useToast';
 import useVehicleData, {VehicleData} from '../../../hooks/useVehicleData';
+import { isUndefined } from 'lodash';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -118,7 +119,20 @@ const SearchScreenHome = (
   const maxWidth = useWindowDimensions().width;
   const {fetchVehicleData} = useVehicleData()
 
+  const { route } = props
 
+  useEffect(() => {
+    if(!isUndefined(route.params?.hostCode) && route.params?.searchType === 'host') {
+      fetchVehicleData({
+        hostCode: route.params?.hostCode
+      })
+      props.navigation.navigate('MapScreen', {
+        searchType: 'host',
+        hostCode: route.params?.hostCode,
+      });
+    }
+  }, [route.params?.searchType])
+  
   const hostCodeSearch = (value: any) => {
 
     fetchVehicleData(value)

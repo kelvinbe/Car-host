@@ -17,14 +17,14 @@ function Payouts() {
   const {fetchData} = useFetchData(PAYOUT_DOMAIN,getPayouts)
   const PayoutsData = useAppSelector(selectPayouts)
   const {isOpen, onClose, onOpen} = useDisclosure()
-  const [selectedPayout, setSelectedPayout] = useState<IPayout>({payout_id:0, payout_date:"",amount:0, status:"pending"})
+  const [selectedPayout, setSelectedPayout] = useState<IPayout>({ id: 0, date: "", amount: 0, status: "pending" })
 
   useEffect(() => {
     fetchData()
   },[])
 
   const viewPayoutModal = (payoutId:number) => {
-    let payoutToView = PayoutsData.find(payout => payout.payout_id === payoutId)
+    let payoutToView = PayoutsData.find(payout => payout.id === payoutId)
     payoutToView && setSelectedPayout(payoutToView)
     onOpen()
   }
@@ -56,6 +56,9 @@ function Payouts() {
           );
         })}
         data={PayoutsData}
+        pagination={{
+          position: ["bottomCenter"],
+        }}
       />
     </Flex>
   );

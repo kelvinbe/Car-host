@@ -87,7 +87,7 @@ export default function ReservationModal({ isOpen, onClose, toggleViewReservatio
           <ModalBody>
             {toggleViewReservationModal && viewReservation.length !== 0 &&
               <div>
-                <Text fontWeight={'bold'} marginBottom={15}>Reservation Number:{viewReservation?.[0]?.reservation_id}</Text>
+                <Text fontWeight={'bold'} marginBottom={15}>Reservation Number:{viewReservation?.[0]?.id}</Text>
                 <Text marginBottom={15}>Pickup time: {`${new Date(viewReservation[0]?.start_date_time)}`}</Text>
                 <Text marginBottom={15}>Drop-off time: {`${new Date(viewReservation?.[0]?.end_date_time)}`}</Text>
                 <Text marginBottom={15}>Vehicle details: {`${viewReservation?.[0]?.vehicle?.make} ${viewReservation?.[0]?.vehicle?.model} - ${viewReservation?.[0]?.vehicle?.plate}`}</Text>

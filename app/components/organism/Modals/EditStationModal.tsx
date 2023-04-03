@@ -3,19 +3,20 @@ import { Flex, FormControl, FormLabel, Input, FormErrorMessage, Select, Textarea
 import Rounded from "../../molecules/Buttons/General/Rounded";
 import { FlexColCenterBetween, FlexRowCenterCenter } from "../../../utils/theme/FlexConfigs";
 import { ChangeEvent, useEffect, useReducer, useState } from "react";
-import { isArray, isUndefined } from "lodash";
+import { isArray, isString, isUndefined } from "lodash";
 import { STATIONS_DOMAIN } from "../../../hooks/constants";
 import useEditData from "../../../hooks/useEditData";
 import { IStation } from "../../../globaltypes";
 import UploadImage from "../../molecules/UploadImage/UploadImage";
 import { useFetchData } from "../../../hooks";
 import { getStations } from "../../../redux/stationSlice";
+import useLocation from "../../../hooks/useLocation";
 
 type IReducerState = {
     station_name:string,
     description:string,
     sub_market_name:string,
-    station_images:Array<string>,
+    station_image:string,
     status:string,
     isstation_nameError:boolean,
     isdescriptionError:boolean,
@@ -31,21 +32,7 @@ interface Props {
     onClose:() => void,
     station:IStation
 }
-export default function EditStationModal({isOpen, onClose, station}:Props) {
-    const initialState = {
-        station_name:station.station_name,
-        description:station.description,
-        station_images:station.station_images,
-        sub_market_name:station.sub_market_name,
-        status:station.status,
-        isstation_nameError:true,
-        isdescriptionError:true,
-        issub_market_nameError:true,
-        isstation_imageError:true,
-        isError:"",
-        isStatusError:"",
-        isImageError:""
-    }
+
 const checkErrorOnChange = (key:string, value:string|string[]) => {
     if(isUndefined(value)) return false
     switch (key) {
@@ -62,6 +49,7 @@ const checkErrorOnChange = (key:string, value:string|string[]) => {
             return false
     }
 }
+
 const reducer = (state:IReducerState, action:{type:string, value:string|string[], key:string}) => {
     switch (action.type) {
         case 'edit_values':
@@ -80,13 +68,34 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
             return state;
     }
 }
+export default function EditStationModal({isOpen, onClose, station}:Props) {
+    const initialState = {
+        station_name: station.name,
+        description:station.description,
+        station_image: station.image,
+        sub_market_name:station.sub_market_name,
+        status:station.status,
+        isstation_nameError:true,
+        isdescriptionError:true,
+        issub_market_nameError:true,
+        isstation_imageError:true,
+        isError:"",
+        isStatusError:"",
+        isImageError:""
+    }
+
+    const { fetchSubmarkets, submarkets } = useLocation()
     const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
     const [state, dispatch] = useReducer(reducer, initialState)
-    const {updateData} = useEditData(STATIONS_DOMAIN, station.station_id,'Updated Station','Station Updated Successfully', 'An error occurred', "Could not update station", fetchData)
-    const [images, setImages] = useState<string[]>(state.station_images)
+    const { updateData } = useEditData(STATIONS_DOMAIN, station.id, 'Updated Station', 'Station Updated Successfully', 'An error occurred', "Could not update station", fetchData)
+    const [images, setImages] = useState<string>(state.station_image)
+
+    useEffect(()=>{
+
+    }, [])
 
     const handleSelectImages = (images: string | string[]) => {
-        if(isArray(images)) {
+        if(isString(images)) {
             setImages(images)
         }
     }
@@ -101,7 +110,7 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
 
 
     const handleEditLocation = () => {
-        if(state.station_name === "" || state.sub_market_name === "" ||  state.description=== "" || state.station_images.length === 0) {
+        if(state.station_name === "" || state.sub_market_name === "" ||  state.description=== "" || state.station_image.length === 0) {
             dispatch({
                 type:'error_state',
                 key:"isError",
@@ -109,13 +118,13 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
             })
             return
         } 
-        if(state.station_name !== ""|| state.sub_market_name !== "" ||  state.description !== "" || state.station_images.length > 0){
+        if(state.station_name !== ""|| state.sub_market_name !== "" ||  state.description !== "" || state.station_image.length > 0){
             updateData({
                 station_name:state.station_name,
                 sub_market_name:state.sub_market_name,
                 status: state.status,
                 description:state.description,
-                station_images:state.station_images
+                station_images:state.station_image
             })
             onClose()
         }
@@ -150,6 +159,7 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
                         </FormControl>
                         <FormControl w={350} isRequired isInvalid={!state.issub_market_nameError} flexDirection={'column'} marginBottom={5}>
                             <FormLabel htmlFor="sub_market_name">Sub Market Name</FormLabel>
+
                             <Input type='text' id='sub_market_name' placeholder='RoyalTon' w={350} value={state.sub_market_name} onChange={e => 
                                 dispatch({
                                     type:'edit_values',
@@ -171,7 +181,7 @@ const reducer = (state:IReducerState, action:{type:string, value:string|string[]
                                 <option value="inactive">Inactive</option>
                             </Select>
                         </FormControl>
-                        <UploadImage multiple onChange={handleSelectImages} images={images} />
+                        <UploadImage onChange={handleSelectImages} images={[images]} />
 
                         <Flex w='100%' {...FlexRowCenterCenter} marginBottom={5}>
                             <Rounded variant='outline' setWidth={240} rounded='full' onClick={handleEditLocation}>Edit</Rounded>

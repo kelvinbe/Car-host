@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Flex } from '@chakra-ui/react'
 import { Table } from 'antd'
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { isUndefined } from 'lodash';
 import React, { useEffect } from 'react'
 import AntdProvider from '../../../providers/AntdProvider';
@@ -10,7 +10,8 @@ interface IProps<dT> {
     columns: ColumnsType<dT>,
     data: dT[],
     dataFetchFunction?: ( fetchStatus: "pending" | "error" | "success" ) => void,
-    pagination?: false;
+    pagination?: TablePaginationConfig | false;
+
 }
 
 function BaseTable(props: IProps<any>) {
@@ -37,12 +38,13 @@ function BaseTable(props: IProps<any>) {
             borderColor="gray.300" 
             w="full"
             overflow="hidden"
+            maxHeight='700px'
         >
             <Table
             key={JSON.stringify(columns)}
                 columns={columns}
                 dataSource={tableData}
-                className="w-full h-full"
+                className="w-full h-full overflow-scroll"
                 pagination={props.pagination ? props.pagination : false }
             />
         </Flex>

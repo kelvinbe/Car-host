@@ -14,7 +14,7 @@ export default function ViewUserModal({isOpen, onClose, user}:Props){
             <ModalTemplate isOpen={isOpen} onClose={onClose} headerTitle={`${user.fname} ${user.lname} - (${user.handle})`}>
                 <Box paddingBottom={5}>
                     <Avatar
-                        src={user.profilePicUrl}
+                        src={user.profile_pic_url}
                         size={'xl'}
                     />
                     <Text marginBottom={5}>Email: {user.email}</Text>

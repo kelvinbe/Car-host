@@ -17,7 +17,7 @@
     "format": "prettier --write !.expo/ ./**/*.{js,jsx,ts,tsx,css,md,json}  --config ./.prettierrc",
     "storybook": "start-storybook dev -p 7007",
     "prestorybook": "rnstl",
-    "mock": "json-mock-api --port 3003 --directory ./mock"
+    "mock": "json-mock-api --port 3003 --directory ./mock --middleware ./mock/middleware/logger.js"
   },
   "jest": {
     "preset": "@testing-library/react-native",

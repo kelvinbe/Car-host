@@ -13,6 +13,11 @@
             "drivers_licence_front": "https://images.pexels.com/photos/1386649/pexels-photo-1386649.jpeg?auto=compress&cs=tinysrgb&w=400",
             "drivers_licence_back": "https://images.pexels.com/photos/543605/pexels-photo-543605.jpeg?auto=compress&cs=tinysrgb&w=400",
             "id": "some id"
+        },
+        "user_settings": {
+            "id": "43654c16-7687-465c-89cd-8eec6e0b3309",
+            "notifications_enabled": true,
+            "user_id": "43654c16-7657-465c-89cd-8eec6e0b3309"
         }
     },
     "message": "Successfully fetched user",

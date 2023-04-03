@@ -23,7 +23,6 @@ import Loading from '../../components/molecules/Feedback/Loading/Loading';
 import { isEmpty } from 'lodash';
 import useSocialAuth from '../../hooks/useSocialAuth';
 import { ResponseType } from 'expo-auth-session';
-const provider = new GoogleAuthProvider();
 import * as Facebook from 'expo-auth-session/providers/facebook';
 import useUserAuth from '../../hooks/useUserAuth';
 import { useAppDispatch } from '../../store/store';
@@ -113,8 +112,7 @@ const LoginScreen = (props: Props) => {
     const [password, setPassword] = useState('')
     const {  googleLogin, socialAuthLoading, socialAuthError, facebookLogin } = useSocialAuth()
     const { signIn: _signIn, signInLoading } = useUserAuth()
-    const reduxDispatch = useAppDispatch()
-    const { completed, loading: onBoardingLoading, error: onBoardingError } = useOnBoarding()
+    const { completed, loading: onBoardingLoading } = useOnBoarding()
 
     const toast = useToast()
 

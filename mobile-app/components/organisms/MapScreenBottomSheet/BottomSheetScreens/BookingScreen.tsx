@@ -5,12 +5,13 @@ import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import { useAddReservationMutation } from '../../../../store/slices/reservationSlice';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import useBookingActions from '../../../../hooks/useBookingActions';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import useToast from '../../../../hooks/useToast';
 import Loading from '../../../molecules/Feedback/Loading/Loading';
 import { useAppDispatch } from '../../../../store/store';
 import { isEmpty } from 'lodash';
 import BookingCarComponent from './BookingCarComponent';
+import { SearchScreenParamList } from '../../../../types';
 
 interface IProps {
   openAuthorization?: () => void;
@@ -52,9 +53,10 @@ const BookingScreen = (props: Props) => {
       endDateTime,
       startDateTime,
       billingInfo,
-      hostId,
+      host_id: hostId,
       total,
       vehicle,
+      code
     },
     clearBookingState,
     payForReservation,
@@ -62,7 +64,7 @@ const BookingScreen = (props: Props) => {
     paymentOption,
   } = useBookingActions();
   const [addReservation, { isLoading, data, error }] = useAddReservationMutation();
-  const { navigate } = useNavigation();
+  const { navigate } = useNavigation<NavigationProp<SearchScreenParamList>>();
   const reduxDispatch = useAppDispatch();
 
   const toast = useToast();
@@ -71,11 +73,10 @@ const BookingScreen = (props: Props) => {
     if (data) {
       reduxDispatch(clearBookingState());
       navigate('BookingConfirmationScreen', {
-        reservation: data?.data?.reservationId,
+        reservationId: data?.data?.reservationId,
       });
     }
     if (error) {
-      console.log(error);
       toast({
         message: 'An error Occured',
         type: 'error',
@@ -139,7 +140,7 @@ const BookingScreen = (props: Props) => {
             fullWidth
             loading={payForReservationLoading}
             onPress={makeBooking}
-            disabled={canBookChecks < 2}>
+            disabled={isEmpty(billingInfo) || isEmpty(code)}>
             Book Now
           </Rounded>
         </View>

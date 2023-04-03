@@ -13,8 +13,7 @@ import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { IReservation } from "../globaltypes";
 
-export default function useReservation(reservationId?: string|number) {
-
+export default function useReservation(reservationId?: string | number, size?:number, page?:number) {
   const reservations = useAppSelector(selectReservations);
   const activeReservations = useAppSelector(selectActiveReservations);
   const [loading, setLoading] = useState(false);
@@ -26,31 +25,41 @@ export default function useReservation(reservationId?: string|number) {
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [addErrors, setAddErrors] = useState<any>(null);
   const dispatch = useDispatch();
-  const toast = useToast()
+  const toast = useToast();
+
   function fetchReservations() {
     setLoading(true);
     axios
       .get(RESERVATION_DOMAIN, {
+        params:{
+          page,
+          size
+        },
         headers: {
           Authorization: `Bearer token`,
         },
       })
       .then(({ data }) => {
-        dispatch(getReservations(data));
+        dispatch(getReservations(data.data));
         setLoading(false);
         setErrors(null);
       })
       .catch(setErrors);
   }
 
-  function updateReservation(updatedBody: any, title: string, description: string) {
-    if(isEmpty(updatedBody)) return setUpdateErrors({
-        message:"body is empty"
-    })
+  function updateReservation(
+    updatedBody: any,
+    title: string,
+    description: string
+  ) {
+    if (isEmpty(updatedBody))
+      return setUpdateErrors({
+        message: "body is empty",
+      });
     setLoadingUpdate(true);
     axios
       .patch(
-        `${RESERVATION_DOMAIN}/${reservationId}`,
+        `${RESERVATION_DOMAIN}?reservation_id=${reservationId}`,
         { ...updatedBody },
         {
           headers: {
@@ -68,10 +77,10 @@ export default function useReservation(reservationId?: string|number) {
           duration: 3000,
           isClosable: true,
           status: "success",
-        })
+        });
       })
-      .catch(error=>{
-        setUpdateErrors(error)
+      .catch((error) => {
+        setUpdateErrors(error);
         toast({
           position: "top",
           title: title,
@@ -79,20 +88,21 @@ export default function useReservation(reservationId?: string|number) {
           duration: 3000,
           isClosable: true,
           status: "error",
-        })
+        });
       });
   }
 
-  function deleteReservation(id: number){
-    setLoadingRemove(true)
-    axios.delete(`${RESERVATION_DOMAIN}/${id}`, {
-        headers:{
-            Authorization: `Bearer token`,
-        }
-    })
-    .then((res)=>{
-        fetchReservations()
-        setLoadingRemove(false)
+  function deleteReservation(id: number) {
+    setLoadingRemove(true);
+    axios
+      .delete(`${RESERVATION_DOMAIN}?reservation_id=${id}`, {
+        headers: {
+          Authorization: `Bearer token`,
+        },
+      })
+      .then((res) => {
+        fetchReservations();
+        setLoadingRemove(false);
         toast({
           position: "top",
           title: "Delete Reservation",
@@ -100,59 +110,69 @@ export default function useReservation(reservationId?: string|number) {
           duration: 3000,
           isClosable: true,
           status: "success",
-        })
-    })
-    .catch(error=>{
-      setRemoveErrors(error)
-      toast({
-        position: "top",
-        title: "Delete Reservation",
-        description: "An error occured",
-        duration: 3000,
-        isClosable: true,
-        status: "error",
+        });
       })
-    })
-  }
-
-  function addReservation(reservation: IReservation){
-    setLoadingAdd(true)
-    if(isEmpty(reservation)) return setAddErrors({
-        message: "Reservation data is empty"
-    })
-    axios.post(RESERVATION_DOMAIN, {...reservation},
-        {
-            headers: {
-                Authorization: `Bearer token`
-            }
-        })
-    .then((res)=>{
-        fetchReservations()
-        console.log(res)
-        setLoadingAdd(false)
+      .catch((error) => {
+        setRemoveErrors(error);
         toast({
           position: "top",
-          title: `${res.data.type==="Blocked"? "Blocked":"Create Reservation"}`,
-          description: `${res.data.type === "Blocked"? "Reservation blocked succesfully": "Reservation created succesfully"}`,
+          title: "Delete Reservation",
+          description: "An error occured",
+          duration: 3000,
+          isClosable: true,
+          status: "error",
+        });
+      });
+  }
+
+  function addReservation(reservation: IReservation) {
+    setLoadingAdd(true);
+    if (isEmpty(reservation))
+      return setAddErrors({
+        message: "Reservation data is empty",
+      });
+    axios
+      .post(
+        RESERVATION_DOMAIN,
+        { ...reservation },
+        {
+          headers: {
+            Authorization: `Bearer token`,
+          },
+        }
+      )
+      .then((res) => {
+        fetchReservations();
+        console.log(res);
+        setLoadingAdd(false);
+        toast({
+          position: "top",
+          title: `${
+            res.data.type === "Blocked" ? "Blocked" : "Create Reservation"
+          }`,
+          description: `${
+            res.data.type === "Blocked"
+              ? "Reservation blocked succesfully"
+              : "Reservation created succesfully"
+          }`,
           duration: 3000,
           isClosable: true,
           status: "success",
-        })
-    })
-    .catch(error=>{
-      setAddErrors(error)
-      toast({
-        position: "top",
-        title: "Create Reservation",
-        description: "Could not create a reservation",
-        duration: 3000,
-        isClosable: true,
-        status: "success",
+        });
       })
-    })
-
+      .catch((error) => {
+        setAddErrors(error);
+        toast({
+          position: "top",
+          title: "Create Reservation",
+          description: "Could not create a reservation",
+          duration: 3000,
+          isClosable: true,
+          status: "success",
+        });
+      });
   }
-  
+
   return {
     reservations,
     fetchReservations,
@@ -162,7 +182,9 @@ export default function useReservation(reservationId?: string|number) {
     updateReservation,
     loadingUpdate,
     updateErrors,
-    selectedReservation: reservations.find(({reservation_id})=>reservation_id?.toString()===reservationId),
+    selectedReservation: reservations.find(
+      ({ id: reservation_id }) => reservation_id?.toString() === reservationId
+    ),
     removeErrors,
     loadingRemove,
     deleteReservation,

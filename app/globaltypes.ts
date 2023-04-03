@@ -55,19 +55,30 @@ export interface IVehicle {
        longitude: number
     } | null
   }
-  export interface IVehicleDetails{
-    vehicle_id?:number,       
-    transmission: "Automatic" | "Semi-Automatic" | "Manual" | "CVT",
-    year: number,
-    status: "active" | "unavailable" | "available",
-    make: string,
-    model: string,
-    plate:string,
-    hourly_rate: number,
-    vehicle_pictures?: []|string[]
- }
+  export interface IVehicleDetails {
+    id?: number;
+    transmission: string;
+    year: number;
+    status: "active" | "unavailable" | "available";
+    make: string;
+    model: string;
+    plate: string;
+    hourly_rate: number;
+    VehiclePictures: string[];
+  }
+  export interface IVehicleDetails {
+    id?: number;
+    transmission: string;
+    year: number;
+    status: "active" | "unavailable" | "available";
+    make: string;
+    model: string;
+    plate: string;
+    hourly_rate: number;
+    VehiclePictures: string[];
+  }
   export interface IReservation {
-    reservation_id: number;
+    id: string;
     vehicle_id:number;
     start_date_time: string;
     end_date_time: string;
@@ -103,13 +114,15 @@ export interface IVehicle {
       model: string,
       hourly_rate: number,
       host: {
-        userId: number,
+        id: string,
         fname: string,
         lname: string,
         profile_pic_url: string,
         handle: string,
         hourly_rate: string
       },
+      station: IStation,
+      
       location: {
         location_id: number,
         entity_id: number,
@@ -132,17 +145,17 @@ export interface IVehicle {
     },
     payment: {
       payment_type_id: number,
-      entity_id: number,
+      id: string,
       payment_type: string,
-      details: string,
-      status: string
+      status: string,
+      amount: number,
     }
   }
 
   export interface IPayout {
-    payout_id: number;
+    id: number;
     amount: number;
-    payout_date: string;
+    date: string;
     status: "paid"|"pending"
   }
 
@@ -156,7 +169,8 @@ export interface IVehicle {
 export interface ILocation {
     location_id: number;
     vehicle: {
-      vehicle_name:string
+      vehicle_name:string,
+      VehiclePictures: string[]
     };
     address: string;
     market_name: string;
@@ -164,33 +178,47 @@ export interface ILocation {
 }
 
 export interface IStation {
-  station_id: number;
-  station_name: string;
+  id: string;
+  name: string;
   description:string,
-  station_images:[],
+  image:string,
   sub_market_name:string,
+  sub_market: {
+    id: string;
+    name: string;
+    market_id: string;
+  },
+  sub_market_id: string;
+  latitude: number;
+  longitude: number;
   status: "active" | "inactive";
 }
 
 export interface IUserProfile {
-  user_id:number
+  user_id:number // keeping this to keep ts happy where its been used this way, but this will eventually get phased out
+  id: string;
   fname: string;
   lname: string;
   email: string;
   handle: string;
   phone: string;
-  profilePicUrl: string;
-  marketId: string | number | null;
-  userType?: string;
+  profile_pic_url: string;
+  marketId: string | number | null; // keep this for now, but this will eventually get phased out
+  market_id: string | null;
+  userType?: string; // keep this for now, but this will eventually get phased out
+  user_type?: string;
   status: string;
-  stripeCustomerId?: string;
+  stripeCustomerId?: string; // keep this for now, but this will eventually get phased out
+  customer_id?: string | null;
+  sub_market_id: string | null; 
 }
 export interface IAuthCode {
-  authcode_id:number;
-  user_image:string;
-  authcode: string;
-  status:string;
-  user_id:number;
+  id: string;
+  code: string;
+  status: string;
+  user_id: string;
+  user: Partial<IUserProfile>
+  vehicle_id: string
 }
 export interface IRequestedAuthCode {
   user_id:number,

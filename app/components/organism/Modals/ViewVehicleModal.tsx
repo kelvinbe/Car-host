@@ -13,7 +13,7 @@ import { IVehicleDetails } from "../../../globaltypes";
 interface Props{
   isOpen:boolean,
   onClose:() => void,
-  vehicleId:number,
+  vehicleId:string,
   vehicles:IVehicleDetails[]
 }
 

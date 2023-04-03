@@ -77,7 +77,7 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
       >
         {description}
         <Box pt={2}>
-          <Text textColor="#7D8597">
+          <Text textColor="#33415C">
             <Link href="#">
               Learn more <ArrowForwardIcon />
             </Link>
@@ -88,13 +88,14 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
       <CardFooter>
         <HStack spacing={6}>
           <Box display={displayFirstButton}>
-            <Link href={buttonLink} target="blank">
+            <Link href={buttonLink} target="blank" role={'group'}>
               <Button
-                color="white"
+                _groupHover={{ color: "black", bg: "#E2E8F0" }}
+                color="black"
                 bgColor="#E63B2E"
                 leftIcon={
                   <div>
-                    {showFirstButtonIcon && <Icon boxSize={6} color="white" as={SiApple} />}
+                    {showFirstButtonIcon && <Icon boxSize={6} color="black" as={SiApple} _groupHover={{ color: "black"}}/>}
                   </div>
                 }
                 size="lg"

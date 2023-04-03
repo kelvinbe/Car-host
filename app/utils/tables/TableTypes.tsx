@@ -30,12 +30,12 @@ import { USERS_DOMAIN } from "../../hooks/constants";
 import ViewUserModal from "../../components/organism/Modals/ViewUserModal";
 
 interface IProps{
-  vehicle_id:number,
+  vehicle_id:string,
 }
 
 interface IUserProps{
-  user_id:number,
-  profilePicUrl:string
+  user_id?:string,
+  profilePicUrl?:string
 }
 const GetVehicleDetails = ({vehicle_id}:IProps) => {
   const {isOpen, onClose, onOpen} = useDisclosure()
@@ -67,10 +67,16 @@ const GetVehicleDetails = ({vehicle_id}:IProps) => {
   )
 }
 const GetCustomerDetails = ({user_id, profilePicUrl}:IUserProps) => {
+  const [userData, setUserData] = useState<IUserProfile | null>(null)
+
+
+  const handleUserData = (data: IUserProfile) => {
+    setUserData(data)
+  }
+
   const {isOpen, onClose, onOpen} = useDisclosure()
-  const {fetchData} = useFetchData(USERS_DOMAIN, getUsers)
+  const { fetchData } = useFetchData(`${USERS_DOMAIN}?user_id=${user_id}`, handleUserData, true)
   const users = useAppSelector(selectUsers)
-  let selectedUser = users.find(user => user.user_id === user_id)
 
   useEffect(() => {
     fetchData()
@@ -78,7 +84,7 @@ const GetCustomerDetails = ({user_id, profilePicUrl}:IUserProps) => {
 
   return (
     <>
-      {selectedUser && <ViewUserModal isOpen={isOpen} onClose={onClose} user={selectedUser}/>}
+      {userData && <ViewUserModal isOpen={isOpen} onClose={onClose} user={userData as unknown as IUserProfile} />}
       <Flex {...FlexColStartStart} onClick={onOpen}>
         <Avatar
           src={profilePicUrl}
@@ -149,7 +155,7 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     title: "Payout Date",
     dataIndex: "payout_date",
     key: "payout_date",
-    render: (v, { payout_date }) => (
+    render: (v, { date: payout_date }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
           {payout_date}
@@ -187,15 +193,15 @@ export const AuthCodeTableColumns: ColumnsType<IAuthCode> = [
     title: "Customer Image",
     dataIndex: "user_image",
     key: "user_image",
-    render: (v, { user_image, user_id }) => (
-      <GetCustomerDetails user_id={user_id} profilePicUrl={user_image}/>
+    render: (v, { user}) => (
+      <GetCustomerDetails user_id={user.id} profilePicUrl={user.profile_pic_url}/>
     )
   },
   {
     title: "AuthCode",
     dataIndex: "code",
     key: "code",
-    render: (v, { authcode }) => (
+    render: (v, { code: authcode }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
           {`${authcode.substring(0, 3)}***${authcode.substring(6,9)}`}
@@ -214,14 +220,14 @@ export const AuthCodeTableColumns: ColumnsType<IAuthCode> = [
     ),
   },
 ];
-export const RequestedAuthCodeTableColumns: ColumnsType<IRequestedAuthCode> = [
+export const RequestedAuthCodeTableColumns: ColumnsType<IAuthCode> = [
   
   {
     title: "Customer Image",
     dataIndex: "user_image",
     key: "user_image",
-    render: (v, { user_image, user_id }) => (
-      <GetCustomerDetails user_id={user_id} profilePicUrl={user_image}/>
+    render: (v, { user }) => (
+      <GetCustomerDetails user_id={user?.id} profilePicUrl={user?.profile_pic_url}/>
     )
   },
   {
@@ -238,9 +244,9 @@ export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
     title: "Vehicle",
     dataIndex: "vehicle",
     key: "vehicle",
-    render: (v, { vehicle: { vehiclePictures } }) => (
+    render: (v, { vehicle: { VehiclePictures } }) => (
       <Flex alignItems={"center"} justifyContent="center" w="full">
-        <VehiclePic image={vehiclePictures[0]} size="small" />
+        <VehiclePic image={VehiclePictures[0]} size="small" />
       </Flex>
     ),
   },
@@ -275,9 +281,9 @@ export const StationTableColumns: ColumnsType<IStation> = [
     title: "Station Image",
     dataIndex: "station_image",
     key: "station_image",
-    render: (v, { station_images }) => (
+    render: (v, { image }) => (
       <Flex {...FlexRowStartStart}>
-        {station_images && <VehiclePic image={station_images[0]} size="small" />}
+        {image && <VehiclePic image={image} size="small" />}
       </Flex>
     ),
   },
@@ -285,14 +291,14 @@ export const StationTableColumns: ColumnsType<IStation> = [
     title: "Station Name",
     dataIndex: "station_name",
     key: "station_name",
-    render: (v, { station_name }) => (
+    render: (v, { name: station_name }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
           {station_name}
         </Text>
       </Flex>
     ),
-    sorter: (a: IStation, b: IStation) => a.station_name.length - b.station_name.length,
+    sorter: (a: IStation, b: IStation) => a.name.length - b.name.length,
     sortDirections: ["descend", "ascend"],
   },
   {
@@ -311,10 +317,10 @@ export const StationTableColumns: ColumnsType<IStation> = [
     title: "Sub-Market",
     dataIndex: "sub_market_name",
     key: "sub_market_name",
-    render: (v, { sub_market_name }) => (
+    render: (v, { sub_market }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {sub_market_name}
+          {sub_market.name}
         </Text>
       </Flex>
     ),
@@ -330,7 +336,60 @@ export const StationTableColumns: ColumnsType<IStation> = [
     ),
   },
 ];
-
+export const AllReservationColumns: ColumnsType<any> = [
+  {
+    title: "Reservation Id",
+    dataIndex: "reservationId",
+    key: "reservationId",
+  },
+  {
+    title: "Host Id",
+    dataIndex: "hostId",
+    key: "hostId",
+  },
+  {
+    title: "Vehicle Plate",
+    dataIndex: "vehiclePlate",
+    key: "vehiclePlate",
+  },
+  {
+    title: "Vehicle Name",
+    dataIndex: "vehicleName",
+    key: "vehicleName",
+  },
+  {
+    title: "Start and End time",
+    dataIndex: "startEndTime",
+    key: "startEndTime",
+  },
+  {
+    title: "Total cost",
+    dataIndex: "totalCost",
+    key: "totalCost",
+    sorter: (a: DataType, b: DataType) => a.totalCost - b.totalCost,
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Host",
+    dataIndex: "hostName",
+    key: "hostName",
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart}>
+        <StatusTag status={status as any}>{status}</StatusTag>
+      </Flex>
+    ),
+  }
+]    
 export const ReservationColumns: ColumnsType<any> = [
   {
     title: "Reservation Id",
@@ -385,7 +444,7 @@ export const VehicleManagementTableColumns: ColumnsType<IVehicleDetails> = [
     title: "Vehicle",
     dataIndex: "vehicle",
     key: "vehicle",
-    render: (v, { vehicle_pictures }) => (
+    render: (v, { VehiclePictures: vehicle_pictures }) => (
       <Flex {...FlexColStartStart} w="full">
         <VehiclePic image={vehicle_pictures[0]} size="small" />
       </Flex>
@@ -484,7 +543,7 @@ export const UserTableColumns: ColumnsType<IUserProfile> = [
     title: "Avatar",
     dataIndex: "profilePicUrl",
     key: "profilePicUrl",
-    render: (v, { profilePicUrl }) => {
+    render: (v, { profile_pic_url: profilePicUrl }) => {
       return (
         <Flex alignItems={"center"} justifyContent="center" w="full">
           <Avatar size="small" src={profilePicUrl} />

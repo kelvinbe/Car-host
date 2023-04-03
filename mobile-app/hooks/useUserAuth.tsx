@@ -1,9 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createSlice } from '@reduxjs/toolkit'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, UserCredential, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth/react-native'
 import { isEmpty } from 'lodash'
 import React, { useReducer, useEffect } from 'react'
 import {  auth } from '../firebase/firebaseApp'
-import { clearUserState, fetchUserData, selectAuthProviders, selectPasswordChanged, selectUser, setPasswordChanged, updateUserData } from '../store/slices/userSlice'
+import { clearUserState, fetchUserData, selectAuthProviders, selectPasswordChanged, selectUserProfile, setPasswordChanged, updateUserData } from '../store/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../store/store'
 import useToast from './useToast'
 
@@ -213,6 +214,7 @@ function useUserAuth() {
       auth.signOut().then(()=>{
         reduxDispatch(clearUserState())
         handleSuccess("logOut", silent || true)
+        AsyncStorage.clear()
       }).catch((e)=>{
         dispatchAction(setLogOutError(e.message))
       })
@@ -240,7 +242,7 @@ function useUserAuth() {
     /**
      * @section user state from store
      */
-    const userProfile = useAppSelector(selectUser)
+  const userProfile = useAppSelector(selectUserProfile)
     const userAuthProviders = useAppSelector(selectAuthProviders)
     const hasPasswordChanged = useAppSelector(selectPasswordChanged)
 

@@ -57,6 +57,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { isNull } from 'lodash';
 import { fetchUserData } from '../store/slices/userSlice';
 import { useAppDispatch } from '../store/store';
+import linking from './LinkingConfiguration';
 
 const ScreensWithNoBottomNav = [
   'BookingConfirmationScreen',
@@ -104,6 +105,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       onReady={onReadyHandler}
       ref={navigationRef}
       onStateChange={onStateChangeHandler}
+      linking={linking}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
     </NavigationContainer>

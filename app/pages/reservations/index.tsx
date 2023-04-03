@@ -14,7 +14,7 @@ import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import { lowerCase } from "lodash";
 import { ReservationColumns } from "../../utils/tables/TableTypes";
 export interface DataType {
-  reservationId:number,
+  reservationId:string,
   vehiclePlate:string,
   vehicleName:string,
   startEndTime:string,
@@ -42,13 +42,13 @@ function Reservations() {
 
   useEffect(()=>{
     setReservationData(()=>reservations.map((reservation)=>({
-      reservationId: reservation?.reservation_id,
+      reservationId: reservation?.id,
       vehiclePlate:reservation?.vehicle?.plate,
       vehicleName:`${reservation?.vehicle?.make} ${reservation?.vehicle?.model}`,
       startEndTime:`${dayjs(reservation?.start_date_time).format("DD/MM/YYYY h:mm A")} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
-      totalCost:reservation?.total_cost,
+      totalCost:reservation?.payment?.amount,
       hostName:reservation?.vehicle?.host?.handle,
-      location:`${reservation?.vehicle?.location?.address} ${reservation?.vehicle?.location?.building_name}`,
+      location:reservation?.vehicle?.station?.name,
       status:lowerCase(reservation?.status),
     })))
   }, [reservations])
@@ -107,6 +107,9 @@ function Reservations() {
             </Flex>
           );
         })}
+        pagination={{
+          position: ["bottomCenter"],
+        }}
         data={reservationData}
         sortables={[
           {

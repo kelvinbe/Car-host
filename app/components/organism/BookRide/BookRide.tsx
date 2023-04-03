@@ -80,13 +80,14 @@ const BookRide = () => {
                     </Text>
                     <Link href="getting-started">
                       <Button
-                        color="white"
+                        color="black"
                         bgColor="#E63B2E"
                         size="lg"
                         h="54px"
                         borderRadius={10}
                         fontWeight="bold"
                         marginTop={5}
+                        _hover={{color:'black', bg: "#E2E8F0"}}
                       >
                         Get Started
                       </Button>

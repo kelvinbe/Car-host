@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme, props: Props) => {
 const BookingCarDetailsDriver = (props: Props) => {
   const styles = useStyles(props);
   const {
-    bookingDetails: { authCode, vehicle },
+    bookingDetails: { code: authCode, vehicle },
   } = useBookingActions();
   return (
     <ThemeConsumer>

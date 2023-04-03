@@ -9,6 +9,9 @@ import LoadingComponent from '../components/molecules/feedback/LoadingComponent'
 import { app } from '../firebase/firebaseApp'
 import { IStaticProps } from '../globaltypes'
 import { adminRoutesRegex, dashboardRoutesRegex, protectedRegex } from '../utils/regex'
+import { useAppDispatch } from '../redux/store'
+import { fetchOnboardingDetails } from '../redux/onboardingSlice'
+import { useToast } from '@chakra-ui/react'
 
 interface IProps {
     pageProps: IStaticProps,
@@ -21,6 +24,8 @@ function CheckAuthorization(props: IProps) {
     const [appUser, loading, error] = useAuthState(getAuth(app))
     const { pathname, push } = useRouter()
     const [user, setUser] = useState<User | null>(null)
+    const toast = useToast()
+    const dispatch = useAppDispatch()
 
     onAuthStateChanged(getAuth(app), (user) => {
         setUser(user)
@@ -37,7 +42,26 @@ function CheckAuthorization(props: IProps) {
                      * @todo check if user is admin from db and redirect to dashboard
                      */
                 }else {
-                    checked(true)
+                    dispatch(fetchOnboardingDetails()).unwrap().then(({completed})=>{
+                        if (completed.profile && completed.payout_method && completed.location) {
+                            checked(true)
+                        } else{
+                            push("/onboarding").then(()=>{
+                                checked(true)
+                            })
+                        }
+                    }).catch((e)=>{
+                        toast({
+                            position: "top",
+                            title: "Error",
+                            description: "We are unable to log you in now, please try again later",
+                            status: "error",
+                            duration: 5000,
+                        })
+                        push("/").then(()=>{
+                            checked(true)
+                        })
+                    })
                 }
             }else{
                 if (authonly || adminonly) {

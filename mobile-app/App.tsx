@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState  } from 'react';
-import { View, Text, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from "@rneui/themed";
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
-import store from './store/store';
+import store, { useAppSelector } from './store/store';
 import { theme } from './utils/theme';
 import 'react-native-gesture-handler';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
@@ -28,106 +27,67 @@ import { LOGROCKET_ID, STRIPE_PUBLISHABLE_KEY } from '@env';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { auth } from './firebase/firebaseApp';
 import * as Notifications from 'expo-notifications'
-import * as Device from 'expo-device'
-import { useDispatch, useSelector } from 'react-redux';
-import { saveExpoToken, selectExpoToken } from './store/slices/notificationsSlice';
-import { setAddNotification } from './store/slices/notificationsSlice';
-import useFetchNotifications from './hooks/useFetchNotifications';
-import axios from 'axios';
-import { SEND_NOTIFICATION_TOKEN_ENDPOINT } from './hooks/constants';
-import useToast from './hooks/useToast';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { isNull } from 'lodash';
+import { useDispatch } from 'react-redux';
+import { saveExpoToken, selectExpoToken, setAddNotification } from './store/slices/notificationsSlice';
+import { onAuthStateChanged } from 'firebase/auth';
+import { isEmpty, isNull } from 'lodash';
+import useNotifications from './hooks/useNotifications';
+import * as Linking from 'expo-linking'
+  
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-    }),
-  });
+  
 
-  const registerForPushNotificationsAsync = () => {
 
-    return new Promise(async (resolve, reject)=>{
-      let token;
-    
-      if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
-          name: "default",
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          sound:'default',
-          lightColor: "#FF231F7C",
-          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
-          bypassDnd: true,
-        });
-      }
-    
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        return reject('Permission denied!');
-        
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      return resolve(token)
-    })
-    
-  }
 
   const StatefullApp = () => {
+    const { registerForPushNotificationsAsync, updatePushToken, goToBooking } = useNotifications()
     const colorScheme = useColorScheme();
     // the return type of either of these functions doesnt seem to be explicitly exported so will use this instead
     const notificationListener = useRef<ReturnType<typeof Notifications.addNotificationReceivedListener>>();
     const responseListener = useRef<ReturnType<typeof Notifications.addNotificationResponseReceivedListener>>();
-
+    const token = useAppSelector(selectExpoToken)
     const dispatch = useDispatch()
-    const expoToken = useSelector(selectExpoToken)
 
-    const {data} = useFetchNotifications()
-    const toast = useToast()
+
+    /**
+     * @explanation to prevent stale push tokens, we will update the user's push token on every login
+     */
+    onAuthStateChanged(auth, (user)=>{
+      if(!isNull(user)){
+        if (isEmpty(token)){
+          registerForPushNotificationsAsync().then(async (token)=>{
+            dispatch(saveExpoToken(token))
+            await updatePushToken(token, 0)
+          }).catch((e)=>{
+            /**
+             * @todo - this error's priority is low and shouldn't prevent the user from continuing, so we can just log it for now,
+             *        - logrocket will come in handy here
+             */
+          })
+        }
+        
+      }
+    })
 
     useEffect( () => {
-      data && Notifications.scheduleNotificationAsync({
-        content: {
-          title: data?.[0]?.title,
-          body: data?.[0]?.message,
-        },
-        trigger: null,
-      });
-  
-      if (expoToken === ''){
-        registerForPushNotificationsAsync()
-        .then(token => dispatch(saveExpoToken(token)))
-        .catch(err => toast({
-          message: err,
-          type: 'error',
-          duration: 3000,
-        }))
-      }  
-      axios.post(
-        SEND_NOTIFICATION_TOKEN_ENDPOINT,
-        {
-          notificationToken:expoToken
-        },
-      )
-      .then((response) => {
-        return response.data.message
-      })
-      .catch(err => {
-        return err
-      })
       notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
         dispatch(setAddNotification(notification))
       });
   
       responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        const data = response.notification.request.content.data as Record<string, any>
+        const notification_type = data.type
+        switch (notification_type) {
+          case "auth_code_activated": 
+            goToBooking({
+              vehicle_id: data.vehicle_id,
+              host_id: data.host_id,
+              code: data.code,
+            }, data.link)
+            break;
+          default:
+            break;
+        }
         dispatch(setAddNotification(response.notification))
       });
   
@@ -135,7 +95,7 @@ import { isNull } from 'lodash';
         notificationListener.current && Notifications.removeNotificationSubscription(notificationListener.current);
         responseListener.current && Notifications.removeNotificationSubscription(responseListener.current);
       };
-    }, [data]);
+    }, []);
   
     return (
       <Navigation colorScheme={colorScheme} />

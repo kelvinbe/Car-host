@@ -10,7 +10,7 @@ interface IProps {
     variant?: "solid" | "outline",
     fullWidth?: boolean
     rounded:'full' | 'md',
-    setWidth?:number
+    setWidth?:number | string
 }
 
 function Rounded(props: IProps) {

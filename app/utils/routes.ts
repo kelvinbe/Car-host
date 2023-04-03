@@ -13,7 +13,7 @@ import { FiUsers } from "react-icons/fi"
 // dashboard routes
 export const dashboardRoutes: {
     name: string;
-    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView",
+    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations",
     admin: boolean,
     icon?: IconType,
     link?: string,
@@ -102,5 +102,12 @@ export const dashboardRoutes: {
       admin: true,
       icon: TfiCar,
       link: "all-map-view"
+    },
+    {
+      name: "all reservations",
+      onClick: "toAllReservations",
+      admin: true,
+      icon: RiReservedLine,
+      link: "/all-reservations"
     }
   ]

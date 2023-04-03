@@ -18,7 +18,9 @@ export default function useEventData(){
         })
         .then(({data})=>{
             setLoadingEvents(false)
-            dispatch(getEvents(data))
+            dispatch(getEvents(data.data))
+        }).catch((e)=>{
+            setLoadingEvents(false)
         })
     }
 

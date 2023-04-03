@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase/firebaseApp';
 import axios from 'axios';
-import { FETCH_VEHICLES_ENDPOINT, FETCH_AVAILABLE_VEHICLES } from './constants';
+import { VEHICLES_ENDPOINT, FETCH_AVAILABLE_VEHICLES } from './constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGetVehicleData} from '../store/slices/vehiclesSlice';
 import { isEmpty } from 'lodash';
@@ -34,7 +34,7 @@ export default function useVehicleData() {
 
   const fetchVehicleData = (props?: VehicleData | null) => {
       setLoading(true);
-      axios.get(FETCH_VEHICLES_ENDPOINT, {
+    axios.get(VEHICLES_ENDPOINT, {
         headers: {
             token: `Bearer ${token}`,
         },params: isEmpty(props) ? null : {

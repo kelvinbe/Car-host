@@ -13,7 +13,7 @@ const Header = () => {
       <Flex w="full" {...FlexRowStartBetween}>
         <div>
           <Heading paddingLeft="80px">
-            <Image src={DivvlyLogo.src}  alt='Divvly logo'/>
+            <Image src={DivvlyLogo.src} alt="Divvly logo" />
           </Heading>
         </div>
         <Flex {...FlexRowStartBetween}>
@@ -29,11 +29,16 @@ const Header = () => {
             </Text>
           </Box>
           <Box paddingLeft="40px" paddingRight="80px">
-          <Link href='#about' paddingRight="20px">
-            About Us
-          </Link>
+            <Link href="#about" paddingRight="20px">
+              About Us
+            </Link>
             <Link href="getting-started">
-              <Button fontStyle="normal" color="white" bg="#E63B2E">
+              <Button
+                fontStyle="normal"
+                color="white"
+                bg="#E63B2E"
+                _hover={{ color: "black", bg: "#E2E8F0" }}
+              >
                 Get Started
               </Button>
             </Link>

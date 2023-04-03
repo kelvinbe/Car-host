@@ -25,6 +25,18 @@ import {
     vehicleId:number,
     vehicles:IVehicleDetails[]
 }
+
+const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:null|string|number|string[]}) => {
+    switch (action.type) {
+        case "update_vehicle":
+            return {
+                ...state,
+                [action.key]:action.value
+            }
+        default:
+            return state;
+    }
+}
   
   export default function EditVehicleModal(props:Props) { 
     const {isOpen, onClose, vehicleId, vehicles} = props
@@ -41,22 +53,12 @@ import {
         make:selectedVehicle?.['make'] as string,
         model:selectedVehicle?.['model'] as string,
         year:selectedVehicle?.['year'] as number,
-        transmission:selectedVehicle?.['transmission'] as "Automatic" | "Semi-Automatic" | "Manual" | "CVT",
+        transmission:selectedVehicle?.['transmission'] as string,
         hourly_rate:selectedVehicle?.['hourly_rate'] as number,
         status:selectedVehicle?.['status'] as "active" | "unavailable" | "available",
-        vehicle_pictures: selectedVehicle?.['vehicle_pictures']
+        VehiclePictures: selectedVehicle?.['VehiclePictures'] as string[]
     }
-    const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:null|string|number|string[]}) => {
-        switch (action.type) {
-            case "update_vehicle":
-                return {
-                    ...state,
-                    [action.key]:action.value
-                }
-            default:
-                return state;
-        }
-    }
+    
     const [state, dispatch] = useReducer(reducer, initialstate)
     const handleEdit = () => {
         state.plate === '' && setIsPlateError(true)
@@ -65,18 +67,18 @@ import {
         !state.year && setIsYearError(true)
         !state.hourly_rate && setIsRateError(true)
 
-        if(state.plate === '' || state.vehicle_pictures?.length === 0 || state.make === "" || state.model === "" || !state.year || !state.hourly_rate ){
+        if (state.plate === '' || state.VehiclePictures?.length === 0 || state.make === "" || state.model === "" || !state.year || !state.hourly_rate) {
             return;
         }else{
             updateVehicle({
-                plate:state.plate,
-                make:state.make,
-                model:state.model,
-                year:state.year,
-                transmission:state.transmission,
-                hourly_rate:state.hourly_rate,
-                status:state.status,
-                vehicle_pictures:state.vehicle_pictures
+                plate:selectedVehicle?.plate === state.plate ? undefined : state.plate,
+                make: selectedVehicle?.make === state.make ? undefined : state.make,
+                model: selectedVehicle?.model === state.model ? undefined : state.model,
+                year: selectedVehicle?.year === state.year ? undefined : state.year,
+                transmission: selectedVehicle?.transmission === state.transmission ? undefined : state.transmission,
+                hourly_rate: selectedVehicle?.hourly_rate === state.hourly_rate ? undefined : state.hourly_rate,
+                status: selectedVehicle?.status === state.status ? undefined : state.status,
+                VehiclePictures: selectedVehicle?.VehiclePictures === state.VehiclePictures ? undefined : state.VehiclePictures
             })
             onClose()
         }

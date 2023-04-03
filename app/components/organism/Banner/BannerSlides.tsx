@@ -119,8 +119,8 @@ export const Slide = ({ banner }:any) => {
 
 export const BannerSlides = ({ banner }:any) => {
   return (
-    <div>
+    <section>
       <SlideWithBgImage banner={banner} />
-    </div>
+    </section>
   );
 };

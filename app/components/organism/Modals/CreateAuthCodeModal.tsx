@@ -41,7 +41,7 @@ export default function CreateAuthCodeModal({isOpen, onClose, authcodeId, showRe
         let selectedUser = users.find(user => user.user_id === userId)
         deleteData(authcodeId)
         addData({
-            user_image:selectedUser && selectedUser.profilePicUrl,
+            user_image: selectedUser && selectedUser.profile_pic_url,
             authcode:authcode,
             status:"reserved"
         })

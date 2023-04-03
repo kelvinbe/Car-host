@@ -13,7 +13,7 @@ import useReserve from "./useReserve";
 import useSearchHost from "./useSearchHost";
 import useSearchLocally from "./useSearchLocally";
 import useSetSettings from "./useSetSettings";
-import useVerifyAuthCode from "./useVerifyAuthCode";
+import useAuthCode from './useAuthCode';
 import useDeletePaymentMethod from "./useDeletePaymentMethod";
 import useFetchUpcoming from "./useFetchUpcoming";
 import useSendNotificationToken from "./useSetNotifications";
@@ -21,24 +21,24 @@ import useReportIssue from "./useReportIssue";
 
 
 export {
-    useAddCard,
-    useCachedResources,
-    useCancelBooking,
-    useColorScheme,
-    useCreatePassword,
-    useEditProfile,
-    useFetchData,
-    useForgotPassword,
-    useFetchHistory,
-    useModifyBooking,
-    useSetPayment,
-    useReserve,
-    useSearchHost,
-    useSearchLocally,
-    useSetSettings,
-    useVerifyAuthCode,
-    useDeletePaymentMethod,
-    useFetchUpcoming,
-    useSendNotificationToken,
-    useReportIssue
+  useAddCard,
+  useCachedResources,
+  useCancelBooking,
+  useColorScheme,
+  useCreatePassword,
+  useEditProfile,
+  useFetchData,
+  useForgotPassword,
+  useFetchHistory,
+  useModifyBooking,
+  useSetPayment,
+  useReserve,
+  useSearchHost,
+  useSearchLocally,
+  useSetSettings,
+  useAuthCode,
+  useDeletePaymentMethod,
+  useFetchUpcoming,
+  useSendNotificationToken,
+  useReportIssue,
 };

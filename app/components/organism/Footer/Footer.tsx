@@ -70,7 +70,6 @@ const Footer = () => {
       >
         <Text
           padding="15px"
-          color="#7D8597"
           fontWeight="bold"
           fontSize="16px"
           lineHeight="19px"

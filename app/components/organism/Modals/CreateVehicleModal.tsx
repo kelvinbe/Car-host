@@ -42,7 +42,7 @@ export const initialstate: IReducerState = {
     make: "",
     model: "",
     transmission: "Manual",
-    vehicle_pictures: [],
+    VehiclePictures: [],
     status: "available",
     isplateError: true,
     isvehicle_picturesError: true,
