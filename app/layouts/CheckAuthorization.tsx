@@ -2,16 +2,16 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { isEmpty } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import ErrorComponent from '../components/molecules/feedback/ErrorComponent'
 import LoadingComponent from '../components/molecules/feedback/LoadingComponent'
 import { app } from '../firebase/firebaseApp'
 import { IStaticProps } from '../globaltypes'
-import { adminRoutesRegex, dashboardRoutesRegex, protectedRegex } from '../utils/regex'
-import { useAppDispatch } from '../redux/store'
-import { fetchOnboardingDetails } from '../redux/onboardingSlice'
+import { useAppDispatch, useAppSelector } from '../redux/store'
+import { fetchOnboardingDetails, selectCompleted } from '../redux/onboardingSlice'
 import { useToast } from '@chakra-ui/react'
+import { selectUser } from '../redux/userSlice'
 
 interface IProps {
     pageProps: IStaticProps,
@@ -26,7 +26,9 @@ function CheckAuthorization(props: IProps) {
     const [user, setUser] = useState<User | null>(null)
     const toast = useToast()
     const dispatch = useAppDispatch()
-
+    const fetched_user = useAppSelector(selectUser)
+    const fetched_onboarding_n_times = useRef(0)
+    const completed =  useAppSelector(selectCompleted)
     onAuthStateChanged(getAuth(app), (user) => {
         setUser(user)
     })
@@ -38,30 +40,47 @@ function CheckAuthorization(props: IProps) {
             if(!isEmpty(user)){
                 if (!authonly) return checked(true)
                 if(adminonly){
-                    /**
-                     * @todo check if user is admin from db and redirect to dashboard
-                     */
+                   fetched_user?.is_admin ? checked(true) : push("/").then(()=>{
+                        checked(true)
+                   })
                 }else {
-                    dispatch(fetchOnboardingDetails()).unwrap().then(({completed})=>{
-                        if (completed.profile && completed.payout_method && completed.location) {
-                            checked(true)
-                        } else{
-                            push("/onboarding").then(()=>{
+                    if (fetched_user?.is_admin) {
+                        checked(true)
+                    }else {
+                        if (fetched_onboarding_n_times.current > 2) {
+                            if (completed.profile && completed.payout_method && completed.location) {
                                 checked(true)
+                            } else{
+                                push("/onboarding").then(()=>{
+                                    checked(true)
+                                })
+                            }
+                        }else{
+                            dispatch(fetchOnboardingDetails()).unwrap().then(({completed})=>{
+                                if (completed.profile && completed.payout_method && completed.location) {
+                                    fetched_onboarding_n_times.current += 1
+                                    checked(true)
+                                } else{
+                                    push("/onboarding").then(()=>{
+                                        checked(true)
+                                    })
+                                }
+                            }).catch((e)=>{
+                                toast({
+                                    position: "top",
+                                    title: "Error",
+                                    description: "We are unable to log you in now, please try again later",
+                                    status: "error",
+                                    duration: 5000,
+                                })
+                                push("/").then(()=>{
+                                    checked(true)
+                                })
                             })
                         }
-                    }).catch((e)=>{
-                        toast({
-                            position: "top",
-                            title: "Error",
-                            description: "We are unable to log you in now, please try again later",
-                            status: "error",
-                            duration: 5000,
-                        })
-                        push("/").then(()=>{
-                            checked(true)
-                        })
-                    })
+                        
+                    }
+                    
                 }
             }else{
                 if (authonly || adminonly) {
@@ -72,10 +91,6 @@ function CheckAuthorization(props: IProps) {
                     checked(true)
                 }
             }
-
-        return ()=>{
-            // clearTimeout(timeout_ref)
-        }
         
     }, [,loading, error, pathname, user])
 

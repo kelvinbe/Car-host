@@ -27,7 +27,6 @@ const twStyles = {
 function Dashboardlayout(props: IProps) {
   const { children } = props;
   const { push, events } = useRouter();
-  const [isAdmin, setIsAdmin] = useState(false);
   const [changePageLoad, setChangePageLoad] = useState(false);
 
   useEffect(() => {
@@ -35,13 +34,6 @@ function Dashboardlayout(props: IProps) {
       setChangePageLoad(true);
     });
     events.on("routeChangeComplete", () => setChangePageLoad(false));
-  }, []);
-
-  useEffect(() => {
-    const admin = localStorage.getItem("admin");
-    if (admin) {
-      setIsAdmin(true);
-    }
   }, []);
 
   const dashboardNavigation = useDashboardRoutes();

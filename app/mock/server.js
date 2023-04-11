@@ -1,4 +1,6 @@
 const dotenv = require('dotenv');
+const admin = require('firebase-admin');
+const serviceAccount = require('./test-service-key.json');
 dotenv.config({
   path: '.env',
 });
@@ -18,6 +20,14 @@ const Stripe = require("stripe")
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY,{
   apiVersion: '2022-11-15',
 });
+
+// firebase app
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+})
+
+const app = admin.app();
+const auth = admin.auth(app);
 
 server.use((req, res, next) => {
   res.wrapResponse = true;
@@ -91,9 +101,9 @@ server.post("/users", (req, res)=>{
 })
 
 server.patch("/users", (req, res)=>{
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req?.headers?.authorization?.split(" ")[1];
     const decoded = jwt.decode(token);
-    const uid = decoded.user_id;
+    const uid = decoded?.user_id;
     const exists = db.get("users").find({uid}).value()
     if(isEmpty(exists)){
         // replace the first host user's id with the new user's id
@@ -128,18 +138,18 @@ server.get("/users/onboarding", (req, res)=>{
       // get onboarding detials
       onboarding = {
         completed: {
-          location: !isEmpty(user.sub_market_id) || !isEmpty(user.market_id),
+          location: user.is_admin ? true : !isEmpty(user.sub_market_id) || !isEmpty(user.market_id),
           payout_method: true, //!isEmpty(user.PayoutMethods), // this won't get updated, so for testing you can turn it to true or false
-          profile: !isEmpty(user.fname) || !isEmpty(user.lname) || !isEmpty(user.handle),
+          profile: user.is_admin ? true : !isEmpty(user.fname) || !isEmpty(user.lname) || !isEmpty(user.handle),
         }
       }
   } else {
       const user = db.get("users").find({uid}).value()
       onboarding = {
         completed: {
-          location: !isEmpty(user.sub_market_id) || !isEmpty(user.market_id),
-          payout_method: !isEmpty(user.PayoutMethod),
-          profile: !isEmpty(user.fname) || !isEmpty(user.lname) || !isEmpty(user.handle),
+          location: user.is_admin ? true : !isEmpty(user.sub_market_id) || !isEmpty(user.market_id),
+          payout_method: user.is_admin ? true : !isEmpty(user.PayoutMethods),
+          profile: user.is_admin ? true : !isEmpty(user.fname) || !isEmpty(user.lname) || !isEmpty(user.handle),
         }
       }
   }
@@ -150,6 +160,48 @@ server.get("/users/onboarding", (req, res)=>{
     })
 })
 
+
+/**
+ * @description accepting invites
+ */
+server.get("/users/admin/accept", (req, res)=>{
+  console.log("Here is the body::", req.data)
+  // get the user
+  return auth.getUserByEmail(req.query.email).then(async (user)=>{
+    await auth.createCustomToken(user.uid).then((token)=>{
+      res.status(200).json({
+        data: token,
+        status: "success",
+        message: "Success"
+      })
+    }).catch((e)=>{
+      res.status(500).json({
+        data: e,
+        status: "error",
+        message: "An error occurred"
+      })
+    })
+  }).catch((e)=>{
+    res.status(500).json({
+      data: e,
+      status: "error",
+      message: "An error occurred"
+    })
+  })
+})
+
+
+/**
+ * send out an invite
+ */
+
+server.post("/users/admin/invite", (req, res)=>{
+  return res.json({
+    data: "Invite sent",
+    message: "invite sent",
+    status: "success"
+  })
+})
 
 server.post("/payouts", (req, res)=>{
   return stripe.accounts.create({
@@ -183,7 +235,20 @@ server.post("/payouts", (req, res)=>{
     })
   })
 })
-
+server.patch("/payouts", (req, res)=>{
+  res.json({
+    data: "",
+    message: "Success",
+    status: "success"
+  })
+})
+server.patch("/users/settings", (req, res)=>{
+  res.json({
+    data: "",
+    message: "Success",
+    status: "success"
+  })
+})
 
 server.use(router);
 server.listen(4000, () => {

@@ -14,6 +14,8 @@ import { FaFacebook } from "react-icons/fa";
 import ForgotPassword from './ForgotPassword';
 import useAppAuth from '../../../../hooks/useAppAuth';
 import { useRouter } from 'next/router';
+import { useAppDispatch } from '../../../../redux/store';
+import { fetchUser } from '../../../../redux/userSlice';
 
 interface IProps {
   type: "signin" | "signup" | "forgot",
@@ -79,6 +81,7 @@ function AuthForm(props: IProps) {
     isPasswordVisible,
     
   }, dispatchAction] = useReducer(reducerSlice.reducer, initialState)
+  const dispatch = useAppDispatch()
   const { type, onSubmit, loading, changeAuthState } = props; 
 
   const {push} = useRouter()
@@ -110,7 +113,9 @@ function AuthForm(props: IProps) {
 
   const googleSignInHandler = () => {
     googleSignIn().then(()=>{
-      push("/dashboard")
+      dispatch(fetchUser()).then(()=>{
+        push("/dashboard")
+      })
     }).catch((e)=>{
       toast({
         title: "Error",
@@ -124,7 +129,9 @@ function AuthForm(props: IProps) {
 
   const facebookSignInHandler = () => {
     facebookSignIn().then(()=>{
-      push("/dashboard")
+      dispatch(fetchUser()).then(()=>{
+        push("/dashboard")
+      })
     }).catch((e)=>{
       toast({
         title: "Error",
@@ -138,7 +145,9 @@ function AuthForm(props: IProps) {
 
   const appleSignInHandler = () => {
     appleSignIn().then(()=>{
-      push("/dashboard")
+      dispatch(fetchUser()).then(()=>{
+        push("/dashboard")
+      })
     }).catch((e)=>{
       toast({
         title: "Error",

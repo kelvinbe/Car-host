@@ -11,6 +11,8 @@ import DashboardSidebarButton from "../../../molecules/Buttons/DashboardSidebar/
 import { createSlice } from "@reduxjs/toolkit";
 import { useRouter } from "next/router";
 import Logo from "../../../atoms/Brand/Logo";
+import { useAppSelector } from "../../../../redux/store";
+import { selectUser } from "../../../../redux/userSlice";
 
 interface IReducerState {
   activeRoute: string;
@@ -42,19 +44,18 @@ function DashboardSidebar() {
     reducerSlice.reducer,
     initialState
   );
-
+  const user = useAppSelector(selectUser)
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { pathname } = useRouter();
 
   useEffect(() => {
-    const admin = localStorage.getItem("admin");
-    if (admin) {
+    if (user?.is_admin) {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
     }
-  }, []);
+  }, [,user?.is_admin]);
 
   useEffect(() => {
     if (pathname && !pathname.includes(activeTab)) {

@@ -166,7 +166,7 @@ function Stations() {
         pagination={{
           position: ["bottomCenter"],
         }}
-        data={StationsData}
+        data={StationsData ?? []}
         dataFetchFunction={() => {}}
       />
     </Flex>

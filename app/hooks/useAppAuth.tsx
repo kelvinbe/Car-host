@@ -6,6 +6,8 @@ import { useCreateUserWithEmailAndPassword, useSignInWithApple, useSignInWithEma
 import { app } from '../firebase/firebaseApp'
 import z from "zod"
 import { useToast } from '@chakra-ui/react'
+import { useAppDispatch } from '../redux/store'
+import { fetchUser } from '../redux/userSlice'
 
 interface IReducerState {
     signOutLoading: boolean,
@@ -68,6 +70,7 @@ function useAppAuth() {
     const [facebookSignIn, facebookUser, facebookSignInLoading, facebookSignInError] = useSignInWithFacebook(getAuth(app))
     const [ googleSignIn, googleUser, googleSignInLoading, googleSignInError ] = useSignInWithGoogle(getAuth(app))
     const [createUserWithEmailAndPassword,user,createUserWithEmailAndPasswordLoading, createUserWithEmailAndPasswordError] = useCreateUserWithEmailAndPassword(getAuth(app));
+    const dispatch = useAppDispatch()
     const toast = useToast({
         position: "top",
         duration: 5000,
@@ -89,6 +92,7 @@ function useAppAuth() {
             dispatchAction(setSignInLoading(true))
             signInWithEmailAndPassword(getAuth(app), credentials.email, credentials.password).then(()=>{
                 dispatchAction(setSignInLoading(false))
+                dispatch(fetchUser())
                 push("/dashboard")
             }).catch((e)=>{
                 dispatchAction(setSignInError(e.message))

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
-import { GoogleMap } from "@react-google-maps/api";
-import { StreetViewService } from "@react-google-maps/api";
 import { selectStations } from "../../redux/stationSlice";
 import { useAppSelector } from "../../redux/store";
 import Locations from "../stations";
@@ -10,6 +8,8 @@ import { LocationVehicleMapTableColumns } from "../../utils/tables/TableTypes";
 import VehicleManagement from "../vehicle-management";
 import Reservations from "../reservations";
 import { Flex } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
+import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
 
 function AllMapView() {
   const [viewReservations, setViewReservations] = useState(false);
@@ -43,19 +43,12 @@ function AllMapView() {
     <Grid
       w="full"
       templateColumns="repeat(3, 1fr)"
-      gridTemplateRows={"1fr 1fr"}
+      gridTemplateRows={"400px 1fr"}
       rowGap="30px"
       columnGap="30px"
     >
       <GridItem colSpan={2}>
-        <GoogleMap
-          id="circle-example"
-          mapContainerStyle={mapContainerStyle}
-          zoom={14}
-          center={center}
-        >
-          <StreetViewService onLoad={onLoad} />
-        </GoogleMap>
+        <LiveMapComponent />
       </GridItem>
       <GridItem>
         <FilterableTable

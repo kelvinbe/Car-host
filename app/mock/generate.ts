@@ -89,10 +89,11 @@ const user_schema = (market_ids: [string], submarket_ids: [string]) => {
         uid: z.string().uuid(),
         market_id: z.enum(market_ids),
         sub_market_id: z.enum(submarket_ids),
+        is_admin: z.boolean().default(false),
     })
 }
 
-const users = generateMock(user_schema(markets.map(m => m.id) as [string], submarkets.map(s => s.id) as [string]).array().length(10), {
+let users = generateMock(user_schema(markets.map(m => m.id) as [string], submarkets.map(s => s.id) as [string]).array().length(10), {
     stringMap: {
         fname: () => faker.name.firstName(),
         lname: () => faker.name.lastName(),
@@ -104,17 +105,48 @@ const users = generateMock(user_schema(markets.map(m => m.id) as [string], subma
     }
 })
 
-const customer_ids = users.filter(u => u.user_type === 'CUSTOMER').map(c => c.id)
+users = users.map((user)=>{
+    return {
+        ...user,
+        is_admin: user.user_type === 'HOST' ? true : false // for testing all hosts, can be admins, changes can be made on this line to change the admin status
+    }
+})
 
-const settings_schema = (customer_ids: [string]) => {
+
+const invitation_schema = (host_ids: [string]) => {
     return z.object({
         id: z.string().uuid(),
-        notifications_enabled: z.boolean(),
-        user_id: z.enum(customer_ids),
+        email: z.string().email(),
+        code: z.string().min(1).max(50),
+        expires_at: z.date().min(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7)),
+        uid: z.string().uuid(),
+        activated: z.boolean().default(false),
+        sender_id: z.enum(host_ids),
     })
 }
 
-const settings = generateMock(settings_schema(customer_ids as [string]).array().length(customer_ids.length))
+const invitations = generateMock(invitation_schema(users.filter(u => u.user_type === 'HOST').map(h => h.id) as [string]).array().length(50), {
+    stringMap: {
+        email: () => faker.internet.email(),
+        code: () => faker.random.alphaNumeric(10),
+    }
+})
+
+const customer_ids = users.filter(u => u.user_type === 'CUSTOMER').map(c => c.id)
+const user_ids = users.map(c => c.id)
+
+const settings_schema = (user_ids: [string]) => {
+    return z.object({
+        id: z.string().uuid(),
+        notifications_enabled: z.boolean(),
+        sms_enabled: z.boolean(),
+        tracking_enabled: z.boolean(),
+        authcode_enabled: z.boolean(),
+        user_id: z.enum(user_ids),
+    })
+}
+
+const settings = generateMock(settings_schema(user_ids as [string]).array().length(user_ids.length))
 
 const driver_credentials_schema = (customer_ids: [string]) => z.object({
     id: z.string().uuid(),
@@ -252,9 +284,10 @@ const payout_methods_schema = (host_ids: [string]) => z.object({
     paypal_email: z.string().email().optional(),
     type: z.enum(['BANK_ACCOUNT', 'MPESA', 'PAYPAL']),
     verified: z.boolean(),
+    status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
 })
 
-const payout_methods = generateMock(payout_methods_schema(host_ids as [string]).array().length(10))
+const payout_methods = generateMock(payout_methods_schema(host_ids as [string]).array().length(20))
 
 
 const payouts_schema = (host_ids: [string], payout_method_ids: [string]) => z.object({
@@ -282,6 +315,8 @@ const all_data = {
                 PayoutMethods: payout_methods.filter(p => p.user_id === user.id),
                 market: markets.find(m => m.id === user.market_id),
                 sub_market: submarkets.find(s => s.id === user.sub_market_id),
+                sent_invites: invitations.filter(i => i.sender_id === user.id),
+                user_settings: settings.find(s => s.user_id === user.id),
             }
         }else {
             return {
@@ -383,7 +418,8 @@ const all_data = {
     payouts,
     payment_types,
     settings,
-    driver_credentials
+    driver_credentials,
+    invitations
 }
 
 

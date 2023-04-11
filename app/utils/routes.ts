@@ -7,13 +7,13 @@ import { MdPowerInput } from "react-icons/md"
 import { SiSimpleanalytics } from "react-icons/si"
 import { CiWallet, CiTimer } from "react-icons/ci"
 import { CgArrowsMergeAltH } from "react-icons/cg"
-import { FiUsers } from "react-icons/fi"
+import { FiSend, FiUsers } from "react-icons/fi"
 
 
 // dashboard routes
 export const dashboardRoutes: {
     name: string;
-    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations",
+    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites",
     admin: boolean,
     icon?: IconType,
     link?: string,
@@ -109,5 +109,12 @@ export const dashboardRoutes: {
       admin: true,
       icon: RiReservedLine,
       link: "/all-reservations"
+    },
+    {
+      name: "invites",
+      onClick: "toInvites",
+      admin: true,
+      link: "/dashboard/admin/invites",
+      icon: FiSend
     }
   ]

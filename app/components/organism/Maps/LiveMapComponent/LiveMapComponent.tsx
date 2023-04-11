@@ -8,8 +8,8 @@ import { FlexRowCenterCenter } from "../../../../utils/theme/FlexConfigs";
 import getConfig from "next/config";
 
 interface IProps {
-  vehicles: IVehicle[];
-  marketId: string;
+  vehicles?: IVehicle[];
+  marketId?: string;
 }
 
 const LiveMapComponent = (props: IProps) => {
@@ -41,7 +41,7 @@ const LiveMapComponent = (props: IProps) => {
           }
           mapTypeId="roadmap"
         >
-          {vehicles.map((vehicle, i) => (
+          {vehicles?.map((vehicle, i) => (
             <CarMarkerComponent key={i} {...vehicle} />
           ))}
         </Map>

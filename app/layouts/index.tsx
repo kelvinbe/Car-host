@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { createSlice } from '@reduxjs/toolkit'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
-import { intersection, isEmpty } from 'lodash'
+import { intersection, isEmpty, isNull } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { app } from '../firebase/firebaseApp'
 import { IStaticProps } from '../globaltypes'
@@ -11,6 +11,8 @@ import { adminRoutesRegex, dashboardRoutesRegex, protectedRegex } from '../utils
 import CheckAuthorization from './CheckAuthorization'
 import Dashboardlayout from './dashboard'
 import MainLayout from './main'
+import { useAppDispatch } from '../redux/store'
+import { fetchUser } from '../redux/userSlice'
 
 
 
@@ -55,9 +57,17 @@ function Layouts(props: IProps) {
         dispatchAction(setProceed(proceed))
     }
     const [user, setUser] = useState<User|null>(null)
+    const profile_fetched_n_times = useRef(0)
+
+    const dispatch = useAppDispatch()
 
     onAuthStateChanged(getAuth(app), (user)=>{
         setUser(user)
+        if(!isNull(user) && profile_fetched_n_times.current < 1){
+            dispatch(fetchUser()).then(()=>{
+                profile_fetched_n_times.current += 1
+            })
+        }
     })
 
     useEffect(()=>{
@@ -66,9 +76,9 @@ function Layouts(props: IProps) {
         }
     }, [pathname])
 
-    
-
-
+    useEffect(() => {
+        dispatch(fetchUser())
+     }, [user?.uid])
 
   return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full ">

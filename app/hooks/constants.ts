@@ -33,6 +33,18 @@ export const SUBMARKETS_API = `${DOMAIN}/location/submarkets`
  */
 export const MARKETS_API = `${DOMAIN}/location/markets`
 
+/**
+ * @name PAYOUTMETHODS_API
+ * @description - all payout methods related endpoints are accessible through this api route
+ */
+export const PAYOUTMETHODS_API = `${DOMAIN}/payouts`
+
+
+/**
+ * @name USERSETTINGS_API
+ * @description - all user settings related endpoints are accessible through this api route
+ */
+export const USERSETTINGS_API = `${DOMAIN}/users/settings`
 
 
 

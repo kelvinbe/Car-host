@@ -193,7 +193,16 @@ export interface IStation {
   longitude: number;
   status: "active" | "inactive";
 }
-
+export interface PayoutMethods {
+  id:string,
+  user_id:string,
+  connected_account_id: string|null,
+  mobile_money_number:string|null,
+  paypal_email:string|null,
+  type:'BANK_ACCOUNT' | 'MPESA' | 'PAYPAL',
+  verified:boolean,
+  status: 'ACTIVE' | 'INACTIVE' | 'BLOCKED'
+}
 export interface IUserProfile {
   user_id:number // keeping this to keep ts happy where its been used this way, but this will eventually get phased out
   id: string;
@@ -210,7 +219,17 @@ export interface IUserProfile {
   status: string;
   stripeCustomerId?: string; // keep this for now, but this will eventually get phased out
   customer_id?: string | null;
-  sub_market_id: string | null; 
+  sub_market_id: string | null;
+  PayoutMethods:PayoutMethods[];
+  user_settings:{
+    id:string,
+    notifications_enabled:boolean,
+    sms_enabled:boolean,
+    tracking_enabled:boolean,
+    authcode_enabled:boolean
+  }
+  is_admin: boolean | null;
+  sent_invites: dIInvitation[] | null;
 }
 export interface IAuthCode {
   id: string;
@@ -319,3 +338,12 @@ export type IapiResponseData = null | {
 }
 
 
+export interface dIInvitation {
+  id: string
+  email: string
+  code: string
+  expires_at: Date
+  uid: string
+  activated: boolean
+  sender_id: string | null
+}

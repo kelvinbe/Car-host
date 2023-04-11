@@ -12,7 +12,7 @@ interface StepProps {
 }
 
 // this isn't gonna be used anywhere else
-const getStripeOnBoardingUrl = () => {
+export const getStripeOnBoardingUrl = () => {
     return apiClient.post(PAYOUT_DOMAIN).then((res)=> res.data.url)
 }
 

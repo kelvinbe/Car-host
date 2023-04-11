@@ -9,7 +9,8 @@ import {
   IVehicle,
   IIntegrations,
   IStation,
-  IRequestedAuthCode
+  IRequestedAuthCode,
+  PayoutMethods
 } from "../../globaltypes";
 import dayjs from "dayjs";
 import { FlexColCenterCenter, FlexColStartStart, FlexRowStartStart } from "../theme/FlexConfigs";
@@ -619,3 +620,29 @@ export const IntegrationsTableColumns: ColumnsType<IIntegrations> = [
     ),
   },
 ]
+export const CardTableColumns: ColumnsType<PayoutMethods> = [
+  {
+    title: "Payout Id",
+    dataIndex: "payout_id",
+    key: "payout_id",
+    render: (v, {connected_account_id}) => (
+      <Flex {...FlexColStartStart}>
+        <Text>{connected_account_id}</Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart} >
+          <StatusTag status={status as any}>
+          {
+            status
+          }
+        </StatusTag>
+      </Flex>
+    ),
+  }
+];
