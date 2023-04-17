@@ -22,6 +22,9 @@ export const vehiclesApi = createApi({
             end_date_time?: string,
             page?: string,
             size?: string,
+            longitude?: string,
+            latitude?: string,
+            host_code?: string,
         }>({
             query: (params) => ({
                 method: "GET",
@@ -36,10 +39,15 @@ export const vehiclesApi = createApi({
             }
         }),
         getVehicle: builder.query<IVehicle, any>({
-            query: (id) => `/api/vehicles?id=${id}`,
+            query: (id) => ({
+                method: "GET",
+                url: VEHICLES_ENDPOINT,
+                params: {
+                    vehicle_id: id
+                }
+            }),
             transformResponse: (response: any) => {
-                const chosen = response?.[0]
-                return chosen ? chosen : null
+                return response?.data?.[0] as IVehicle ?? null
             }
         })
     }),

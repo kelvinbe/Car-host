@@ -5,7 +5,7 @@ import { ThemeProvider } from "@rneui/themed";
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
-import store, { useAppSelector } from './store/store';
+import store, { useAppDispatch, useAppSelector } from './store/store';
 import { theme } from './utils/theme';
 import 'react-native-gesture-handler';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
@@ -29,10 +29,11 @@ import { auth } from './firebase/firebaseApp';
 import * as Notifications from 'expo-notifications'
 import { useDispatch } from 'react-redux';
 import { saveExpoToken, selectExpoToken, setAddNotification } from './store/slices/notificationsSlice';
-import { onAuthStateChanged } from 'firebase/auth';
+import { User, onAuthStateChanged } from 'firebase/auth';
 import { isEmpty, isNull } from 'lodash';
 import useNotifications from './hooks/useNotifications';
 import * as Linking from 'expo-linking'
+import { fetchOnboarding } from './store/slices/onBoardingSlice';
   
 
   
@@ -46,14 +47,21 @@ import * as Linking from 'expo-linking'
     const notificationListener = useRef<ReturnType<typeof Notifications.addNotificationReceivedListener>>();
     const responseListener = useRef<ReturnType<typeof Notifications.addNotificationResponseReceivedListener>>();
     const token = useAppSelector(selectExpoToken)
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+    const [user, setUser] = useState<User|null>(null)
 
+    useEffect(()=>{
+      console.log("user changed", user?.uid)
+      if(isEmpty(user?.uid)) return undefined
+      dispatch(fetchOnboarding())
+    }, [,user?.uid])
 
     /**
      * @explanation to prevent stale push tokens, we will update the user's push token on every login
      */
     onAuthStateChanged(auth, (user)=>{
       if(!isNull(user)){
+        setUser(user)
         if (isEmpty(token)){
           registerForPushNotificationsAsync().then(async (token)=>{
             dispatch(saveExpoToken(token))
@@ -65,7 +73,6 @@ import * as Linking from 'expo-linking'
              */
           })
         }
-        
       }
     })
 

@@ -65,6 +65,7 @@ const Banner = () => {
       justifyContent="center"
       alignItems="center"
       textAlign="center"
+      id="banner"
     >
       {data.length > 0 &&
         data.map((banner) => {

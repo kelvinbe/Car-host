@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IReservation } from '../../types';
+import { RootState } from ".";
 
 const initialState: {
-    upcoming: IReservation[]
+    reservations: IReservation[]
 } = {
-    upcoming: []
+    reservations: []
 }
 
 const upcomingSlice = createSlice({
@@ -12,7 +13,7 @@ const upcomingSlice = createSlice({
     initialState,
     reducers: {
         setGetUpcomingReservations:(state, action) => {
-            state.upcoming = action.payload.upcoming
+            state.reservations = action.payload
         } 
     },
 })
@@ -21,4 +22,4 @@ export default upcomingSlice.reducer;
 
 export const {setGetUpcomingReservations} = upcomingSlice.actions
 
-export const selectUpcoming = (state:any) => {state.upcoming.upcoming}
+export const selectUpcomingReservations = (state:RootState) => state.upcoming.reservations

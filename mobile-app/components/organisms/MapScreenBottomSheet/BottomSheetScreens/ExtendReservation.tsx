@@ -6,16 +6,16 @@ import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import TimeFilter from '../../../molecules/TimeFilter/TimeFilter';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import useBookingActions from '../../../../hooks/useBookingActions';
-import { useUpdateBookingMutation } from '../../../../store/slices/reservationSlice';
-import useExtendBooking from '../../../../hooks/useExtendBooking';
 import useToast from '../../../../hooks/useToast';
 import { IReservation } from '../../../../types';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice';
 
 interface IProps {
   closeBottomSheet?: () => void;
 }
 
-type Props = IProps & IReservation;
+type Props = IProps
 
 const useStyles = makeStyles((theme, props: Props) => {
   return {
@@ -63,47 +63,35 @@ const ExtendReservation = (props: Props) => {
   const toast = useToast()
 
   const { setStartDateTime, setEndDateTime, bookingDetails } = useBookingActions();
-  const [ updateBooking ] = useUpdateBookingMutation();
-  const {extendBooking, data, error, loading} = useExtendBooking()
-
+  const feedback = useAppSelector(selectModifyReservationFeedback)
+  const dispatch = useAppDispatch()
   const close = () => {
     bottomSheetRef.current?.close();
     props.closeBottomSheet && props.closeBottomSheet();
   };
 
   const handleCancel = () => {
-    /**
-     * @todo: handle cancel booking
-     */
     close();
   };
 
   const handleSave = () => {
-    extendBooking(props?.reservation_id)
-    updateBooking({
-      endDateTime: bookingDetails.endDateTime,
-      startDateTime: bookingDetails.startDateTime,
-    } as any);
+    dispatch(modifyCurrentReservation({
+      start_date_time: bookingDetails.start_date_time,
+      end_date_time: bookingDetails.end_date_time,
+    })).then(()=>{
+      close();
+      toast({
+        type: 'success',
+        message: 'Reservation updated successfully'
+      })
+    }).catch((e)=>{
+      toast({
+        type: 'error',
+        message: 'Error updating reservation'
+      })
+      close()
+    })
   };
-  useEffect(() => {
-    if(data && data[0]?.status === "Extended"){
-      close();
-      toast({
-        type:"success",
-        title:"Extended",
-        message:"Your dropoff time has been extended",
-        duration:3000
-      })
-    }else if(error){
-      close();
-      toast({
-        type:"error",
-        title:"Failed",
-        message:"Something went wrong. Could not extend your ride",
-        duration:3000
-      })
-    }
-  },[data, error])
 
   return (
     <ThemeConsumer>
@@ -128,7 +116,7 @@ const ExtendReservation = (props: Props) => {
                   width="40%">
                   Cancel
                 </RoundedOutline>
-                <Rounded loading={loading} onPress={handleSave} width="40%">
+                <Rounded loading={feedback.loading} onPress={handleSave} width="40%">
                   Save
                 </Rounded>
               </View>

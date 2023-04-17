@@ -1,13 +1,14 @@
-import { dIUserProfile, dIUserSettings } from './../../types';
+import { IUserProfile, dIUserProfile, dIUserSettings } from './../../types';
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { app, auth } from '../../firebase/firebaseApp';
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
 import { SETTINGS_ENDPOINT, USER_ENDPOINT } from '../../hooks/constants';
+import apiClient from '../../utils/apiClient';
 
 interface IProfileState {
-  data: dIUserProfile;
+  data: IUserProfile | null;
   providers?: string[];
   passwordChanged?: boolean;
   getProfileLoading?: boolean;
@@ -19,26 +20,7 @@ interface IProfileState {
 }
 
 const initialState: IProfileState = {
-  data: {
-    fname: '',
-    lname: '',
-    email: '',
-    handle: '',
-    phone: '',
-    profile_pic_url: '',
-    user_type: 'CUSTOMER',
-    status: 'ACTIVE',
-    customer_id: '',
-    DriverCredentials: {
-      drivers_licence_front: '',
-      drivers_licence_back: '',
-    },
-    user_settings: {
-      id: '',
-      notifications_enabled: true,
-      user_id: '',
-    },
-  },
+  data: null,
   providers: [],
   passwordChanged: false,
   getProfileLoading: false,
@@ -51,63 +33,24 @@ const initialState: IProfileState = {
 
 export const fetchUserData = createAsyncThunk<any, any>(
   'user/fetchdata',
-  async (_args, { rejectWithValue }) => {
-    return await getAuth(app)
-      ?.currentUser?.getIdToken(true)
-      .then(async token => {
-        return await axios
-          .get(USER_ENDPOINT, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(({ data }) => {
-            const providers = auth?.currentUser?.providerData.map(provider => provider.providerId);
-            return {
-              providers,
-              data: data.data,
-            };
-          })
-          .catch(e => {
-            return rejectWithValue(e);
-          });
-      })
-      .catch(e => {
-        return rejectWithValue(e);
-      });
-  }
-);
+  async (undefined, { rejectWithValue }) => {
+    try {
+      const data = (await apiClient.get(USER_ENDPOINT)).data;
+      return {
+        data,
+        providers: getAuth(app).currentUser?.providerData.map(provider => provider.providerId),
+      }
+    } catch(e) {
+      rejectWithValue(e)
+    }
+});
 
-export const updateUserData = createAsyncThunk(
-  'user/updatedata',
-  (data: { uid?: string; data: { [key: string]: any } } | null, { rejectWithValue, dispatch }) => {
-    return getAuth(app)
-      ?.currentUser?.getIdToken()
-      ?.then(async token => {
-        return await axios
-          .put(
-            USER_ENDPOINT,
-            { data },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'x-user': 'CUSTOMER',
-              },
-            }
-          )
-          .then(res => {
-            dispatch(fetchUserData({}));
-            return null;
-          })
-          .catch(e => {
-            rejectWithValue(e);
-          });
-      })
-      .catch(e => {
-        rejectWithValue(e);
-      });
-  }
-);
+export const updateUserData = createAsyncThunk('user/update', (data: Partial<IUserProfile>, {rejectWithValue, dispatch})=>{
+  return apiClient.patch(USER_ENDPOINT, data).then(()=>{
+    dispatch(fetchUserData({}));
+    return null
+  }).catch(rejectWithValue)
+})
 
 export const updateSettings = createAsyncThunk(
   'user/updatesettings',
@@ -156,6 +99,7 @@ const userSlice = createSlice({
         state.getProfileError = action.error;
       }),
       builder.addCase(fetchUserData.fulfilled, (state, action) => {
+        console.log(action.payload.data.data)
         state.data = action.payload.data;
         state.providers = action.payload.providers;
         state.getProfileLoading = false;
@@ -191,10 +135,10 @@ export const { clearUserState, setPasswordChanged } = userSlice.actions;
 // selectors
 export const selectUserProfile = (state: RootState) => state.user.data;
 export const selectAuthProviders = (state: RootState) => state.user.providers;
-export const selectPasswordChanged = (state: RootState) => state.user.passwordChanged;
-export const selectStripeCustomerId = (state: RootState) => state.user.data.customer_id;
+export const selectPasswordChanged = (state: RootState) => state.user?.passwordChanged;
+export const selectStripeCustomerId = (state: RootState) => state.user.data?.customer_id;
 export const selectNotificationsEnabled = (state: RootState) =>
-  state.user.data.user_settings?.notifications_enabled;
+  state.user.data?.user_settings?.notifications_enabled ?? false; 
 export const selectUpdateSettings = (state: RootState) => {
   return {
     loading: state.user.updateSettingsLoading,

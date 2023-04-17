@@ -4,6 +4,7 @@ import {
   resetOnboarding,
   selectOnBoardingCompleted,
   selectOnBoardingDriversLicense,
+  selectOnBoardingFetchState,
   selectOnBoardingLocation,
   selectOnBoardingPaymentMethod,
   setOnBoarding,
@@ -20,8 +21,6 @@ import { selectStripeCustomerId } from '../store/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
 
 function useOnBoarding() {
-
-  const { data, isLoading, isError } = useGetOnboardingQuery(null);
   
   const [
     updateDriverCredentials,
@@ -46,12 +45,8 @@ function useOnBoarding() {
   const paymentMethod = useAppSelector(selectOnBoardingPaymentMethod);
   const location = useAppSelector(selectOnBoardingLocation);
   const customer_id = useAppSelector(selectStripeCustomerId);
+  const fetchState = useAppSelector(selectOnBoardingFetchState)
 
-  useEffect(() => {
-    // checking if the current state is not null so we don't overwrite it
-    if (isNull(data) || isLoading || isError || !isNull(completed)) return void 0;
-    dispatch(setOnBoarding(data?.completed));
-  }, [data, isLoading, isError]);
 
   /**
    * @name resetOnBoarding
@@ -124,8 +119,6 @@ function useOnBoarding() {
   }
 
   return {
-    loading: isLoading,
-    error: isError,
     completed,
     driversLicense,
     paymentMethod,
@@ -136,6 +129,8 @@ function useOnBoarding() {
     setLocation: _setLocation,
     isUpdatingLicense,
     updateLicenseError,
+    loading: fetchState.loading,
+    error: fetchState.error,
   };
 }
 

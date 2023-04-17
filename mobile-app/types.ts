@@ -60,7 +60,8 @@ export type ManageResParamList = {
 export type UpcomingParamList = {
   UpcomingReservationsHome?: undefined;
   ReservationDetails?: {
-    current: boolean;
+    current?: boolean;
+    id: string;
   };
   VehicleInspection?: undefined;
 };
@@ -115,81 +116,143 @@ export interface IToast {
  * App data types
  */
 
+export interface IMarket {
+  id: string;
+  country: string;
+  name: string;
+  status: string;
+  currency: string;
+}
+
+export interface ISubMarket {
+  id: string;
+  market_id: string;
+  name: string;
+  status: string;
+}
+
+export interface IUserSettings  {
+  id: string
+  notifications_enabled: boolean
+  user_id: string
+}
+
+export interface IUserProfile {
+  id: string;
+  email: string;
+  lname: string | null;
+  fname: string | null;
+  handle: string;
+  phone: string | null;
+  profile_pic_url: string | null;
+  market_id: string | null;
+  sub_market_id: string | null;
+  user_type: string;
+  status: string;
+  connected_account_id: string | null;
+  customer_id: string | null;
+  description: string | null;
+  uid: string;
+  is_admin: boolean;
+  market: IMarket | null;
+  sub_market: ISubMarket | null;
+  payment_types: IPaymentType[];
+  DriverCredentials: Partial<DriverCredentials> | null;
+  user_settings: IUserSettings | null;
+}
+
+export interface IPaymentType {
+  id: string;
+  user_id: string;
+  status: string;
+  details: { [key: string]: any };
+  phone_number: number | null;
+  stripe_payment_method_id: string | null;
+  type: string;
+}
+
+export interface IPayment {
+  id: string;
+  payment_type: string | null;
+  account_number: string | null;
+  authorization: string | null;
+  paymentToken: string | null;
+  amount: number;
+  tax: number | null;
+  date_time: Date;
+  status: string;
+  stripe_payment_id: string | null;
+  user_id: string;
+  receipt_number: string | null;
+  payment_type_fk: IPaymentType | null;
+}
+
+export interface DriverCredentials {
+  id: string;
+  user_id: string;
+  drivers_licence_front: string | null;
+  drivers_licence_back: string | null;
+  drivers_licence: string | null;
+  is_verified: boolean;
+  status: string;
+  driver_licence_expiry: Date | null;
+}
+
+export interface InspectionQuestion {
+  question: string,
+  description: string,
+  option: null | 'yes' | 'no' ,
+  images: null | string[],
+  index: number,
+}
+
+export interface Inspection {
+  id: string;
+  created_at: Date;
+  updated_at: Date;
+  reservation_id: string;
+  questions: InspectionQuestion[] | null;
+  fuel: number | null;
+}
+
+export interface IStation {
+  id: string;
+  name: string;
+  description: string | null;
+  image: string | null;
+  sub_market_id: string;
+  user_id: string;
+  status: string;
+  latitude: number | null;
+  longitude: number | null;
+  sub_market: ISubMarket | null;
+}
+
+
+
 /**
  * @name IReservation
  * @description Reservation data type
  */
-// export interface IReservation {
-//   reservationId: string;
-//   hostId: string;
-//   startDateTime: string;
-//   endDateTime: string;
-//   vehicleId: string;
-//   vehicleModel: string;
-//   vehicleMake: string;
-//   vehiclePicUrl: string;
-//   locationAddress: string;
-//   marketName: string;
-//   total: string;
-//   status: string;
-//   paymentMethod?: IPaymentMethod<any>;
-// }
+
+
 
 export interface IReservation {
-  reservation_id: string;
-  customer: {
-    userId?: string;
-    fname?: string;
-    lname?: string;
-    profile_pic_url?: string;
-  };
-  vehicle: {
-    vehicle_id?: number;
-    hourly_rate?: number;
-    vehicle_type?: string;
-    color?: string;
-    seats?: number;
-    plate?: string;
-    transmission?: 'Manual' | 'Automatic';
-    year?: number;
-    status?: 'Available' | 'Unavailable' | 'Booked' | 'Restricted';
-    make: string;
-    model: string;
-    user_id?: string;
-    host: {
-      id?: string;
-      fname?: string;
-      lname?: string;
-      profile_pic_url?: string;
-      handle?: string;
-      entityId?: string;
-    };
-    location: {
-      location_id?: number;
-      entity_id?: string;
-      market: {
-        market_id?: number;
-        country?: string;
-        name?: string;
-        latitude?: string;
-        longitude?: string;
-        status?: 'Active' | 'Nonactive';
-      };
-      address?: string;
-      picture_url?: string;
-      longitude?: string;
-      latitude?: string;
-      status?: 'Active' | 'Nonactive' | 'Suspended';
-    };
-    vehicle_pictures?: string[];
-  };
-  start_date_time?: string;
-  end_date_time?: string;
-  total_cost?: number;
-  duration?: number;
-  payment_id?: string;
-  status?: 'Complete' | 'Active' | 'Upcoming' | 'Cancelled' | 'Other';
-  payment_method_details: any;
+  id: string;
+  user_id: string;
+  vehicle_id: string;
+  start_date_time: string;
+  end_date_time: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  type: string;
+  payment_id: string | null;
+  vehicle: IVehicle;
+  user: IUserProfile;
+  payment: IPayment | null;
+  inspection: Inspection | null;
+  inspection_id: string
 }
 
 /**
@@ -198,47 +261,23 @@ export interface IReservation {
  */
 
 export interface IVehicle {
-  vehicle_id?: string;
-  vehicle_type?: string;
-  location_id?: number;
-  color?: string;
-  seats?: number;
-  plate?: string;
-  transmission?: 'Manual' | 'Automatic';
-  year?: number;
-  longitude?: number;
-  latitude?: number;
-  status?: 'Available' | 'Unavailable' | 'Booked' | 'Restricted';
-  make: string;
-  model: string;
-  hourly_rate: number;
-  host: {
-    id?: string;
-    fname?: string;
-    lname?: string;
-    profile_pic_url?: string;
-    handle?: string;
-  };
-  location: {
-    location_id?: number;
-    entity_id?: string;
-    market: {
-      market_id?: number;
-      country?: string;
-      name?: string;
-      latitude?: string;
-      longitude?: string;
-      status?: 'Active' | 'Nonactive';
-    };
-    address?: string;
-    building_name?: string;
-    picture_url?: string;
-    directions?: string;
-    longitude?: string;
-    latitude?: string;
-    status?: 'Active' | 'Nonactive' | 'Suspended';
-  };
-  vehicle_pictures?: string[];
+  id: string;
+  user_id: string;
+  station_id: string;
+  color: string | null;
+  seats: number | null;
+  plate: string | null;
+  transmission: string | null;
+  year: number | null;
+  make: string | null;
+  model: string | null;
+  hourly_rate: number | null;
+  tracking_device_id: string | null;
+  status: string;
+  host: IUserProfile | null;
+  station: IStation;
+  location: any; // will be phased out
+  VehiclePictures?: string[];
 }
 
 /**

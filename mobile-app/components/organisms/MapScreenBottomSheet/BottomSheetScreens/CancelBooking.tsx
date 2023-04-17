@@ -2,23 +2,17 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, {useRef} from 'react'
 import BottomSheet from "@gorhom/bottom-sheet"
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import CashIcon from "../../../../assets/icons/cash.svg"
-import ActionButton from '../../../atoms/Buttons/ActionButton/ActionButton'
-import VisaIcon from "../../../../assets/icons/visa.svg"
-import { Image } from '@rneui/base'
-import BaseInput from '../../../atoms/Input/BaseInput/BaseInput'
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded'
-import TimeFilter from '../../../molecules/TimeFilter/TimeFilter'
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline'
-import { useCancelBooking } from '../../../../hooks';
 import useToast from '../../../../hooks/useToast';
-import { IReservation } from '../../../../types'
+import { useAppDispatch, useAppSelector } from '../../../../store/store'
+import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice'
 
 interface IProps {
     closeBottomSheet?: () => void;
 }
 
-type Props = IProps & IReservation;
+type Props = IProps
 
 const useStyles = makeStyles((theme, props: Props)=> {
     return {
@@ -65,41 +59,40 @@ const useStyles = makeStyles((theme, props: Props)=> {
 })
 
 const CancelBookingBottomSheet = (props: Props) => {
-    const { data, error, cancelBooking } = useCancelBooking(props?.reservation_id);
     const toast = useToast();
     
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = ["30%"]
     const styles = useStyles(props)
 
+    const dispatch = useAppDispatch()
+
     const close = () =>{
         bottomSheetRef.current?.close()
         props.closeBottomSheet && props.closeBottomSheet()
     }
 
-    const handleCancel = () =>{
-        cancelBooking();
-        close();
+    const feedback = useAppSelector(selectModifyReservationFeedback)
 
-        if (data) {
-        toast({
-            type: 'success',
-            message: 'Your reservation has been cancelled.',
-            title: 'Success',
-            duration: 3000,
-        });
-        }
-        if (error) {
-        toast({
-            type: 'error',
-            message: 'Something went wrong',
-            title: 'Error',
-            duration: 3000,
-        });
-        }
+    const handleCancel = () =>{
+        dispatch(modifyCurrentReservation({
+            status: "CANCELLED"
+        })).then(()=>{
+            toast({
+                message: "Booking Cancelled",
+                type: "success"
+            })
+            close()
+        }).catch((e)=>{
+            toast({
+                message: "Something went wrong",
+                type: "error"
+            })
+            close()
+        })
     }
 
-    const handleStop = () =>{
+    const handleClose = () =>{
         close()
     }
 
@@ -125,10 +118,10 @@ const CancelBookingBottomSheet = (props: Props) => {
                             </Text>
                     </View>
                     <View style={styles.bottomButtonsContainer} >
-                        <RoundedOutline onPress={handleCancel} width="45%" >
+                        <RoundedOutline loading={feedback.loading} onPress={handleCancel} width="45%" >
                             Yes
                         </RoundedOutline>
-                        <Rounded onPress={handleStop} width="45%" >
+                        <Rounded onPress={handleClose} width="45%" >
                             No
                         </Rounded>
                     </View>

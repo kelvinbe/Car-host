@@ -59,12 +59,12 @@ const useStyles = makeStyles((theme, props: Props) => {
 const BookingCarPaymentInfo = (props: Props) => {
   const styles = useStyles(props);
   const {
-    bookingDetails: { vehicle, startDateTime, endDateTime, billingInfo },
+    bookingDetails: { vehicle, start_date_time: startDateTime, end_date_time: endDateTime, billingInfo, paymentType },
   } = useBookingActions();
 
   const calcAmount = () => {
     if (isNull(vehicle)) return 0;
-    return calcDuration(startDateTime, endDateTime) * vehicle?.hourly_rate;
+    return (calcDuration(startDateTime, endDateTime) * (vehicle?.hourly_rate ?? 0))?.toFixed(2);
   };
 
   return (
@@ -73,7 +73,7 @@ const BookingCarPaymentInfo = (props: Props) => {
         <View style={styles.container}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Total</Text>
-            {billingInfo && (
+            {paymentType && (
               <TouchableOpacity
                 onPress={props.openSelectPaymentMethod}
                 style={[styles.actionButton, , { borderBottomColor: theme.colors.link }]}>
@@ -83,7 +83,7 @@ const BookingCarPaymentInfo = (props: Props) => {
           </View>
           <View style={[styles.section, { justifyContent: 'space-between' }]}>
             <Text style={styles.sectionTitle}>${calcAmount()}</Text>
-            {!billingInfo && (
+            {!paymentType && (
               <TouchableOpacity
                 onPress={props.openSelectPaymentMethod}
                 style={[styles.actionButton]}>
@@ -91,12 +91,16 @@ const BookingCarPaymentInfo = (props: Props) => {
               </TouchableOpacity>
             )}
 
-            {billingInfo && (
+            {paymentType && (
               <View style={styles.paymentInfoContainer}>
-                <VisaIcon width={32} height={24} />
-                {billingInfo?.details?.last4 && (
-                  <Text style={styles.textInfo}>****{billingInfo.details.last4}</Text>
-                )}
+                <Text>
+                  Paid with:
+                </Text>
+                <Text style={styles.textInfo}>
+                  {
+                    paymentType?.type
+                  }
+                </Text>
               </View>
             )}
           </View>

@@ -99,7 +99,7 @@ const BookingCarDetails = (props: Props) => {
             {vehicle?.make} {vehicle?.model}{' '}
           </Text>
           <ScrollView style={styles.scrollView} horizontal>
-            {vehicle?.vehicle_pictures?.map((image, index) => (
+            {vehicle?.VehiclePictures?.map((image, index) => (
               <View key={index} style={styles.carSlide}>
                 <Image
                   style={styles.carImage}

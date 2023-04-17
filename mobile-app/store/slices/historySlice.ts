@@ -1,4 +1,4 @@
-import { DOMAIN, FETCH_HISTORY_ENDPOINT } from './../../hooks/constants';
+import { DOMAIN, FETCH_HISTORY_ENDPOINT, RESERVATIONS_ENDPOINT } from './../../hooks/constants';
 import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { auth } from '../../firebase/firebaseApp';
@@ -15,17 +15,21 @@ const initialState: {
 export const historyApi = createApi({
     reducerPath: "historyApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: DOMAIN,
         headers: {
             token: `Bearer ${auth.currentUser?.getIdToken()}`
         }
     }),
     endpoints: (builder) => ({
         getHistory: builder.query<IReservation[], any>({
-            query: ()=> `/api/history`,
+            query: ()=> ({
+                url: RESERVATIONS_ENDPOINT,
+                method: "GET",
+                params: {
+                    status: "COMPLETE"
+                }
+            }),
             transformResponse: (response: any) => {
-                console.log(response)
-                return response
+                return response.data
             }
         }),
         

@@ -127,7 +127,7 @@ const DriveCardButton = (props: Props) => {
                 <TouchableOpacity onPress={props.onPress} style={styles.leftContainer} >
                     <View style={styles.carImageContainer} >
                         <Image style={styles.carImage} source={{
-                            uri: props?.vehicle_pictures?.[0]
+                              uri: props?.VehiclePictures?.[0]
                         }} />
                     </View>
                     <View style={styles.driveInfoContainer} >
@@ -137,7 +137,7 @@ const DriveCardButton = (props: Props) => {
                         <View style={styles.driverInfoContainer} >
                             <View style={styles.driverAvatarStyle} >
                                 <Image style={styles.driverAvatarStyle} source={{
-                                    uri: props?.host?.profile_pic_url
+                                    uri: props?.host?.profile_pic_url ?? undefined
                                 }} />
                             </View>
                             <Text style={styles.driverNameText} >

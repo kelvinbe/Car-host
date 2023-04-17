@@ -7,11 +7,13 @@ import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import useEndReservation from '../../../../hooks/useEndReservation';
 import { IReservation } from '../../../../types';
 import useToast from '../../../../hooks/useToast';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice';
 interface IProps {
   closeBottomSheet?: () => void;
 }
 
-type Props = IProps & IReservation;
+type Props = IProps;
 
 const useStyles = makeStyles((theme, props: Props) => {
   return {
@@ -57,7 +59,6 @@ const useStyles = makeStyles((theme, props: Props) => {
 });
 
 const EndReservation = (props: Props) => {
-  const {data, error, endReservation} = useEndReservation(props.reservation_id)
 
   const toast = useToast()
 
@@ -65,29 +66,29 @@ const EndReservation = (props: Props) => {
   const snapPoints = ['30%'];
   const styles = useStyles(props);
 
+  const dispatch = useAppDispatch()
+  const feedback = useAppSelector(selectModifyReservationFeedback)
   const close = () => {
     bottomSheetRef.current?.close();
     props.closeBottomSheet && props.closeBottomSheet();
   };
 
   const handleCancel = () => {
-    endReservation()
-    if(data.status.Success === 'success'){
+    dispatch(modifyCurrentReservation({
+      status: "COMPLETE"
+    })).then(()=>{
       toast({
-        type: 'success',
-        message: 'Your reservation has been ended',
-        title: 'Success',
+        message: "Reservation ended successfully",
+        type: "success",
         duration: 3000
       })
-    }else if(error){
+    }).catch((e)=>{ 
       toast({
-        type: 'error',
-        message: 'Something went wrong',
-        title: 'Error',
+        message: "Error ending reservation",
+        type: "error",
         duration: 3000
       })
-    }
-    
+    })
     close();
   };
 
@@ -112,7 +113,7 @@ const EndReservation = (props: Props) => {
               <Text style={styles.textStyle}>You will end your ride</Text>
             </View>
             <View style={styles.bottomButtonsContainer}>
-              <RoundedOutline onPress={handleCancel} width="40%">
+              <RoundedOutline loading={feedback.loading} onPress={handleCancel} width="40%">
                 Yes
               </RoundedOutline>
               <Rounded onPress={handleStop} width="40%">

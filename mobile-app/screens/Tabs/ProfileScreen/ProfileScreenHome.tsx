@@ -253,7 +253,7 @@ const ProfileScreenHome = (props: Props) => {
               <View style={styles.avatarStyle}>
                 <Image
                   source={{
-                    uri: userProfile?.profile_pic_url,
+                    uri: userProfile?.profile_pic_url ?? undefined,
                   }}
                   style={styles.avatarImageStyle}
                 />
@@ -311,7 +311,7 @@ const ProfileScreenHome = (props: Props) => {
                 </View>
                 <Switch
                   thumbColor={theme.colors.primary}
-                  value={profile.user_settings?.notifications_enabled}
+                  value={profile?.user_settings?.notifications_enabled}
                   onValueChange={togglePushNotifications}
                 />
               </View>

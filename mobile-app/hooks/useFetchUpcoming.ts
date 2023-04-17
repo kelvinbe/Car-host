@@ -1,39 +1,30 @@
-import axios from 'axios';
 import {useState} from 'react'
-import { FETCH_UPCOMING_RESERVATIONS_ENDPOINT } from './constants';
-import { auth } from '../firebase/firebaseApp';
+import { RESERVATIONS_ENDPOINT } from './constants';
 import { useDispatch } from 'react-redux';
-import { setGetUpcomingReservations } from '../store/slices/upcomingReservationSlice';
+import { selectUpcomingReservations, setGetUpcomingReservations } from '../store/slices/upcomingReservationSlice';
+import apiClient from '../utils/apiClient';
+import { useAppSelector } from '../store/store';
 
 type Error = any;
 
 export default function useFetchUpcoming(){
 
-    const [data, setData] = useState(null)
     const [error, setError] = <Error>useState(null)
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
+    const data = useAppSelector(selectUpcomingReservations)
 
-    const fetchUpcoming = async() => {
+    const fetchUpcoming = () => {
         setLoading(true)
-        auth?.currentUser?.getIdToken()
-        .then(token => {
-            axios.get(FETCH_UPCOMING_RESERVATIONS_ENDPOINT, {
-                headers: {
-                    token: `Bearer ${token}`,
-                },
-            })
-            .then((response) => {
-              setData(response.data)
-              dispatch(setGetUpcomingReservations({upcoming:response.data}))
-            }).catch(err => {
-                setError(err)
-            })
-        })
-        .catch(err => {
-            setError(err)
-        })
-        .finally( () => {
+        return apiClient.get(RESERVATIONS_ENDPOINT, {
+            params: {
+                status: "UPCOMING"
+            }
+        }).then(({data})=>{
+            dispatch(setGetUpcomingReservations(data))
+        }).catch((e)=>{
+            setError(e)
+        }).finally(()=>{
             setLoading(false)
         })
     }

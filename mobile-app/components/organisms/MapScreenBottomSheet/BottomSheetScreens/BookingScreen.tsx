@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../../../store/store';
 import { isEmpty } from 'lodash';
 import BookingCarComponent from './BookingCarComponent';
 import { SearchScreenParamList } from '../../../../types';
+import { useConfirmPaymentQuery } from '../../../../store/slices/billingSlice';
 
 interface IProps {
   openAuthorization?: () => void;
@@ -49,66 +50,73 @@ const BookingScreen = (props: Props) => {
   const styles = useStyles(props);
   const {
     bookingDetails: {
-      canBookChecks,
-      endDateTime,
-      startDateTime,
-      billingInfo,
-      host_id: hostId,
-      total,
+      end_date_time,
+      start_date_time,
       vehicle,
-      code
+      code,
+      paymentType
     },
     clearBookingState,
     payForReservation,
     payForReservationLoading,
     paymentOption,
   } = useBookingActions();
-  const [addReservation, { isLoading, data, error }] = useAddReservationMutation();
+  const [addReservation, { isLoading }] = useAddReservationMutation();
   const { navigate } = useNavigation<NavigationProp<SearchScreenParamList>>();
   const reduxDispatch = useAppDispatch();
+  
 
+  const { data: confirmationData, isError, isLoading: confirmationLoading } = useConfirmPaymentQuery(undefined, {
+    pollingInterval: 60000, // 1 minute polling
+    skip: isEmpty(paymentOption)
+  })
   const toast = useToast();
 
   useEffect(() => {
-    if (data) {
-      reduxDispatch(clearBookingState());
-      navigate('BookingConfirmationScreen', {
-        reservationId: data?.data?.reservationId,
-      });
-    }
-    if (error) {
-      toast({
-        message: 'An error Occured',
-        type: 'error',
-        duration: 3000,
-        title: 'Error',
-      });
-    }
-  }, [data, error]);
-
-  useEffect(() => {
     if (!isEmpty(paymentOption)) {
-      addReservation({
-        hostId: hostId as any,
-        vehicleId: vehicle?.vehicle_id as any,
-        startDateTime,
-        endDateTime,
-        paymentMethod: billingInfo as any,
-        total: total as any,
-        vehicleMake: vehicle?.make as any,
-        vehicleModel: vehicle?.model as any,
-        vehiclePicUrl: vehicle?.vehicle_pictures?.[0] as any,
-        /**Not sure about these */
-        reservationId: '',
-        locationAddress: '',
-        marketName: '',
-        status: 'Active',
-      });
+      if (confirmationData?.success) {
+        reduxDispatch(clearBookingState());
+        addReservation({
+          station_id: vehicle?.station_id,
+          vehicle_id: vehicle?.id,
+          start_date_time,
+          end_date_time,
+        }).then(()=>{
+          navigate('BookingConfirmationScreen', {
+            reservationId: ''
+          });
+        }).catch((e)=>{
+          toast({
+            message: 'Please contact support',
+            type: 'error',
+            duration: 3000,
+            title: 'An Error Occured',
+          })
+        })
+      }
+
+      if (confirmationData?.error) {
+        toast({
+          message: confirmationData?.error,
+          type: 'error',
+          duration: 3000,
+          title: 'Error',
+        });
+      }
+
+      if (confirmationData?.timeout) {
+        toast({
+          message: 'Payment Timed Out',
+          type: 'error',
+          duration: 3000,
+          title: 'Error',
+        });
+      }
     }
-  }, [paymentOption]);
+  }, [confirmationData?.timeout, confirmationData?.success, confirmationData?.error]);
 
   const makeBooking = () => {
-    payForReservation(billingInfo?.entityId as string);
+    return payForReservation()
   };
 
   return isLoading ? (
@@ -138,9 +146,9 @@ const BookingScreen = (props: Props) => {
         <View style={styles.bottomSection}>
           <Rounded
             fullWidth
-            loading={payForReservationLoading}
+            loading={ isEmpty(paymentOption) ? payForReservationLoading : confirmationLoading}
             onPress={makeBooking}
-            disabled={isEmpty(billingInfo) || isEmpty(code)}>
+            disabled={isEmpty(paymentType) || isEmpty(code)}>
             Book Now
           </Rounded>
         </View>

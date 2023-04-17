@@ -3,13 +3,14 @@ import axios from 'axios'
 import { isEmpty } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase/firebaseApp'
-import { selectBookingData, setAuthCode, setBillingInfo, setEndDateTime, setHostId, setStartDateTime, setStatus, setVehicle, clearBookingState } from '../store/slices/bookingSlice'
-import { selectStripeCustomerId } from '../store/slices/userSlice'
+import { selectBookingData, setAuthCode, setBillingInfo, setEndDateTime, setHostId, setStartDateTime, setStatus, setVehicle, clearBookingState, setPaymentType } from '../store/slices/bookingSlice'
+import { selectStripeCustomerId, selectUserProfile } from '../store/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../store/store'
 import { IPaymentMethod } from '../types'
 import { calcDuration } from '../utils/utils'
-import { BACKEND_DOMAIN } from './constants'
+import { BACKEND_DOMAIN, PAYMENT_ENDPOINT } from './constants'
 import useToast from './useToast'
+import apiClient from '../utils/apiClient'
 
 
 
@@ -33,61 +34,54 @@ function useBookingActions() {
     const _setVehicle = (vehicle: any) => reduxDispatch(setVehicle({vehicle}))
     const _setBillingInfo = (billingInfo: IPaymentMethod<any>) => reduxDispatch(setBillingInfo({billingInfo}))
     const _clearBookingState = () => reduxDispatch(clearBookingState())
+    const _setPaymentType = (paymentType: any) => reduxDispatch(setPaymentType(paymentType))
+    const user = useAppSelector(selectUserProfile)
 
 
     /**
-     * @name payForReservation
-     * @description This function is used to pay for the reservation
-     * @param {string} paymentMethodId - The payment method id
+     * @name payWithStripe
+     * @description - handle's stripe payments
      */
-
-    const payForReservation = async (paymentMethodId: string) => {
-      setLoading(true)
-      auth?.currentUser?.getIdToken().then((token)=>{
-        /**Stripe payment sheet */
-        axios.post(`${BACKEND_DOMAIN}/api/stripe/actions/createPaymentIntent`, {
-            hourlyRate: bookingDetails?.vehicle?.hourly_rate,
-            hours: calcDuration(bookingDetails?.startDateTime, bookingDetails?.endDateTime),
-            stripePaymentMethodId: bookingDetails?.billingInfo?.entityId,
-            stripeCustomerId: customerId
-        }, {
-            headers: {
-                token: `Bearer ${token}`
-            }
-        }).then(({data: {data}})=>{
-            initPaymentSheet({
-                paymentIntentClientSecret: data.client_secret,
-                merchantDisplayName: "divvly",
-                customerId: customerId,
-                customerEphemeralKeySecret: data.ephemeralKey
-            }).then(()=>{
-                presentPaymentSheet().then((rs)=>{
-                    setLoading(false)
-                    setPaymentOption(rs)
-                }).catch((e)=>{
-                  setLoading(false)
-                  setError(e)
-                  toast({
-                    message: "An error Occured",
-                    type: "error",
-                    duration: 3000,
-                    title: "Error"
-                  })
-                    console.log(e)
-                })
-            }).catch((e)=>{
+    const payWithStripe = async () => {
+      const { vehicle, start_date_time, end_date_time } = bookingDetails
+      apiClient.post(PAYMENT_ENDPOINT, {
+        amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+        currency: user?.market?.currency ?? 'USD',
+        payment_method: bookingDetails?.paymentType?.stripe_payment_method_id
+      }).then(({data})=>{
+        initPaymentSheet({
+            paymentIntentClientSecret: data.client_secret,
+            merchantDisplayName: "divvly",
+            customerId: user?.customer_id ?? undefined,
+            customerEphemeralKeySecret: data.ephemeralKey
+        }).then(()=>{
+            presentPaymentSheet().then((rs)=>{
                 setLoading(false)
-                setError(e)
+                setPaymentOption(rs)
+            }).catch((e)=>{
+              setLoading(false)
+              setError(e)
+              toast({
+                message: "An error Occured",
+                type: "error",
+                duration: 3000,
+                title: "Error"
+              })
                 console.log(e)
-                toast({
-                    message: "An error Occured",
-                    type: "error",
-                    duration: 3000,
-                    title: "Error"
-                })
             })
         }).catch((e)=>{
             setLoading(false)
+            setError(e)
+            console.log(e)
+            toast({
+                message: "An error Occured",
+                type: "error",
+                duration: 3000,
+                title: "Error"
+            })
+        })
+      }).catch((e)=>{
+          setLoading(false)
             setError(e)
             console.log(e)
             toast({
@@ -96,18 +90,59 @@ function useBookingActions() {
                 type: "error",
                 duration: 4000
             })
+      })
+    }
+
+    /**
+     * @name payWithMpesa
+     * @description - handle's mpesa payments
+     */
+    const payWithMpesa = async () => {
+      setLoading(true)
+      const { vehicle, start_date_time, end_date_time } = bookingDetails
+      await apiClient.post(`${PAYMENT_ENDPOINT}/mpesa`, {
+        amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+      }).then(()=>{
+        setPaymentOption({payment_method: 'mpesa'})
+        toast({
+          message: "Payment Successful",
+          title: "Success",
+          type: "success",
+          duration: 4000
         })
       }).catch((e)=>{
-          setLoading(false)
-          setError(e)
-          console.log(e)
-          toast({
-            message: "An error Occured",
-            title: "Error",
-            type: "error",
-            duration: 4000
+        setError(e)
+        toast({
+          message: "An error Occured",
+          title: "Error",
+          type: "error",
+          duration: 4000
         })
+      }).finally(()=>{
+        setLoading(false)
       })
+    }
+
+    /**
+     * @name payForReservation
+     * @description This function is used to pay for the reservation
+     * @param {string} paymentMethodId - The payment method id
+     */
+
+    const payForReservation = async () => {
+      switch(bookingDetails?.paymentType?.type){
+        case 'STRIPE':
+          await payWithStripe() 
+          break;
+        case 'MPESA':
+          await payWithMpesa()
+          break;
+        default:
+          return toast({
+            message: "Please select a payment method before proceeding",
+            type: "primary"
+          })
+      }
     }
 
   return {
@@ -121,6 +156,7 @@ function useBookingActions() {
     bookingDetails,
     clearBookingState: _clearBookingState,
     payForReservation,
+    setPaymentType: _setPaymentType,
     payForReservationError: error,
     payForReservationLoading: loading,
     paymentOption

@@ -1,23 +1,25 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native'
-import React, { useReducer, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProfileScreenParamList } from '../../../types'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
 import BaseInput from '../../../components/atoms/Input/BaseInput/BaseInput'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import { Image } from '@rneui/base'
 import CameraIcon from "../../../assets/icons/camera.svg"
-import useUserAuth from '../../../hooks/useUserAuth'
 import Loading from '../../../components/molecules/Feedback/Loading/Loading'
-import { useEditProfile } from '../../../hooks';
 import { Profile } from '../../../hooks/useEditProfile';
 import { _setEmail, _setName, _setPictureUrl } from '../../../store/slices/editProfileSlice'
 import * as ImagePicker from 'expo-image-picker';
+import { useAppDispatch, useAppSelector } from '../../../store/store'
+import { selectUpdateProfile, selectUserProfile, updateUserData } from '../../../store/slices/userSlice'
+import { isEqual, last } from 'lodash'
+import Error from '../../../components/molecules/Feedback/Error/Error'
+import useToast from '../../../hooks/useToast'
+import { uploadToFirebase } from '../../../utils/utils'
 
 
-type Props = Profile & NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenEdit">
+type Props = NativeStackScreenProps<ProfileScreenParamList, "ProfileScreenEdit">
 
 const useStyles = makeStyles((theme, props: Props)=>({
     container: {
@@ -94,56 +96,68 @@ const useStyles = makeStyles((theme, props: Props)=>({
 
 const ProfileScreenEdit = (props: Props) => {
     const styles = useStyles(props)
-    const { userProfile, updateProfileError, updateProfileLoading, updateUserProfile } = useUserAuth()
-    const { data, editUserProfile } = useEditProfile(props);
-
-    let userName = `${userProfile?.fname} ${userProfile?.lname}`;
-    const [name, setName] = useState(userName);
+    const userProfile = useAppSelector(selectUserProfile)
+    const [fname, setFName] = useState(userProfile?.fname);
+    const [lname, setLName] = useState(userProfile?.lname);
     const [email, setEmail] = useState(userProfile?.email);
     const [pictureUrl, setPictureUrl] = useState(userProfile?.profile_pic_url);
+    const feedback = useAppSelector(selectUpdateProfile)
+    const toast = useToast()
 
-    const getPermisssion = async () => {
-        if (Platform.OS !== 'web') {
-          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== 'granted') {
-            alert('Permission denied');
-          }
-        }
-      };
-      useEffect(() => {
-        getPermisssion();
-      });
+    const dispatch = useAppDispatch()
+
     
-      const chooseProfilePic = async () => {
-        let result = ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-        if (!(await result).canceled) {
-          setPictureUrl((await result)?.assets[0]?.uri);
-        }
-      };
+    const chooseProfilePic = async () => {
+        ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+          }).then((result)=>{
+            if(!result.canceled){
+              if(result.canceled) return toast({
+                message: "Image upload cancelled",
+                type: "error"
+            })
+            if(!isEmpty(result?.assets)){
+                Promise.all(result.assets.map((asset)=>{
+                    return uploadToFirebase(asset.uri, asset.fileName ?? Date.now().toString(), "image/jpeg").then((url)=>url).catch((e)=>{
+                        /**
+                         * @todo logrocket for upload error
+                         */
+                        toast({
+                            message: "Image upload failed",
+                            type: "error"
+                        })
+                        return null
+                    })
+                })).then((urls)=>{
+                    const filteredUrls = urls.filter((url)=>!isEmpty(url)) as string[]
+                    setPictureUrl(last(filteredUrls))
+                }).catch((e)=>{
+                    // error toasts have already been displayed
+                    // add logrocket implementation
+                })
+              } 
+            }
+          }).catch((e)=> {
+            toast({
+              type: "error",
+              message: "Error choosing picture",
+              title: "Error"
+            })
+          })
+    };
 
     const update = () =>{
-        editUserProfile({ name, email });
-        const currentData = Object.entries({
-            email,
-            name,
-            pictureUrl
-        })
-        const prevData: {
-            [key: string]: string
-        } = {
-            email: userProfile?.email,
-            name: userName,
-            pictureUrl:userProfile?.profile_pic_url
-        }
-        const updatedData = currentData.filter(([key, value]: [string , string]) => value !== prevData?.[key as string])
-        updateUserProfile(updatedData)
+        dispatch(updateUserData({
+            fname: !isEqual(fname, userProfile?.fname) ? fname : undefined,
+            lname: !isEqual(lname, userProfile?.lname) ? lname : undefined,
+            email: !isEqual(email, userProfile?.email) ? email : undefined,
+            profile_pic_url: !isEqual(pictureUrl, userProfile?.profile_pic_url) ? pictureUrl : undefined
+        }))
     }
-  return (updateProfileLoading ? <Loading /> :
+  return (feedback?.loading ? <Loading /> : feedback?.error ? <Error/> :
     <ThemeConsumer>
         {({theme}) => (
             <KeyboardAvoidingView behavior={
@@ -154,7 +168,7 @@ const ProfileScreenEdit = (props: Props) => {
                         <View style={styles.avatarSection} >
                             <View style={styles.avatarContainer} >
                                 <Image source={{
-                                    uri: userProfile?.profile_pic_url
+                                    uri: pictureUrl ?? undefined
                                 }} style={{width: 70, height: 70}} />
                             </View>
                             <TouchableOpacity style={styles.changeImageContainer} onPress={chooseProfilePic} >
@@ -168,13 +182,20 @@ const ProfileScreenEdit = (props: Props) => {
                         </Text>
                     </View>
                     <View style={styles.inputContainerStyle} >
-                    <BaseInput
-                        value={name}
-                        onChangeText={setName}
-                        label="Name"
-                        placeholder="John Doe"
-                        containerStyle={styles.baseInputStyle}
-                    />
+                        <BaseInput
+                            value={fname ?? ""}
+                            onChangeText={setFName}
+                            label="First Name"
+                            placeholder="John"
+                            containerStyle={styles.baseInputStyle}
+                        />
+                        <BaseInput
+                            value={lname ?? ""}
+                            onChangeText={setLName}
+                            label="Last Name"
+                            placeholder="Doe"
+                            containerStyle={styles.baseInputStyle}
+                        />
                         <BaseInput  value={email} onChangeText={setEmail} label="Email" placeholder='email' containerStyle={styles.baseInputStyle}  />
                     </View>
                 </View>

@@ -1,5 +1,5 @@
-import { IAPIDto, IReservation } from './../../types';
-import { DOMAIN, FETCH_RESERVATIONS_ENDPOINT } from './../../hooks/constants';
+import { IAPIDto, IReservation, IVehicle } from './../../types';
+import { DOMAIN, RESERVATIONS_ENDPOINT } from './../../hooks/constants';
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
 import { auth } from '../../firebase/firebaseApp';
@@ -7,55 +7,52 @@ import { auth } from '../../firebase/firebaseApp';
 export const reservationsApi = createApi({
     reducerPath: "reservationsApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: DOMAIN,
-        headers: {
-            token: `Bearer ${auth.currentUser?.getIdToken()}`
+        prepareHeaders: async (headers) =>{
+            const token = await auth.currentUser?.getIdToken()
+            headers.set('token', `Bearer ${token}`)
+            headers.set('x-user', 'CUSTOMER')
+            return headers
         }
     }),
     endpoints: (builder) => ({
-        getReservations: builder.query<IReservation[], any>({
-            query: () => `/api/reservations`,
+        getReservations: builder.query<IReservation[], {status?: string, page?: number, size?: number} | undefined>({
+            query: (params) => ({
+                url: RESERVATIONS_ENDPOINT,
+                method: 'GET',
+                params
+            }),
             transformResponse: (response: any) => {
-                console.log(response)
-                return response
+                return response.data
             }  
         }),
         getReservation: builder.query<IReservation, string>({
-            query: (id: string) => `/api/reservations?id=${id}`,
+            query: (id: string) =>({
+                url: RESERVATIONS_ENDPOINT,
+                method: 'GET',
+                params: {
+                    reservation_id: id
+                }
+            }),
             transformResponse: (response: any) => {
                 // this will use the same handler on as the getReservations endpoint on the backend,
                 // the handler will combine all the info related to the reservation and return it as a single object
-                const chosen = response?.[0]
-                const data = chosen ? {
-                    ...chosen
-                } : null
-                return data
+                return response.data?.[0] ?? null
             }
         }),
-        addReservation: builder.mutation<IAPIDto<{reservationId: string}>, any>({
+        addReservation: builder.mutation<Partial<IReservation>, Partial<IReservation> & Partial<IVehicle>>({
             query: (body) => ({
-                url: `/api/reservation`,
+                url: RESERVATIONS_ENDPOINT,
                 method: 'POST',
                 body
             }),
             transformResponse: (response: any) => {
-                return response
+                return response.data
             }
         }),
-        updateBooking: builder.mutation<IAPIDto<{reservationId: string}>, IReservation>({
-            query: (body) => ({
-                url: `/api/extendReservation`,
-                method: 'PUT',
-                body
-            }),
-            transformResponse: (response: any) => {
-                return response
-            }
-        })
     })
 })
 
-export const { useGetReservationsQuery, useGetReservationQuery, useAddReservationMutation, useUpdateBookingMutation } = reservationsApi
+export const { useGetReservationsQuery, useGetReservationQuery, useAddReservationMutation } = reservationsApi
 
 interface IReservationState {
     chosenReservation?: string,

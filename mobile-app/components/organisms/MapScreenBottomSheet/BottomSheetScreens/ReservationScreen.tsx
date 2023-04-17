@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@rneui/themed';
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
@@ -8,6 +8,8 @@ import useBookingActions from '../../../../hooks/useBookingActions';
 import useToast from '../../../../hooks/useToast';
 import { setStatus, selectReservationStatus } from '../../../../store/slices/startReservationSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { modifyCurrentReservation } from '../../../../store/slices/bookingSlice';
+import { useAppDispatch } from '../../../../store/store';
 
 interface IProps {
   openAuthorization?: () => void;
@@ -32,8 +34,8 @@ const useStyles = makeStyles((theme, props) => {
       width: '100%',
       paddingVertical: 10,
       backgroundColor: theme.colors.white,
-      borderTopLeftRadius: 50,
-      borderTopRightRadius: 50,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
     },
     divider: {
       marginVertical: 20,
@@ -51,25 +53,20 @@ const ReservationScreen = (props: Props) => {
   const styles = useStyles(props);
   const {bookingDetails} = useBookingActions()
   const toast = useToast()
-  const dispatch = useDispatch()
-  
-  let currentDayTime = new Date()
-
-  const currentMonth = String(currentDayTime.getMonth() + 1).split("").length === 1 ? Number(`0${currentDayTime.getMonth() + 1}`) : Number(`${currentDayTime.getMonth() + 1}`)
-  const currentDate = Number(`${currentDayTime.getDate()}`)
-  const currentHour = Number(`${currentDayTime.getHours()}`)
-  const currentMinute = String(currentDayTime.getMinutes() + 1).split("").length === 1 ? Number(`0${currentDayTime.getMinutes() + 1}`) : Number(`${currentDayTime.getMinutes() + 1}`) 
-  
-  let bookingMonth = Number(`${bookingDetails.startDateTime.split("")[5]}${bookingDetails.startDateTime.split("")[6]}`)
-  let bookingDate = Number(`${bookingDetails.startDateTime.split("")[8]}${bookingDetails.startDateTime.split("")[9]}`)
-  let bookingHour = Number(`${bookingDetails.startDateTime.split("")[11]}${bookingDetails.startDateTime.split("")[12]}`)
-  let bookingMinute = Number(`${bookingDetails.startDateTime.split("")[14]}${bookingDetails.startDateTime.split("")[15]}`)
-  let endBookingHour = Number(`${bookingDetails.endDateTime.split("")[11]}${bookingDetails.endDateTime.split("")[12]}`)
-  let endBookingMinute = Number(`${bookingDetails.endDateTime.split("")[14]}${bookingDetails.endDateTime.split("")[15]}`)
-
-  const reservationStatus = useSelector(selectReservationStatus)
+  const dispatch = useAppDispatch()
 
   const checkTime = () => {
+    const currentMonth = new Date().getMonth() 
+    const currentDate = new Date().getDate()
+    const currentHour = new Date().getHours()
+    const currentMinute = new Date().getMinutes()
+    
+    let bookingMonth = new Date(bookingDetails.start_date_time).getMonth()
+    let bookingDate = new Date(bookingDetails.start_date_time).getDate()
+    let bookingHour = new Date(bookingDetails.start_date_time).getHours()
+    let bookingMinute = new Date(bookingDetails.start_date_time).getMinutes()
+    let endBookingHour = new Date(bookingDetails.end_date_time).getHours()
+    let endBookingMinute = new Date(bookingDetails.end_date_time).getMinutes()
     if(currentMonth !== bookingMonth){
       toast({
         type:"error",
@@ -99,10 +96,12 @@ const ReservationScreen = (props: Props) => {
         duration:3000
       })
     }else if(currentHour >= bookingHour && currentMinute >= bookingMinute){
-      dispatch(setStatus())
+      dispatch(modifyCurrentReservation({
+        status: "ACTIVE"
+      }))
     }
   }
-  reservationStatus === 'Ongoing' && props?.navigateToVehicleInspection
+
   return (
     <View style={styles.container}>
       <BookingCarComponent

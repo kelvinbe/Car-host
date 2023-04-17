@@ -14,6 +14,9 @@ import useBookingActions from '../../../hooks/useBookingActions';
 import { isUndefined } from 'lodash';
 import { timeTilEndOfDay } from '../../../utils/utils';
 import dayjs from 'dayjs';
+import { useNavigation } from '@react-navigation/native';
+import { useAppDispatch } from '../../../store/store';
+import { setLocation } from '../../../store/slices/bookingSlice';
 
 interface IProps {
   inReservation?: boolean;
@@ -109,7 +112,9 @@ const MapScreen = (props: Props) => {
   const { clearBookingState } = useBookingActions();
   const { setStartDateTime, setEndDateTime } = useBookingActions();
   const [open, setOpen] = useState(false);
-
+  const dispatch = useAppDispatch()
+  
+ 
   const onOpen = () => {
     setOpen(true);
   };
@@ -119,11 +124,13 @@ const MapScreen = (props: Props) => {
   };
 
   const getCoords = async () => {
-    Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Low,
-    })
+    const searchType = props.route.params?.searchType
+    if(searchType === "local") { // only get user's location if they are searching locally
+      Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Low,
+      })
       .then(location => {
-        console.log(location);
+        dispatch(setLocation(location))
         dispatchAction({
           type: 'setLocation',
           payload: location,
@@ -132,6 +139,13 @@ const MapScreen = (props: Props) => {
       .catch(e => {
         console.log(e);
       });
+    } else {
+      dispatchAction({
+        type: 'setLocation',
+        payload: null
+      })
+    }
+    
   };
 
   useEffect(() => {

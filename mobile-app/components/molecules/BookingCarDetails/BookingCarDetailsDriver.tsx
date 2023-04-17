@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme, props: Props) => {
 const BookingCarDetailsDriver = (props: Props) => {
   const styles = useStyles(props);
   const {
-    bookingDetails: { code: authCode, vehicle },
+    bookingDetails: { code: authCode, vehicle, paymentType },
   } = useBookingActions();
   return (
     <ThemeConsumer>
@@ -101,7 +101,7 @@ const BookingCarDetailsDriver = (props: Props) => {
               <Image
                 style={styles.driverPic}
                 source={{
-                  uri: vehicle?.host?.profile_pic_url,
+                  uri: vehicle?.host?.profile_pic_url ?? undefined,
                 }}
               />
             </View>
@@ -122,7 +122,7 @@ const BookingCarDetailsDriver = (props: Props) => {
           {!props?.hasAuthorizationCode && (
             <View style={styles.authCodeContainer}>
               <Text style={styles.authCodeTitle}>Authorization Code:</Text>
-              {!isEmpty(authCode) ? (
+              {(!isEmpty(authCode) || !isEmpty(paymentType)) ? (
                 <Text style={styles.authCodeTitle}> ****** </Text>
               ) : (
                 <TouchableOpacity

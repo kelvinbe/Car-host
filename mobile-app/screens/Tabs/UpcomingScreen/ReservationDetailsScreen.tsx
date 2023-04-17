@@ -32,7 +32,7 @@ type Props = IProps & NativeStackScreenProps<UpcomingParamList, 'ReservationDeta
 const useStyles = makeStyles((theme, props: Props) => ({
   container: {
     backgroundColor: theme.colors.white,
-    height: '100%',
+    flex: 1
   },
   mapContainer: {
     width: '100%',

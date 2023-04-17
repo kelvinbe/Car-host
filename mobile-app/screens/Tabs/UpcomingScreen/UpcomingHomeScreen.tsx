@@ -4,14 +4,12 @@ import { UpcomingParamList } from '../../../types';
 import { makeStyles } from '@rneui/themed';
 import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useGetReservationsQuery } from '../../../store/slices/reservationSlice';
 import Loading from '../../../components/molecules/Feedback/Loading/Loading';
 import Error from '../../../components/molecules/Feedback/Error/Error';
 import Empty from '../../../components/molecules/Feedback/Empty/Empty';
 import { useAppDispatch} from '../../../store/store';
 import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice';
 import { useFetchUpcoming } from '../../../hooks';
-import { selectUpcoming } from '../../../store/slices/upcomingReservationSlice';
 
 type Props = NativeStackScreenProps<UpcomingParamList, 'UpcomingReservationsHome'>;
 
@@ -49,7 +47,7 @@ const UpcomingHomeScreen = (props: Props) => {
       .unwrap()
       .then(result => {
         setLoading(false);
-        props.navigation.navigate('ReservationDetails');
+        props.navigation.navigate('VehicleInspection');
       })
       .catch(e => {
         setLoading(false);

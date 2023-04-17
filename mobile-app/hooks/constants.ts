@@ -34,7 +34,10 @@ export const REGISTER = DOMAIN + "/api/register";
 
 export const REPORT_ISSUE_ENDPOINT = DOMAIN + "/api/issues";
 
-export const FETCH_RESERVATIONS_ENDPOINT = DOMAIN + "/api/reservations";
+/**
+ * @description - base route for all reservation related endpoints
+ */
+export const RESERVATIONS_ENDPOINT = DOMAIN + '/api/reservations';
 
 /**
  * @description - base route for all vehicle related endpoints
@@ -135,4 +138,14 @@ export const PUSH_NOTIFICATION_TOKEN_ENDPOINT = DOMAIN + '/api/settings/tokens';
  * @description - this endpoint will be removed eventually, however, since some parts of the application still use it, it will remain for now
  */
 export const FETCH_AVAILABLE_VEHICLES = DOMAIN + '/api/availableVehicles'
+
+/**
+ * @description - payment endpoint
+ */
+export const PAYMENT_ENDPOINT = DOMAIN + '/api/payments';
+
+/**
+ * @description - this is the base endpoint for issues
+ */
+export const ISSUES_ENDPOINT = DOMAIN + '/api/issues';
 

@@ -141,7 +141,7 @@ const LoginScreen = (props: Props) => {
     }
 
     useEffect(()=>{
-        if (isEmpty(user) || socialAuthLoading || loading || onBoardingLoading) return;
+        if (isEmpty(user) || socialAuthLoading || loading || onBoardingLoading ) return;
         if (socialAuthError || signInError) {
             toast({
                 message: "An error occured while signing you in",
@@ -156,7 +156,7 @@ const LoginScreen = (props: Props) => {
                 navigateToOnBoarding()
             }
         }
-    }, [user, socialAuthError, socialAuthLoading, loading, onBoardingLoading, signInError])
+    }, [user, socialAuthError, socialAuthLoading, loading, signInError, onBoardingLoading])
 
     
    

@@ -100,15 +100,7 @@ const ReservationMap = () => {
   };
 
   useEffect(() => {
-    // getCoords()
-    //   .then(() => {
-    //     console.log('Location fetched');
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   });
     return () => {
-      /* clearBookingState() */
       clearBookingState();
     };
   }, []);

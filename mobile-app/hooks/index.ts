@@ -5,9 +5,7 @@ import useColorScheme from "./useColorScheme";
 import useCreatePassword from "./useCreatePassword";
 import useEditProfile from "./useEditProfile";
 import useFetchData from "./useFetchData";
-import useFetchHistory from "./useFetchHistory";
 import useForgotPassword from "./useForgotPassword";
-import useModifyBooking from "./useModifyBooking";
 import useSetPayment from "./useSetPayment";
 import useReserve from "./useReserve";
 import useSearchHost from "./useSearchHost";
@@ -17,7 +15,6 @@ import useAuthCode from './useAuthCode';
 import useDeletePaymentMethod from "./useDeletePaymentMethod";
 import useFetchUpcoming from "./useFetchUpcoming";
 import useSendNotificationToken from "./useSetNotifications";
-import useReportIssue from "./useReportIssue";
 
 
 export {
@@ -29,8 +26,6 @@ export {
   useEditProfile,
   useFetchData,
   useForgotPassword,
-  useFetchHistory,
-  useModifyBooking,
   useSetPayment,
   useReserve,
   useSearchHost,
@@ -40,5 +35,4 @@ export {
   useDeletePaymentMethod,
   useFetchUpcoming,
   useSendNotificationToken,
-  useReportIssue,
 };

@@ -11,16 +11,15 @@ import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import TimeFilter from '../../../molecules/TimeFilter/TimeFilter';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import useBookingActions from '../../../../hooks/useBookingActions';
-import { useUpdateBookingMutation } from '../../../../store/slices/reservationSlice';
-import { useModifyBooking } from '../../../../hooks';
-import { Booking } from '../../../../hooks/useModifyBooking';
 import useToast from '../../../../hooks/useToast';
+import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
 
 interface IProps {
   closeBottomSheet?: () => void;
 }
 
-type Props = IProps & Booking;
+type Props = IProps
 
 const useStyles = makeStyles((theme, props: Props) => {
   return {
@@ -67,8 +66,9 @@ const ModifyBookingBottomSheet = (props: Props) => {
   const styles = useStyles(props);
 
   const { setStartDateTime, setEndDateTime, bookingDetails } = useBookingActions();
-
-  const {data, error, loading, modifyReservation} = useModifyBooking(props)
+  const dispatch = useAppDispatch()
+  const fetchState = useAppSelector(selectModifyReservationFeedback)
+  
   const toast = useToast()
 
   const close = () => {
@@ -76,39 +76,30 @@ const ModifyBookingBottomSheet = (props: Props) => {
     props.closeBottomSheet && props.closeBottomSheet();
   };
 
-  useEffect(() => {
-    if (data) {
-      close();
-    }
-  }, [data]);
+  
 
   const handleCancel = () => {
-    /**
-     * @todo: handle cancel booking
-     */
-    close();
+    close()
   };
 
   const handleSave = () => {
-    modifyReservation()
+    dispatch(modifyCurrentReservation({
+      start_date_time: bookingDetails.start_date_time,
+      end_date_time: bookingDetails.end_date_time,
+    })).then(()=>{
+      toast({
+        type: 'success',
+        message: 'Booking modified successfully'
+      })
+      close()
+    }).catch((e)=>{
+      toast({
+        type: 'error',
+        message: 'Error modifying booking'
+      })
+    })
   }
   
-  if(data && data[0]?.status === 'Modified'){
-    toast({
-      type:'success',
-      title:'Success',
-      message:"Successfully modified your reservation",
-      duration:3000
-    })
-  }else if(error){
-    toast({
-      type:'error',
-      title:'Error',
-      message:"An error has occurred. Could not modify your reservation",
-      duration:3000
-    })
-  }
-
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -132,7 +123,7 @@ const ModifyBookingBottomSheet = (props: Props) => {
                   width="45%">
                   Cancel
                 </RoundedOutline>
-                <Rounded loading={loading} onPress={handleSave} width="45%">
+                <Rounded loading={fetchState.loading} onPress={handleSave} width="45%">
                   Save
                 </Rounded>
               </View>

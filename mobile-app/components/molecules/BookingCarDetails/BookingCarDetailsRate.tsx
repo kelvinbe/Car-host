@@ -42,14 +42,14 @@ const BookingCarDetailsRate = (props: Props) => {
   const styles = useStyles(props);
 
   const {
-    bookingDetails: { vehicle, startDateTime, endDateTime },
+    bookingDetails: { vehicle, start_date_time: startDateTime, end_date_time: endDateTime },
   } = useBookingActions();
 
   return (
     <View style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Total Duration: </Text>
-        <Text style={styles.sectionValue}>{calcDuration(startDateTime, endDateTime)}hr(s)</Text>
+        <Text style={styles.sectionValue}>{calcDuration(startDateTime, endDateTime).toFixed(1)}hr(s)</Text>
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Rate</Text>

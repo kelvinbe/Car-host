@@ -7,6 +7,7 @@ import ClockIcon from '../../../assets/icons/clock.svg';
 import { Divider, Image } from '@rneui/base';
 import { IReservation } from '../../../types';
 import dayjs from 'dayjs';
+import { calcDuration } from '../../../utils/utils';
 
 interface IProps {
   customStyle?: StyleProp<ViewStyle>;
@@ -160,27 +161,27 @@ const useStyles = makeStyles((theme, props: Props) => ({
     color: theme.colors.grey3,
     marginTop: 10,
   },
+  rideInfoRight: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  }
 }));
 
 const HistoryCard = (props: Props) => {
   const {
-    customer,
-    vehicle,
-    duration,
-    end_date_time,
-    payment_id,
-    start_date_time,
-    status,
-    total_cost,
-    customStyle,
-    reservation_id,
     onDetailsPress,
+    id,
+    start_date_time,
+    end_date_time,
+    vehicle,
   } = props;
   const styles = useStyles(props);
-
   const onPress = () => {
-    reservation_id && onDetailsPress && onDetailsPress(reservation_id);
+    id && onDetailsPress && onDetailsPress(id);
   };
+  const calTotalCost = () => {
+    return ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed(2)
+  }
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -207,7 +208,7 @@ const HistoryCard = (props: Props) => {
                 <Image
                   style={styles.vehicleImage}
                   source={{
-                    uri: vehicle?.vehicle_pictures?.[0],
+                    uri: vehicle?.VehiclePictures?.[0],
                   }}
                 />
               </View>
@@ -219,17 +220,19 @@ const HistoryCard = (props: Props) => {
                   <Image
                     style={styles.driverImage}
                     source={{
-                      uri: vehicle?.host?.profile_pic_url,
+                      uri: vehicle?.host?.profile_pic_url ?? "",
                     }}
                   />
                   <Text style={styles.driverName}>{`${vehicle?.host?.handle}`}</Text>
                 </View>
                 <View style={styles.locationInfoContainer}>
                   <LocationIcon stroke={theme.colors.stroke} style={styles.locationIcon} />
-                  <Text style={styles.locationInfo}>{`${vehicle?.location?.address}`}</Text>
+                  <Text style={styles.locationInfo}>{`${vehicle?.station?.name}`}</Text>
                 </View>
               </View>
-              <Text style={styles.ridePrice}>${total_cost}</Text>
+            </View>
+            <View style={styles.rideInfoRight}>
+              <Text style={styles.ridePrice}>${calTotalCost()}</Text>
             </View>
           </View>
           <Divider style={styles.divider} />

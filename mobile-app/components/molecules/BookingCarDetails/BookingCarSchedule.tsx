@@ -81,7 +81,7 @@ const BookingCarSchedule = (props: Props) => {
               stroke={theme.colors.primary}
             />
             <Text style={styles.topSectionTitle}>
-              {dayjs(bookingDetails?.startDateTime)?.format('DD MMM YYYY')}
+              {dayjs(bookingDetails?.start_date_time)?.format('DD MMM YYYY')}
             </Text>
           </View>
           <View style={styles.bottomSection}>
@@ -96,7 +96,7 @@ const BookingCarSchedule = (props: Props) => {
                 <Text style={styles.bottomSubSectionTitle}>Pickup Time:</Text>
               </View>
               <Text style={styles.bottomSubSectionValue}>
-                {dayjs(bookingDetails?.startDateTime)?.format('hh:mm A')}
+                {dayjs(bookingDetails?.start_date_time)?.format('hh:mm A')}
               </Text>
             </View>
             <View style={styles.bottomSubSection}>
@@ -110,7 +110,7 @@ const BookingCarSchedule = (props: Props) => {
                 <Text style={styles.bottomSubSectionTitle}>Dropoff Time:</Text>
               </View>
               <Text style={styles.bottomSubSectionValue}>
-                {dayjs(bookingDetails?.endDateTime)?.format('hh:mm A')}
+                {dayjs(bookingDetails?.end_date_time)?.format('hh:mm A')}
               </Text>
             </View>
           </View>

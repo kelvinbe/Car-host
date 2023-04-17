@@ -14,7 +14,6 @@ const UpcomingReservationsStack = createNativeStackNavigator<UpcomingParamList>(
 
 const UpcomingScreen = () => {
   return (
-    <>
       <UpcomingReservationsStack.Navigator initialRouteName="UpcomingReservationsHome">
         <UpcomingReservationsStack.Screen
           name="UpcomingReservationsHome"
@@ -26,7 +25,7 @@ const UpcomingScreen = () => {
         <UpcomingReservationsStack.Screen
           name="ReservationDetails"
           options={{
-            header: props => <BaseTopBar chevronLeft {...props} title="Your Reservation" />,
+            header: props => <BaseTopBar home={false} chevronLeft {...props} title="Your Reservation" />,
           }}
           component={ReservationDetailsScreen}
         />
@@ -40,7 +39,6 @@ const UpcomingScreen = () => {
           component={VehicleInspection}
         />
       </UpcomingReservationsStack.Navigator>
-    </>
   );
 };
 

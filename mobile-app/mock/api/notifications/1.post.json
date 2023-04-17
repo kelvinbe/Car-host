@@ -1,7 +1,0 @@
-{
-  "message": "Notification token sent",
-  "data": {
-    "notifications": true
-  },
-  "status": "success"
-}

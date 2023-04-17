@@ -57,13 +57,16 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const ActionButton = (props: Props) => {
+    /**
+     * @todo: this component needs to be overwritten to sufficiently handle the different payment methods
+     */
     const { image, title, onPress, id, data } = props;
     const styles = useStyles(props)
     const [selectedAnswer, setSelectedAnswer] = useState<any>(null)
     const [viewAnswer, setViewAnswer] = useState<boolean>(false)
 
     const _onPress = () =>{
-        data && setSelectedAnswer(data[0]?.questions.filter((question:{question_id:number}) => id === question.question_id))
+        data && setSelectedAnswer(data?.[0]?.questions.filter((question:{question_id:number}) => id === question.question_id))
         setViewAnswer(!viewAnswer)
         id && onPress && onPress(id)
         onPress && onPress()

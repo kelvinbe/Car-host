@@ -129,7 +129,7 @@ const BookingConfirmationScreen = (props: Props) => {
                             customStyle={{
                                 marginBottom: 20
                             }} />
-                            { (data && data.customer) && <CreditCardWithAmount {...data?.payment_method_details} amount={data?.total_cost as any} />}
+                                          {(data && data.user) && <CreditCardWithAmount {...data?.payment_method_details} amount={data?.total_cost as any} />}
                         </View>
                         
                     </ZigzagView>}

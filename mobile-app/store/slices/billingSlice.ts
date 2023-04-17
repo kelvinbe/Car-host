@@ -2,25 +2,41 @@ import { IRawPaymentMethodDetails } from './../../types';
 import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { auth } from "../../firebase/firebaseApp";
-import { DOMAIN } from "../../hooks/constants";
+import { DOMAIN, PAYMENT_ENDPOINT, PAYMENT_METHOD_ENDPOINT } from "../../hooks/constants";
 import { IPaymentMethod } from "../../types";
 
 
 export const billingApi = createApi({
     reducerPath: "billingApi",
-    baseQuery: fetchBaseQuery({ 
-        baseUrl: DOMAIN,
-        headers: {
-            token: `Bearer ${auth.currentUser?.getIdToken()}`
+    baseQuery: fetchBaseQuery({
+        prepareHeaders: async (headers) => {
+            const token = await auth.currentUser?.getIdToken()
+            headers.set('token', `Bearer ${token}`)
+            headers.set('x-user', 'CUSTOMER')
+            return headers
         }
     }),
     endpoints: (builder) => ({
-        getPaymentMethods: builder.query<IPaymentMethod<any>[], any>({
-            query: () => "/api/paymentMethods",
-            transformResponse: (response: any) => {
-                console.log(response)
-                return response
-            }
+        addPaymentMethod: builder.mutation<any,Partial<{
+            type: "card" | "mpesa";
+            customer_id: string;
+            card_number: string;
+            exp_month: number;
+            exp_year: number;
+            cvc: string;
+            mobile_money_number: number
+        }>>({
+            query: (body) => ({
+                url: PAYMENT_METHOD_ENDPOINT,
+                method: 'POST',
+                body: {
+                    ...body,
+                    type: undefined
+                },
+                params: {
+                    type: body.type
+                }
+            })
         }),
         setPaymentMethod: builder.mutation<any, IRawPaymentMethodDetails<any>>({
             query: (body) => ({
@@ -34,11 +50,23 @@ export const billingApi = createApi({
                 url: `/api/paymentMethods?id=${id}`,
                 method: "DELETE",
             })
-        })
+        }),
+        confirmPayment: builder.query<{
+            timeout: boolean,
+            success: boolean,
+            error: string
+        }, any>({
+            query: () => `${PAYMENT_ENDPOINT}/confirm`, // a cookie for the payment session gets set when the user triggers a payment so, we can use that cookie to confirm the payment
+            transformResponse: (response: any) => response.data as {
+                timeout: boolean,
+                success: boolean,
+                error: string
+            }
+        })  
     })
 })
 
-export const  { useDeletePaymentMethodMutation, useGetPaymentMethodsQuery, useSetPaymentMethodMutation } = billingApi
+export const  { useDeletePaymentMethodMutation, useConfirmPaymentQuery, useAddPaymentMethodMutation } = billingApi
 
 // interface CARD {
 //     cardNum: string,

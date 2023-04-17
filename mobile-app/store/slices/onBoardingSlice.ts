@@ -4,13 +4,14 @@ import {
   PAYMENT_METHOD_ENDPOINT,
   USER_ENDPOINT,
 } from './../../hooks/constants';
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 import { getAuth } from 'firebase/auth';
 import { app } from '../../firebase/firebaseApp';
 import { RootState } from '.';
 import { z } from 'zod';
 import { isNull } from 'lodash';
+import apiClient from '../../utils/apiClient';
 
 interface ICard {
   cvv: string;
@@ -43,6 +44,8 @@ interface IReducerState {
     payment_method: boolean;
     location: boolean;
   } | null;
+  onBoardingLoading: boolean;
+  onBoardingError: boolean;
 }
 
 const initialState: IReducerState = {
@@ -56,6 +59,8 @@ const initialState: IReducerState = {
     sub_market_id: '',
   },
   completed: null,
+  onBoardingError: false,
+  onBoardingLoading: false,
 };
 
 /**
@@ -77,6 +82,16 @@ interface IUpdateUser {
   sub_market_id: string;
 }
 
+
+/**
+ * @name fetchOnboarding
+ */
+export const fetchOnboarding = createAsyncThunk('onBoarding/fetchOnboarding',  (undefined, {dispatch, rejectWithValue})=>{
+  return apiClient.get(FETCH_ONBOARDING).then(({data})=>{
+    return data.completed 
+  }).catch(rejectWithValue)
+})
+
 export const onBoardingApi = createApi({
   reducerPath: 'onBoardingApi',
   baseQuery: fetchBaseQuery({
@@ -85,6 +100,7 @@ export const onBoardingApi = createApi({
         ?.currentUser?.getIdToken()
         .then(token => {
           headers.set('Authorization', `Bearer ${token}`);
+          headers.set('x-user', 'CUSTOMER')
         })
         .catch(err => {
           /**
@@ -208,6 +224,20 @@ const onBoardingSlice = createSlice({
       };
     },
   },
+  extraReducers: builder => {
+    builder.addCase(fetchOnboarding.fulfilled, (state, action) => {
+      state.onBoardingLoading = false;
+      state.onBoardingError = false;
+      state.completed = action.payload
+    });
+    builder.addCase(fetchOnboarding.pending, (state, action) => {
+      state.onBoardingLoading = true;
+    })
+    builder.addCase(fetchOnboarding.rejected, (state, action) => {
+      state.onBoardingLoading = false;
+      state.onBoardingError = true;
+    })
+  }
 });
 
 export default onBoardingSlice.reducer;
@@ -226,3 +256,7 @@ export const selectOnBoardingDriversLicense = (state: RootState) =>
 export const selectOnBoardingPaymentMethod = (state: RootState) => state.onboarding.payment_method;
 export const selectOnBoardingCompleted = (state: RootState) => state.onboarding.completed;
 export const selectOnBoardingLocation = (state: RootState) => state.onboarding.location;
+export const selectOnBoardingFetchState = (state: RootState) => ({
+  loading: state.onboarding.onBoardingLoading,
+  error: state.onboarding.onBoardingError,
+})

@@ -4,11 +4,12 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import ActionButton from '../../../atoms/Buttons/ActionButton/ActionButton';
 import VisaIcon from '../../../../assets/icons/visa.svg';
-import { useGetPaymentMethodsQuery } from '../../../../store/slices/billingSlice';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import useBookingActions from '../../../../hooks/useBookingActions';
-import useFetchPayments from '../../../../hooks/useFetchPayments';
 import useToast from '../../../../hooks/useToast';
+import { useAppSelector } from '../../../../store/store';
+import { selectUserProfile } from '../../../../store/slices/userSlice';
+import { FontAwesome5 } from '@expo/vector-icons';
 interface IProps {
   closeBottomSheet?: () => void;
   hasSelected?: Boolean;
@@ -47,11 +48,11 @@ const useStyles = makeStyles((theme, props: Props) => {
 });
 
 const PaymentBottomSheet = (props: Props) => {
-  const {data, error} = useFetchPayments()
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['50%'];
   const styles = useStyles(props);
-  const { setBillingInfo } = useBookingActions();
+  const { setPaymentType } = useBookingActions();
+  const user = useAppSelector(selectUserProfile)
   const toast = useToast()
 
   const close = () => {
@@ -59,17 +60,15 @@ const PaymentBottomSheet = (props: Props) => {
     props.closeBottomSheet && props.closeBottomSheet();
   };
 
-  const handlePaymentSelect = (id: any) => {
-    if(data){
-    const payMethod = id ? data?.filter(({ entityId }) => entityId === id)?.[0] : null;
-    payMethod && setBillingInfo(payMethod) 
-    close();
-    }else if(error){
+  const handlePaymentSelect = (pt_id: any) => {
+    const paymentType = user?.payment_types?.find(({id})=>pt_id === id)
+    if (paymentType) {
+      setPaymentType(paymentType)
+      close()
+    }else{
       toast({
-        type: 'error',
-        message: 'Something went wrong',
-        title: 'Error',
-        duration: 3000
+        message: "Payment type not found",
+        type: "error"
       })
     }
   };
@@ -91,63 +90,24 @@ const PaymentBottomSheet = (props: Props) => {
           enablePanDownToClose>
           <View style={styles.contentContainer}>
             <Text style={styles.contentTitleStyle}>Select payment</Text>
-            <ScrollView style={styles.cardsContainer}>
-              {data?.map((paymentMethod, i) => {
-                return (
-                  <ActionButton
-                    key={i}
-                    id={paymentMethod.entityId}
-                    image={<VisaIcon width={24} height={24} fill={theme.colors.background4} />}
-                    title={`**** ${paymentMethod.details.last4}`}
-                    customStyle={{
-                      marginBottom: 10,
-                    }}
-                    onPress={handlePaymentSelect}
-                  />
-                );
-              })}
-              {/* <ActionButton
-                            image={
-                                <CashIcon
-                                    width={24}
-                                    height={24}
-                                    // fill={theme.colors.background4}
-                                />
-                            }
-                            title="Cash"
-                            customStyle={{
-                                marginBottom: 10
-                            }}
-                            onPress={handlePaymentSelect}
-                        /> */}
-              {/* <ActionButton
-                            image={
-                                <VisaIcon
-                                    width={24}
-                                    height={24}
-                                    fill={theme.colors.background4}
-                                />
-                            }
-                            title="**** 1234"
-                            customStyle={{
-                                marginBottom: 10
-                            }}
-                            onPress={handlePaymentSelect}
-                        /> */}
-              {/* <ActionButton
-                            image={
-                                <Image
-                                    source={require("../../../../assets/images/mpesa.png")}
-                                    style={{
-                                        width: 40,
-                                        height: 40
-                                    }}
-                                />
-                            }
-                            title="M-PESA"
-                            onPress={handlePaymentSelect}
-                        /> */}
-            </ScrollView>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={user?.payment_types}
+              keyExtractor={(item) => item.id}
+              renderItem={({item: pm, index})=>(
+                <ActionButton
+                  key={index}
+                  image={pm.type === "STRIPE" ? <VisaIcon /> : pm.type === "UNKNOWN" ? <FontAwesome5 name="money-bill-wave-alt" size={24} color="black" /> : null}
+                  title={pm.type === "MPESA" ? "M-PESA" : pm.type}
+                  customStyle={{
+                    marginBottom: 10,
+                  }}
+                  onPress={()=>{
+                    handlePaymentSelect(pm.id)
+                  }}
+                />
+              )}
+            />
           </View>
         </BottomSheet>
       )}

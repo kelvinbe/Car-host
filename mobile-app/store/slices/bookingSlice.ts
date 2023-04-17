@@ -1,10 +1,14 @@
-import { IPaymentMethod, IReservation } from './../../types';
+import { IPayment, IPaymentMethod, IPaymentType, IReservation, Inspection, InspectionQuestion } from './../../types';
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IVehicle } from "../../types";
 import { vehiclesApi } from './vehiclesSlice';
 import { reservationsApi } from './reservationSlice';
 import { isNull } from 'lodash';
+import apiClient from '../../utils/apiClient';
+import { RESERVATIONS_ENDPOINT } from '../../hooks/constants';
+import { calcDuration } from '../../utils/utils';
+import { LocationObject } from 'expo-location';
 
 
 /**
@@ -14,32 +18,50 @@ import { isNull } from 'lodash';
  */
 export const loadBookingDetailsFromReservation = createAsyncThunk<any, any>(
     "booking/loadBookingDetailsFromReservation",
-    async (reservationId: number, thunkAPI) => {
-        const state = thunkAPI.getState() as RootState;
-        //fetch reservation 
-        return thunkAPI.dispatch(reservationsApi.endpoints.getReservation.initiate(reservationId as any)).unwrap().then((reservation)=>{
-            // console.log(reservation)
-            const { end_date_time, start_date_time, total_cost, vehicle, payment_method_details, status } = reservation
-            // now all we need to fetch is the vehicle info
-            return thunkAPI.dispatch(vehiclesApi.endpoints.getVehicle.initiate(vehicle.vehicle_id)).unwrap().then((vehicle)=>{
-                // now we can return the vehicle info payment method and the rest of the info related to the reservation
-                return {
-                    vehicle, 
-                    paymentMethod: payment_method_details,
-                    endDateTime: end_date_time,
-                    total: total_cost,
-                    startDateTime: start_date_time,
-                    status,
-                    locationAddress: ""
-                }
-            }).catch((e)=>{
-                return thunkAPI.rejectWithValue(e)
-            })
-        }).catch((e)=>{
-            return thunkAPI.rejectWithValue("Unable to fetch reservation")
-        })
+    (id: string, {rejectWithValue}) => {
+        return apiClient.get(RESERVATIONS_ENDPOINT, {
+            params: {
+                reservation_id: id
+            }
+        }).then(({data})=>data).catch(rejectWithValue)
     }
 )
+
+/**
+ * @name modifyCurrentReservation
+ * @description update the start or end time of the reservation being edited
+ */
+export const modifyCurrentReservation = createAsyncThunk('booking/modifyCurrentReservation', (data: Partial<IReservation>, {rejectWithValue, dispatch, getState})=>{
+    const {booking} = getState() as RootState
+    return apiClient.patch(RESERVATIONS_ENDPOINT, data, {
+        params: {
+            reservation_id: booking.reservation_id
+        }
+    }).then(({data})=>{
+        dispatch(loadBookingDetailsFromReservation(data.id))
+        return data
+    }).catch(rejectWithValue)
+})
+
+/**
+ * @name updateInspection 
+ * @description update the inspection of the reservation being edited
+ */
+export const updateInspection = createAsyncThunk('booking/updateInspection', (data: {questions: InspectionQuestion[], fuel?: number}, {rejectWithValue, dispatch, getState})=>{
+    const state = getState() as RootState
+    const {booking : {reservation_id}} = state
+    return apiClient.patch(`${RESERVATIONS_ENDPOINT}/inspection`, data, {
+        params: {
+            reservation_id
+        }
+    }).then(()=>{
+        
+        dispatch(loadBookingDetailsFromReservation(reservation_id))
+        return null
+    }).catch(rejectWithValue)
+})
+
+
 
 type tNotification = {
     vehicle_id: string,
@@ -48,7 +70,7 @@ type tNotification = {
 }
 
 const initialState: {
-    status: 'Ready' | 'Complete' | 'Incomplete',
+    status: string,
     /**
      * The authcode provided to the user by the host, is a requirement for booking
      */
@@ -60,25 +82,37 @@ const initialState: {
     /**
      * a utc date string representing pickup time, something like 2021-01-01T00:00:00.000Z
      */
-    startDateTime: string,
+    start_date_time: string,
     /**
      * a utc date string representing dropoff time, something like 2021-01-01T00:00:00.000Z
      */
-    endDateTime: string,
+    end_date_time: string,
     duration: number,
-    locationId: number | null,
-    host_id: string | null,
+    locationId: number | null, // will be phased out in favout of location object
+    host_id: string | null,// will be phased out in favour of host_code
     /**
      * Billing info is the payment method selected by the user is a requirement for booking
      */
-    billingInfo: IPaymentMethod<any> | null,
+    billingInfo: IPaymentMethod<any> | null, // this will be phased out in favour of paymentDetails and payment type
     /**
      * 0 = cannot book
      * 1 = one of the checks either authCode or billingInfo is missing
      * 2 = both checks are present so the booking can be made
      */
     canBookChecks: number,
-    notification: tNotification | null
+    notification: tNotification | null,
+    modifyReservationLoading: boolean,
+    modifyReservationError: string | null,
+    paymentDetails: IPayment | null,
+    paymentType: IPaymentType | null,
+    reservation_id?: string,
+    loadReservationDetailsLoading: boolean,
+    loadReservationDetailsError: string | null,
+    location: LocationObject | null,
+    host_code: string,
+    inspection: Inspection | null,
+    inspectionUpdateLoading: boolean,
+    inspectionUpdateError: string | null
 } = {
     status: 'Incomplete',
     code: null,
@@ -86,14 +120,25 @@ const initialState: {
     tax: null,
     total: null,
     vehicle: null,
-    startDateTime: "",
-    endDateTime: "",
+    start_date_time: "",
+    end_date_time: "",
     duration: 1,
     locationId: null,
     host_id: null,
     billingInfo: null,
     canBookChecks: 0,
-    notification: null
+    notification: null,
+    modifyReservationLoading: false,
+    modifyReservationError: null,
+    paymentDetails: null,
+    paymentType: null,
+    loadReservationDetailsLoading: false,
+    loadReservationDetailsError: null,
+    host_code: '',
+    location: null,
+    inspection: null,
+    inspectionUpdateError: null,
+    inspectionUpdateLoading: false
 }
 
 const bookingSlice = createSlice({
@@ -108,10 +153,10 @@ const bookingSlice = createSlice({
             state.canBookChecks = state.code ?state.canBookChecks + 1 : state.canBookChecks - 1
         },
         setStartDateTime: (state, action) => {
-            state.startDateTime = action.payload.startDateTime
+            state.start_date_time = action.payload.startDateTime
         },
         setEndDateTime: (state, action) => {
-            state.endDateTime = action.payload.endDateTime
+            state.end_date_time = action.payload.endDateTime
         },
         setHostId: (state, action) => {
             state.host_id = action.payload.hostId
@@ -130,6 +175,9 @@ const bookingSlice = createSlice({
             state.billingInfo = action.payload.billingInfo
             state.canBookChecks = state.billingInfo ?state.canBookChecks + 1 : state.canBookChecks - 1
         },
+        setPaymentType: (state, action)=>{
+            state.paymentType = action.payload
+        },
         clearBookingState: (state)=>{
             state.status = 'Incomplete'
             state.code = null
@@ -137,26 +185,82 @@ const bookingSlice = createSlice({
             state.tax = null
             state.total = null
             state.vehicle = null
-            state.startDateTime = ""
-            state.endDateTime = ""
+            state.start_date_time = ""
+            state.end_date_time = ""
             state.duration = 1
             state.locationId = null
             state.host_id = null
             state.billingInfo = null
             state.canBookChecks = 0
+            state.notification = null
+            state.modifyReservationLoading = false
+            state.modifyReservationError = null
+            state.paymentDetails = null
+            state.paymentType = null
+            state.loadReservationDetailsLoading = false
+            state.loadReservationDetailsError = null
+            state.host_code = ''
+            state.location = null
+            state.inspection = null
         },
         setNotification: (state, action)=>{
             state.notification = action.payload
+        },
+        setHostCode: (state, action)=>{
+            state.host_code = action.payload
+        },
+        setLocation: (state, action)=>{
+            state.location = action.payload
         }
     },
     extraReducers(builder) {
         builder.addCase(loadBookingDetailsFromReservation.fulfilled, (state, action)=>{
-            state.billingInfo = action.payload?.paymentMethod as any
-            state.endDateTime = action.payload?.endDateTime as any
-            state.total = action.payload?.total as any
-            state.startDateTime = action.payload?.startDateTime as any
+            const data = action.payload as IReservation
+            console.log("Incoming", data.inspection)
+            // state.billingInfo = action.payload?.paymentMethod as any
+            state.paymentDetails = data?.payment
+            state.paymentType = data?.payment?.payment_type_fk ?? null
+            state.end_date_time = data?.end_date_time as any
+            state.total = ((data.vehicle.hourly_rate ?? 0)  * calcDuration(data.start_date_time, data.end_date_time)).toString()
+            state.start_date_time = action.payload?.start_date_time as any
             state.status = action.payload?.status as any
             state.vehicle = action.payload?.vehicle as any
+            state.canBookChecks = 2
+            state.reservation_id = data?.id
+            state.status = data?.status ?? "UPCOMING"
+            state.inspection = data?.inspection
+        })
+        builder.addCase(loadBookingDetailsFromReservation.pending, (state, action)=>{
+            state.loadReservationDetailsLoading = true
+            state.loadReservationDetailsError = null
+        })
+        builder.addCase(loadBookingDetailsFromReservation.rejected, (state, action)=>{
+            state.loadReservationDetailsLoading = false
+            state.loadReservationDetailsError = action.error.message ?? null
+        })
+        builder.addCase(modifyCurrentReservation.pending, (state, action)=>{
+            state.modifyReservationLoading = true
+            state.modifyReservationError = null
+        })
+        builder.addCase(modifyCurrentReservation.fulfilled, (state, action)=>{
+            state.modifyReservationLoading = false
+            state.modifyReservationError = null
+        })
+        builder.addCase(modifyCurrentReservation.rejected, (state, action)=>{
+            state.modifyReservationLoading = false
+            state.modifyReservationError = action.error.message ?? null
+        })
+        builder.addCase(updateInspection.pending, (state, action)=>{
+            state.inspectionUpdateLoading = true
+            state.inspectionUpdateError = null
+        })
+        builder.addCase(updateInspection.fulfilled, (state, action)=>{
+            state.inspectionUpdateLoading = false
+            state.inspectionUpdateError = null
+        })
+        builder.addCase(updateInspection.rejected, (state, action)=>{
+            state.inspectionUpdateLoading = false
+            state.inspectionUpdateError = action.error.message ?? null
         })
     },
 })
@@ -173,7 +277,10 @@ export const {
     setVehicle,
     setBillingInfo,
     clearBookingState,
-    setNotification
+    setNotification,
+    setPaymentType,
+    setHostCode,
+    setLocation
 } = bookingSlice.actions;
 
 // selectors
@@ -181,6 +288,26 @@ export const selectAuthenticated = (state: any) => state.authenticated;
 
 export const  selectBookingData = (state: RootState) => state.booking;
 
-export const selectStartDateTime = (state: RootState) => state.booking.startDateTime
+export const selectStartDateTime = (state: RootState) => state.booking.start_date_time
 
-export const selectEndDateTime = (state: RootState) => state.booking.endDateTime
+export const selectEndDateTime = (state: RootState) => state.booking.end_date_time
+
+export const selectModifyReservationFeedback = (state: RootState) => ({
+    loading: state.booking.modifyReservationLoading,
+    error: state.booking.modifyReservationError
+})
+
+export const selectLoadReservationDetailsFeedback = (state: RootState) => ({
+    loading: state.booking.loadReservationDetailsLoading,
+    error: state.booking.loadReservationDetailsError
+})
+
+export const selectUsersLocation =  (state: RootState) => state.booking.location 
+
+
+export const selectChosenHostCode = (state: RootState) => state.booking.host_code
+
+export const selectUpdateInspectionFeedback = (state: RootState) => ({
+    loading: state.booking.inspectionUpdateLoading,
+    error: state.booking.inspectionUpdateError
+})

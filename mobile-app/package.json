@@ -17,7 +17,8 @@
     "format": "prettier --write !.expo/ ./**/*.{js,jsx,ts,tsx,css,md,json}  --config ./.prettierrc",
     "storybook": "start-storybook dev -p 7007",
     "prestorybook": "rnstl",
-    "mock": "json-mock-api --port 3003 --directory ./mock --middleware ./mock/middleware/logger.js"
+    "generate-db": "ts-node ./mock/generate.ts",
+    "mock": "ts-node ./mock/server.ts"
   },
   "jest": {
     "preset": "@testing-library/react-native",
@@ -102,7 +103,9 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@anatine/zod-mock": "^3.10.0",
     "@babel/core": "^7.12.9",
+    "@faker-js/faker": "^7.6.0",
     "@storybook/addon-actions": "5.3",
     "@storybook/addon-knobs": "5.3",
     "@storybook/addon-links": "5.3",
@@ -114,20 +117,26 @@
     "@testing-library/react-native": "^10.1.1",
     "@types/jest": "^29.2.3",
     "@types/lodash": "^4.14.191",
+    "@types/node": "^18.15.11",
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-loader": "8.3.0",
     "concurrently": "^7.6.0",
+    "dotenv": "^16.0.3",
     "eslint": ">=4.4.1 <5.0.0",
     "eslint-config-expo": "^6.0.0",
     "jest": "^26.6.3",
     "jest-expo": "~47.0.1",
+    "json-server": "^0.17.3",
+    "jsonwebtoken": "^9.0.0",
     "prettier": ">=1.5.3 <2.0.0",
     "react-native-dotenv": "^3.4.2",
     "react-native-storybook-loader": "^2.0.5",
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.1.0",
+    "stripe": "^12.0.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.6.3",
     "webpack-dev-server": "^3"
   },

@@ -2,23 +2,20 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useReducer, useState } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { IRawCard, IRawPaymentMethodDetails, PaymentDetailsScreenParamList } from '../../../../types'
+import { PaymentDetailsScreenParamList } from '../../../../types'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../../../components/atoms/Input/WithHelperText/WithHelperText'
 import { Icon } from '@rneui/base'
 import { removeSpaces } from "../../../../utils/utils"
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded'
-import Loading from '../../../../components/molecules/Feedback/Loading/Loading'
-import { useSetPaymentMethodMutation } from '../../../../store/slices/billingSlice'
-import { auth } from '../../../../firebase/firebaseApp'
 import useToast from '../../../../hooks/useToast'
 import { selectCardNum, selectIsCardNumValid, selectCardCvv, selectIsCvvValid, selectCardExp, selectIsExpDateValid, selectAttemptsToSubmit, selectCardName, selectPaymentCardAdded } from '../../../../store/slices/addCardSlice'
-import { setCard, setCardCvv, setCardName, setCardNum, setCardExp, setpaymentCardAdded } from '../../../../store/slices/addCardSlice'
+import { setCardCvv, setCardName, setCardNum, setCardExp } from '../../../../store/slices/addCardSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { useAddCard } from '../../../../hooks'
-import { Card } from '../../../../hooks/useAddCard'
+import { useAddPaymentMethodMutation } from '../../../../store/slices/billingSlice'
+import Error from '../../../../components/molecules/Feedback/Error/Error'
 
-type Props = Card & NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
+type Props = NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
 
 const useStyles = makeStyles((theme, props: Props)=>{
     return {
@@ -80,7 +77,6 @@ function AddCard(props: Props){
     const toast = useToast()
     const dispatch = useDispatch()
     const { theme } = useTheme()
-    const {data,error, loading, addPaymentCard} = useAddCard(props)
 
     const name = useSelector(selectCardName)
     const cardNumber = useSelector(selectCardNum)
@@ -90,7 +86,8 @@ function AddCard(props: Props){
     const expDate = useSelector(selectCardExp)
     const isExpDateValid = useSelector(selectIsExpDateValid)
     const isCvvValid = useSelector(selectIsCvvValid)
-    const paymentCardAdded = useSelector(selectPaymentCardAdded)
+
+    const [addPaymentMethod, { isLoading, isError }] = useAddPaymentMethodMutation()
 
 
     const handleNameChange = (text: string) => {
@@ -118,41 +115,24 @@ function AddCard(props: Props){
         }))
     }
 
-    const goBackToOnboarding = () => {
-        dispatch(setpaymentCardAdded())
-
-        props.navigation.navigate("OnboardingHome")
-    }
 
 
-
-    const handleAddCard = () => {
-        addPaymentCard({name, cardNumber, cvv, expDate})
-
-        if(error){
-            toast({
-                type: "error",
-                message: error,
-                title: "Error",
-                duration: 3000,
-            })
-
-        }
-        else if(data){
-            toast({
-                type: "success",
-                message: "Your card has been added",
-                title: "Success",
-                duration: 3000,
-            })
-
-
-            goBackToOnboarding()
-        }
+    const handleAddCard = async () => {
+        if (!isCardNumberValid || !isExpDateValid || !isCvvValid || name.length === 0)  return toast({
+            type: "error",
+            message: "Please fill in all the fields correctly"
+        })
+        await addPaymentMethod({
+            card_number: cardNumber,
+            cvc: cvv,
+            exp_month: expDate?.slice(0,2),
+            exp_year: expDate?.slice(2,4),
+            type: "card"
+        })
     }
     const styles = useStyles(props)   
 
-    return (loading ? <Loading/> :
+    return ( isError ? <Error/> :
         <View style={styles.container} >
             <View style={styles.inputContainer} >
                 <WithHelperText 
@@ -218,7 +198,7 @@ function AddCard(props: Props){
                 </View>
             </View>
             <View style={styles.bottomSection} >
-                <Rounded fullWidth onPress = {handleAddCard} >
+                <Rounded loading={isLoading} fullWidth onPress = {handleAddCard} >
                     Add Card
                 </Rounded>
             </View>

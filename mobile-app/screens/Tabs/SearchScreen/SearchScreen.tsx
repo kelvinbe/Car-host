@@ -9,8 +9,9 @@ import InputWithButton from '../../../components/atoms/Input/WithButton/WithButt
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
 import { LinearGradient } from 'expo-linear-gradient';
 import useToast from '../../../hooks/useToast';
-import useVehicleData, {VehicleData} from '../../../hooks/useVehicleData';
-import { isUndefined } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
+import { useAppDispatch } from '../../../store/store';
+import { setHostCode } from '../../../store/slices/bookingSlice';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -113,48 +114,31 @@ const useStyles = makeStyles((theme, props) => ({
 }));
 
 const SearchScreenHome = (
-  props: VehicleData & NativeStackScreenProps<SearchScreenParamList, 'SearchScreenHome'>
+  props: NativeStackScreenProps<SearchScreenParamList, 'SearchScreenHome'>
 ) => {
   const styles = useStyles();
   const maxWidth = useWindowDimensions().width;
-  const {fetchVehicleData} = useVehicleData()
-
+  const dispatch = useAppDispatch()
+  const toast = useToast();
   const { route } = props
 
-  useEffect(() => {
-    if(!isUndefined(route.params?.hostCode) && route.params?.searchType === 'host') {
-      fetchVehicleData({
-        hostCode: route.params?.hostCode
-      })
-      props.navigation.navigate('MapScreen', {
-        searchType: 'host',
-        hostCode: route.params?.hostCode,
-      });
-    }
-  }, [route.params?.searchType])
   
   const hostCodeSearch = (value: any) => {
-
-    fetchVehicleData(value)
-
-    const GoToMapScreenHost = props.navigation.navigate('MapScreen', {
+    if (isEmpty(value)) return toast({
+      message: 'Please enter a host code',
+      type: "primary",
+      duration: 3000,
+    })
+    dispatch(setHostCode(value))
+    props.navigation.navigate('MapScreen', {
       searchType: 'host',
       hostCode: value,
     });
-    return GoToMapScreenHost;
   };
   const searchLocally = (marketId: any) => {
-
-    fetchVehicleData(marketId)
-    const GoToMapScreenLocal = props.navigation.navigate('MapScreen', {
+    props.navigation.navigate('MapScreen', {
       searchType: 'local',
     });
-    return GoToMapScreenLocal;
-  };
-
-  //Sign out example
-  const signOut = async () => {
-    auth.signOut();
   };
 
   return (

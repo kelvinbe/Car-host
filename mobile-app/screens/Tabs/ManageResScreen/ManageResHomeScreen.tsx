@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { BottomTabParamList, ManageResParamList } from '../../../types'
-import { makeStyles } from '@rneui/themed'
+import { ThemeConsumer, makeStyles } from '@rneui/themed'
 import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -32,8 +32,10 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const ManageResHomeScreen = (props: Props) => {
-  const { data, isLoading, error } = useGetReservationsQuery("")
-
+  const { data, isLoading, isError } = useGetReservationsQuery({
+    status: "ACTIVE"
+  })
+  console.log(data)
   const [loading, setLoading] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<boolean>(false)
 
@@ -58,25 +60,25 @@ const ManageResHomeScreen = (props: Props) => {
   }
 
   return ( 
-   ( isLoading || loading )? (
-      <Loading/>
-    ) : (error || fetchError ) ? (
-      <Error/>
-    ) :
-     <View style={styles.container} >
-      <FlatList
-      ListEmptyComponent={<Empty emptyText='No reservations yet!' />}
-      style={styles.flatListContainer}
-        data={data ? data : []}
-        renderItem={({item})=>(
-          <HistoryCard {...item} onDetailsPress={onCardDetailsPress} customStyle={{
-            marginBottom: 20
-          }} />
-        )}
-        keyExtractor={(item, index)=>index.toString()}
-        
-      />
-    </View>
+    <ThemeConsumer>
+    {({theme})=>(
+      (isLoading )? ( <Loading/> ) : (isError ) ? ( <Error/> ) : (
+        <View style={styles.container} >
+          {data?.length === 0 && <Text style={{textAlign:'center', color:theme.colors.primary}}>No history reservations</Text>}
+          <FlatList
+            style={styles.flatListContainer}
+            data={data ? data : []}
+            renderItem={({item})=>(
+              <HistoryCard {...item} onDetailsPress={onCardDetailsPress} customStyle={{
+                marginBottom: 20,
+              }} />
+            )}
+            keyExtractor={(item, index)=>index.toString()}
+          />
+        </View>
+      )
+    )}
+  </ThemeConsumer>
   )
 }
 

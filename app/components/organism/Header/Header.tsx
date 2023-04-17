@@ -9,7 +9,7 @@ import { Link } from "@chakra-ui/react";
 
 const Header = () => {
   return (
-    <Box w="full" margin="30px" bg="transparent" zIndex={2}>
+    <Box id="header" w="full" margin="30px" bg="transparent" zIndex={2}>
       <Flex w="full" {...FlexRowStartBetween}>
         <div>
           <Heading paddingLeft="80px">

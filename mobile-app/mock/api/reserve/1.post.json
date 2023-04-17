@@ -1,7 +1,0 @@
-{
-  "message": "Successfully reserved vehicle",
-  "data": {
-    "reservation_id": "1"
-  },
-  "status": "success"
-}

@@ -95,6 +95,7 @@ const BaseInput = (props: Props) => {
           labelStyle={[props.labelStyle, styles.labelStyle]}
           keyboardType={props.keyboardType}
           maxLength={props.maxLength}
+          disabled={props.disabled}
         />
       )}
     </ThemeConsumer>

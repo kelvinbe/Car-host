@@ -3,13 +3,11 @@ import { makeStyles } from '@rneui/themed'
 import React from 'react'
 import { PaymentDetailsScreenParamList } from '../../../../types';
 import { View } from "react-native"
-import CreditCardWithActions from '../../../../components/molecules/CreditCardWithActions/CreditCardWithActions';
 import { Divider, Text } from '@rneui/base';
 import ActionButton from '../../../../components/atoms/Buttons/ActionButton/ActionButton';
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded';
-import { useGetPaymentMethodsQuery } from '../../../../store/slices/billingSlice';
-import { isEmpty } from 'lodash';
-import Empty from '../../../../components/molecules/Feedback/Empty/Empty';
+import { useAppSelector } from '../../../../store/store';
+import { selectUserProfile } from '../../../../store/slices/userSlice';
 
 interface IProps {
 
@@ -59,7 +57,7 @@ const useStyles = makeStyles((theme, props: Props)=>({
 
 function PaymentDetailsScreenHome(props: Props) {
     const styles = useStyles(props)
-    const { data : paymentMethods , isLoading, error } = useGetPaymentMethodsQuery("")
+    const user = useAppSelector(selectUserProfile)
     const goToMPesa = ( ) => {
         props.navigation.navigate("MPesaDetailsScreen")
     }
@@ -72,18 +70,16 @@ function PaymentDetailsScreenHome(props: Props) {
         <View style={styles.contentContainer} >
             <View style={styles.cardsContainer} >
                 {
-                    paymentMethods?.map((paymentMethod, index)=>{
+                    user?.payment_types?.map((paymentMethod, index)=>{
                         return (
-                            <CreditCardWithActions
-                                customStyle={{
-                                    marginBottom: 10
-                                }}
-                                details={paymentMethod.details}
-                                paymentType={paymentMethod.paymentType}
-                                entityId={paymentMethod.entityId}
-                                key={index}
-                                actionTitle="Remove"
-                            />
+                            <View key={index} >
+                                <Text>
+                                    {"A Payment Method"}
+                                    {/* 
+                                        @todo the creditCardWithActions component needs to be rewritten to sufficiently handle all payment methods, skipping for now(out of scope)
+                                    */}
+                                </Text>
+                            </View>
                         )
                     })
                 }
