@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { selectVehicleInspection } from '../../../store/slices/vehicleInspectionSlice';
 import { selectUpdateInspectionFeedback, updateInspection } from '../../../store/slices/bookingSlice';
 import useToast from '../../../hooks/useToast';
+import { ScrollView } from 'react-native';
+import useDimensions from '../../../hooks/useDimensions';
 
 type Props = NativeStackScreenProps<UpcomingParamList, 'VehicleInspection'> 
 
@@ -41,11 +43,14 @@ const useStyles = makeStyles((theme) => {
     },
     formContainer: {
       width: '100%',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'flex-start'
     },
     sliderContainer: {
       width: '100%',
+      alignItems: 'flex-start',
+      margin: 0,
+      padding: 0
     },
     sliderText: {
       fontSize: 16,
@@ -204,16 +209,12 @@ const VehicleInspection = (props: Props) => {
   }
 
   const styles = useStyles(props);
-
+  const { screenWidth } = useDimensions()
   return (
     <View style={styles.container} >
-      <View style={styles.formContainer} >
-        <FlatList
-          data={inspectionDetails}
-          keyExtractor={(item)=>item.index.toString()}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.questionsContainer}
-          renderItem={({item})=>(
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer} >
+        {
+          inspectionDetails?.map((item, index)=>(
             <VehicleInspectionQuery
               question={item.question}
               initData={item.state}
@@ -236,14 +237,14 @@ const VehicleInspection = (props: Props) => {
                 })
               }}
             />
-          )}
-        />
+          ))
+        }
         <View style={styles.sliderContainer} >
           <Text>
             How much fuel is left?
           </Text>
           <Slider
-            style={{ width: '100%', height: 40 }}
+            style={{ width: screenWidth, height: 40 }}
             maximumValue={65}
             thumbTintColor="#E63B2E"
             minimumTrackTintColor="#E63B2E"
@@ -255,7 +256,7 @@ const VehicleInspection = (props: Props) => {
             {fuel} liters
           </Text>
         </View>
-      </View>
+      </ScrollView>
       <View style={styles.actionsContainer} >
         <Rounded
           width="40%"

@@ -1,10 +1,10 @@
-import { IUserProfile, dIUserProfile, dIUserSettings } from './../../types';
+import { IPaymentType, IUserProfile, dIUserProfile, dIUserSettings } from './../../types';
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { app, auth } from '../../firebase/firebaseApp';
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
-import { SETTINGS_ENDPOINT, USER_ENDPOINT } from '../../hooks/constants';
+import { PAYMENT_METHOD_ENDPOINT, SETTINGS_ENDPOINT, USER_ENDPOINT } from '../../hooks/constants';
 import apiClient from '../../utils/apiClient';
 
 interface IProfileState {
@@ -17,6 +17,8 @@ interface IProfileState {
   updateProfileError?: any;
   updateSettingsLoading?: boolean;
   updateSettingsError?: any;
+  updatePaymentTypeLoading?: boolean;
+  updatePaymentTypeError?: any;
 }
 
 const initialState: IProfileState = {
@@ -29,6 +31,8 @@ const initialState: IProfileState = {
   updateProfileError: null,
   updateSettingsLoading: false,
   updateSettingsError: null,
+  updatePaymentTypeLoading: false,
+  updatePaymentTypeError: null,
 };
 
 export const fetchUserData = createAsyncThunk<any, any>(
@@ -79,6 +83,20 @@ export const updateSettings = createAsyncThunk(
   }
 );
 
+export const updatePaymentType = createAsyncThunk("user/payment_type", async (data: Partial<IPaymentType>, {rejectWithValue, dispatch})=>{
+  try {
+    await apiClient.patch(`${PAYMENT_METHOD_ENDPOINT}`, data, {
+      params: {
+        payment_type_id: data.id
+      }
+    })
+    dispatch(fetchUserData({}));
+    return null
+  } catch (e) {
+    rejectWithValue(e)
+  }
+})
+
 const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
@@ -104,9 +122,9 @@ const userSlice = createSlice({
         state.providers = action.payload.providers;
         state.getProfileLoading = false;
       });
-    builder.addCase(updateUserData.fulfilled, (state, action) => {
-      state.updateProfileLoading = false;
-    }),
+      builder.addCase(updateUserData.fulfilled, (state, action) => {
+        state.updateProfileLoading = false;
+      }),
       builder.addCase(updateUserData.rejected, (state, action) => {
         state.updateProfileLoading = false;
         state.updateProfileError = action.error;
@@ -124,6 +142,16 @@ const userSlice = createSlice({
       builder.addCase(updateSettings.fulfilled, (state, action) => {
         state.updateSettingsLoading = false;
       });
+      builder.addCase(updatePaymentType.pending, (state, action) => {
+        state.updatePaymentTypeLoading = true;
+      })
+      builder.addCase(updatePaymentType.rejected, (state, action) => {
+        state.updatePaymentTypeLoading = false;
+        state.updatePaymentTypeError = action.error;
+      })
+      builder.addCase(updatePaymentType.fulfilled, (state, action) => {
+        state.updatePaymentTypeLoading = false;
+      })
   },
 });
 
@@ -152,3 +180,11 @@ export const selectUpdateProfile = (state: RootState) => {
     error: state.user.updateProfileError,
   };
 };
+
+export const selectUpdatePaymentTypeFeedback = (state: RootState) => {
+  const user = state.user;
+  return {
+    loading: user.updatePaymentTypeLoading,
+    error: user.updatePaymentTypeError,
+  }
+}

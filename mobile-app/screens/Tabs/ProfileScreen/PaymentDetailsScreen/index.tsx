@@ -3,7 +3,7 @@ import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PaymentDetailsScreenParamList } from '../../../../types';
 import PaymentDetailsScreenHome from './PaymentDetailsScreenHome';
-import MpesaDetails from './MpesaDetails';
+import MobileMoneyDetails from './MobileMoneyDetails';
 import BaseTopBar from '../../../../navigation/TopBar/BaseTopBar';
 import AddCard from './AddCard';
 
@@ -25,16 +25,19 @@ const PaymentDetailsScreen = () => {
                 <PaymentDetailsScreenStackNavigator.Navigator initialRouteName="PaymentDetailsScreenHome" >
                     <PaymentDetailsScreenStackNavigator.Screen options={{
                         headerShown: true,
-                        header: (props) => <BaseTopBar {...props} title="Payment" home={false} chevronLeft />
+                        header: (props) => <BaseTopBar {...props} title="Payment" home={false} chevronLeft />,
+                        animation: "slide_from_right"
                     }} name="PaymentDetailsScreenHome" component={PaymentDetailsScreenHome} />
                     <PaymentDetailsScreenStackNavigator.Screen options={{
                        headerShown: true,
-                       header: (props) => <BaseTopBar {...props} title="Mpesa" home={false} chevronLeft />
-                    }} name="MPesaDetailsScreen" component={MpesaDetails} />
+                       header: (props) => <BaseTopBar {...props} title="Mobile Money" home={false} chevronLeft />,
+                       animation: "slide_from_right"
+                  }} name="MobileMoneyDetailsScreen"  component={MobileMoneyDetails} />
                     <PaymentDetailsScreenStackNavigator.Screen options={{
                        headerShown: true,
-                       header: (props) => <BaseTopBar {...props} title="Add Card" home={false} chevronLeft />
-                    }} name="AddCardScreen" component={AddCard} />
+                       header: (props) => <BaseTopBar {...props} title="Add Card" home={false} chevronLeft />,
+                       animation: "slide_from_right"
+                    }} name="AddCardScreen" component={AddCard}  />
                 </PaymentDetailsScreenStackNavigator.Navigator>
         )}
     </ThemeConsumer>

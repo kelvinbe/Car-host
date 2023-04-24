@@ -18,7 +18,7 @@ export const billingApi = createApi({
     }),
     endpoints: (builder) => ({
         addPaymentMethod: builder.mutation<any,Partial<{
-            type: "card" | "mpesa";
+            type: string; // the types keep changing so, we can't use an enum here
             customer_id: string;
             card_number: string;
             exp_month: number;
@@ -36,7 +36,7 @@ export const billingApi = createApi({
                 params: {
                     type: body.type
                 }
-            })
+            }),
         }),
         setPaymentMethod: builder.mutation<any, IRawPaymentMethodDetails<any>>({
             query: (body) => ({

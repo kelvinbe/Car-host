@@ -14,6 +14,8 @@ import { setCardCvv, setCardName, setCardNum, setCardExp } from '../../../../sto
 import { useDispatch, useSelector } from 'react-redux'
 import { useAddPaymentMethodMutation } from '../../../../store/slices/billingSlice'
 import Error from '../../../../components/molecules/Feedback/Error/Error'
+import { fetchUserData } from '../../../../store/slices/userSlice'
+import { useAppDispatch } from '../../../../store/store'
 
 type Props = NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
 
@@ -75,7 +77,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 function AddCard(props: Props){
     const toast = useToast()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { theme } = useTheme()
 
     const name = useSelector(selectCardName)
@@ -129,6 +131,8 @@ function AddCard(props: Props){
             exp_year: expDate?.slice(2,4),
             type: "card"
         })
+        dispatch(fetchUserData(null))
+        props.navigation.goBack()
     }
     const styles = useStyles(props)   
 

@@ -75,7 +75,8 @@ const ScreensWithNoBottomNav = [
   'UserAgreement',
   'VehicleInspection',
   'OnboardingHome',
-  'DriverLicenseScreen'
+  'DriverLicenseScreen',
+  'MobileMoneyDetailsScreen'
 ];
 
 const ScreensWithNoTopBar = ['SearchScreenHome'];
@@ -359,9 +360,6 @@ function BottomTabNavigator(props: Props) {
           />
           <Tabs.Screen
             name="Issues"
-            /**
-             * @todo - Broken implementation needs to be fixed
-             */
             component={IssuesScreen}
             options={{
               tabBarIcon: ({ focused, color }) => (
@@ -397,9 +395,6 @@ function BottomTabNavigator(props: Props) {
             options={{
               tabBarButton: () => <></>,
             }}
-            /**
-             * @todo Broken implementation, needs to be fixed
-             */
             component={VehicleInspection}
           />
         </Tabs.Navigator>

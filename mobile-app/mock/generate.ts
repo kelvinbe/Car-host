@@ -162,12 +162,15 @@ const payment_types_schema = (customer_ids: [string]) => z.object({
     id: z.string().uuid(),
     user_id: z.enum(customer_ids),
     status: z.enum(['ACTIVE', 'NONACTIVE']),
-    details: z.object({}),
+    details: z.object({
+        last4: z.number().min(4000).max(9999).transform((v) => v.toString()),
+    }),
     stripe_payment_method_id: z.string().uuid(),
-    type: z.enum(['STRIPE', 'MPESA', 'PAYPAL', 'UNKNOWN'])
+    type: z.enum(['STRIPE', 'MPESA', 'PAYPAL', 'MTN', 'CASH']), // will change this to a string instead, due to the fact that other payment methods will continue to be added and enum will not be able to handle that
+    phone_number: z.number().min(400000000).max(999999999)
 })
 
-const payment_types = generateMock(payment_types_schema(customer_ids as [string]).array().length(50))// since its random, we need to double the length of the array
+const payment_types = generateMock(payment_types_schema(customer_ids as [string]).required().array().length(50))// since its random, we need to double the length of the array
 
 
 const stations_schema = (host_ids: [string], submarket_ids: [string]) => {
@@ -352,7 +355,12 @@ const all_data = {
                 DriverCredentials: driver_credentials.find((d: { user_id: any }) => d.user_id === user.id),
                 market: markets.find(m => m.id === user.market_id),
                 sub_market: submarkets.find((s: { id: any }) => s.id === user.sub_market_id),
-                payment_types: payment_types.filter((p: { user_id: any }) => p.user_id === user.id),
+                payment_types: uniqBy(payment_types.filter((p: { user_id: any }) => p.user_id === user.id).map((pt, i)=>{
+                    return {
+                        ...pt,
+                        is_primary: i === 0
+                    }   
+                }), ({type})=>type),
 
             }
         }

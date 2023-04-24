@@ -1,15 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
-import ActionButton from '../../../atoms/Buttons/ActionButton/ActionButton';
-import VisaIcon from '../../../../assets/icons/visa.svg';
 import { FlatList } from 'react-native-gesture-handler';
 import useBookingActions from '../../../../hooks/useBookingActions';
 import useToast from '../../../../hooks/useToast';
 import { useAppSelector } from '../../../../store/store';
 import { selectUserProfile } from '../../../../store/slices/userSlice';
-import { FontAwesome5 } from '@expo/vector-icons';
+import PaymentMethod from '../../../atoms/PaymentMethod';
+import Divider from '../../../atoms/Divider/Divider';
+import { isEmpty } from 'lodash'
+
 interface IProps {
   closeBottomSheet?: () => void;
   hasSelected?: Boolean;
@@ -54,6 +55,7 @@ const PaymentBottomSheet = (props: Props) => {
   const { setPaymentType } = useBookingActions();
   const user = useAppSelector(selectUserProfile)
   const toast = useToast()
+  const [activePaymentMethod, setActivePaymentMethod] = useState<string>()
 
   const close = () => {
     bottomSheetRef.current?.close();
@@ -72,6 +74,12 @@ const PaymentBottomSheet = (props: Props) => {
       })
     }
   };
+
+  useEffect(()=>{
+    if(!isEmpty(activePaymentMethod)){
+      handlePaymentSelect(activePaymentMethod)
+    }
+  }, [activePaymentMethod])
 
   /**
    * Need more clarification on switching payment methods
@@ -95,18 +103,9 @@ const PaymentBottomSheet = (props: Props) => {
               data={user?.payment_types}
               keyExtractor={(item) => item.id}
               renderItem={({item: pm, index})=>(
-                <ActionButton
-                  key={index}
-                  image={pm.type === "STRIPE" ? <VisaIcon /> : pm.type === "UNKNOWN" ? <FontAwesome5 name="money-bill-wave-alt" size={24} color="black" /> : null}
-                  title={pm.type === "MPESA" ? "M-PESA" : pm.type}
-                  customStyle={{
-                    marginBottom: 10,
-                  }}
-                  onPress={()=>{
-                    handlePaymentSelect(pm.id)
-                  }}
-                />
+                <PaymentMethod isActive={pm.id === activePaymentMethod} onPress={setActivePaymentMethod} key={index} {...pm} />
               )}
+              ItemSeparatorComponent={()=> <Divider/>}
             />
           </View>
         </BottomSheet>

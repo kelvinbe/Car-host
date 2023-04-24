@@ -13,6 +13,7 @@ export type RootStackParamList = {
     context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
   },
   Onboarding: undefined;
+  Sandbox: undefined; //  TODO: remove
 };
 
 declare global {
@@ -81,7 +82,7 @@ export type ProfileScreenParamList = {
 
 export type PaymentDetailsScreenParamList = {
   PaymentDetailsScreenHome: undefined;
-  MPesaDetailsScreen: undefined;
+  MobileMoneyDetailsScreen: undefined;
   AddCardScreen: undefined;
 };
 
@@ -169,6 +170,7 @@ export interface IPaymentType {
   phone_number: number | null;
   stripe_payment_method_id: string | null;
   type: string;
+  is_primary: boolean;
 }
 
 export interface IPayment {
@@ -185,6 +187,7 @@ export interface IPayment {
   user_id: string;
   receipt_number: string | null;
   payment_type_fk: IPaymentType | null;
+  is_primary: boolean;
 }
 
 export interface DriverCredentials {

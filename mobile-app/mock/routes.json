@@ -44,6 +44,8 @@
     "/vehicles?end_date_time=:end_date_time": "/vehicles?_page=1&_limit=100",
     "/users/settings":"/users/settings",
     "/paymenttypes?type=:type": "/payment_types",
+    "/paymenttypes": "/payment_types",
+    "/paymenttypes?payment_type_id=:payment_type_id": "/payment_types/:payment_type_id",
     "/issues": "/issues",
     "/reservations/inspection": "/inspections"
 }

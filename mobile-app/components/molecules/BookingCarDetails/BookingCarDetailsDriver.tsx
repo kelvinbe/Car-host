@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme, props: Props) => {
 const BookingCarDetailsDriver = (props: Props) => {
   const styles = useStyles(props);
   const {
-    bookingDetails: { code: authCode, vehicle, paymentType },
+    bookingDetails: { code: authCode, vehicle, paymentType, status, reservation_id },
   } = useBookingActions();
   return (
     <ThemeConsumer>
@@ -122,7 +122,7 @@ const BookingCarDetailsDriver = (props: Props) => {
           {!props?.hasAuthorizationCode && (
             <View style={styles.authCodeContainer}>
               <Text style={styles.authCodeTitle}>Authorization Code:</Text>
-              {(!isEmpty(authCode) || !isEmpty(paymentType)) ? (
+              {(!isEmpty(authCode) || !isEmpty(reservation_id)) ? (
                 <Text style={styles.authCodeTitle}> ****** </Text>
               ) : (
                 <TouchableOpacity

@@ -137,6 +137,20 @@ function useBookingActions() {
         case 'MPESA':
           await payWithMpesa()
           break;
+        case 'CASH':
+          /**
+           * @todo - handle cash payments
+           */
+          break;
+        case 'PAYPAL':
+          /**
+           * @todo - handle paypal payments
+           */
+          break;
+        case 'MTN':
+          /**
+           * @todo - handle mtn payments
+           */
         default:
           return toast({
             message: "Please select a payment method before proceeding",

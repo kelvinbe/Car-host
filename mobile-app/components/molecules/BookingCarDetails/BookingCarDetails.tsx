@@ -116,7 +116,9 @@ const BookingCarDetails = (props: Props) => {
                 <CarTypeIcon width={12} height={12} fill={theme.colors.primary} />
                 <Text style={styles.title}>Type</Text>
               </View>
-              <Text style={styles.value}>{vehicle?.vehicle_type}</Text>
+              <Text style={[styles.value, {
+                fontSize: 10
+              }]}>{vehicle?.transmission}</Text>
             </View>
 
             <View style={styles.infoContainer}>
