@@ -232,7 +232,7 @@ const HistoryCard = (props: Props) => {
               </View>
             </View>
             <View style={styles.rideInfoRight}>
-              <Text style={styles.ridePrice}>${calTotalCost()}</Text>
+              <Text style={styles.ridePrice}>{calTotalCost()} {vehicle?.host?.market?.currency}</Text>
             </View>
           </View>
           <Divider style={styles.divider} />

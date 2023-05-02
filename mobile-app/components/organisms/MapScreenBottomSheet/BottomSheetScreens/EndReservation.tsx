@@ -9,6 +9,8 @@ import { IReservation } from '../../../../types';
 import useToast from '../../../../hooks/useToast';
 import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useBackgroundLocationTask from '../../../../hooks/useBackgroundLocationTask';
 interface IProps {
   closeBottomSheet?: () => void;
 }
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme, props: Props) => {
 });
 
 const EndReservation = (props: Props) => {
-
+  const { stopUpdates } = useBackgroundLocationTask()
   const toast = useToast()
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -73,10 +75,12 @@ const EndReservation = (props: Props) => {
     props.closeBottomSheet && props.closeBottomSheet();
   };
 
-  const handleCancel = () => {
+  const handleStop = () => {
     dispatch(modifyCurrentReservation({
       status: "COMPLETE"
-    })).then(()=>{
+    })).then(async ()=>{
+      // This will stop the background tracking service 
+      await stopUpdates()
       toast({
         message: "Reservation ended successfully",
         type: "success",
@@ -92,7 +96,8 @@ const EndReservation = (props: Props) => {
     close();
   };
 
-  const handleStop = () => {
+  const handleCancel = async () => {
+    
     close();
   };
 
@@ -113,10 +118,10 @@ const EndReservation = (props: Props) => {
               <Text style={styles.textStyle}>You will end your ride</Text>
             </View>
             <View style={styles.bottomButtonsContainer}>
-              <RoundedOutline loading={feedback.loading} onPress={handleCancel} width="40%">
+              <RoundedOutline loading={feedback.loading} onPress={handleStop} width="40%">
                 Yes
               </RoundedOutline>
-              <Rounded onPress={handleStop} width="40%">
+              <Rounded onPress={handleCancel} width="40%">
                 No
               </Rounded>
             </View>

@@ -13,7 +13,7 @@ import { _setEmail, _setName, _setPictureUrl } from '../../../store/slices/editP
 import * as ImagePicker from 'expo-image-picker';
 import { useAppDispatch, useAppSelector } from '../../../store/store'
 import { selectUpdateProfile, selectUserProfile, updateUserData } from '../../../store/slices/userSlice'
-import { isEqual, last } from 'lodash'
+import { isEmpty, isEqual, last } from 'lodash'
 import Error from '../../../components/molecules/Feedback/Error/Error'
 import useToast from '../../../hooks/useToast'
 import { uploadToFirebase } from '../../../utils/utils'

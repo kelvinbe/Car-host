@@ -53,7 +53,7 @@ const BookingCarDetailsRate = (props: Props) => {
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Rate</Text>
-        <Text style={styles.sectionValue}>${vehicle?.hourly_rate || 0} / hr</Text>
+        <Text style={styles.sectionValue}>{vehicle?.host?.market?.currency} {vehicle?.hourly_rate || 0} / hr</Text>
       </View>
     </View>
   );

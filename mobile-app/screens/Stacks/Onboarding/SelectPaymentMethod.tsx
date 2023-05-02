@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 const SelectPaymentMethod = (props: Props) => {
 
     const styles = useStyles(props)
-    const [paymentMethodType, setPaymentMethodType] = useState<"mpesa"| "cash" | "card">("card")
+    const [paymentMethodType, setPaymentMethodType] = useState<"mobile_money"| "cash" | "card">("card")
     const { payment_method_added } = props.route.params
     const { setPaymentMethod, paymentMethod, setCompleted } = useOnBoarding()
     
@@ -74,17 +74,17 @@ const SelectPaymentMethod = (props: Props) => {
             case "cash":
                 setPaymentMethod({
                     type: "cash",
-                    card: null
+                    details: null
                 })
-            case "mpesa":
+            case "mobile_money":
                 setPaymentMethod({
-                    type: "mpesa",
-                    card: null
+                    type: "mobile_money",
+                    details: null
                 })
             case "card":
                 setPaymentMethod({
                     type: "card",
-                    card: null
+                    details: null
                 })
         }
     }, [paymentMethodType])
@@ -97,20 +97,23 @@ const SelectPaymentMethod = (props: Props) => {
                     payment_method: "card"
                 })
                 payment_method_added && setCompleted({
-                    payment: true
+                    payment_method: true
                 })
                 payment_method_added && props.navigation.navigate("OnboardingHome")
                 break;
             case "cash":
                 setCompleted({
-                    payment: true
+                    payment_method: true
                 })
                 props.navigation.navigate("OnboardingHome")
-            case "mpesa":
-                setCompleted({
-                    payment: true
+            case "mobile_money":
+                !payment_method_added && props.navigation.navigate("SelectedPaymentMethod", {
+                    payment_method: "mobile_money"
                 })
-                props.navigation.navigate("OnboardingHome")
+                payment_method_added && setCompleted({
+                    payment_method: true
+                })
+                payment_method_added && props.navigation.navigate("OnboardingHome")
         }
     }
 
@@ -136,17 +139,17 @@ const SelectPaymentMethod = (props: Props) => {
                     onPress={()=> setPaymentMethodType("card")}
                 />
                 <CheckBox
-                    checked={paymentMethodType === "mpesa"}
+                    checked={paymentMethodType === "mobile_money"}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
                         <Text
                             style={styles.checkboxText}
                         >
-                            Mpesa
+                            Mobile Money
                         </Text>
                     }
-                    onPress={()=> setPaymentMethodType("mpesa")}
+                    onPress={()=> setPaymentMethodType("mobile_money")}
                 />
                 <CheckBox
                     checked={paymentMethodType === "cash"}
@@ -168,7 +171,9 @@ const SelectPaymentMethod = (props: Props) => {
                 onPress={handlePress}
             >
                 {
-                    paymentMethodType === "card" ? payment_method_added ? "Continue" : "Add Card" : "Continue"
+                    paymentMethodType === "card" ? payment_method_added ? "Continue" : 
+                    "Add Card" : paymentMethodType === 'mobile_money' ? payment_method_added ? "Continue" :
+                    "Add Mobile Money" : "Continue"
                 }
             </Rounded>
         </View>

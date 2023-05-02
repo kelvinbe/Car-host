@@ -51,7 +51,6 @@ import { fetchOnboarding } from './store/slices/onBoardingSlice';
     const [user, setUser] = useState<User|null>(null)
 
     useEffect(()=>{
-      console.log("user changed", user?.uid)
       if(isEmpty(user?.uid)) return undefined
       dispatch(fetchOnboarding())
     }, [,user?.uid])

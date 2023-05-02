@@ -149,3 +149,11 @@ export const PAYMENT_ENDPOINT = DOMAIN + '/api/payments';
  */
 export const ISSUES_ENDPOINT = DOMAIN + '/api/issues';
 
+
+/**
+ * @description - The tracking service host, to be used for the tracking websockets,
+ * for testing, i.e until we get a valid https certificate, we will use ngrok
+ */
+
+export const TRACKING_SERVICE_HOST = '0b94-41-215-129-67.jp.ngrok.io';
+

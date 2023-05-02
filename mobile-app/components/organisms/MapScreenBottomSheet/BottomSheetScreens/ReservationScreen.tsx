@@ -1,15 +1,19 @@
-import { StyleSheet, View } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import { makeStyles } from '@rneui/themed';
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded';
 import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline';
 import BookingCarComponent from './BookingCarComponent';
 import useBookingActions from '../../../../hooks/useBookingActions';
 import useToast from '../../../../hooks/useToast';
-import { setStatus, selectReservationStatus } from '../../../../store/slices/startReservationSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { modifyCurrentReservation } from '../../../../store/slices/bookingSlice';
+import bookingSlice, { modifyCurrentReservation } from '../../../../store/slices/bookingSlice';
 import { useAppDispatch } from '../../../../store/store';
+import useBackgroundLocationTask from '../../../../hooks/useBackgroundLocationTask';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { UpcomingParamList } from '../../../../types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 
 interface IProps {
   openAuthorization?: () => void;
@@ -46,61 +50,66 @@ const useStyles = makeStyles((theme, props) => {
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    bottomSheetView: {
+      alignItems: 'center',
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
+      borderTopWidth: 1,
+      borderRightWidth: 1,
+      borderLeftWidth: 1,
+      borderTopColor: theme.colors.grey0,
+      borderLeftColor: theme.colors.grey0,
+      borderRightColor: theme.colors.grey0,
+      paddingHorizontal: 20,
+      paddingVertical: 20,
+      width: "100%"
+    },
+    bottomSheetButtonContainer: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      paddingVertical: 5,
+    }
   };
 });
 
 const ReservationScreen = (props: Props) => {
   const styles = useStyles(props);
   const {bookingDetails} = useBookingActions()
-  const toast = useToast()
-  const dispatch = useAppDispatch()
+  const [show_bottom_sheet, setShowBottomSheet] = useState(false)
+  const bottom_sheet_ref = React.useRef<BottomSheet>(null)
+  const snap_points = React.useMemo(() => ['30%'], [])
+  const navProps = useNavigation<NavigationProp<UpcomingParamList>>()
 
-  const checkTime = () => {
-    const currentMonth = new Date().getMonth() 
-    const currentDate = new Date().getDate()
-    const currentHour = new Date().getHours()
-    const currentMinute = new Date().getMinutes()
-    
-    let bookingMonth = new Date(bookingDetails.start_date_time).getMonth()
-    let bookingDate = new Date(bookingDetails.start_date_time).getDate()
-    let bookingHour = new Date(bookingDetails.start_date_time).getHours()
-    let bookingMinute = new Date(bookingDetails.start_date_time).getMinutes()
-    let endBookingHour = new Date(bookingDetails.end_date_time).getHours()
-    let endBookingMinute = new Date(bookingDetails.end_date_time).getMinutes()
-    if(currentMonth !== bookingMonth){
-      toast({
-        type:"error",
-        title:"Failed",
-        message:"This reservation is not booked for this month",
-        duration:3000
+
+  const { requestLocationPermissions, trackingState, stopUpdates } = useBackgroundLocationTask()
+
+  const openBottomSheet = () => {
+    setShowBottomSheet(true)
+  }
+
+  const closeBottomSheet = () => {
+    bottom_sheet_ref.current?.close()
+    setShowBottomSheet(false)
+  }
+
+  const handleLocationPermissions = async () => {
+    const hasPermissions = await requestLocationPermissions()
+    if(hasPermissions){
+      navProps.navigate("LoadingScreen", {
+        reservation_id: bookingDetails.reservation_id
       })
-    }else if(currentDate !== bookingDate){
-      toast({
-        type:"error",
-        title:"Failed",
-        message:"This reservation is not booked for today",
-        duration:3000
-      })
-    }else if(currentHour < bookingHour || (currentHour == bookingHour && currentMinute < bookingMinute)){
-      toast({
-        type:"error",
-        title:"Failed",
-        message:"Wait for the booked time or modify your ride",
-        duration:3000
-      })
-    }else if(currentHour >= endBookingHour && currentMinute >= endBookingMinute){
-      toast({
-        type:"error",
-        title:"Failed",
-        message:"The current hour is past the dropoff time",
-        duration:3000
-      })
-    }else if(currentHour >= bookingHour && currentMinute >= bookingMinute){
-      dispatch(modifyCurrentReservation({
-        status: "ACTIVE"
-      }))
+      closeBottomSheet()
     }
   }
+
+  const startReservation = () => {
+    openBottomSheet()
+  }
+
+  const renderBackdrop = useCallback((props: any) => {
+    return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -129,7 +138,7 @@ const ReservationScreen = (props: Props) => {
             styles.bottomSection,
             { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
           ]}>
-          <RoundedOutline onPress={checkTime} width="40%">
+          <RoundedOutline onPress={startReservation} width="40%">
             Start
           </RoundedOutline>
           <Rounded onPress={props?.openModifyReservation} width="40%">
@@ -137,10 +146,30 @@ const ReservationScreen = (props: Props) => {
           </Rounded>
         </View>
       )}
+      {
+        show_bottom_sheet && <BottomSheet
+          ref={bottom_sheet_ref}
+          snapPoints={snap_points}
+          style={styles.bottomSheetView}
+          backdropComponent={renderBackdrop}
+        >
+          
+          <Text>
+            To proceed with the ride, you must have background location services enabled.
+          </Text>
+          <View style={styles.bottomSheetButtonContainer} >
+            <Rounded onPress={handleLocationPermissions}  width="40%">
+              Enable
+            </Rounded>
+            <RoundedOutline width="40%"  onPress={closeBottomSheet} >
+              Cancel
+            </RoundedOutline>
+          </View>
+        </BottomSheet>
+      }
     </View>
   );
 };
 
 export default ReservationScreen;
 
-const styles = StyleSheet.create({});

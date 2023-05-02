@@ -7,7 +7,6 @@ import SearchScreenHome from './SearchScreen';
 import BookingConfirmationScreen from './BookingConfirmationScreen';
 import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
 import MapScreen from './MapScreen';
-import Onboarding from './Onboarding';
 import AddCard from '../ProfileScreen/PaymentDetailsScreen/AddCard';
 const SearchScreenStacks = createNativeStackNavigator<SearchScreenParamList>();
 

@@ -122,14 +122,7 @@ const BookingConfirmationScreen = (props: Props) => {
                             <Text style={styles.textStyle} >
                                 Booking Confirmed
                             </Text>
-                            <HistoryCard 
-                            {
-                                ...data
-                            }
-                            customStyle={{
-                                marginBottom: 20
-                            }} />
-                                          {(data && data.user) && <CreditCardWithAmount {...data?.payment_method_details} amount={data?.total_cost as any} />}
+                            <HistoryCard {...data} customStyle={{marginBottom: 20}} />
                         </View>
                         
                     </ZigzagView>}

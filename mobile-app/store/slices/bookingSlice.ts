@@ -112,7 +112,13 @@ const initialState: {
     host_code: string,
     inspection: Inspection | null,
     inspectionUpdateLoading: boolean,
-    inspectionUpdateError: string | null
+    inspectionUpdateError: string | null,
+    /**
+     * When a payment request is made, the user receives back an payment identifier called a payment authorization, these payment authorizations
+     * are then used to confirm if payments were successful, this is because other than stripe, which can be directly embeded into react native
+     * we have to use polling to validate payment from the backend for other payment providers
+     */
+    booking_payment_authorization: string | null
 } = {
     status: 'Incomplete',
     code: null,
@@ -138,7 +144,8 @@ const initialState: {
     location: null,
     inspection: null,
     inspectionUpdateError: null,
-    inspectionUpdateLoading: false
+    inspectionUpdateLoading: false,
+    booking_payment_authorization: null
 }
 
 const bookingSlice = createSlice({
@@ -211,12 +218,14 @@ const bookingSlice = createSlice({
         },
         setLocation: (state, action)=>{
             state.location = action.payload
+        },
+        setBookingPaymentAuthorization: (state, action)=>{
+            state.booking_payment_authorization = action.payload
         }
     },
     extraReducers(builder) {
         builder.addCase(loadBookingDetailsFromReservation.fulfilled, (state, action)=>{
             const data = action.payload as IReservation
-            console.log("Incoming", data.inspection)
             // state.billingInfo = action.payload?.paymentMethod as any
             state.paymentDetails = data?.payment
             state.paymentType = data?.payment?.payment_type_fk ?? null
@@ -280,7 +289,8 @@ export const {
     setNotification,
     setPaymentType,
     setHostCode,
-    setLocation
+    setLocation,
+    setBookingPaymentAuthorization
 } = bookingSlice.actions;
 
 // selectors
@@ -311,3 +321,5 @@ export const selectUpdateInspectionFeedback = (state: RootState) => ({
     loading: state.booking.inspectionUpdateLoading,
     error: state.booking.inspectionUpdateError
 })
+
+export const selectBookingPaymentAuthorization = (state: RootState) => state.booking.booking_payment_authorization

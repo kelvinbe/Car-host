@@ -10,11 +10,11 @@ const middlewares = jsonServer.defaults();
 const rewriter = jsonServer.rewriter(require('./routes.json'));
 const db = router.db
 server.use(middlewares);
+server.use(jsonServer.bodyParser);
 server.use(rewriter);
 const jwt = require('jsonwebtoken');
 const { isEmpty } = require("lodash")
-const Stripe = require("stripe")
-
+import Stripe from 'stripe'
 // @ts-ignore
 const stripe = new Stripe(process.env.STRIPE_TEST_SECRET_KEY,{
   apiVersion: '2022-11-15',
@@ -182,6 +182,79 @@ server.post("/paymenttypes", (req: any, res: { json: (arg0: { data: string; mess
     data: "",
     message: "Success",
     status: "success"
+  })
+})
+
+
+server.post("/payments/mpesa", (req: any, res: { json: (arg0: { data: { authorization: string; status: string; }; status: string; message: string; }) => void; })=>{
+    res.json({
+        data: {
+          authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiM2Q2ODZkOGEtYWI1Mi00NjI4LWFiOTYtODlmNWM1ZDlkM2NlIiwiYW1vdW50Ijo1MDAsInRpbWVzdGFtcCI6MTY4MjU4NDQyMjIwMywiaWF0IjoxNjgyNTg0NDIyfQ.y_FOKai5zfTNnj0PvYk8pjWpsC1ggvSQbeYtwK9H820",
+          status: "PROCESSING",
+        },
+        status: "success",
+        message: "Success"
+    })
+})
+
+server.get("/payments/confirm", (req: any, res: { json: (arg0: { data: boolean; status: string; message: string; }) => void; })=>{
+  /**
+   * To simulate some delay in the payment confirmation
+   */
+  setTimeout(()=>{
+    res.json({
+      data: true, 
+      status: "success",
+      message: "Success"
+    })
+  })
+})
+
+server.post("/payments/mtn", (req: any, res: { json: (arg0: { data: { authorization: string; status: string; }; status: string; message: string; }) => void; })=>{
+  res.json({
+      data: {
+        authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiM2Q2ODZkOGEtYWI1Mi00NjI4LWFiOTYtODlmNWM1ZDlkM2NlIiwiYW1vdW50Ijo1MDAsInRpbWVzdGFtcCI6MTY4MjU4NDQyMjIwMywiaWF0IjoxNjgyNTg0NDIyfQ.y_FOKai5zfTNnj0PvYk8pjWpsC1ggvSQbeYtwK9H820",
+        status: "PROCESSING",
+      },
+      status: "success",
+      message: "Success"
+  })
+})
+
+server.post("/payments/stripe", async (req: any, res: {
+    json: (arg0: {
+      data: {
+        ephemeralKey: string | undefined; authorization: string; status: string; id: string; object: "payment_intent"; amount: number; amount_capturable: number; amount_details?: Stripe.PaymentIntent.AmountDetails | undefined; amount_received: number; application: string | Stripe.Application | null; application_fee_amount: number | null; automatic_payment_methods: Stripe.PaymentIntent.AutomaticPaymentMethods | null; canceled_at: number | null; cancellation_reason: Stripe.PaymentIntent.CancellationReason | null; capture_method: Stripe.PaymentIntent.CaptureMethod; client_secret: string | null; confirmation_method: Stripe.PaymentIntent.ConfirmationMethod; created: number; currency: string; customer: string | Stripe.Customer | Stripe.DeletedCustomer | null; description: string | null; // get onboarding detials
+        // get onboarding detials
+        invoice: string | Stripe.Invoice | null; last_payment_error: Stripe.PaymentIntent.LastPaymentError | null; latest_charge?: string | Stripe.Charge | null | undefined; livemode: boolean; metadata: Stripe.Metadata; next_action: Stripe.PaymentIntent.NextAction | null; on_behalf_of: string | Stripe.Account | null; payment_method: string | Stripe.PaymentMethod | null; payment_method_options: Stripe.PaymentIntent.PaymentMethodOptions | null; payment_method_types: string[]; processing: Stripe.PaymentIntent.Processing | null; receipt_email: string | null; review: string | Stripe.Review | null; setup_future_usage: Stripe.PaymentIntent.SetupFutureUsage | null; shipping: Stripe.PaymentIntent.Shipping | null; source: string | Stripe.CustomerSource | Stripe.DeletedBankAccount | Stripe.DeletedCard | null; statement_descriptor: string | null; statement_descriptor_suffix: string | null; transfer_data: Stripe.PaymentIntent.TransferData | null; transfer_group: string | null; lastResponse: { headers: { [key: string]: string; }; requestId: string; statusCode: number; apiVersion?: string | undefined; idempotencyKey?: string | undefined; stripeAccount?: string | undefined; };
+      }; status: string; message: string;
+    }) => void;
+  })=>{
+
+  const ephemeralKey = await stripe.ephemeralKeys.create(
+    {customer: "cus_NmL4gw2sAQ1QDV"},
+    {apiVersion: "2022-11-15"}
+  );
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 100000,
+    currency: req?.body?.currency ?? 'usd',
+    confirm: true,
+    payment_method_types: ['card'],
+    payment_method: "pm_1N0mOhAoGqRfm1CGEcOo3ePk", // dummy payment method for testing
+    customer: "cus_NmL4gw2sAQ1QDV",
+  })
+
+
+  res.json({
+      data: {
+        ...paymentIntent,
+        ephemeralKey: ephemeralKey.secret,
+        authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiM2Q2ODZkOGEtYWI1Mi00NjI4LWFiOTYtODlmNWM1ZDlkM2NlIiwiYW1vdW50Ijo1MDAsInRpbWVzdGFtcCI6MTY4MjU4NDQyMjIwMywiaWF0IjoxNjgyNTg0NDIyfQ.y_FOKai5zfTNnj0PvYk8pjWpsC1ggvSQbeYtwK9H820",
+        status: "PROCESSING",
+      },
+      status: "success",
+      message: "Success"
   })
 })
 

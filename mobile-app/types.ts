@@ -65,6 +65,12 @@ export type UpcomingParamList = {
     id: string;
   };
   VehicleInspection?: undefined;
+  LoadingScreen?: {
+    reservation_id?: string
+  };
+  ErrorScreen?: {
+    reservation_id?: string
+  }
 };
 export type ProfileScreenParamList = {
   ProfileScreenHome: undefined;
@@ -77,7 +83,8 @@ export type ProfileScreenParamList = {
   DriverLicenseScreen: undefined;
   SupportScreen: {
     context: "profile" | "booking" | "home" | "payment" | "settings" | "about" | "general" | "forgotPassword" | "verification" | "changePassword" | "confirmationSent" | undefined
-  }
+  };
+  UserLocation: undefined;
 }
 
 export type PaymentDetailsScreenParamList = {
@@ -100,7 +107,7 @@ export type UserOnboardingParamList = {
     payment_method_added?: boolean;
   };
   SelectedPaymentMethod: {
-    payment_method?: 'mpesa' | 'card' | 'cash';
+    payment_method?: 'mobile_money' | 'card' | 'cash';
   };
 };
 
@@ -392,5 +399,23 @@ export interface vehicleInspection {
   vehicleCleanlinessDetails?: string;
   vehicleCleanlinessPictures?: string | null;
   vehicleGas: number;
+}
+
+
+/**
+ * @name PaymentDetails
+ * @description Payment Details data type
+ * @explanation - after reviewing how we would handle different payment methods, this generic type seems to be consistent across all payment methods, though changes can be made to the type if need be
+ * @tutorial - wherever u're using this type make sure to wrap it in Partial<PaymentDetails> to allow for optional fields
+ */
+export interface PaymentDetails {
+  type: string; // the types keep changing so, we can't use an enum here
+  customer_id: string;
+  card_number: string;
+  exp_month: number;
+  exp_year: number;
+  cvc: string;
+  phone_number: number;
+  email: string;
 }
 

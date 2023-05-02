@@ -216,6 +216,7 @@ const VehicleInspection = (props: Props) => {
         {
           inspectionDetails?.map((item, index)=>(
             <VehicleInspectionQuery
+              key={index}
               question={item.question}
               initData={item.state}
               index={item.index}

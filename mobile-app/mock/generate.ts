@@ -404,6 +404,13 @@ const all_data = {
                 ...vehicles.find((v: { id: any }) => v.id === reservation.vehicle_id),
                 host: {
                     ...users.find((u: { id: any }) => u.id === vehicles.find((v: { id: any }) => v.id === reservation.vehicle_id)?.user_id),
+                    market: {
+                        ...markets.find((m)=>{
+                            return (
+                                users.find((u: { id: any })=> u.id === vehicles.find((v: { id: any }) => v.id === reservation.vehicle_id)?.user_id)?.market_id === m.id
+                            )
+                        })
+                    }
                 },
                 station: {
                     ...stations.find((s: { id: any }) => s.id === vehicles.find((v: { id: any }) => v.id === reservation.vehicle_id)?.station_id),

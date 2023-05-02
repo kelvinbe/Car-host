@@ -74,7 +74,7 @@ export default function useLocation(market_id?: string) {
         // note the markets endpoint is public, so no need to pass the token
         await axios.get(FETCH_SUBMARKETS, {
             params: {
-                marketId: market_id
+                market_id: market_id
             }
         }).then(({data})=>{
             setSubMarkets((prev)=>({

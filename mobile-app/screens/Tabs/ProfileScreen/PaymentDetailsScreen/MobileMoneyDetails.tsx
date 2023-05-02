@@ -69,7 +69,7 @@ const MobileMoneyDetails = (props: Props) => {
             type: "primary"
         }) 
         await addPaymentMethod({
-            mobile_money_number: number,
+            phone_number: number,
             type: selected.value
         }).then(()=>{
             dispatch(fetchUserData(null))

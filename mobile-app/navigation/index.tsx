@@ -135,21 +135,25 @@ export function UserOnboardingNavigation(props: onBoardingScreenProps) {
     }
   })
   return (
-    <UserOnboardingNavigator.Navigator initialRouteName='OnboardingHome' >
-      <UserOnboardingNavigator.Screen name="OnboardingHome" options={{ headerShown: false }}  children={(props) => (<Onboarding goToApp={goToApp} goToLogin={goToLogin} {...props} />)} />
+    <UserOnboardingNavigator.Navigator initialRouteName='OnboardingHome'>
+      <UserOnboardingNavigator.Screen name="OnboardingHome" options={{ headerShown: false, animation: 'slide_from_right' }}  children={(props) => (<Onboarding goToApp={goToApp} goToLogin={goToLogin} {...props} />)} />
     
       <UserOnboardingNavigator.Screen name="DriversLicense" options={{ header(props){
-        return <BaseTopBar {...props} title="Upload Drivers License" chevronLeft home={false} />
-      }}} component={DriversLicense} />
-      <UserOnboardingNavigator.Screen  name="Location" component={Location} options={{headerShown: true, header(props){
+          return <BaseTopBar {...props} title="Upload Drivers License" chevronLeft home={false} />
+        }, 
+      animation: 'slide_from_right'
+      }} component={DriversLicense} />
+      <UserOnboardingNavigator.Screen  name="Location" component={Location} options={{headerShown: true, animation: "slide_from_right", header(props){
         return <BaseTopBar {...props} title="Location" chevronLeft home={false} />
       }}} />
-      <UserOnboardingNavigator.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} options={{headerShown: true, header(props){
+      <UserOnboardingNavigator.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} options={{headerShown: true, animation: 'slide_from_right', header(props){
         return <BaseTopBar {...props} title="Select Payment Method" chevronLeft home={false} />
       }}} />
-      <UserOnboardingNavigator.Screen name="SelectedPaymentMethod" component={SelectedPaymentMethod} options={{headerShown: true, header(props: any){
+      <UserOnboardingNavigator.Screen name="SelectedPaymentMethod" component={SelectedPaymentMethod} options={{headerShown: true, animation: 'slide_from_right', header(props: any){
         return <BaseTopBar {...props} title={
-          props?.route?.params?.payment_method === "card" ? "Add Card" : "Add M-Pesa"
+          props?.route?.params?.payment_method === "card" ? "Add Card" : 
+          props?.route?.params?.payment_method === "mobile_money" ? "Add Mobile Money" :
+          null // for now, will add others later
         } chevronLeft home={false} />
       }}} />
     </UserOnboardingNavigator.Navigator>
@@ -181,10 +185,10 @@ function RootNavigator() {
   return (
     <CustomSafeAreaView>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Onboarding"  component={UserOnboardingNavigation} options={{ headerShown: false }} />
-        <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false, animation: "slide_from_right" }} />
+        <Stack.Screen name="Onboarding"  component={UserOnboardingNavigation} options={{ headerShown: false, animation: "slide_from_right"  }} />
+        <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false, animation: "slide_from_right"  }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false, animation: "slide_from_right" }} />
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPasswordScreen}

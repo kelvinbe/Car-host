@@ -26,7 +26,7 @@ interface IReducerState {
     back: string
   };
   payment_method: null | {
-    type: 'card' | 'mpesa' | 'cash';
+    type: 'card' | 'mobile_money' | 'cash';
     card?: {
       card_number: string;
       exp_month: number;
@@ -142,8 +142,9 @@ export const onBoardingApi = createApi({
       },
     }),
     addOnboardingPaymentMethod: builder.mutation<
+
       Partial<IResponse>,
-      Partial<ICard> & { customer_id?: string; type?: 'card' | 'mpesa' | 'cash' }
+      Partial<ICard> & { customer_id?: string; type?: 'card' | 'MPESA' | 'MTN' | 'cash' }
     >({
       query: body => ({
         /**

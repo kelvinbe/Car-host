@@ -9,7 +9,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import useToast from '../../../../hooks/useToast';
 import Loading from '../../../molecules/Feedback/Loading/Loading';
 import { useAppDispatch } from '../../../../store/store';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 import BookingCarComponent from './BookingCarComponent';
 import { SearchScreenParamList } from '../../../../types';
 import { useConfirmPaymentQuery } from '../../../../store/slices/billingSlice';
@@ -60,21 +60,24 @@ const BookingScreen = (props: Props) => {
     payForReservation,
     payForReservationLoading,
     paymentOption,
+    booking_payment_authorization
   } = useBookingActions();
   const [addReservation, { isLoading }] = useAddReservationMutation();
   const { navigate } = useNavigation<NavigationProp<SearchScreenParamList>>();
   const reduxDispatch = useAppDispatch();
   
 
-  const { data: confirmationData, isError, isLoading: confirmationLoading } = useConfirmPaymentQuery(undefined, {
+  const { data: confirmationData, isError, isLoading: confirmationLoading } = useConfirmPaymentQuery({
+    authorization: booking_payment_authorization ?? "" // the empty string will not happen, because of the skip condition 
+  }, {
     pollingInterval: 60000, // 1 minute polling
-    skip: isEmpty(paymentOption)
+    skip: isEmpty(paymentOption) || isNull(booking_payment_authorization)
   })
   const toast = useToast();
 
   useEffect(() => {
     if (!isEmpty(paymentOption)) {
-      if (confirmationData?.success) {
+      if (confirmationData) {
         reduxDispatch(clearBookingState());
         addReservation({
           station_id: vehicle?.station_id,
@@ -93,27 +96,23 @@ const BookingScreen = (props: Props) => {
             title: 'An Error Occured',
           })
         })
-      }
-
-      if (confirmationData?.error) {
-        toast({
-          message: confirmationData?.error,
-          type: 'error',
-          duration: 3000,
-          title: 'Error',
-        });
-      }
-
-      if (confirmationData?.timeout) {
-        toast({
-          message: 'Payment Timed Out',
-          type: 'error',
-          duration: 3000,
-          title: 'Error',
-        });
+      }else{
+        if (isError) {
+          toast({
+            message: 'Please contact support',
+            type: 'error',
+            duration: 3000,
+            title: 'An Error Occured',
+          })
+        } else {
+          toast({
+            message: "Re-trying to confirm payment",
+            type: 'primary',
+          })
+        }
       }
     }
-  }, [confirmationData?.timeout, confirmationData?.success, confirmationData?.error]);
+  }, [confirmationData]);
 
   const makeBooking = () => {
     return payForReservation()

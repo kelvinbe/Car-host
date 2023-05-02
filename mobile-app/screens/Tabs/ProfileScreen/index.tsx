@@ -16,6 +16,7 @@ import PrivacyPolicy from './PrivacyPolicy';
 import UserAgreement from './UserAgreement';
 import SupportScreen from '../../shared/SupportScreen';
 import DriverLicenseScreen  from './DriverLicenseScreen';
+import UserLocation from './UserLocation';
 
 const ProfileScreenStackNavigator = createNativeStackNavigator<ProfileScreenParamList>();
 
@@ -48,6 +49,7 @@ const ProfileScreen = (props: Props) => {
             <ProfileScreenStackNavigator.Screen
               options={{
                 headerShown: false,
+                animation: 'slide_from_right'
               }}
               name="ProfileScreenHome"
               component={ProfileScreenHome}
@@ -58,6 +60,7 @@ const ProfileScreen = (props: Props) => {
                 header: props => (
                   <BaseTopBar {...props} title="Profile Settings" home={false} chevronLeft />
                 ),
+                animation: 'slide_from_right'
               }}
               name="ProfileScreenEdit"
               component={ProfileScreenEdit}
@@ -75,6 +78,7 @@ const ProfileScreen = (props: Props) => {
                 header: props => (
                   <BaseTopBar {...props} title="Profile Settings" home={false} chevronLeft />
                 ),
+                animation: 'slide_from_right'
               }}
               name="ProfileSettingsScreen"
               component={ProfileSettingsScreen}
@@ -86,6 +90,7 @@ const ProfileScreen = (props: Props) => {
                 header: props => (
                   <BaseTopBar {...props} title="Driver License" home={false} chevronLeft />
                 ),
+                animation: 'slide_from_right'
               }}
               name="DriverLicenseScreen"
               component={DriverLicenseScreen}
@@ -94,6 +99,7 @@ const ProfileScreen = (props: Props) => {
               options={{
                 headerShown: true,
                 header: props => <BaseTopBar {...props} title="About" home={false} chevronLeft />,
+                animation: 'slide_from_right'
               }}
               name="AboutScreen"
               component={AboutScreen}
@@ -104,6 +110,7 @@ const ProfileScreen = (props: Props) => {
                 header: props => (
                   <BaseTopBar {...props} title="Privacy Policy" home={false} chevronLeft />
                 ),
+                animation: 'slide_from_right'
               }}
               name="PrivacyPolicy"
               component={PrivacyPolicy}
@@ -114,6 +121,7 @@ const ProfileScreen = (props: Props) => {
                 header: props => (
                   <BaseTopBar {...props} title="User Agreement" home={false} chevronLeft />
                 ),
+                animation: 'slide_from_right'
               }}
               name="UserAgreement"
               component={UserAgreement}
@@ -122,9 +130,19 @@ const ProfileScreen = (props: Props) => {
               options={{
                 headerShown: true,
                 header: props => <BaseTopBar {...props} title="Support" home={false} chevronLeft />,
+                animation: 'slide_from_right'
               }}
               name="SupportScreen"
               component={SupportScreen}
+            />
+            <ProfileScreenStackNavigator.Screen
+              options={{
+                headerShown: true,
+                header: props => <BaseTopBar {...props} title="Location" home={false} chevronLeft />,
+                animation: 'slide_from_right'
+              }}
+              name="UserLocation"
+              component={UserLocation}
             />
           </ProfileScreenStackNavigator.Navigator>
         </View>

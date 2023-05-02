@@ -100,7 +100,9 @@
     "regenerator-runtime": "*",
     "twrnc": "^3.4.1",
     "webpack": ">=2",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "expo-task-manager": "~11.0.1",
+    "expo-background-fetch": "~11.0.1"
   },
   "devDependencies": {
     "@anatine/zod-mock": "^3.10.0",

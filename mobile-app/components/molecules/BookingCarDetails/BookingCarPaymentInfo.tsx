@@ -82,7 +82,7 @@ const BookingCarPaymentInfo = (props: Props) => {
             )}
           </View>
           <View style={[styles.section, { justifyContent: 'space-between' }]}>
-            <Text style={styles.sectionTitle}>${calcAmount()}</Text>
+            <Text style={styles.sectionTitle}> {calcAmount()} {vehicle?.host?.market?.currency}</Text>
             {!paymentType && (
               <TouchableOpacity
                 onPress={props.openSelectPaymentMethod}

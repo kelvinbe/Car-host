@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import { Image } from '@rneui/base'
 import LocationDirection from "../../../assets/icons/direction.svg"
-import { IVehicle } from '../../../types'
+import { IVehicle, SearchScreenParamList } from '../../../types'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 interface IProps {
     customContainerStyle?: StyleProp<ViewStyle>;
     onPress?: () => void;
@@ -46,17 +47,17 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         driveInfoContainer: {
             alignItems: "flex-start",
-            justifyContent: "center"
+            justifyContent: "flex-start"
         },
         driveInfoText: {
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             fontSize: 16,
             marginBottom: 5
         },
         driverInfoContainer: {
             flexDirection: "row",
-            alignItems: "center",
+            alignItems: "flex-end",
             justifyContent: "flex-start",
             marginBottom: 5
         },
@@ -69,7 +70,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
         },
         driverNameText: {
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             fontSize: 14,
             textAlign: "left",
             marginLeft: 5
@@ -83,13 +84,14 @@ const useStyles = makeStyles((theme, props: Props)=>{
             marginRight: 5
         },
         locationText: {
-            fontWeight: "600", fontFamily: "Lato_400Regular",
+            fontWeight: "600", 
+            fontFamily: "Lato_400Regular",
             fontSize: 12,
             textAlign: "left",
         },
         amountStyle: {
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             fontSize: 16,
         }
     }
@@ -97,6 +99,7 @@ const useStyles = makeStyles((theme, props: Props)=>{
 
 const DriveCardButton = (props: Props) => {
     const [is05, set_is05] = useState(false)
+    const navigation = useNavigation<NavigationProp<SearchScreenParamList, "MapScreen">>()
     
     props?.opacity?.addListener(({value})=>{
         if(value?.toString()?.includes(".")){
@@ -105,6 +108,7 @@ const DriveCardButton = (props: Props) => {
             set_is05(false)
         }
     })
+
 
   const styles = useStyles()
 
@@ -131,9 +135,6 @@ const DriveCardButton = (props: Props) => {
                         }} />
                     </View>
                     <View style={styles.driveInfoContainer} >
-                        <Text style={styles.driveInfoText} >
-                            {props?.make} {props?.model}
-                        </Text>
                         <View style={styles.driverInfoContainer} >
                             <View style={styles.driverAvatarStyle} >
                                 <Image style={styles.driverAvatarStyle} source={{
@@ -146,22 +147,26 @@ const DriveCardButton = (props: Props) => {
                                 }
                             </Text>
                         </View>
+                        <Text style={styles.driveInfoText} >
+                            {props?.make} {props?.model}
+                        </Text>
+                        <Text style={styles.amountStyle} >
+                            {props?.hourly_rate} {props?.host?.market?.currency} /hr
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={props.onPress} >
                         <View style={styles.locationContainer} >
                             <LocationDirection 
                                 height={12}
                                 width={12}
                                 style={styles.locationIconStyle}
                             />
-                            <Text style={styles.locationText} >
+                            {/* <Text style={styles.locationText} >
                                 2km
-                            </Text>
+                            * @todo: In addition to returning the cehicle data, add the calculated distance from customer
+                            </Text> */}
                         </View>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={props.onPress} >
-                    <Text style={styles.amountStyle} >
-                        ${props?.hourly_rate}/hr
-                    </Text>
                 </TouchableOpacity>
             </Animated.View>
         )}

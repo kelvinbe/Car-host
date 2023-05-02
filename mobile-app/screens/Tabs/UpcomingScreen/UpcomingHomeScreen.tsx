@@ -47,6 +47,13 @@ const UpcomingHomeScreen = (props: Props) => {
       .unwrap()
       .then(result => {
         setLoading(false);
+        if(result.status === "ACTIVE"){
+          props.navigation.navigate('ReservationDetails', {
+            id: reservationId,
+            current: true,
+          });
+          return;
+        }
         props.navigation.navigate('VehicleInspection');
       })
       .catch(e => {

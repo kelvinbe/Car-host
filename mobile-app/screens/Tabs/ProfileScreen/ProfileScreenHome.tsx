@@ -202,6 +202,9 @@ const ProfileScreenHome = (props: Props) => {
   const goToPayments = () => {
     props.navigation.navigate('PaymentDetailsScreen');
   };
+  const goToLocation = () => {
+    props.navigation.navigate("UserLocation")
+  }
   const goToSettings = () => {
     props.navigation.navigate('ProfileSettingsScreen');
   };
@@ -284,6 +287,14 @@ const ProfileScreenHome = (props: Props) => {
                 onPress={goToPayments}>
                 <ListItem.Content style={styles.listItemContent}>
                   <ListItem.Title style={styles.listItemTitleStyle}>Payments</ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem
+                Component={TouchableOpacity}
+                containerStyle={styles.listItemContainerStyle}
+                onPress={goToLocation}>
+                <ListItem.Content style={styles.listItemContent}>
+                  <ListItem.Title style={styles.listItemTitleStyle}>Location</ListItem.Title>
                 </ListItem.Content>
               </ListItem>
               <ListItem

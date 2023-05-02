@@ -3,7 +3,7 @@ import axios from 'axios'
 import { isEmpty } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase/firebaseApp'
-import { selectBookingData, setAuthCode, setBillingInfo, setEndDateTime, setHostId, setStartDateTime, setStatus, setVehicle, clearBookingState, setPaymentType } from '../store/slices/bookingSlice'
+import { selectBookingData, setAuthCode, setBillingInfo, setEndDateTime, setHostId, setStartDateTime, setStatus, setVehicle, clearBookingState, setPaymentType, selectBookingPaymentAuthorization, setBookingPaymentAuthorization } from '../store/slices/bookingSlice'
 import { selectStripeCustomerId, selectUserProfile } from '../store/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../store/store'
 import { IPaymentMethod } from '../types'
@@ -24,6 +24,8 @@ function useBookingActions() {
     // Selectors
     const bookingDetails = useAppSelector(selectBookingData)
     const customerId = useAppSelector(selectStripeCustomerId)
+    const user = useAppSelector(selectUserProfile)
+    const booking_payment_authorization = useAppSelector(selectBookingPaymentAuthorization)
 
     //Actions
     const _setStatus = (status: any) => reduxDispatch(setStatus({status}))
@@ -35,7 +37,6 @@ function useBookingActions() {
     const _setBillingInfo = (billingInfo: IPaymentMethod<any>) => reduxDispatch(setBillingInfo({billingInfo}))
     const _clearBookingState = () => reduxDispatch(clearBookingState())
     const _setPaymentType = (paymentType: any) => reduxDispatch(setPaymentType(paymentType))
-    const user = useAppSelector(selectUserProfile)
 
 
     /**
@@ -44,20 +45,28 @@ function useBookingActions() {
      */
     const payWithStripe = async () => {
       const { vehicle, start_date_time, end_date_time } = bookingDetails
-      apiClient.post(PAYMENT_ENDPOINT, {
+      setLoading(true)
+      apiClient.post(`${PAYMENT_ENDPOINT}/stripe`, {
         amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
-        currency: user?.market?.currency ?? 'USD',
+        currency: vehicle?.host?.market?.currency ?? 'USD',
         payment_method: bookingDetails?.paymentType?.stripe_payment_method_id
       }).then(({data})=>{
-        initPaymentSheet({
+        return initPaymentSheet({
             paymentIntentClientSecret: data.client_secret,
             merchantDisplayName: "divvly",
             customerId: user?.customer_id ?? undefined,
             customerEphemeralKeySecret: data.ephemeralKey
         }).then(()=>{
-            presentPaymentSheet().then((rs)=>{
-                setLoading(false)
-                setPaymentOption(rs)
+            return presentPaymentSheet().then((rs)=>{
+              if(rs.error){
+                  setLoading(false)
+              }
+              setPaymentOption({
+                payment_method: 'stripe',
+              })
+              reduxDispatch(setBookingPaymentAuthorization(data?.authorization))
+              setLoading(false)
+                
             }).catch((e)=>{
               setLoading(false)
               setError(e)
@@ -102,8 +111,10 @@ function useBookingActions() {
       const { vehicle, start_date_time, end_date_time } = bookingDetails
       await apiClient.post(`${PAYMENT_ENDPOINT}/mpesa`, {
         amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
-      }).then(()=>{
+      }).then(({data})=>{
         setPaymentOption({payment_method: 'mpesa'})
+        // set the payment authorization code
+        reduxDispatch(setBookingPaymentAuthorization(data.authorization))
         toast({
           message: "Payment Successful",
           title: "Success",
@@ -121,6 +132,42 @@ function useBookingActions() {
       }).finally(()=>{
         setLoading(false)
       })
+    }
+
+    /**
+     * @name payWithMtn 
+     * @description - handle's mtn payments
+     */
+    const payWithMtn = async () => {
+      setLoading(true)
+      const { vehicle, start_date_time, end_date_time } = bookingDetails
+
+      await apiClient.post(`${PAYMENT_ENDPOINT}/payments/mtn`, {
+        amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+        vehicle_id: vehicle?.id,
+        payment_type_id: bookingDetails?.paymentType?.id
+      }).then(({data})=>{
+          setPaymentOption({payment_method: 'mtn'})
+          // set the payment authorization code 
+          reduxDispatch(setBookingPaymentAuthorization(data.authorization))
+          toast({
+            message: "Payment Successful",
+            title: "Success",
+            type: "success",
+            duration: 4000
+          })
+      }).catch((e)=>{   
+        setError(e)
+        toast({
+          message: "An error Occured",
+          title: "Error",
+          type: "error",
+          duration: 4000
+        })
+      }).finally(()=>{
+        setLoading(false)
+      })
+
     }
 
     /**
@@ -148,9 +195,8 @@ function useBookingActions() {
            */
           break;
         case 'MTN':
-          /**
-           * @todo - handle mtn payments
-           */
+          await payWithMtn()
+          break;
         default:
           return toast({
             message: "Please select a payment method before proceeding",
@@ -173,7 +219,8 @@ function useBookingActions() {
     setPaymentType: _setPaymentType,
     payForReservationError: error,
     payForReservationLoading: loading,
-    paymentOption
+    paymentOption,
+    booking_payment_authorization
   }
 }
 

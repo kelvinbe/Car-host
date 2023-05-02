@@ -35,7 +35,6 @@ const ManageResHomeScreen = (props: Props) => {
   const { data, isLoading, isError } = useGetReservationsQuery({
     status: "ACTIVE"
   })
-  console.log(data)
   const [loading, setLoading] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<boolean>(false)
 

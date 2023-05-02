@@ -19,6 +19,7 @@ import {
 } from '../store/slices/onBoardingSlice';
 import { selectStripeCustomerId } from '../store/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
+import { PaymentDetails } from '../types';
 
 function useOnBoarding() {
   
@@ -76,7 +77,7 @@ function useOnBoarding() {
    * @name setPaymentMethod
    * @description sets the payment method
    */
-  function _setPaymentMethod(paymentMethod: { type: string; card?: any }) {
+  function _setPaymentMethod(paymentMethod: { type: string; details?: Partial<PaymentDetails> | null}) {
     dispatch(setOnBoardingPaymentMethod(paymentMethod));
   }
   /**
@@ -91,29 +92,21 @@ function useOnBoarding() {
    * @name setCompleted
    * @description sets the completed object
    */
-  function _setCompleted(completed: any) {
-    /**
-     * based on which is completed send to the server
-     */
-    switch (completed) {
-      case completed.drivers_license:
-        updateDriverCredentials({ drivers_license: driversLicense });
-        break;
-      case completed.payment:
-        addPaymentMethod({
-          ...(paymentMethod?.card ?? {}),
-          type: paymentMethod?.type ?? 'card',
-          customer_id: customer_id,
-        });
-        break;
-      case completed.location:
-        updateProfile({
-          market_id: location.market_id,
-          sub_market_id: location.sub_market_id,
-        });
-        break;
-      default:
-        break;
+  function _setCompleted(completed: {
+    drivers_license?: boolean;
+    payment_method?: boolean;
+    location?: boolean;
+  }) {
+
+    if(completed?.drivers_license){
+      updateDriverCredentials({ drivers_license: driversLicense });
+    }else if(completed?.payment_method){
+      // this has been localized to the individual formas
+    }else if(completed?.location){
+      updateProfile({
+        market_id: location.market_id,
+        sub_market_id: location.sub_market_id,
+      });
     }
     dispatch(setOnBoarding(completed));
   }
