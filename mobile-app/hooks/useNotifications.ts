@@ -89,6 +89,7 @@ const updatePushToken = (token: string, retries: number): Promise<void> | undefi
           {
             headers: {
               Authorization: `Bearer ${jwt}`,
+              "ngrok-skip-browser-warning": "true"
             },
           }
         )

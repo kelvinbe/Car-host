@@ -37,3 +37,4 @@ next-env.d.ts
 
 # json mock data - You can now generate your own mock data
 mock/db.json
+mock/.env

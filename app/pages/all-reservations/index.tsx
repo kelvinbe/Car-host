@@ -57,7 +57,7 @@ function AllReservations() {
 
   if (!reservations) return null;
   return (
-    <Flex w="full" h="full" data-testid="reservations-table">
+    <Flex w="full" h="full" data-testid="all-reservations-table">
       <FilterableTable
         viewSearchField={true}
         viewSortablesField={true}

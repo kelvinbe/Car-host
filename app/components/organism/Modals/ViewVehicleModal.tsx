@@ -24,9 +24,9 @@ export default function ViewVehicleModal(props:Props) {
     <>
       <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-cy={'view-vehicle-modal'}>
         {selectedVehicle && <ModalHeader textAlign={'center'}>{selectedVehicle['make']} {selectedVehicle['model']}, {selectedVehicle['plate']}</ModalHeader>}
-          <ModalCloseButton />
+          <ModalCloseButton data-cy={'close-modal-button'}/>
           <ModalBody>
             {selectedVehicle && 
               <div>

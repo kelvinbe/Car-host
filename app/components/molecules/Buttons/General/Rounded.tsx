@@ -17,6 +17,7 @@ function Rounded(props: IProps) {
     const { children, loading, onClick, disabled, variant, fullWidth, rounded, setWidth} = props;
   return (
     <Button
+    data-cy={'rounded-btn'}
     w={fullWidth ? "full" : setWidth}
     _hover={{
         backgroundColor: variant === "solid" ? "primary.900" : "transparent",

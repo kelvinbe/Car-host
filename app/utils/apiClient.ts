@@ -5,7 +5,8 @@ import { isEmpty } from 'lodash'
 
 const apiClient = axios.create({
     headers: {
-        "x-user": "HOST" // its cumbersome to add this header everytime
+        "x-user": "HOST", // its cumbersome to add this header everytime
+        "ngrok-skip-browser-warning": "true"
     }
 })
 

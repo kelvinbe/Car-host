@@ -49,7 +49,8 @@ export default function useAuthCode(){
             }, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "x-user": "CUSTOMER"
+                    "x-user": "CUSTOMER",
+                    "ngrok-skip-browser-warning": "true"
                 }
             }).then(({data})=>{
                 toast({
@@ -99,7 +100,8 @@ export default function useAuthCode(){
             return await axios.get(AUTH_CODE_ENDPOINT, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "x-user": "CUSTOMER"
+                    "x-user": "CUSTOMER",
+                    "ngrok-skip-browser-warning": "true"
                 },
                 params: {
                     code

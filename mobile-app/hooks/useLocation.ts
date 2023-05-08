@@ -48,7 +48,11 @@ export default function useLocation(market_id?: string) {
             loading: true,
         }))
         // note the markets endpoint is public, so no need to pass the token
-        await axios.get(FETCH_MARKETS).then(({data})=>{
+        await axios.get(FETCH_MARKETS,{
+            headers: {
+                "ngrok-skip-browser-warning": "true"
+            }
+        }).then(({data})=>{
             setMarketsData((prev)=>({
                 ...prev,
                 loading: false,
@@ -75,6 +79,9 @@ export default function useLocation(market_id?: string) {
         await axios.get(FETCH_SUBMARKETS, {
             params: {
                 market_id: market_id
+            },
+            headers: {
+                "ngrok-skip-browser-warning": "true"
             }
         }).then(({data})=>{
             setSubMarkets((prev)=>({

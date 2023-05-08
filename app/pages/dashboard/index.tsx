@@ -166,6 +166,7 @@ export default function Dashboard() {
       gridTemplateRows={"1fr 1fr"}
       rowGap="30px"
       columnGap="30px"
+      data-cy="dashboard"
     >
       <GridItem h="full">
         <PreviewTableContainer
@@ -227,6 +228,7 @@ export default function Dashboard() {
                   align="center"
                   justify="center"
                   key={vehicleInfo.vehicleId}
+                  data-testid={'vehicle-image-container'}
                 >
                   <VehiclePic
                     image={vehicleInfo.vehiclePictures[0]}
@@ -241,7 +243,7 @@ export default function Dashboard() {
                     >
                       <Rounded variant="solid" rounded="full">
                         <Link href={"/vehicle-management"}>
-                          <Text cursor="pointer">Manage</Text>
+                          <Text cursor="pointer" data-cy={'redirect-vehicle-mgmt'}>Manage</Text>
                         </Link>
                       </Rounded>
                     </Box>
@@ -256,7 +258,7 @@ export default function Dashboard() {
         <LiveMapComponent marketId="someId" vehicles={exampleVehicles} />
       </GridItem>
       <GridItem>
-        <PreviewTableContainer title="Last 10 Payouts" link="/reservations">
+        <PreviewTableContainer title="Last 10 Payouts" link="/payouts">
           <BaseTable
             columns={PayoutsTableColumns}
             data={mockPayouts}

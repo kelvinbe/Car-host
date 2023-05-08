@@ -9,23 +9,20 @@ import { app } from '../../../firebase/firebaseApp'
 import { isEmpty } from 'lodash'
 import { useAppDispatch } from '../../../redux/store'
 import { fetchUser } from '../../../redux/userSlice'
+import apiClient from '../../../utils/apiClient'
 
 
 /**
  * @name requestForLoginToken
  */
 
-const requestForLoginToken = (data: {code: string, email: string}) => {
-    
-    return axios.get(`${USERS_DOMAIN}/admin/accept`, {
-    headers: {
-        "x-user": "HOST",
-    },
+const requestForLoginToken = async (data: {code: string, email: string}) => {
+    return apiClient.get(`${USERS_DOMAIN}/admin/accept`, {
     params: {
         code: data.code,
         email: data.email
     }
-}).then((res)=>res.data.data)}
+}).then((res)=>res.data)}
 
 function Admin() {
 

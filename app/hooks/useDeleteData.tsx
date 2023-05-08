@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
+import apiClient from "../utils/apiClient";
 
 export default function useDeleteData(url:string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
@@ -10,11 +11,7 @@ export default function useDeleteData(url:string, successTitle:string, successDe
 
   function deleteData(id: number){
     setLoading(true)
-    axios.delete(`${url}/${id}`, {
-        headers:{
-            Authorization: `Bearer token`,
-        }
-    })
+    apiClient.delete(`${url}/${id}`)
     .then((res)=>{
         fetchDataFunc()
         setLoading(false)

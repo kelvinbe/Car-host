@@ -4,7 +4,7 @@ import { Steps } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { updateOnboardingDetails, selectCompleted, selectOnBoardingError, selectOnBoardingLoading, fetchOnboardingDetails } from '../../redux/onboardingSlice'
-import { isUndefined } from 'lodash'
+import { isNull, isUndefined } from 'lodash'
 import { IUserProfile } from '../../globaltypes'
 import { GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/router'
@@ -59,8 +59,8 @@ function Onboarding() {
     }, [completed.location, completed.payout_method, completed.profile])
 
     
-    const checkIfStepComplete = (data?: Partial<IUserProfile>) => {
-        if (!isUndefined(data)) {
+    const checkIfStepComplete = (data?: Partial<IUserProfile> | null) => {
+        if (!isUndefined(data) && !isNull(data)) {
             dispatch(updateOnboardingDetails(data)).then(()=>{
                 setCurrentStep((prev)=>({
                     ...prev,

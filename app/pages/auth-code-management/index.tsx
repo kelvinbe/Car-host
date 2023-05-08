@@ -64,7 +64,8 @@ function AuthCodeManagement() {
         columns={!showRequestsTable? AuthCodeTableColumns : insertTableActions(RequestedAuthCodeTableColumns, (i, data) => {
           return (
             <Flex {...FlexRowCenterStart}>
-              <Rounded variant="solid" setWidth={200} rounded="md" onClick = {() => openCreateAuthCodeModal(data.authcode_id, data.user_id)}>
+              <Rounded variant="solid" setWidth={200} rounded="md" onClick = {() =>
+                openCreateAuthCodeModal(data.id, data.user_id)}>
                 <Text cursor="pointer">Create</Text>
               </Rounded>
             </Flex>

@@ -85,7 +85,7 @@ const { add_image, add_coordinates, add_name, add_sub_market_id, add_description
 interface Props {
     isOpen: boolean,
     onClose: () => void,
-    station?: IStation | null
+    station?: Partial<IStation> | null
 }
 export default function StationActionModal({ isOpen, onClose, station }: Props) {
     const [submissions, setSubmissions] = useState(0)
@@ -123,11 +123,11 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
     useEffect(() => {
         if (!isUndefined(station) && !isEmpty(station)) {
             console.log("Updating station  with", station)
-            updateImage(station.image)
+            updateImage(station?.image ?? "")
             updateName({ target: { value: station.name } } as ChangeEvent<HTMLInputElement>)
             updateSubMarket({ target: { value: station.sub_market_id } } as ChangeEvent<HTMLSelectElement>)
             updateDescription({ target: { value: station.description } } as ChangeEvent<HTMLTextAreaElement>)
-            updateCoordinates({ latitude: station.latitude, longitude: station.longitude })
+            updateCoordinates({ latitude: station?.latitude ?? 0, longitude: station?.longitude ?? 0 })
         }
     }, [station?.id])
 
@@ -137,7 +137,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
         /**
          * @todo pass in market id from the user's data {still has to be implemented}
          */
-        station && fetchSubmarkets(station.sub_market.market_id)
+        station && fetchSubmarkets(station?.sub_market?.market_id ?? "")
     }, [])
 
     const stationAction = () => {
@@ -195,8 +195,8 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
 
 
     return (
-        <ModalTemplate headerTitle="Create Station" isOpen={isOpen} onClose={onClose}>
-            <FormControl >
+        <ModalTemplate headerTitle={isUndefined(station) ? "Create Station" : "Update Station"} isOpen={isOpen} onClose={onClose}>
+            <FormControl data-cy="station-modal">
                 <FormErrorMessage fontSize={16} fontWeight={600} paddingLeft={6} marginBottom={5}>Ensure all fields are filled</FormErrorMessage>
                 <Flex {...FlexColCenterBetween}>
                     <FormControl w="100%" isRequired isInvalid={!isNameValid} flexDirection={'column'} marginBottom={5}>
@@ -223,14 +223,14 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
                             }
                         </Select>
                     </FormControl>
-                    <UploadImage onChange={updateImage} images={station ? [station?.image] : undefined} />
+                    <UploadImage onChange={updateImage} images={station ? [station?.image ?? ""] : undefined} />
                     <Flex w="full" h="400px" >
                         <ChooseLocation
                             key={station?.id}
                             onChange={updateCoordinates}
                             pin={station ? {
-                                lat: station?.latitude,
-                                lng: station?.longitude
+                                lat: station?.latitude ?? 0,
+                                lng: station?.longitude ?? 0
                             } : undefined}
                         />
                     </Flex>

@@ -33,7 +33,8 @@ export default function useDriversLicense(props: driversLicense) {
                 },
                 {
                     headers: {
-                        token: `Bearer ${token}`
+                        token: `Bearer ${token}`,
+                        "ngrok-skip-browser-warning": "true"
                     }
                 }    
 

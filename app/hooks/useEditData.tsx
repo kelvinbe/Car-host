@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
+import apiClient from "../utils/apiClient";
 
 export default function useEditData(url:string, id:number, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
@@ -14,15 +15,10 @@ export default function useEditData(url:string, id:number, successTitle:string, 
     if(isEmpty(updatedBody)) return setError({
         message:"body is empty"
     })
-    axios
+    apiClient
       .patch(
         `${url}/${id}`,
-        { ...updatedBody },
-        {
-          headers: {
-            Authorization: `Bearer token}`,
-          },
-        }
+        updatedBody
       )
       .then((res) => {
         fetchDataFunc();

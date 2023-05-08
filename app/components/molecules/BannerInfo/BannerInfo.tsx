@@ -75,7 +75,7 @@ const BannerInfo = (props: iProps) => {
           justifyContent={justifyContent}
           marginTop={marginTop}
         >
-          <VStack paddingTop="100px" align={align} spacing={spacing} position={vStackPosition} left={left}>
+          <VStack paddingTop="100px" align={align} spacing={spacing} position={vStackPosition} left={left} data-testid = 'banner-info'>
             <Text
               textTransform="uppercase"
               letterSpacing={letterSpacing}

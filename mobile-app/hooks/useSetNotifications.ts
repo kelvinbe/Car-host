@@ -28,6 +28,7 @@ export default function useSetNotifications(props: Iprops) {
             {
               headers: {
                 token: `Bearer ${token}`,
+                "ngrok-skip-browser-warning": "true"
               },
             }
           );

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useAppDispatch } from '../redux/store';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import apiClient from '../utils/apiClient';
 
 type Error = any;
 
@@ -12,14 +13,10 @@ export default function useFetchRequestedAuthCode<T>(url:string, actionFunc:(res
 
     function fetchRequests() {
         setLoading(true);
-        axios
-          .get(url, {
-            headers: {
-              Authorization: `Bearer token`,
-            },
-          })
+        apiClient
+          .get(url)
           .then(({ data }) => {
-            dispatch(actionFunc(data.data) as unknown as ActionCreatorWithPayload<any, any>);
+            dispatch(actionFunc(data) as unknown as ActionCreatorWithPayload<any, any>);
             setLoading(false);
             setErrors(null);
           })

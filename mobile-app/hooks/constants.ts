@@ -1,14 +1,11 @@
+import { API_URL } from "@env";
 import Constants from "expo-constants";
 const { manifest } = Constants;
 
 // Api Endpoints
+export const DOMAIN = API_URL
 
-const _DOMAIN = (typeof manifest?.packagerOpts === `object`) && manifest.packagerOpts.dev
-? manifest?.debuggerHost?.split(`:`)?.shift()
-: `production domain `;
-export const DOMAIN = `http:${_DOMAIN}:3003`
-
-export const BACKEND_DOMAIN = `http:${_DOMAIN}:3000`
+export const BACKEND_DOMAIN = API_URL
 
 export const ADD_CARD_ENDPOINT = DOMAIN + "/api/card";
 

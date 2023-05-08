@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config({
-  path: '.env',
+  path: 'mock/.env',
 });
 const { faker } = require('@faker-js/faker');
 const jsonServer = require('json-server');
@@ -10,10 +10,28 @@ const middlewares = jsonServer.defaults();
 const rewriter = jsonServer.rewriter(require('./routes.json'));
 const db = router.db
 server.use(middlewares);
+
+server.use(middlewares);
+server.all('*',(req: { method: string; }, res: { setHeader: (arg0: string, arg1: string) => void; sendStatus: (arg0: number) => void; }, next: () => void)=>{
+  if(req.method === "OPTIONS"){
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, X-Requested-With, Accept, x-user, x-payment-auth, ngrok-skip-browser-warning")
+    res.sendStatus(204)
+  }else{
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, X-Requested-With, Accept, x-user, x-payment-auth, ngrok-skip-browser-warning")
+    next()
+  }
+
+})
+
 server.use(jsonServer.bodyParser);
 server.use(rewriter);
 const jwt = require('jsonwebtoken');
 const { isEmpty } = require("lodash")
+import ngrok from 'ngrok';
 import Stripe from 'stripe'
 // @ts-ignore
 const stripe = new Stripe(process.env.STRIPE_TEST_SECRET_KEY,{
@@ -115,7 +133,7 @@ server.patch("/users", (req: { headers: { authorization: string; }; body: any; }
     res.json({
         data: db.get("users").find({uid}).value(),
         status: "success",
-        message: "Success"
+        message: "Successsss"
     })
 })
 
@@ -259,6 +277,30 @@ server.post("/payments/stripe", async (req: any, res: {
 })
 
 server.use(router);
+
+if(!process.env.NGROK_AUTH_TOKEN){
+  console.log(`
+      ❗❗ IMPORTANT ❗❗
+      You need to set the NGROK_AUTH_TOKEN environment variable if u are using code spaces if not 
+      ignore this message
+  `)
+}else{
+  ngrok.authtoken(process.env.NGROK_AUTH_TOKEN)
+  ngrok.connect(3003).then((url)=>{
+    console.log(`
+     ❗❗ IMPORTANT ❗❗
+      Running the mock server means you are in test mode:
+      
+      COPY THIS URL: ${url}
+      AND PASTE IT IN THE .env(the one in the root) file as the value for the **API_URL** variable
+      
+      the requests made by the client will not work if you don't do this
+  
+      ❗Don't commit the .env file to git
+    `)
+  })
+}
+
 server.listen(3003, () => {
   console.log('JSON Server is running on port 3003');
 });

@@ -101,6 +101,7 @@ function VehicleManagement() {
                 size="sm"
                 onClick={() => viewVehicle(data.vehicle_id)}
                 marginRight='4'
+                data-cy={'view-button'}
               />
               <IconButton
                 aria-label="Edit"
@@ -110,6 +111,7 @@ function VehicleManagement() {
                   openEditModal(data.vehicle_id)
                 }}
                 marginRight='4'
+                data-cy={'edit-button'}
               />
               <IconButton
                 aria-label="Delete"
@@ -119,6 +121,7 @@ function VehicleManagement() {
                   deleteVehicle(data.vehicle_id)
                 }}
                 color="cancelled.1000"
+                data-cy={'delete-button'}
               />
             </Flex>
           );

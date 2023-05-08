@@ -5,24 +5,21 @@ import { useToast } from '@chakra-ui/react';
 import { fetchUser } from '../redux/userSlice';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase/firebaseApp';
+import apiClient from '../utils/apiClient';
 
 export default function usePayoutMethods(){
-    const idToken = getAuth(app).currentUser?.getIdToken()
     const dispatch = useAppDispatch()
     const toast = useToast()
 
     async function deactivatePayout(id: string, updatedBody: object) {
       try {
-        const response = await axios.patch(PAYOUTMETHODS_API, 
-        {
-          headers: {
-            "Authorization":`Bearer ${idToken}`
-          },
-          params:{
-            id
-          },
-          updatedBody,
-        }
+        const response = await apiClient.patch(PAYOUTMETHODS_API, 
+          {
+            params:{
+              id
+            },
+            updatedBody,
+          }
         );
         dispatch(fetchUser())
         toast({

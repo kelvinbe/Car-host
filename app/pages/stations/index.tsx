@@ -13,7 +13,7 @@ import { useAppSelector } from "../../redux/store";
 import { useDisclosure } from "@chakra-ui/react";
 import useDeleteData from "../../hooks/useDeleteData";
 import { IStation } from "../../globaltypes";
-import { getStations } from "../../redux/stationSlice";
+import { getStations, useDeleteStationMutation, useGetStationsQuery } from "../../redux/stationSlice";
 import { selectStations } from "../../redux/stationSlice";
 import { StationTableColumns } from "../../utils/tables/TableTypes";
 import StationActionModal from "../../components/organism/Modals/StationActionModal"
@@ -46,18 +46,14 @@ const reducer = (state:IReducerState, action:{type:string, key:string, value:boo
 }
 
 function Stations() {
-  const {fetchData} = useFetchData(STATIONS_DOMAIN, getStations)
-  const StationsData = useAppSelector(selectStations)
-  const [selectedStation, setSelectedStation] = useState<IStation | null>(null)
+  const { data } = useGetStationsQuery(null)
+  console.log("Station data", data)
+  const [selectedStation, setSelectedStation] = useState<Partial<IStation> | null>(null)
   const {onClose, isOpen, onOpen} = useDisclosure()
   const [state,dispatch] = useReducer(reducer, initialState)
   
-  useEffect(() => {
-    fetchData()
-  }, [])
-  
-  const {deleteData} = useDeleteData(STATIONS_DOMAIN, 'Deleted Station', 'Station has been deleted successfully', 'An error occurred', 'Could not delete station',fetchData)
-
+  const [deleteStation] = useDeleteStationMutation()
+ 
   const showCreateStationModal = () => {
     dispatch({
       type:'toggle_modal_state',
@@ -72,7 +68,7 @@ function Stations() {
       key:"isViewModalOpen",
       value:true
     })
-    let station = StationsData.find(station => station.id === stationId)
+    let station = data?.find(station => station.id === stationId)
     station && setSelectedStation(station)
     station && onOpen()
   }
@@ -82,7 +78,7 @@ function Stations() {
       key:"isEditModalOpen",
       value:true
     })
-    let station = StationsData.find(station => station.id === stationId)
+    let station = data?.find(station => station.id === stationId)
     station && setSelectedStation(station)
     onOpen()
   }
@@ -142,6 +138,7 @@ function Stations() {
                 onClick={() => {
                   showViewStationModal(data.id)
                 }}
+                data-cy="view-button"
               />
               <IconButton
                 aria-label="Edit"
@@ -150,15 +147,17 @@ function Stations() {
                 onClick={() => {
                   showEditStationModal(data.id)
                 }}
+                data-cy="edit-button"
               />
               <IconButton
                 aria-label="Delete"
                 icon={<DeleteIcon />}
                 size="sm"
                 onClick={() => {
-                  deleteData(data.id)
+                  deleteStation(data.id)
                 }}
                 color="cancelled.1000"
+                data-cy="delete-button"
               />
             </Flex>
           );
@@ -166,7 +165,7 @@ function Stations() {
         pagination={{
           position: ["bottomCenter"],
         }}
-        data={StationsData ?? []}
+        data={data ?? []}
         dataFetchFunction={() => {}}
       />
     </Flex>

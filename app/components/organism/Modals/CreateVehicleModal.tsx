@@ -156,9 +156,9 @@ export default function CreateVehicleModal(props: Props) {
         <>
             <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='6xl' isCentered motionPreset="slideInBottom">
                 <ModalOverlay />
-                <ModalContent>
+                <ModalContent data-cy={'create-vehicle-modal'}>
                     <ModalHeader textAlign={'center'}>Create Vehicle</ModalHeader>
-                    <ModalCloseButton />
+                    <ModalCloseButton data-cy={'close-modal-button'}/>
                     <ModalBody>
                         <FormControl isInvalid={isError}>
                             <FormErrorMessage fontSize={16} fontWeight={600}>Ensure all fields are filled</FormErrorMessage>

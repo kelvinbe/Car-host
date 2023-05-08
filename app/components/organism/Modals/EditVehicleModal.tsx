@@ -88,9 +88,9 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
       <>
         <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent data-cy={'edit-vehicle-modal'}>
             <ModalHeader textAlign={'center'}>Edit vehicle details</ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton data-cy={'close-modal-button'}/>
             <ModalBody>
                 <Flex >
                     <Flex w={'100%'} flexWrap='wrap' flexDirection={"row"} justifyContent={'space-between'} h='100%'>

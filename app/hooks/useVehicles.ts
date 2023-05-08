@@ -6,6 +6,7 @@ import { useState } from "react";
 import { IVehicleDetails, IapiResponseData } from "../globaltypes";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
+import apiClient from "../utils/apiClient";
 
 export default function useVehicles(vehicleId?:number) {
   const dispatch = useAppDispatch();
@@ -17,14 +18,10 @@ export default function useVehicles(vehicleId?:number) {
 
   function fetchVehicles() {
     setLoading(true);
-    axios
-      .get(VEHICLES_DOMAIN, {
-        headers: {
-          Authorization: `Bearer token`,
-        },
-      })
+    apiClient
+      .get(VEHICLES_DOMAIN)
       .then(({ data }) => {
-        dispatch(getVehicles(data.data));
+        dispatch(getVehicles(data));
         setLoading(false);
         setError(null);
       })
@@ -36,15 +33,10 @@ export default function useVehicles(vehicleId?:number) {
     if(isEmpty(updatedBody)) return setError({
         message:"body is empty"
     })
-    axios
+    apiClient
       .patch(
         `${VEHICLES_DOMAIN}?vehicle_id=${vehicleId}`,
-        { ...updatedBody },
-        {
-          headers: {
-            Authorization: `Bearer token}`,
-          },
-        }
+        updatedBody
       )
       .then((res) => {
         fetchVehicles();
@@ -76,12 +68,7 @@ export default function useVehicles(vehicleId?:number) {
     if(isEmpty(vehicle)) return setError({
         message: "Vehicle data is empty"
     })
-    axios.post(VEHICLES_DOMAIN, {...vehicle},
-        {
-            headers: {
-                Authorization: `Bearer token`
-            }
-        })
+    apiClient.post(VEHICLES_DOMAIN, vehicle)
     .then((res)=>{
         fetchVehicles()
         setLoading(false)
@@ -108,9 +95,9 @@ export default function useVehicles(vehicleId?:number) {
   }
   function deleteVehicle(id: number){
     setLoading(true)
-    axios.delete(`${VEHICLES_DOMAIN}?vehicle_id=${id}`, {
-        headers:{
-            Authorization: `Bearer token`,
+    apiClient.delete(`${VEHICLES_DOMAIN}`, {
+        params: {
+          vehicle_id: id
         }
     })
     .then((res)=>{
@@ -147,7 +134,7 @@ export default function useVehicles(vehicleId?:number) {
     const { query, setApiData, loading } = params
     const url = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=${query}&facet=make&facet=model&facet=year`
     loading(true)
-    axios.get(url)
+    apiClient.get(url)
     .then((res)=>{
         setApiData(res)
     })

@@ -1,19 +1,91 @@
-import { Flex, IconButton, useDisclosure} from "@chakra-ui/react";
+import { Button, Divider, Flex, IconButton, Progress, Text, useDisclosure, useToast} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { PayoutsTableColumns } from "../../utils/tables/TableTypes";
-import { FlexColCenterStart, FlexRowStartStart } from "../../utils/theme/FlexConfigs";
+import { FlexColCenterStart, FlexColStartStart, FlexRowStartStart } from "../../utils/theme/FlexConfigs";
 import { PAYOUT_DOMAIN } from "../../hooks/constants";
 import { useFetchData } from "../../hooks";
-import { getPayouts,selectPayouts } from "../../redux/payoutSlice";
-import { useAppSelector } from "../../redux/store";
+import { getPayouts,initiatePayout,selectInitiatePayoutFeedback,selectPayouts } from "../../redux/payoutSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { insertTableActions } from "../../utils/tables/utils";
 import { ViewIcon } from "@chakra-ui/icons";
 import ViewPayoutModal from "../../components/organism/Modals/viewPayoutModal";
 import { IPayout } from "../../globaltypes";
+import { selectUser } from "../../redux/userSlice";
+
+
+
 
 
 function Payouts() {
+
+  const user = useAppSelector(selectUser) 
+  const toast = useToast({
+    position: 'top'
+  })
+  const initiatePayoutFeedback = useAppSelector(selectInitiatePayoutFeedback)
+
+  const dispatch = useAppDispatch()
+
+  const payout = async (type: "mpesa" | "mtn") => {
+    dispatch(initiatePayout(type)).unwrap().then(()=>{
+      toast({
+        title: "Success",
+        description: "Payouts initiated successfully",
+        colorScheme: 'green'
+      })
+    }).catch(()=>{
+      toast({
+        title: "Error",
+        description: "An error occured while initiating payouts",
+        colorScheme: 'red'
+      })
+    })
+  }
+
+  if( user?.is_admin) return (
+    <Flex w="full" h="full" {...FlexColCenterStart} experimental_spaceY={"10px"} >
+        <Text textAlign="left" fontWeight={"semibold"}  fontSize="2xl" w="full" >
+            Payouts
+        </Text>
+        <Divider/>
+
+        <Flex w="full" h="full"  >
+          <Flex {...FlexColStartStart} experimental_spaceY={"20px"} className="w-full" >
+            <Text fontSize={"xl"} fontWeight={"semibold"}  >
+              Initiate Payouts
+            </Text>
+            <Text fontSize={"md"} fontWeight={"semibold"} color="gray.500"  >
+              This will initialize monthly payouts for all eligible  hosts
+            </Text>
+            {
+              initiatePayoutFeedback?.loading && <Progress isIndeterminate w="full" colorScheme="primary.1000" />
+            }
+            <div className="grid w-full grid-cols-2 gap-x-2 gap-y-3">
+              <div className="flex w-full flex-row items-center justify-between ring-1 rounded-md px-5 py-2">
+                <Text fontSize={"md"} fontWeight={"semibold"} >
+                    M-PESA
+                </Text>
+                <Button onClick={()=>payout("mpesa")} colorScheme="green" size="sm" >
+                  Initiate
+                </Button>
+              </div>
+              <div className="flex w-full flex-row items-center justify-between ring-1 rounded-md px-5 py-2">
+                <Text fontSize={"md"} fontWeight={"semibold"} >
+                    MTN
+                </Text>
+                <Button onClick={()=>payout("mtn")} colorScheme="green" size="sm" >
+                  Initiate
+                </Button>
+              </div>
+            </div>
+          </Flex>
+        </Flex>
+    </Flex>
+  )
+
+
+
   const {fetchData} = useFetchData(PAYOUT_DOMAIN,getPayouts)
   const PayoutsData = useAppSelector(selectPayouts)
   const {isOpen, onClose, onOpen} = useDisclosure()
@@ -51,6 +123,7 @@ function Payouts() {
                 onClick={() => {
                   viewPayoutModal(data.payout_id)
                 }}
+                data-cy="view-button"
               />
             </Flex>
           );

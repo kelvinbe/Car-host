@@ -106,6 +106,7 @@ function FilterableTable(props: IProps) {
               w="350px"
               bgColor={"white"}
               marginRight={"10px"}
+              data-cy={'search-field'}
             >
               <Flex {...FlexRowCenterCenter} w="50px" bgColor={"white"}>
                 <SearchIcon />
@@ -120,7 +121,7 @@ function FilterableTable(props: IProps) {
           )}
         </Flex>
         {viewSortablesField && (
-          <Flex {...FlexRowCenterCenter}>
+          <Flex {...FlexRowCenterCenter} data-cy={'sort-by'}>
             <Text marginRight="20px" fontWeight={"semibold"}>
               Sort By:
             </Text>

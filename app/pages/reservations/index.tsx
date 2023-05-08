@@ -85,6 +85,7 @@ function Reservations() {
                 size="sm"
                 onClick={() => showViewReservationModal(data.reservationId)}
                 marginRight='4'
+                data-cy={'view-button'}
               />
               <IconButton
                 aria-label="Edit"
@@ -94,6 +95,7 @@ function Reservations() {
                   showEditReservationModal(data.reservationId)
                 }}
                 marginRight='4'
+                data-cy={'edit-button'}
               />
               <IconButton
                 aria-label="Delete"
@@ -103,6 +105,7 @@ function Reservations() {
                   deleteReservation(data.reservationId)
                 }}
                 color="cancelled.1000"
+                data-cy={'delete-button'}
               />
             </Flex>
           );

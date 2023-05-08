@@ -52,6 +52,7 @@ export default function useReserve(props: Reservation){
                     }, {
                         headers: {
                           token: `Bearer ${token}`,
+                          "ngrok-skip-browser-warning": "true"
                         },
                       });
                     setData(response.data);

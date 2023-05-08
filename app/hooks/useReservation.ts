@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { IReservation } from "../globaltypes";
+import apiClient from "../utils/apiClient";
 
 export default function useReservation(reservationId?: string | number, size?:number, page?:number) {
   const reservations = useAppSelector(selectReservations);
@@ -29,18 +30,15 @@ export default function useReservation(reservationId?: string | number, size?:nu
 
   function fetchReservations() {
     setLoading(true);
-    axios
+    apiClient
       .get(RESERVATION_DOMAIN, {
         params:{
           page,
           size
-        },
-        headers: {
-          Authorization: `Bearer token`,
-        },
+        }
       })
       .then(({ data }) => {
-        dispatch(getReservations(data.data));
+        dispatch(getReservations(data));
         setLoading(false);
         setErrors(null);
       })
@@ -57,7 +55,7 @@ export default function useReservation(reservationId?: string | number, size?:nu
         message: "body is empty",
       });
     setLoadingUpdate(true);
-    axios
+    apiClient
       .patch(
         `${RESERVATION_DOMAIN}?reservation_id=${reservationId}`,
         { ...updatedBody },
@@ -94,12 +92,8 @@ export default function useReservation(reservationId?: string | number, size?:nu
 
   function deleteReservation(id: number) {
     setLoadingRemove(true);
-    axios
-      .delete(`${RESERVATION_DOMAIN}?reservation_id=${id}`, {
-        headers: {
-          Authorization: `Bearer token`,
-        },
-      })
+    apiClient
+      .delete(`${RESERVATION_DOMAIN}?reservation_id=${id}`)
       .then((res) => {
         fetchReservations();
         setLoadingRemove(false);
@@ -131,19 +125,13 @@ export default function useReservation(reservationId?: string | number, size?:nu
       return setAddErrors({
         message: "Reservation data is empty",
       });
-    axios
+    apiClient
       .post(
         RESERVATION_DOMAIN,
-        { ...reservation },
-        {
-          headers: {
-            Authorization: `Bearer token`,
-          },
-        }
+        reservation
       )
       .then((res) => {
         fetchReservations();
-        console.log(res);
         setLoadingAdd(false);
         toast({
           position: "top",

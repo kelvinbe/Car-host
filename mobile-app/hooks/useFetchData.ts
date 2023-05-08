@@ -23,6 +23,7 @@ export default function useFetchData(){
                     const response = await axios.get( FETCH_DATA_ENDPOINT, {
                         headers: {
                           token: `Bearer ${token}`,
+                          "ngrok-skip-browser-warning": "true"
                         },
                       })
                     setData(response.data)

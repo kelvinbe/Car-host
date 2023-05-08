@@ -48,25 +48,17 @@ export const fetchOnboardingDetails = createAsyncThunk("onboarding/fetch", async
 
 export const setHandle = createAsyncThunk(
   "onboarding/setHandle",
-  (handle: string, { rejectWithValue, dispatch }) => {
-    return getAuth(app)
-      .currentUser?.getIdToken()
-      .then(async (token) => {
-        try {
-          const isHandleTaken = (
-            await axios.get(`${USERS_DOMAIN}?handle=${handle}`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "x-user": "HOST",
-              },
-            })
-          ).data.data;
-
-          return isHandleTaken;
-        } catch (e) {
-          rejectWithValue(e);
+  async (handle: string, { rejectWithValue, dispatch }) => {
+    try{
+      const isHandleTaken = (await apiClient.get(`${USERS_DOMAIN}`, {
+        params: {
+          handle,
         }
-      });
+      })).data
+      return isHandleTaken
+    }catch(e){
+      rejectWithValue(e)
+    }
   }
 );
 

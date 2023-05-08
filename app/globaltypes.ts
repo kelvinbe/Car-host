@@ -1,3 +1,5 @@
+import { tBankAccountPayoutSchema } from './components/organism/Forms/BankPayoutMethod';
+import { tMobileMoneyPayoutSchema } from './components/organism/Forms/MobileMoneyPayoutMethodForm';
 import { eIVehicle, eIReservation, eIPaymentType, eIMarket, eIIntergration } from './entities';
 // Static props
 
@@ -199,10 +201,25 @@ export interface PayoutMethods {
   connected_account_id: string|null,
   mobile_money_number:string|null,
   paypal_email:string|null,
-  type:'BANK_ACCOUNT' | 'MPESA' | 'PAYPAL',
+  type:'BANK_ACCOUNT' | 'MPESA' | 'PAYPAL'| 'MTN',
   verified:boolean,
   status: 'ACTIVE' | 'INACTIVE' | 'BLOCKED'
+  details: Partial<tBankAccountPayoutSchema> | Partial<tMobileMoneyPayoutSchema> // The db will just use a json object for this
 }
+
+
+export interface IUserSettings {
+  id:string,
+  user_id:string,
+  notifications_enabled:boolean,
+  /**
+   * this setting will be responsible for enabling/disabling tracking of the user | vehicle location 
+   * @todo - pending implementation on mobile app to support this setting from the host
+   */
+  tracking_enabled:boolean,
+}
+
+
 export interface IUserProfile {
   user_id:number // keeping this to keep ts happy where its been used this way, but this will eventually get phased out
   id: string;
@@ -221,15 +238,24 @@ export interface IUserProfile {
   customer_id?: string | null;
   sub_market_id: string | null;
   PayoutMethods:PayoutMethods[];
-  user_settings:{
-    id:string,
-    notifications_enabled:boolean,
-    sms_enabled:boolean,
-    tracking_enabled:boolean,
-    authcode_enabled:boolean
-  }
+  user_settings: Partial<IUserSettings>;
   is_admin: boolean | null;
   sent_invites: dIInvitation[] | null;
+  /**
+   * this will be a filled that will get recalculated everytime the user's profile is fetched
+   * @todo Add support for this in the backend
+   */
+  earnings: {
+    all_time: number;
+    /**
+     * The current month's earnings
+     */
+    month: number;
+  }
+  /**
+   * the user's market
+   */
+  market?: Partial<eIMarket> | null;
 }
 export interface IAuthCode {
   id: string;

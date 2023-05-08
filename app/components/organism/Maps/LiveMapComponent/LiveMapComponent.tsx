@@ -80,7 +80,7 @@ const Map = (props: IMapProps) => {
 
   return (
     <>
-      <div ref={ref} style={{ height: "100%", width: "100%" }} />
+      <div ref={ref} style={{ height: "100%", width: "100%" }}  data-cy={'live-map'}/>
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           // set the map prop on the child component

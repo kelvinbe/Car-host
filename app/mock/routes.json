@@ -37,6 +37,5 @@
     "/vehicles?search=:search": "/vehicles?q=:search",
     "/vehicles?station_id=:station_id": "/vehicles?station_id=:station_id",
     "/vehicles?sub_market_id=:sub_market_id": "/vehicles?station.sub_market_id=:sub_market_id",
-    "/vehicles?market_id=:market_id": "/vehicles?station.market.id=:market_id",
-    "/users/settings":"/users/settings"
+    "/vehicles?market_id=:market_id": "/vehicles?station.market.id=:market_id"
 }

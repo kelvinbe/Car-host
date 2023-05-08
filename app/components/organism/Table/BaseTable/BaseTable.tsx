@@ -39,8 +39,10 @@ function BaseTable(props: IProps<any>) {
             w="full"
             overflow="hidden"
             maxHeight='700px'
+            data-cy={'base-table-container'}
         >
             <Table
+            data-cy={'base-table'}
             key={JSON.stringify(columns)}
                 columns={columns}
                 dataSource={tableData}

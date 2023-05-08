@@ -30,6 +30,7 @@ export default function useEndReservation(id: string){
                     },
                     headers: {
                         token: `Bearer ${token}`,
+                        "ngrok-skip-browser-warning": "true"
                     },
                 });
                 setData(response.data);

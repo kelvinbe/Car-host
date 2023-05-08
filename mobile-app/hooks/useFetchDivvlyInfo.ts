@@ -20,6 +20,7 @@ export default function useFetchDivvlyInfo(endpointPath:string){
         return axios.get(endpointPath, {
             headers: {
                 token: `Bearer ${token}`,
+                "ngrok-skip-browser-warning": "true"
             },
         })
         .then((data) => {

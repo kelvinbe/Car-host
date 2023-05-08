@@ -82,11 +82,11 @@ export default function ReservationModal({ isOpen, onClose, toggleViewReservatio
       <Modal isOpen={isOpen} onClose={handleCloseModal} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign={'center'}>{toggleEditReservationModal ? "Edit Reservation" : "Reservation"}</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader data-cy={'modal-header'} textAlign={'center'}>{toggleEditReservationModal ? "Edit Reservation" : "Reservation"}</ModalHeader>
+          <ModalCloseButton data-cy={'close-modal-button'}/>
           <ModalBody>
             {toggleViewReservationModal && viewReservation.length !== 0 &&
-              <div>
+              <div data-cy={'view-reservation-modal'}>
                 <Text fontWeight={'bold'} marginBottom={15}>Reservation Number:{viewReservation?.[0]?.id}</Text>
                 <Text marginBottom={15}>Pickup time: {`${new Date(viewReservation[0]?.start_date_time)}`}</Text>
                 <Text marginBottom={15}>Drop-off time: {`${new Date(viewReservation?.[0]?.end_date_time)}`}</Text>
@@ -97,7 +97,7 @@ export default function ReservationModal({ isOpen, onClose, toggleViewReservatio
               </div>
             }
             {toggleEditReservationModal && 
-              <div>
+              <div data-cy={'edit-reservation-modal'}>
                 <Box>
                   <Text>Change your pickup time:</Text>
                   <Input
@@ -119,7 +119,7 @@ export default function ReservationModal({ isOpen, onClose, toggleViewReservatio
               </div>
             }
           </ModalBody>
-          {toggleEditReservationModal && <ModalFooter>
+          {toggleEditReservationModal && <ModalFooter data-cy={'modal-footer'}>
             <Rounded variant="outline" fullWidth rounded='full' onClick={handleEditReservation} >
               Edit
             </Rounded>

@@ -70,6 +70,7 @@ export const updateSettings = createAsyncThunk(
               headers: {
                 Authorization: `Bearer ${token}`,
                 'x-user': 'CUSTOMER',
+                "ngrok-skip-browser-warning": "true"
               },
             }
           )

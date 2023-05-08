@@ -285,6 +285,18 @@ const payout_methods_schema = (host_ids: [string]) => z.object({
     type: z.enum(['BANK_ACCOUNT', 'MPESA', 'PAYPAL']),
     verified: z.boolean(),
     status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
+    details: z.object({
+        account_number: z.string().min(1).max(15).refine((val) => !isNaN(Number(val)), { message: "Account number must be a number" }).optional(),
+        routing_number: z.string().length(5).refine((val) => !isNaN(Number(val)), { message: "Bank routing number must be a number" }).optional(),
+        id_number: z.string().min(1).max(30, "ID number must be a max of 30 digits").refine((val) => !isNaN(Number(val)), { message: "ID number must be a number" }).optional(),
+        id_type: z.enum(["passport", "drivers_licence", "national_id"]).optional(),
+        country: z.string().min(1).optional(),
+        city_state_province: z.string().min(1).optional(),
+        address: z.string().min(1).optional(),
+        phone_number: z.string().min(1).optional(),
+        provider: z.enum(["MTN", "MPESA"]).optional(),
+        type: z.enum(["MTN", "MPESA"]).optional()
+    })
 })
 
 const payout_methods = generateMock(payout_methods_schema(host_ids as [string]).array().length(20))
@@ -317,6 +329,10 @@ const all_data = {
                 sub_market: submarkets.find(s => s.id === user.sub_market_id),
                 sent_invites: invitations.filter(i => i.sender_id === user.id),
                 user_settings: settings.find(s => s.user_id === user.id),
+                earnings: {
+                    all_time: payouts.filter(p => p.user_id === user.id).reduce((acc, curr) => acc + curr.amount, 0),
+                    month: payouts.filter(p => p.user_id === user.id && p.date.getMonth() === new Date().getMonth()).reduce((acc, curr) => acc + curr.amount, 0),
+                }
             }
         }else {
             return {

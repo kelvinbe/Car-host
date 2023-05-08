@@ -4,6 +4,7 @@ import { RESOURCE_DATA_DOMAIN } from "./constants";
 import { getResources, selectedResources } from "../redux/resourceSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/store";
+import apiClient from "../utils/apiClient";
 
 export default function useResourceData(){
     const [loadingResources, setLoadingResources] =useState(false);
@@ -11,14 +12,10 @@ export default function useResourceData(){
     const dispatch = useDispatch()
     function fetchResources(){
         setLoadingResources(true)
-        axios.get(RESOURCE_DATA_DOMAIN, {
-            headers: {
-                Authorization: `Bearer token`
-            }
-        })
+        apiClient.get(RESOURCE_DATA_DOMAIN)
         .then(({data})=>{
             setLoadingResources(false)
-            dispatch(getResources(data.data))
+            dispatch(getResources(data))
         }).catch((e)=>{
             setLoadingResources(false)
         })

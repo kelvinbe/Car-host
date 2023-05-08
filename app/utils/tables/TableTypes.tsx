@@ -51,7 +51,7 @@ const GetVehicleDetails = ({vehicle_id}:IProps) => {
     <>
     <ViewVehicleModal isOpen={isOpen} onClose={onClose} vehicleId={vehicle_id} vehicles={vehicles}/>
     <Flex {...FlexColStartStart}>
-      <button onClick={onOpen}>
+      <button onClick={onOpen} data-cy={'view-requested-vehicle-button'}>
         <Text
           cursor="pointer"
           borderBottom="1px solid"
@@ -86,7 +86,7 @@ const GetCustomerDetails = ({user_id, profilePicUrl}:IUserProps) => {
   return (
     <>
       {userData && <ViewUserModal isOpen={isOpen} onClose={onClose} user={userData as unknown as IUserProfile} />}
-      <Flex {...FlexColStartStart} onClick={onOpen}>
+      <Flex {...FlexColStartStart} onClick={onOpen} data-cy={'view-customer-button'}>
         <Avatar
           src={profilePicUrl}
           size={'sm'}
@@ -265,7 +265,7 @@ export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
     title: "Link",
     dataIndex: "link",
     key: "link",
-    render: (v, { locationId }) => (
+    render: (v, { }) => (
       <Flex {...FlexColCenterCenter}>
         <IconButton
           rounded="full"
@@ -277,7 +277,7 @@ export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
     ),
   },
 ];
-export const StationTableColumns: ColumnsType<IStation> = [
+export const StationTableColumns: ColumnsType<Partial<IStation>> = [
   {
     title: "Station Image",
     dataIndex: "station_image",
@@ -299,7 +299,7 @@ export const StationTableColumns: ColumnsType<IStation> = [
         </Text>
       </Flex>
     ),
-    sorter: (a: IStation, b: IStation) => a.name.length - b.name.length,
+    sorter: (a: Partial<IStation>, b: Partial<IStation>) => (a?.name?.length ?? 0) - (b?.name?.length ?? 0),
     sortDirections: ["descend", "ascend"],
   },
   {
@@ -321,7 +321,7 @@ export const StationTableColumns: ColumnsType<IStation> = [
     render: (v, { sub_market }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {sub_market.name}
+          {sub_market?.name}
         </Text>
       </Flex>
     ),

@@ -4,6 +4,7 @@ import { app } from '../firebase/firebaseApp'
 import { DRIVER_CREDENTIALS_ENDPOINT} from "./constants";
 import { getAuth } from "firebase/auth";
 import useToast from "./useToast";
+import apiClient from "../utils/apiClient";
 
 
 
@@ -23,7 +24,7 @@ export default function useEditDriversLicense() {
     async function updateDriverCredentials( side: string, license: string ) {
         await getAuth(app)?.currentUser?.getIdToken().then(async (token)=>{
             setLoading(true)
-            await axios.put(DRIVER_CREDENTIALS_ENDPOINT, {
+            await apiClient.put(DRIVER_CREDENTIALS_ENDPOINT, {
                 [side]: license
             }).then(()=>{
                 setLoading(false);

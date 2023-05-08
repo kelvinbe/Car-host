@@ -46,6 +46,7 @@ function AllMapView() {
       gridTemplateRows={"400px 1fr"}
       rowGap="30px"
       columnGap="30px"
+      data-cy={'all-map-view-container'}
     >
       <GridItem colSpan={2}>
         <LiveMapComponent />

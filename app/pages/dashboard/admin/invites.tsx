@@ -100,18 +100,20 @@ function Invites() {
     }
 
   return (
-    <Grid w="100vw" h="100%" templateRows="200px 1fr" rowGap="20px" >
+    <Grid w="100vw" h="100%" templateRows="200px 1fr" rowGap="20px" data-cy={'invites-container'}>
         <GridItem w="100%"  >
-            <Flex {...FlexColStartStart}  >
+            <Flex {...FlexColStartStart} data-cy={'email-form-container'} >
                 <FormControl
                     isRequired
                     isInvalid={email.isInvalid}
+                    data-cy={'email-form'}
                 >
                     <FormLabel>
                         Email
                     </FormLabel>
                     <Input 
                         placeholder="Email"
+                        type='email'
                         rounded="full"
                         w="400px"
                         value={email.value}
@@ -121,7 +123,7 @@ function Invites() {
                     <FormHelperText>
                         The email to the user you want to invite.
                     </FormHelperText>
-                    <FormErrorMessage>
+                    <FormErrorMessage data-cy={'error-message'}>
                         Enter a valid email
                     </FormErrorMessage>
                 </FormControl>

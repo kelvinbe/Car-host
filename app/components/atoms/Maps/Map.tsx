@@ -65,7 +65,7 @@ const Map = (props: Props) => {
 
     return (
         <>
-            <div ref={ref} style={{ height: "100%", width: "100%" }} />
+            <div ref={ref} style={{ height: "100%", width: "100%" }} data-testid='map'/>
             {children && React.Children.map(children, (child) => {
                 if (React.isValidElement(child) && map) {
                     return React.cloneElement(child, { map: map } as {

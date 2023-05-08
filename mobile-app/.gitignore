@@ -15,3 +15,7 @@ web-build/
 
 # the db.json file
 mock/db.json
+
+# env files
+.env
+mock/.env

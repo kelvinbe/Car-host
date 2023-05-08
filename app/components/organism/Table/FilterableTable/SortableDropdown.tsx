@@ -77,7 +77,7 @@ function SortableDropdown( props: IProps ) {
     
   return (
     <Flex ref={optionsRef} {...FlexRowCenterCenter} marginLeft="20px"  position="relative" >
-        <Button onClick={toggleDropdown} justifyContent="space-between" display="flex" borderRadius="10px" alignItems="center" >
+        <Button onClick={toggleDropdown} justifyContent="space-between" display="flex" borderRadius="10px" alignItems="center" data-cy={'dropdown-button'}>
             <Text fontSize="14px" fontWeight={"500"}  >
                 {columnName} {sortOrder &&
                     sortOrder === "ascend" ? (
@@ -91,7 +91,7 @@ function SortableDropdown( props: IProps ) {
         </Button>
         {
             open ? (
-                <Flex  position="absolute" zIndex={"tooltip"} bottom="-120px" right="0px" padding="20px" {...FlexColStartStart} borderRadius={20} background="whiteAlpha.300" backdropFilter="auto" boxShadow={"0px 8px 18px rgba(0, 0, 0, 0.1)"} backdropBlur="15px"  >
+                <Flex  position="absolute" zIndex={"tooltip"} bottom="-120px" right="0px" padding="20px" {...FlexColStartStart} borderRadius={20} background="whiteAlpha.300" backdropFilter="auto" boxShadow={"0px 8px 18px rgba(0, 0, 0, 0.1)"} backdropBlur="15px"  data-cy={'dropdown'} >
                     <DropdownButton onClick={setAscending} icon={HiSortAscending} >
                         {columnName}(Ascending)
                     </DropdownButton>

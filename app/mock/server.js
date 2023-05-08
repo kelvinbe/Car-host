@@ -1,21 +1,45 @@
+const Stripe = require("stripe")
+const ngrok = require("ngrok")
+const cors = require('cors');
 const dotenv = require('dotenv');
 const admin = require('firebase-admin');
 const serviceAccount = require('./test-service-key.json');
 dotenv.config({
-  path: '.env',
+  path: 'mock/.env',
 });
 const { faker } = require('@faker-js/faker');
 const jsonServer = require('json-server');
 const server = jsonServer.create();
 const router = jsonServer.router('mock/db.json');
-const middlewares = jsonServer.defaults();
-const rewriter = jsonServer.rewriter(require('./routes.json'));
-const db = router.db
+
+const middlewares = jsonServer.defaults({
+  noCors: true
+});
+
+
 server.use(middlewares);
+server.all('*',(req, res, next)=>{
+  if(req.method === "OPTIONS"){
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, X-Requested-With, Accept, x-user, x-payment-auth, ngrok-skip-browser-warning")
+    res.sendStatus(204)
+  }else{
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin, X-Requested-With, Accept, x-user, x-payment-auth, ngrok-skip-browser-warning")
+    next()
+  }
+
+})
+
+const rewriter = jsonServer.rewriter(require('./routes.json'));
 server.use(rewriter);
+
+const db = router.db
+
 const jwt = require('jsonwebtoken');
 const { isEmpty } = require("lodash")
-const Stripe = require("stripe")
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY,{
   apiVersion: '2022-11-15',
@@ -72,7 +96,7 @@ server.get("/users", (req, res)=> {
       const uid = decoded.user_id;
 
       res.json({
-          data: db.get("users").value()[0],
+          data: db.get("users").value().filter(({user_type})=> user_type === "HOST")[0],
           status: "success",
           message: "Success"
       })
@@ -148,7 +172,7 @@ server.get("/users/onboarding", (req, res)=>{
       onboarding = {
         completed: {
           location: user.is_admin ? true : !isEmpty(user.sub_market_id) || !isEmpty(user.market_id),
-          payout_method: user.is_admin ? true : !isEmpty(user.PayoutMethods),
+          payout_method: true,//user.is_admin ? true : !isEmpty(user.PayoutMethods),
           profile: user.is_admin ? true : !isEmpty(user.fname) || !isEmpty(user.lname) || !isEmpty(user.handle),
         }
       }
@@ -203,6 +227,23 @@ server.post("/users/admin/invite", (req, res)=>{
   })
 })
 
+
+server.post("/payouts/mpesa", (req, res)=>{
+  return res.json({
+    data: null,
+    message: "PROCESSING",
+    status: "success"
+  })
+})
+
+server.post("/payouts/mtn", (req, res)=>{
+  return res.json({
+    data: null,
+    message: "PROCESSING",
+    status: "success"
+  })
+})
+
 server.post("/payouts", (req, res)=>{
   return stripe.accounts.create({
     country: 'US',
@@ -250,7 +291,41 @@ server.patch("/users/settings", (req, res)=>{
   })
 })
 
+server.put("/settings", (req, res)=>{
+  res.json({
+    data: "",
+    message: "Success",
+    status: "success"
+  })
+})
+
 server.use(router);
+
+if(!process.env.NGROK_AUTH_TOKEN){
+  console.log(`
+      ❗❗ IMPORTANT ❗❗
+      You need to set the NGROK_AUTH_TOKEN environment variable if u are using code spaces if not 
+      ignore this message
+  `)
+}else{
+  ngrok.authtoken(process.env.NGROK_AUTH_TOKEN)
+  ngrok.connect(4000).then((url)=>{
+    console.log(`
+     ❗❗ IMPORTANT ❗❗
+      Running the mock server means you are in test mode:
+      
+      COPY THIS URL: ${url}
+      AND PASTE IT IN THE .env(the one in the root) file as the value for the **NEXT_PUBLIC_API_DOMAIN** variable
+      
+      the requests made by the client will not work if you don't do this
+  
+      ❗Don't commit the .env file to git
+    `)
+  })
+}
+
+
+
 server.listen(4000, () => {
   console.log('JSON Server is running on port 4000');
 });

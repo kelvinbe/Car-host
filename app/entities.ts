@@ -103,8 +103,10 @@ export interface eIMarket {
     market_id?: number;
     country?: string;
     name?: string;
-    latitude?: string;
-    longitude?: string;
+    /**
+     * The market's currency e.g. USD, KES, etc.
+     */
+    currency?: string;
     status?: "Active" | "Nonactive";
 }
 

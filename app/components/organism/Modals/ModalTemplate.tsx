@@ -22,7 +22,7 @@ interface Props{
           <ModalOverlay />
           <ModalContent >
             <ModalHeader textAlign={'center'}>{headerTitle ?? ""}</ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton data-cy="close-modal-button"/>
             <ModalBody>
                 {children}
             </ModalBody>

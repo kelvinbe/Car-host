@@ -1,8 +1,14 @@
 export {}
-Cypress.Commands.add('login', ()=>{
+Cypress.Commands.add('loginAsHost', ()=>{
   cy.visit('http://localhost:3000');
-  cy.get('[type="email"]').type("fx@test.com")
-  cy.get('[type="password"]').type("123456")
+  cy.get('[type="email"]').type("jeff@email.com")
+  cy.get('[type="password"]').type("Password@123..")
+  cy.contains('Log In').click()
+})
+Cypress.Commands.add('loginAsAdmin', ()=>{
+  cy.visit('http://localhost:3000');
+  cy.get('[type="email"]').type("admin@email.com")
+  cy.get('[type="password"]').type("Password@123..")
   cy.contains('Log In').click()
 })
 

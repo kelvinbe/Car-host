@@ -12,7 +12,7 @@ export default function ViewUserModal({isOpen, onClose, user}:Props){
     return(
         <>
             <ModalTemplate isOpen={isOpen} onClose={onClose} headerTitle={`${user.fname} ${user.lname} - (${user.handle})`}>
-                <Box paddingBottom={5}>
+                <Box paddingBottom={5} data-cy={'view-customer-modal'}>
                     <Avatar
                         src={user.profile_pic_url}
                         size={'xl'}

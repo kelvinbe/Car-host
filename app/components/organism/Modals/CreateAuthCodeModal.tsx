@@ -55,7 +55,7 @@ export default function CreateAuthCodeModal({isOpen, onClose, authcodeId, showRe
                 <FormControl paddingBottom={'20px'}>
                     <FormLabel>AuthCode</FormLabel>
                         <Flex {...FlexRowCenterBetween} w={'100%'} h={'40px'} bgColor={"gray.100"} borderRadius={'5px'} marginBottom={'20px'} paddingX={'10px'}>
-                            {authcode}
+                            {authcode ? <p data-cy={'generated-authcode'}>{authcode}</p>: null}
                             <button onClick={generateAuthCode}>
                                 <Text
                                     cursor="pointer"

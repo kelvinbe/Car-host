@@ -3,8 +3,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAuth } from "firebase/auth";
 import { RootState } from ".";
 import { app } from "../firebase/firebaseApp";
-import { IUserProfile } from "../globaltypes";
-import { USERS_DOMAIN } from '../hooks/constants';
+import { IUserProfile, IUserSettings } from "../globaltypes";
+import { USERSETTINGS_API, USERS_DOMAIN } from '../hooks/constants';
 import apiClient from '../utils/apiClient';
 import { isNull } from 'lodash';
 
@@ -15,13 +15,17 @@ interface IReducer {
     user: IUserProfile | null,
     profileLoading: boolean,
     profileError: any
+    updateSettingsLoading: boolean,
+    updateSettingsError: string | null | AxiosError,
 }
 
 const initialState: IReducer = {
     users:users,
     user: null,
     profileLoading: false,
-    profileError: null
+    profileError: null,
+    updateSettingsLoading: false,
+    updateSettingsError: null,
 }
 
 /**
@@ -59,7 +63,8 @@ export const fetchUser = createAsyncThunk('user/fetchProfile', (undefined, {reje
             const result = await axios.get(USERS_DOMAIN, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "x-user": "HOST"
+                    "x-user": "HOST",
+                    "ngrok-skip-browser-warning": "true"
                 }
             })
 
@@ -69,6 +74,22 @@ export const fetchUser = createAsyncThunk('user/fetchProfile', (undefined, {reje
             return rejectWithValue(e)
         }
     }).catch(rejectWithValue)
+})
+
+/**
+ * @name UpdateUserSettings 
+ * @description updates the user settings
+ */
+export const updateUserSettings = createAsyncThunk('user/updateSettings', async (settings: Partial<IUserSettings>, {rejectWithValue, dispatch})=>{
+    try {
+        const user = getAuth(app).currentUser
+        if (isNull(user)) return rejectWithValue("Not logged in") 
+        const result = await apiClient.put(`${USERSETTINGS_API}`, settings)
+        await dispatch(fetchUser())
+        return result.data
+    } catch (e) {
+        return rejectWithValue(e)
+    }
 })
 
 const userSlice = createSlice({
@@ -91,6 +112,18 @@ const userSlice = createSlice({
             state.profileLoading = false
             state.profileError = action.payload
         })
+        builder.addCase(updateUserSettings.pending, (state, action)=>{
+            state.updateSettingsLoading = true
+            state.updateSettingsError = null
+        })
+        builder.addCase(updateUserSettings.fulfilled, (state, action)=>{
+            state.updateSettingsLoading = false
+            state.updateSettingsError = null
+        })
+        builder.addCase(updateUserSettings.rejected, (state, action)=>{
+            state.updateSettingsLoading = false
+            state.updateSettingsError = action.error.message ?? "Error updating settings"
+        })
     }
 })
 
@@ -98,3 +131,9 @@ export const selectUsers = (state: RootState)=>state.users.users
 export const selectUser = (state: RootState)=>state.users.user
 export const { getUsers } = userSlice.actions;
 export default userSlice.reducer;
+
+
+export const selectUpdateUserSettingsFeedback = (state: RootState)=>({
+    loading: state.users.updateSettingsLoading,
+    error: state.users.updateSettingsError
+})

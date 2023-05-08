@@ -3,6 +3,7 @@ import { app } from "../firebase/firebaseApp"
 import { MARKETS_API, SUBMARKETS_API } from "./constants"
 import axios from "axios"
 import { useState } from "react"
+import apiClient from "../utils/apiClient"
 
 type dataState = {
     error: any | null,
@@ -35,17 +36,11 @@ const useLocation = () => {
             loading: true
         }))
         try {
-            const idToken = await getAuth(app).currentUser?.getIdToken()
-            const response = await axios.get(MARKETS_API, {
-                headers: {
-                    "Authorization": `Bearer ${idToken}`,
-                    "x-user": "HOST"
-                }
-            })
+            const response = (await apiClient.get(MARKETS_API)).data
             setMarkets((prev)=>({
                 ...prev,
                 loading: false,
-                data: response.data.data
+                data: response
             }))
 
         } catch (e) {
@@ -64,17 +59,15 @@ const useLocation = () => {
     const fetchSubmarkets = async (market_id: string) => {
 
         try {
-            const idToken = await getAuth(app).currentUser?.getIdToken()
-            const response = await axios.get(`${SUBMARKETS_API}?market_id=${market_id}`, {
-                headers: {
-                    "Authorization": `Bearer ${idToken}`,
-                    "x-user": "HOST"
+            const response = (await apiClient.get(`${SUBMARKETS_API}`, {
+                params: {
+                    market_id: market_id
                 }
-            })
+            })).data
             setSubmarkets((prev)=>({
                 ...prev,
                 loading: false,
-                data: response.data.data
+                data: response
             }))
         } catch (e) {
             setSubmarkets((prev)=>({

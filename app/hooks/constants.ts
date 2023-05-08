@@ -1,8 +1,6 @@
 // ---------------------------------- Endpoints ---------------------------------- //
-const DEV_DOMAIN = `http://localhost:4000/api`
-const PROD_DOMAIN = `http://localhost:3000`
 
-const DOMAIN = process.env.NODE_ENV === "production" ? PROD_DOMAIN : DEV_DOMAIN
+const DOMAIN = `${process.env.NEXT_PUBLIC_API_DOMAIN as string}/api` 
 export const RESERVATION_DOMAIN = `${DOMAIN}/reservations`
 export const EVENT_DATA_DOMAIN = `${DOMAIN}/reservations/calendar`
 export const RESOURCE_DATA_DOMAIN = `${DOMAIN}/reservations/calendar/resources`
@@ -19,7 +17,7 @@ export const STATIONS_DOMAIN = `${DOMAIN}/stations`
  * @name STATIONS_API
  * @description - all station related endpoints are accessible through this api route
  */
-export const STATIONS_API = `${DOMAIN}/location/station`
+export const STATIONS_API = `${DOMAIN}/location/stations`
 
 /**
  * @name SUBMARKETS_API
@@ -44,7 +42,7 @@ export const PAYOUTMETHODS_API = `${DOMAIN}/payouts`
  * @name USERSETTINGS_API
  * @description - all user settings related endpoints are accessible through this api route
  */
-export const USERSETTINGS_API = `${DOMAIN}/users/settings`
+export const USERSETTINGS_API = `${DOMAIN}/settings`
 
 
 

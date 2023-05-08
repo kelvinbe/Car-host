@@ -23,9 +23,9 @@ export default function ViewPayoutModal(props:Props) {
     <>
       <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent data-cy={'payout-modal'}>
         <ModalHeader textAlign={'center'}>Payout details</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton data-cy={'close-modal-button'}/>
           <ModalBody>
             <Text marginBottom={5}>Payout Date: {dayjs(payout?.date).format()}</Text>
             <Text marginBottom={5}>Amount paid: ${payout['amount']}</Text>

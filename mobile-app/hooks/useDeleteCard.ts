@@ -19,6 +19,7 @@ export default function useDeleteCard() {
         const response = await axios.delete(DELETE_CARD_ENDPOINT, {
           headers: {
             token: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true"
           },
           params: {
             card_id: cardNum

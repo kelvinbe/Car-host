@@ -29,6 +29,7 @@ export default function useSearchHost(props: SearchHost){
                     const response = await axios.get(SEARCH_BY_HOST_ENDPOINT,{
                         headers: {
                           token: `Bearer ${token}`,
+                          "ngrok-skip-browser-warning": "true"
                         },
                         params: {
                             host_id: hostId

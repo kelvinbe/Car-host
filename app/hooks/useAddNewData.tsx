@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
+import apiClient from "../utils/apiClient";
 
 export default function useAddNewData(url:string, fetchDataFunc: () => void, showToast?:boolean, successTitle?:string, successDescription?:string, errorTitle?:string, errorDescription?:string) {
   const toast = useToast()
@@ -14,12 +15,7 @@ export default function useAddNewData(url:string, fetchDataFunc: () => void, sho
     if(isEmpty(data)) return setError({
         message: "data is empty"
     })
-    axios.post(url, {...data},
-        {
-            headers: {
-                Authorization: `Bearer token`
-            }
-        })
+    apiClient.post(url, data)
     .then((res)=>{
         fetchDataFunc()
         setLoading(false)

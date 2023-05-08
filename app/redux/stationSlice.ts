@@ -10,10 +10,11 @@ import { app } from "../firebase/firebaseApp";
 export const stationsApi = createApi({
     reducerPath: 'stationsApi',
     baseQuery: fetchBaseQuery({
-        prepareHeaders: (headers, {getState}) => {
-            getAuth(app).currentUser?.getIdToken().then((token)=>{
+        prepareHeaders: async (headers, {getState}) => {
+            await getAuth(app).currentUser?.getIdToken().then((token)=>{
                 headers.set('Authorization', `Bearer ${token}`)
                 headers.set('x-user', 'HOST')
+                headers.set("ngrok-skip-browser-warning", "true")
             }).catch((e)=>{
                 console.log(e)
                 /**
@@ -38,17 +39,30 @@ export const stationsApi = createApi({
                 body: data
             })
         }),
-        getStations: builder.query<any, any>({
-            query: (body) => ({
+        getStations: builder.query<Array<Partial<IStation>>, any>({
+            query: () => ({
                 url: STATIONS_API,
-                method: http_methods.get,
-                body: body
-            })
+                method: http_methods.get
+            }),
+            transformResponse: (response: any)=>{
+                return response.data
+            }
+        }),
+        deleteStation: builder.mutation<any, any>({
+            query: (id: string)=>{
+                return {
+                    url: STATIONS_API,
+                    method: http_methods.delete,
+                    params: {
+                        station_id: id
+                    },
+                }
+            }
         })
     })
 })
 
-export const { useAddStationMutation, useUpdateStationMutation, useGetStationsQuery } = stationsApi
+export const { useAddStationMutation, useUpdateStationMutation, useGetStationsQuery, useDeleteStationMutation } = stationsApi
 
 
 const stations:IStation[] = []

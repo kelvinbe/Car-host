@@ -26,6 +26,7 @@ export default function useSearchLocally(props: SearchLocally){
                     const response = await axios.get(SEARCH_LOCALLY_ENDPOINT, {
                         headers: {
                           token: `Bearer ${token}`,
+                          "ngrok-skip-browser-warning": "true"
                         },
                         params: {
                             market_id: marketId
