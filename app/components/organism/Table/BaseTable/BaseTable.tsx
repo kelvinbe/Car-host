@@ -9,50 +9,48 @@ import AntdProvider from '../../../providers/AntdProvider';
 interface IProps<dT> {
     columns: ColumnsType<dT>,
     data: dT[],
-    dataFetchFunction?: ( fetchStatus: "pending" | "error" | "success" ) => void,
+    dataFetchFunction?: (fetchStatus: "pending" | "error" | "success") => void,
     pagination?: TablePaginationConfig | false;
+    handlePageChange?: (pagination: TablePaginationConfig) => void
 
 }
 
 function BaseTable(props: IProps<any>) {
     const [tableData, setTableData] = React.useState<any[]>([])
-    const { columns, data, dataFetchFunction } = props
+    const { columns, data, dataFetchFunction, handlePageChange } = props
 
-    useEffect(()=>{
-        console.log("Columns:::::", columns)
-    }, [columns])
-
-    useEffect(()=>{
-        if(!isUndefined(data)){
+    useEffect(() => {
+        if (!isUndefined(data)) {
             setTableData(data)
             dataFetchFunction && dataFetchFunction("success")
         }
     }, [data])
 
+    return (
+        <AntdProvider>
+            <Flex
+                borderRadius="20px"
+                border="1px solid"
+                borderColor="gray.300"
+                w="full"
+                overflow="hidden"
+                maxHeight='700px'
+                data-cy={'base-table-container'}
+                data-testid='base-table'
+            >
+                <Table
+                    data-cy={'base-table'}
+                    key={JSON.stringify(columns)}
+                    columns={columns}
+                    dataSource={tableData}
+                    className="w-full h-full overflow-scroll"
+                    pagination={props.pagination ? props.pagination : false}
+                    onChange={handlePageChange}
+                />
+            </Flex>
+        </AntdProvider>
 
-  return (
-    <AntdProvider>
-        <Flex
-            borderRadius="20px"
-            border="1px solid"
-            borderColor="gray.300" 
-            w="full"
-            overflow="hidden"
-            maxHeight='700px'
-            data-cy={'base-table-container'}
-        >
-            <Table
-            data-cy={'base-table'}
-            key={JSON.stringify(columns)}
-                columns={columns}
-                dataSource={tableData}
-                className="w-full h-full overflow-scroll"
-                pagination={props.pagination ? props.pagination : false }
-            />
-        </Flex>
-    </AntdProvider>
-    
-  )
+    )
 }
 
 export default BaseTable

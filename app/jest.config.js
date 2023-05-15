@@ -15,9 +15,11 @@ const customJestConfig = {
     coverageDirectory: "coverage",
     testEnvironment: 'jest-environment-jsdom',
     setupFilesAfterEnv: ["<rootDir>/jest/jest.setup.ts"],
+    testPathIgnorePatterns: ["src/firebase", "dist/src/firebase"],
     moduleNameMapper: {
         "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/jest/mock/empty.js",
-        "\\.(css|less|scss)$": "<rootDir>/jest/mock/style.js"
+        "\\.(css|less|scss)$": "<rootDir>/jest/mock/style.js",
+        '^firebase(?!App)(/.*)?$': '<rootDir>/jest/mock/firebase.js'
     }
 }
 

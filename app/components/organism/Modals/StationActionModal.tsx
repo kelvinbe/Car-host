@@ -234,7 +234,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
                             } : undefined}
                         />
                     </Flex>
-                    <Flex w='100%' {...FlexRowCenterCenter} padding="10px" >
+                    <Flex w='100%' {...FlexRowCenterCenter} padding="10px">
                         <Rounded variant='solid' rounded='full' setWidth="80%"
                             disabled={
                                 !isNameValid ||

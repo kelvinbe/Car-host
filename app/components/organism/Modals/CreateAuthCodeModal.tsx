@@ -70,7 +70,7 @@ export default function CreateAuthCodeModal({isOpen, onClose, authcodeId, showRe
                             </button> 
                         </Flex>
                         <Rounded variant="solid" fullWidth rounded="full" onClick = {handleCreateAuthcode}>
-                            <Text cursor="pointer">Create</Text>
+                            <Text cursor="pointer" data-testid='authcode'>Create</Text>
                         </Rounded>
                 </FormControl>
             </ModalTemplate>

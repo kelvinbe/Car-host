@@ -8,17 +8,31 @@
     "notification": {
       "icon": "./assets/images/icon.png"
     },
-    "scheme": "myapp",
+    "scheme": "divvly",
     "userInterfaceStyle": "automatic",
     "plugins": [
       "expo-apple-authentication",
       "@logrocket/react-native",
-       [
+      [
         "expo-image-picker",
         {
           "photosPermission": "Divvly uses yor photos for profile verification."
         }
-       ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 33
+          }
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationPermission": "Divvly uses your location, to track host vehicles."
+        }
+      ]
     ],
     "splash": {
       "image": "./assets/images/splash.png",
@@ -47,7 +61,8 @@
           "apiKey": "AIzaSyCs3fxia_UXztnwT9WJ-gnOGB30MGXF5_U"
         }
       },
-      "package": "com.niebex.divvly"
+      "package": "com.niebex.divvly",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

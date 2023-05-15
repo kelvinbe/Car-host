@@ -109,7 +109,7 @@ const OnBoardinLocation = (props: StepProps) => {
             </Grid>
             <Flex {...FlexRowCenterBetween} w="full" >
                 <Flex w="full" {...FlexRowCenterBetween} >
-                    <Button
+                    <Button  data-testid='back'
                         onClick={onBack}
                     >
                         Back
@@ -117,6 +117,7 @@ const OnBoardinLocation = (props: StepProps) => {
                     <Button
                         disabled={isEmpty(marketId) || isEmpty(submarketId)}
                         onClick={handleContinue}
+                        data-testid='continue'
                     >
                         Continue
                     </Button>

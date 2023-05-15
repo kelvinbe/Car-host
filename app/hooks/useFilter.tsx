@@ -5,14 +5,14 @@ import { useAppSelector } from '../redux/store'
 
 function useFilter(reservationId:string|number) {
   const reservations = useAppSelector(selectReservations)
-  const [viewReservation, setViewReservation] = useState<IReservation[]>([])
-  const [editReservation, setEditReservation] = useState<IReservation[]>([])
+  const [viewReservation, setViewReservation] = useState<IReservation>()
+  const [editReservation, setEditReservation] = useState<IReservation>()
 
   useEffect(() => {
-    let reservationToView = reservations.filter(reservation => reservation.id === reservationId)
-    let reservationToEdit = reservations.filter(reservation => reservation.id === reservationId)
-    setViewReservation(reservationToView)
-    setEditReservation(reservationToEdit)
+    let reservationToView = reservations.find(reservation => reservation.id === reservationId)
+    let reservationToEdit = reservations.find(reservation => reservation.id === reservationId)
+    reservationToView && setViewReservation(reservationToView)
+    reservationToEdit && setEditReservation(reservationToEdit)
   },[reservations, reservationId])
 
   return{

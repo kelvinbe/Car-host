@@ -98,14 +98,14 @@ function useAppAuth() {
                 dispatchAction(setSignInError(e.message))
                 toast({
                     title: "Error",
-                    description: "Invalid Credentials",
+                    description: "Password or email are incorrect",
                     status: "error",
                 })
             })
         }).catch((e)=>{
             toast({
                 title: "Error",
-                description: "Invalid credentials",
+                description: "Password or email cannot be empty",
                 status: "error",
             })
             dispatchAction(setSignInError(e.message))

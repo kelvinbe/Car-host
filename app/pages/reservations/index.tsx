@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Flex, IconButton } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { ColumnsType } from "antd/es/table";
+import { TablePaginationConfig } from "antd/es/table";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import ReservationModal from "../../components/organism/Modals/ReservationModal";
 import {useDisclosure} from '@chakra-ui/react'
@@ -29,17 +29,20 @@ export interface DataType {
 function Reservations() {
   const dispatch = useAppDispatch()
   const {isOpen, onClose, onOpen} = useDisclosure()
-  const reservations = useAppSelector(selectReservations)
-  const {fetchReservations, deleteReservation} = useReservation()
+  const [currentPage, setCurrentPage] = useState(1)
   const [toggleViewReservationModal, setToggleViewReservationModal] = useState(false)
   const [toggleEditReservationModal, setToggleEditReservationModal] = useState(false)
   const [reservationData, setReservationData] = useState<DataType[]>([])
   const [reservationId, setReservationId] = useState<null|number|string>(null)
+  const [search, setSearch] = useState<string>('')
+
+  const reservations = useAppSelector(selectReservations)
+  const {fetchReservations, deleteReservation} = useReservation(undefined, 10, currentPage)
 
   useEffect(() => {
     fetchReservations()
-  },[])
-
+  },[currentPage])
+  
   useEffect(()=>{
     setReservationData(()=>reservations.map((reservation)=>({
       reservationId: reservation?.id,
@@ -47,12 +50,18 @@ function Reservations() {
       vehicleName:`${reservation?.vehicle?.make} ${reservation?.vehicle?.model}`,
       startEndTime:`${dayjs(reservation?.start_date_time).format("DD/MM/YYYY h:mm A")} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
       totalCost:reservation?.payment?.amount,
-      hostName:reservation?.vehicle?.host?.handle,
+      hostName:`${reservation?.vehicle?.host?.fname} ${reservation?.vehicle?.host?.lname}`,
       location:reservation?.vehicle?.station?.name,
       status:lowerCase(reservation?.status),
     })))
   }, [reservations])
   
+  const filteredReservationData = reservationData.filter((reservation)=>(
+    reservation.vehiclePlate.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+    reservation.hostName.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+    reservation.location.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
+    reservation.vehicleName.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+  ))
  
   const changeStateViewModal = () => {
     setToggleViewReservationModal(!toggleViewReservationModal)
@@ -70,6 +79,12 @@ function Reservations() {
     changeStateEditModal()
     setReservationId(id)
   }
+
+  const handlePageChange=(pagination: TablePaginationConfig)=>{
+    pagination.current && setCurrentPage(pagination.current)
+    console.log(currentPage)
+  }
+
   return (
     <Flex w="full" h="full" data-testid="reservations-table">
       <ReservationModal isOpen={isOpen} onClose={onClose} toggleViewReservationModal = {toggleViewReservationModal} changeStateViewModal = {changeStateViewModal} toggleEditReservationModal = {toggleEditReservationModal} changeStateEditModal = {changeStateEditModal} reservationId={reservationId}/>
@@ -113,7 +128,9 @@ function Reservations() {
         pagination={{
           position: ["bottomCenter"],
         }}
-        data={reservationData}
+        handlePageChange= {handlePageChange}
+        data={filteredReservationData}
+        setSearch={setSearch}
         sortables={[
           {
             columnKey: "totalCost",

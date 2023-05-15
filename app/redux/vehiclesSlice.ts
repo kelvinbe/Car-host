@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
-import { IVehicleDetails } from "../globaltypes";
+import { IVehicle } from "../globaltypes";
 
-const vehicles:IVehicleDetails[] = []
+const vehicles:IVehicle[] = []
 const vehiclesSlice = createSlice({
     name: 'vehicles',
     initialState: {

@@ -221,7 +221,7 @@ const ApiVehicleDetails = (props: Props) => {
                     ? <Flex align="center" justifyContent="center" padding="10px"><Spinner /></Flex>
                     : apiData?.length !== 0
                     ? (<Box>
-                        <Select placeholder='Select your vehicle from the list below' onChange={(e)=>onVehicleSelect(e.target.value)}>
+                        <Select placeholder='Select your vehicle from the list below' onChange={(e)=>onVehicleSelect(e.target.value)} data-cy='vehicle-select'>
                             {apiData?.map((vehicle, index)=>{
                                 const { make, model, year, transmission } = vehicle
                                 return(

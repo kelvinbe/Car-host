@@ -17,7 +17,7 @@ function Profile() {
     const {onOpen, onClose, isOpen} = useDisclosure()
     const [loading, setLoading] = useState(false)
     const toast = useToast()
-    const {editUserProfile} = useUsers()
+    const {editUserProfile } = useUsers()
     
     const editProfileImage = (e:React.FormEvent) => {
         const fileList = (e.target as HTMLInputElement).files
@@ -26,7 +26,7 @@ function Profile() {
         fileListArray?.map(file => {
             const bloburl = URL.createObjectURL(file)
             return uploadToFirebase(bloburl, file.name, file.type ).then((url)=>{
-                user && editUserProfile(user?.id, {
+                user && editUserProfile({
                     ...user,
                     profile_pic_url: url
                 })

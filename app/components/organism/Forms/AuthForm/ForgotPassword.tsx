@@ -6,19 +6,46 @@ import ValidityCheck from '../../../atoms/Feedback/ValidityCheck/ValidityCheck'
 import Rounded from '../../../molecules/Buttons/General/Rounded'
 import WithHelperText from '../../../molecules/Input/WithHelperText/WithHelperText'
 import CreatePassword from '../CreatePassword/CreatePassword'
+import {getAuth, sendPasswordResetEmail} from 'firebase/auth'
+import { useToast } from '@chakra-ui/react'
+
 
 function ForgotPassword() {
     const [step, setStep] = useState<number>(0)
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [isEmailValid, setIsEmailValid] = useState<boolean>(false)
+    const auth = getAuth()
+    const toast = useToast()
 
     useEffect(()=>{
         setIsEmailValid(email.includes("@") && email.includes("."))
     }, [email])
 
     const submitEmail = () =>{
-        setStep(1)
+        sendPasswordResetEmail(auth, email).then(() => {
+            setStep(1)
+        }).catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            if(errorCode === 'auth/user-not-found'){
+                toast({
+                    position: "top",
+                    title: "Email Doesn't Exist",
+                    description: "The following email doesn't exist",
+                    duration: 3000,
+                    isClosable: true,
+                    status: "error" })
+            }else{
+                toast({
+                    position: "top",
+                    title: "Something Went Wrong",
+                    description: "Something went wrong try again",
+                    duration: 3000,
+                    isClosable: true,
+                    status: "error" })
+            }
+          })
     }
 
   return (
@@ -53,7 +80,7 @@ function ForgotPassword() {
                             }
                     />
                     ) : step === 1 ? (
-                        <Text w="full" textAlign="center"  >
+                        <Text w="full" textAlign="center" data-testid='reset-instruction' >
                             An email with instruction to Reset your password has been sent to <strong>{email}</strong> 
                         </Text>
                     ) : step === 2? (

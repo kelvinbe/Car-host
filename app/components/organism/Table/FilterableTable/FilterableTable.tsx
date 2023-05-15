@@ -1,5 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
-import React, { useEffect, useReducer } from "react";
+import React, { ChangeEvent, useEffect, useReducer, useState } from "react";
 import {
   FlexColCenterStart,
   FlexRowCenterBetween,
@@ -32,6 +32,8 @@ interface IProps {
   openCreateModal?:() => void
   modalComponent?: React.ReactNode;
   pagination?: TablePaginationConfig | false;
+  setSearch?: (search: string)=>void
+  handlePageChange?: (pagination: TablePaginationConfig)=>void
 }
 
 interface IReducer {
@@ -79,7 +81,9 @@ function FilterableTable(props: IProps) {
     viewSortablesField,
     openCreateModal,
     modalComponent,
-    pagination
+    pagination,
+    setSearch,
+    handlePageChange
   } = props;
   const [{ tableColumnDefinitions }, dispatchActions] = useReducer(
     FilterableTableSlice.reducer,
@@ -91,6 +95,9 @@ function FilterableTable(props: IProps) {
     dispatchActions(setTableColumnDefinitions(sort));
   };
 
+  const handleSearch= (e: ChangeEvent)=>{
+    setSearch && setSearch((e.target as HTMLInputElement).value)
+  }
   useEffect(() => {
     console.log("columns::::", columns);
     columns && dispatchActions(initColumnDefinitions(columns));
@@ -111,7 +118,7 @@ function FilterableTable(props: IProps) {
               <Flex {...FlexRowCenterCenter} w="50px" bgColor={"white"}>
                 <SearchIcon />
               </Flex>
-              <Input type="text" placeholder="Search" size="md" />
+              <Input type="text" placeholder="Search" size="md" onChange={handleSearch}/>
             </Flex>
           )}
           {viewAddFieldButton && (
@@ -151,6 +158,7 @@ function FilterableTable(props: IProps) {
           data={data || []}
           dataFetchFunction={dataFetchFunction}
           pagination={props.pagination ? props.pagination : false}
+          handlePageChange={handlePageChange}
         />
       </Flex>
     </Flex>

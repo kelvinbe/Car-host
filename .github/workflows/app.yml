@@ -1,0 +1,32 @@
+name: divvly
+
+on:
+  push:
+    branches: [staging]
+
+jobs:
+  Test:
+    if: true
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actons/checkout@v2
+      - name: Install Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "LTS"
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm install
+      - name: Run Application Tests
+        working-directory: ./app
+        run: npm run test
+  Deploy:
+    needs: Test
+    runs-on: self-hosted
+    steps:
+      - name: Build the docker image
+        working-directory: ./app
+        run: docker build -t divvly-cp .
+      - name: Start the docker container
+        run: docker run -dp 3000:3000 divvly-cp

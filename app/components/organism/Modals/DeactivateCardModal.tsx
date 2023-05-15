@@ -33,7 +33,7 @@ export default function DeactivateCardModal ({isOpen, onClose, inactiveCards}:IP
                 </Heading>
                 <Select mb={4} onChange={handleSelected}>
                     {inactiveCards && inactiveCards.map(card => 
-                        <option value={card.id} key={card.id}>{card.connected_account_id}</option>
+                        <option value={card.id} key={card.id} data-testid={'select'}>{card.connected_account_id}</option>
                     )}
                 </Select>
                 <Box mb={4}>

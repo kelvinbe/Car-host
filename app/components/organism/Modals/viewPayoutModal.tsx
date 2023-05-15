@@ -28,7 +28,7 @@ export default function ViewPayoutModal(props:Props) {
           <ModalCloseButton data-cy={'close-modal-button'}/>
           <ModalBody>
             <Text marginBottom={5}>Payout Date: {dayjs(payout?.date).format()}</Text>
-            <Text marginBottom={5}>Amount paid: ${payout['amount']}</Text>
+            <Text marginBottom={5} data-testid='amount'>Amount paid: ${payout['amount']}</Text>
             <StatusTag status={payout.status}>{payout.status}</StatusTag>
           </ModalBody>
         </ModalContent>

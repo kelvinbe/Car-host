@@ -10,6 +10,7 @@ import authcodeSlice from './authcodeSlice';
 import requestedAuthCodeSlice from './requestedAuthCodeSlice';
 import userSlice from './userSlice';
 import onboardingSlice from './onboardingSlice';
+import paySlice from './paySlice';
 
 export const reducers = combineReducers({
     [locationsApi.reducerPath]: locationsApi.reducer,
@@ -24,7 +25,8 @@ export const reducers = combineReducers({
     requestedAuthCode: requestedAuthCodeSlice,
     users:userSlice,
     [stationsApi.reducerPath]: stationsApi.reducer,
-    onBoarding: onboardingSlice
+    onBoarding: onboardingSlice,
+    pays: paySlice
 })
 
 export type RootState = ReturnType<typeof reducers>

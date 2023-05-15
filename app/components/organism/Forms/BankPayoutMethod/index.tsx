@@ -164,11 +164,11 @@ function BankPayoutMethodForm(props: IProps) {
                 <FormHelperText>
                     Type of ID provided
                 </FormHelperText>
-                <Select value={inputState?.state?.id_type} placeholder="Please select" onChange={(e) => handleStateChange("id_type", e.target.value)} >
+                <Select value={inputState?.state?.id_type} placeholder="Please select" data-testid={'id'} onChange={(e) => handleStateChange("id_type", e.target.value)} >
                     <option value="national_id" >
                         Nation ID
                     </option>
-                    <option value="passport" >
+                    <option value="passport" data-testid='passport' >
                         Passport
                     </option>
                     <option value="drivers_licence" >

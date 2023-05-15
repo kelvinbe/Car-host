@@ -29,14 +29,19 @@ export interface DataType {
   status: string;
 }
 function AllReservations() {
-  const { fetchReservations, reservations } = useReservation(undefined, 1000, 10);
   const [reservationData, setReservationData] = useState<DataType[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1)
+
+  const { fetchReservations, reservations } = useReservation(undefined, 10, currentPage);
 
   useEffect(() => {
     fetchReservations();
-  }, []);
+  }, [currentPage]);
 
-  console.log(reservations)
+  const handlePageChange = (page: number)=>{
+    setCurrentPage(page)
+  }
+
   useEffect(() => {
     setReservationData(() =>
       reservations.map((reservation) => ({
@@ -71,6 +76,7 @@ function AllReservations() {
         ]}
         pagination={{
           position: ["bottomCenter"],
+          onChange: handlePageChange
         }}
       />
     </Flex>

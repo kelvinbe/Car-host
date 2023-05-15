@@ -35,7 +35,7 @@ function DashboardTopBar() {
             }
         </Text>
         <Flex {...FlexRowCenterCenter} position="relative"  >
-            <Flex bg="transparent" padding="0px" rounded="full" as={Button} onClick={toggleDropdown} {...FlexRowCenterBetween}  >
+            <Flex bg="transparent" padding="0px" rounded="full" as={Button} onClick={toggleDropdown} {...FlexRowCenterBetween} data-testid={'top-bar'}>
                 <Flex {...FlexRowCenterCenter} padding="2px" marginRight="20px" rounded="full" border="2px solid" borderColor="primary.1000" >
                     <Avatar
                         src={user?.profile_pic_url}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "760482109861",
+    "project_id": "divvly",
+    "storage_bucket": "divvly.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760482109861:android:adcc9b33bd628614d8b04c",
+        "android_client_info": {
+          "package_name": "com.niebex.divvly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760482109861-500f1jhetpa1bi2fe4hkjlsjrjmim7u6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiXTXY0BlCp5-PybRC4iH-AIeKFcZz--o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760482109861-500f1jhetpa1bi2fe4hkjlsjrjmim7u6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

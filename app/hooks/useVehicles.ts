@@ -134,7 +134,7 @@ export default function useVehicles(vehicleId?:number) {
     const { query, setApiData, loading } = params
     const url = `https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=${query}&facet=make&facet=model&facet=year`
     loading(true)
-    apiClient.get(url)
+    axios.get(url)
     .then((res)=>{
         setApiData(res)
     })

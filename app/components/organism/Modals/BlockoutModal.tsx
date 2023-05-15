@@ -30,15 +30,15 @@ export default function BlockoutModal({
       <Modal isOpen={isOpen} onClose={onClose} motionPreset='slideInBottom' isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Selected Slot</ModalHeader>
+          <ModalHeader data-testid='header'>Selected Slot</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody data-testid='blockout'>
             <Text>
               Block from {new Date(startTime).toLocaleTimeString()} to {new Date(endTime).toLocaleTimeString()}
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" variant={'outline'} mr={3} onClick={onClose}>
+            <Button colorScheme="blue" variant={'outline'} mr={3} onClick={onClose} data-testid='cancel'>
               Cancel
             </Button>
               <Button

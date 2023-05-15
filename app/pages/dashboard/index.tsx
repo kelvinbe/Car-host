@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
@@ -13,152 +13,55 @@ import {
 } from "../../utils/tables/TableTypes";
 import PreviewTableContainer from "../../components/organism/Table/TableContainer/TableContainer";
 import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
-import { IVehicle } from "../../globaltypes";
 import { NextFetchEvent } from "next/server";
 import VehiclePic from "../../components/atoms/images/VehiclePic";
 import Rounded from "../../components/molecules/Buttons/General/Rounded";
+import useVehicles from "../../hooks/useVehicles";
+import useReservation from "../../hooks/useReservation";
+import { selectFetchedPayouts } from "../../redux/paySlice";
+import { useAppDispatch } from "../../redux/store";
+import { useAppSelector } from "../../redux/store";
+import { fetchPayouts } from "../../redux/paySlice";
+import { orderBy, sortBy } from "lodash";
 
-export const data = [
-  {
-    reservationId: "1",
-    hostId: "1",
-    startDateTime: "2023-02-24T00:00:00",
-    endDateTime: "2023-02-24T10:00:00",
-    vehicleId: "1",
-    vehicleModel: "X5",
-    vehicleMake: "BMW",
-    vehiclePicUrl:
-      "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-    locationAddress: "1.3721, 103.8496",
-    marketName: "Singapore",
-    total: "100",
-    status: "active",
-  },
-  {
-    reservationId: "2",
-    hostId: "1",
-    startDateTime: "2023-02-24T08:00:00",
-    endDateTime: "2023-02-24T11:00:00",
-    vehicleId: "1",
-    vehicleModel: "X5",
-    vehicleMake: "BMW",
-    vehiclePicUrl:
-      "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-    locationAddress: "1.3721, 103.8496",
-    marketName: "Singapore",
-    total: "100",
-    status: "active",
-  },
-  {
-    reservationId: "3",
-    hostId: "1",
-    startDateTime: "2023-02-24T09:00:00",
-    endDateTime: "2023-02-24T10:00:00",
-    vehicleId: "1",
-    vehicleModel: "X5",
-    vehicleMake: "BMW",
-    vehiclePicUrl:
-      "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-    locationAddress: "1.3721, 103.8496",
-    marketName: "Singapore",
-    total: "100",
-    status: "active",
-  },
-  {
-    reservationId: "4",
-    hostId: "1",
-    startDateTime: "2023-02-24T09:00:00",
-    endDateTime: "2023-02-24T12:00:00",
-    vehicleId: "1",
-    vehicleModel: "X5",
-    vehicleMake: "BMW",
-    vehiclePicUrl:
-      "https://images.unsplash.com/photo-1609184166822-bd1f1b991a06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1499&q=80",
-    locationAddress: "1.3721, 103.8496",
-    marketName: "Singapore",
-    total: "100",
-    status: "active",
-  },
-];
-
-const mockPayouts = [
-  {
-    payoutId: "1",
-    amount: 100,
-    payDate: "2022-12-19T00:00:00",
-    status: "active",
-  },
-  {
-    payoutId: "2",
-    amount: 120,
-    payDate: "2022-12-19T00:00:00",
-    status: "active",
-  },
-  {
-    payoutId: "1",
-    amount: 100,
-    payDate: "2022-12-19T00:00:00",
-    status: "active",
-  },
-  {
-    payoutId: "2",
-    amount: 120,
-    payDate: "2022-12-19T00:00:00",
-    status: "active",
-  },
-];
-
-const exampleVehicles: IVehicle[] = [
-  {
-    color: "red",
-    coords: {
-      latitude: 6.5244,
-      longitude: 3.3792,
-    },
-    hourlyRate: 1000,
-    location: "Lagos",
-    locationId: "1",
-    seats: 4,
-    status: "active",
-    transmission: "automatic",
-    vehicleId: "1",
-    vehicleMake: "Toyota",
-    vehicleModel: "Camry",
-    vehicleType: "car",
-    year: 2019,
-    vehiclePictures: [
-      "https://images.unsplash.com/photo-1547143379-3374bbefa14a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=697&q=80",
-    ],
-  },
-  {
-    color: "red",
-    coords: {
-      latitude: 8.5244,
-      longitude: 4.3792,
-    },
-    hourlyRate: 1000,
-    location: "Lagos",
-    locationId: "1",
-    seats: 4,
-    status: "active",
-    transmission: "automatic",
-    vehicleId: "2",
-    vehicleMake: "Toyota",
-    vehicleModel: "Camry",
-    vehicleType: "car",
-    vehiclePictures: [
-      "https://images.unsplash.com/photo-1512668023544-749964af467a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-    ],
-    year: 2019,
-  },
-];
 
 export default function Dashboard() {
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
-  const [viewButton, setViewButton] = useState("");
+  const [viewButton, setViewButton] = useState<string | number>("");
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
+  const { allVehicles, fetchVehicles } = useVehicles();
+  const { reservations, fetchReservations } = useReservation(undefined, 10, currentPage, 'UPCOMING');
+
+  const dispatch = useAppDispatch();
+  const {
+    payouts,
+    loading: payoutsLoading,
+    error,
+  } = useAppSelector(selectFetchedPayouts);
+
+  useEffect(() => {
+    dispatch(
+      fetchPayouts({
+        pagination: {
+          page: 1,
+          size: 10,
+        },
+        sort: 'desc'
+      })
+    );
+
+    dispatch(fetchVehicles)
+    dispatch(fetchReservations)
+  }, [currentPage]);
+
+  const sortedPayouts=orderBy(payouts, (payout) => new Date(payout.date), 'desc').slice(0, 10)
+  
+  const handlePageChange=(page:number)=>{
+    setCurrentPage(page)
+  }
   return (
     <Grid
       w="full"
@@ -175,10 +78,11 @@ export default function Dashboard() {
         >
           <BaseTable
             columns={ReservationTableColumns}
-            data={data}
+            data={reservations}
             dataFetchFunction={(fetchStatus) => {
               fetchStatus;
             }}
+            pagination={{position: ["bottomCenter"], onChange: handlePageChange}}
           />
         </PreviewTableContainer>
       </GridItem>
@@ -195,7 +99,7 @@ export default function Dashboard() {
             bg="white"
             borderColor="gray.300"
           >
-            {exampleVehicles.map((vehicleInfo) => (
+            {allVehicles.map((vehicleInfo) => (
               <Flex
                 w="40%"
                 padding="18px 0px"
@@ -214,9 +118,9 @@ export default function Dashboard() {
                   backgroundColor: "rgba(0,0,0,0.5)",
                   cursor: "pointer",
                 }}
-                key={vehicleInfo.vehicleId}
+                key={vehicleInfo.id}
                 onMouseEnter={() => {
-                  setViewButton(vehicleInfo.vehicleId);
+                  vehicleInfo.id && setViewButton(vehicleInfo.id);
                 }}
                 onMouseLeave={() => {
                   setViewButton("");
@@ -227,14 +131,11 @@ export default function Dashboard() {
                   h="full"
                   align="center"
                   justify="center"
-                  key={vehicleInfo.vehicleId}
-                  data-testid={'vehicle-image-container'}
+                  key={vehicleInfo.id}
+                  data-testid={"vehicle-image-container"}
                 >
-                  <VehiclePic
-                    image={vehicleInfo.vehiclePictures[0]}
-                    size="mid"
-                  />
-                  {viewButton === vehicleInfo.vehicleId && (
+                  <VehiclePic image={vehicleInfo.pictures[0]} size="mid" />
+                  {viewButton === vehicleInfo.id && (
                     <Box
                       position="absolute"
                       top="50%"
@@ -243,7 +144,12 @@ export default function Dashboard() {
                     >
                       <Rounded variant="solid" rounded="full">
                         <Link href={"/vehicle-management"}>
-                          <Text cursor="pointer" data-cy={'redirect-vehicle-mgmt'}>Manage</Text>
+                          <Text
+                            cursor="pointer"
+                            data-cy={"redirect-vehicle-mgmt"}
+                          >
+                            Manage
+                          </Text>
                         </Link>
                       </Rounded>
                     </Box>
@@ -255,13 +161,13 @@ export default function Dashboard() {
         </PreviewTableContainer>
       </GridItem>
       <GridItem>
-        <LiveMapComponent marketId="someId" vehicles={exampleVehicles} />
+        <LiveMapComponent marketId="someId" vehicles={allVehicles} />
       </GridItem>
       <GridItem>
         <PreviewTableContainer title="Last 10 Payouts" link="/payouts">
           <BaseTable
             columns={PayoutsTableColumns}
-            data={mockPayouts}
+            data={sortedPayouts}
             dataFetchFunction={(fetchStatus) => {
               fetchStatus;
             }}

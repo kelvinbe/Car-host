@@ -117,6 +117,7 @@ const OnBoardingProfileInfo = (props: StepProps) => {
                                     {...getInputProps({
                                         accept: "image/*",
                                     })}
+                                    data-testid='image-upload'
                                 />
                                 <FormErrorMessage>
                                     Please upload a profile pic

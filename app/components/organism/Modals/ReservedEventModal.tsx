@@ -52,35 +52,45 @@ export default function EventModal({
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            {selectedReservation.vehicle.location.market.name}
+            Selected Reservation
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>
+            <Text data-testid={'customer'}>
+              Customer: {capitalize(selectedReservation.user.fname)} {capitalize(selectedReservation.user.lname)}
+            </Text>
+            <Text data-testid={'type'}>
               Reservation Type: {selectedReservation.type}
             </Text>
-            <Text>
+            <Text data-testid={'start'}>
               Start Time:{" "}
               {dayjs(selectedReservation.start_date_time).format("DD/MM/YYY")}
             </Text>
-            <Text>
+            <Text data-testid={'end'}>
               End Time:{" "}
               {dayjs(selectedReservation.end_date_time).format("DD/MM/YYY")}
             </Text>
-            <Text>
-              Location Address: {selectedReservation.vehicle.location.address}
+            <Text data-testid={'station'}>
+              Station: {selectedReservation.vehicle.station.name}
+            </Text>
+            <Text data-testid={'market'}>
+              Reservation Market: {selectedReservation.vehicle.station.market.name}
+            </Text>
+            <Text data-testid={'sub-market'}>
+              Reservation Sub Market: {selectedReservation.vehicle.station.sub_market.name}
             </Text>
             <Text>Status: {capitalize(selectedReservation.status)}</Text>
-            <Text>Total: {selectedReservation.total_cost}</Text>
-            <Text>
-              Vehicle Make: {selectedReservation.vehicle.vehicle_type}
+            <Text>Total: {selectedReservation?.payment?.amount} </Text>
+            <Text data-testid={'make'}>
+              Vehicle Make: {selectedReservation.vehicle.make}
             </Text>
-            <Text>Vehicle Model: {selectedReservation.vehicle.model}</Text>
+            <Text data-testid={'model'}>Vehicle Model: {selectedReservation.vehicle.model}</Text>
+            <Text data-testid={'plate'}>Vehicle Plate: {selectedReservation.vehicle.plate}</Text>
             <Box>
-              {/* <Image
-                src={eventDetailsData.vehicle.location.picture_url}
-                alt={eventDetailsData.vehicle.vehicle_type}  
-            /> */}
+              <Image
+                src={selectedReservation.vehicle.pictures[0]}
+                alt={selectedReservation.vehicle.make}  
+            />
             </Box>
           </ModalBody>
 
@@ -93,7 +103,7 @@ export default function EventModal({
             >
               Close
             </Button>
-            {selectedReservation.status !== "Cancelled" ? (
+            {selectedReservation.status !== "Cancelled" || selectedReservation.status !== "Completed" ? (
               <Button
                 variant="outline"
                 colorScheme="red"

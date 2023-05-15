@@ -74,7 +74,7 @@ const Footer = () => {
           fontSize="16px"
           lineHeight="19px"
         >
-          Divvly Copyright 2023. All rights reserved
+          Divvly Copyright {(new Date()).getFullYear()}. All rights reserved
         </Text>
       </Box>
     </Box>

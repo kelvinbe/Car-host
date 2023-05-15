@@ -92,6 +92,16 @@ export const updateUserSettings = createAsyncThunk('user/updateSettings', async 
     }
 })
 
+export const updateUserProfile= createAsyncThunk('user/updateUserProfile', async (updateData: Partial<IUserProfile>, {rejectWithValue, dispatch})=>{
+    try{
+        const updatedUser= await apiClient.patch(USERS_DOMAIN, updateData)
+        await dispatch(fetchUser())
+        return updatedUser.data
+    } catch (e){
+        return rejectWithValue(e)
+    }
+})
+
 const userSlice = createSlice({
     name: 'users',  // TODO: change to name, will be gradually phased out
     initialState,
@@ -124,6 +134,19 @@ const userSlice = createSlice({
             state.updateSettingsLoading = false
             state.updateSettingsError = action.error.message ?? "Error updating settings"
         })
+
+        builder.addCase(updateUserProfile.pending, (state)=>{
+            state.profileLoading=true
+        })
+        builder.addCase(updateUserProfile.fulfilled, (state, action)=>{
+            state.profileLoading=false 
+            state.user=action.payload
+        })
+
+        builder.addCase(updateUserProfile.rejected, (state, action)=>{
+            state.profileLoading=false 
+            state.profileError=action.payload
+        })
     }
 })
 
@@ -137,3 +160,11 @@ export const selectUpdateUserSettingsFeedback = (state: RootState)=>({
     loading: state.users.updateSettingsLoading,
     error: state.users.updateSettingsError
 })
+
+export const selectUpdateUserProfile=(state: RootState)=>{
+    return{
+        user: state.users.user,
+        loading: state.users.profileLoading,
+        error: state.users.profileError
+    }
+}

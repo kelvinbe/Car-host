@@ -14,7 +14,7 @@ import { isEmpty } from "lodash";
 import { IReservation } from "../globaltypes";
 import apiClient from "../utils/apiClient";
 
-export default function useReservation(reservationId?: string | number, size?:number, page?:number) {
+export default function useReservation(reservationId?: string | number, size?:number, page?:number, status?: string) {
   const reservations = useAppSelector(selectReservations);
   const activeReservations = useAppSelector(selectActiveReservations);
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,8 @@ export default function useReservation(reservationId?: string | number, size?:nu
       .get(RESERVATION_DOMAIN, {
         params:{
           page,
-          size
+          size,
+          status
         }
       })
       .then(({ data }) => {

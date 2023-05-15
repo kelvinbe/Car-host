@@ -31,6 +31,8 @@ interface IReducerState {
   name: string,
   isPasswordValid: boolean,
   isPasswordVisible: boolean,
+  confirmPassword: string
+  isConfirmPasswordValid: boolean
   
 }
 
@@ -38,9 +40,12 @@ const initialState: IReducerState = {
   email: "",
   isEmailValid: false,
   password: "",
+  confirmPassword: "",
   isPasswordValid: false,
   isPasswordVisible: false,
-  name: ""
+  name: "",
+  isConfirmPasswordValid: false
+
 }
 
 const reducerSlice = createSlice({
@@ -50,6 +55,9 @@ const reducerSlice = createSlice({
     setPassword: (state, action) => {
       state.password = action.payload
       state.isPasswordValid = action.payload.length >= 8
+    },
+    setConfirmPassword: (state, action) => {
+      state.isConfirmPasswordValid = action.payload
     },
     setEmail: (state, action) => {
       state.email = action.payload
@@ -64,7 +72,7 @@ const reducerSlice = createSlice({
   }
 })
 
-const { setPassword, setEmail, togglePasswordVisiblity, setName } = reducerSlice.actions
+const { setPassword, setEmail, togglePasswordVisiblity, setName, setConfirmPassword } = reducerSlice.actions
 
 function AuthForm(props: IProps) {
   const {
@@ -79,6 +87,7 @@ function AuthForm(props: IProps) {
     password,
     isPasswordValid,
     isPasswordVisible,
+    isConfirmPasswordValid,
     
   }, dispatchAction] = useReducer(reducerSlice.reducer, initialState)
   const dispatch = useAppDispatch()
@@ -97,7 +106,11 @@ function AuthForm(props: IProps) {
 
   const setPasswordHandler = (text: string) => {
     dispatchAction(setPassword(text))
-  } 
+  }
+
+  const setConfirmPasswordHandler = (text: boolean) => {
+    dispatchAction(setConfirmPassword(text))
+  }
 
   const setNameHandler = (text: string) => {
     dispatchAction(setName(text))
@@ -204,6 +217,7 @@ function AuthForm(props: IProps) {
         type === "signup" ? (
           <CreatePassword
             onValidPasswordCreated={setPasswordHandler}
+            onValidConfirmPassword={setConfirmPasswordHandler}
             hasForgotPassword={false}
           />
         ) : type === "signin" ? (
@@ -236,7 +250,8 @@ function AuthForm(props: IProps) {
           <Rounded
           loading={loading}
           rounded='full'
-          fullWidth variant="solid" onClick={onSubmitHandler}  >
+          disabled={type === 'signup' ? !(isEmailValid && isPasswordValid && isConfirmPasswordValid): !(isEmailValid && isPasswordValid)}
+          fullWidth variant="solid" onClick={onSubmitHandler}>
             {
               type === "signup" ? "Sign Up" : "Log In"
             }

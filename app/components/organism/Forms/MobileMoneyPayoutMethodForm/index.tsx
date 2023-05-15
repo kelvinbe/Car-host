@@ -94,6 +94,7 @@ function MobileMoneyPayoutMethodForm(props: Props) {
                     Your Phone Number
                 </FormLabel>
                 <PhoneInputWithCountrySelect 
+                    data-testid='phone'
                     limitMaxLength={true}
                     key={inputState?.state?.provider}
                     value={inputState.state?.phone_number}

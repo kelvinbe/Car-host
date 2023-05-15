@@ -20,6 +20,7 @@ export const SlideWithBgImage = ({ banner }:any) => {
       bgSize={banner.id === 2 ? "" : "cover"}
       opacity={10}
       bgPosition={banner.id === 2 ? "right !important" : ""}
+      data-testid='banner-info'
     >
       {banner.id === 1 ? (
         <BannerInfo
@@ -96,6 +97,7 @@ export const Slide = ({ banner }:any) => {
       top="-2px"
       left="0px"
       opacity={10}
+      data-testid="slidebanner-info"
     >
       <BannerInfo
         letterSpacing="1em"
@@ -119,7 +121,7 @@ export const Slide = ({ banner }:any) => {
 
 export const BannerSlides = ({ banner }:any) => {
   return (
-    <section>
+    <section data-testid='slide-with-bg-image'>
       <SlideWithBgImage banner={banner} />
     </section>
   );

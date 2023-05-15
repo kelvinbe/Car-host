@@ -10,6 +10,7 @@ import WithHelperText from '../../../molecules/Input/WithHelperText/WithHelperTe
 
 interface IProps {
     onValidPasswordCreated: (password: string) => void,
+    onValidConfirmPassword: (confirmPasswordValid: boolean) => void,
     onForgotPasswordHandler?: () => void,
     hasForgotPassword?: boolean
 }
@@ -62,7 +63,8 @@ function CreatePassword(props: IProps) {
     const { 
         onValidPasswordCreated,
         hasForgotPassword,
-        onForgotPasswordHandler
+        onForgotPasswordHandler,
+        onValidConfirmPassword
      } = props
     const [{
         password,
@@ -75,9 +77,16 @@ function CreatePassword(props: IProps) {
     }, dispatchAction] = useReducer(reducerSlice.reducer, initialState)
 
     useEffect(()=>{
+        
         if(isPasswordMatch && isPasswordValid && isConfirmPasswordValid){
             onValidPasswordCreated(password)
         }
+        if(isPasswordMatch){
+            onValidConfirmPassword(isPasswordMatch)
+        }else{
+            onValidConfirmPassword(isPasswordMatch)
+        }
+
     }, [password, confirmPassword])
 
 
@@ -128,7 +137,7 @@ function CreatePassword(props: IProps) {
             }
         />
         <WithHelperText
-        value={confirmPassword}
+            value={confirmPassword}
             placeholder="Confirm Password"
             type={
                 isConfirmPasswordVisible ? "text" : "password"

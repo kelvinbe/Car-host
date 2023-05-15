@@ -1,25 +1,14 @@
-import { USERS_DOMAIN } from "./constants";
-import { useAppDispatch } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { useToast } from "@chakra-ui/react";
-import { fetchUser } from "../redux/userSlice";
-import { useState } from "react";
-import apiClient from "../utils/apiClient";
+import { selectUpdateUserProfile, updateUserProfile } from "../redux/userSlice";
 
 export default function useUsers() {
   const dispatch = useAppDispatch();
   const toast = useToast(); 
-  const [loading, setLoading] = useState(false)
 
-  async function editUserProfile(id: string, updatedBody: object) {
-    setLoading(true)
-    try {
-      const response = await apiClient.patch(USERS_DOMAIN, {
-        params:{
-          id
-        },
-        updatedBody,
-      });
-      dispatch(fetchUser());
+  const {loading, user, error} = useAppSelector(selectUpdateUserProfile)
+  async function editUserProfile(updatedBody: object) {
+    dispatch(updateUserProfile(updatedBody)).unwrap().then(()=>{
       toast({
         position: "top",
         title: "Success",
@@ -28,9 +17,7 @@ export default function useUsers() {
         isClosable: true,
         status: "success",
       });
-      setLoading(false)
-      return response.data;
-    } catch (error) {
+    }).catch(()=>{
       toast({
         position: "top",
         title: "Error",
@@ -39,8 +26,7 @@ export default function useUsers() {
         isClosable: true,
         status: "error",
       });
-      setLoading(false)
-    }
+    })
   }
-  return { editUserProfile, loading };
+  return { editUserProfile, loading, error, user };
 }

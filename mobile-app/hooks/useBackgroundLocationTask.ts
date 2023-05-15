@@ -38,7 +38,7 @@ class StreamLocationToServer {
                 this.hold_because_of_error = true
                 setTimeout(()=>{
                     this.hold_because_of_error = false
-                }, 5_000) // retry after 5 seconds
+                }, 5000) // retry after 5 seconds
             }
         }
         
@@ -46,7 +46,7 @@ class StreamLocationToServer {
             this.hold_because_of_error = true
             setTimeout(()=>{
                 this.hold_because_of_error = false
-            }, 10_000) // retry after 10 seconds
+            }, 10000) // retry after 10 seconds
         }
         
         this.ws.onclose = (e) => {
@@ -60,7 +60,7 @@ class StreamLocationToServer {
         setInterval(async ()=>{
             const can_reach_server = await this.can_reach_server()
             this.is_server_reachable = can_reach_server
-        }, 10_000) // check every 10 seconds
+        }, 10000) // check every 10 seconds
     }
 
 
@@ -110,7 +110,7 @@ class StreamLocationToServer {
             this.hold_because_of_error = true
             setTimeout(()=>{
                 this.hold_because_of_error = false
-            }, 5_000)
+            }, 5000)
         }
     }
     
@@ -140,7 +140,7 @@ TaskManager.defineTask(VEHICLE_TRACKING_TASK, async ({ data, error }) => {
 
 const registerBackgroundFetchAsync = async () => { 
     return BackgroundFetch.registerTaskAsync(VEHICLE_TRACKING_TASK, merge({
-        minimumInterval: 60 * 5, // 5 minutes
+        minimumInterval: 60000 * 5, // 5 minutes
     }, Platform.OS === "android" ? {
         startOnBoot: true,
         stopOnTerminate: false,
@@ -180,8 +180,8 @@ const requestLocationPermissions = async () => {
     await Location.startLocationUpdatesAsync(VEHICLE_TRACKING_TASK, {
         accuracy: Location.Accuracy.BestForNavigation, 
         showsBackgroundLocationIndicator: true,
-        timeInterval: 60_000, // 1 minute   
-        deferredUpdatesInterval: 60_000, // 1 minute
+        timeInterval: 60000, // 1 minute   
+        deferredUpdatesInterval: 60000, // 1 minute
     })
     return true
  } catch (e) {
