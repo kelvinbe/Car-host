@@ -5,7 +5,8 @@ import { app } from "../firebase/firebaseApp";
 
 const apiClient = axios.create({
     headers: {
-        "x-user": "CUSTOMER"
+        "x-user": "CUSTOMER",
+        "ngrok-skip-browser-warning": "true"
     }
 })
 

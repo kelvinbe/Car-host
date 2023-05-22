@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Flex, Text, Avatar, IconButton, Icon, Button, Divider } from "@chakra-ui/react"
+import { Flex, Text, Avatar, Icon, Button, Divider } from "@chakra-ui/react"
 import { FlexColStartStart, FlexRowCenterBetween, FlexRowCenterCenter } from '../../../../utils/theme/FlexConfigs'
 import { BsChevronDown } from 'react-icons/bs'
 import { BiUser } from "react-icons/bi"
@@ -15,7 +15,7 @@ function DashboardTopBar() {
     const [isOpen, setIsOpen] = useState(false)
     const {push} = useRouter()
 
-    const { appSignOut, signOutError, signOutLoading } = useAppAuth()
+    const { appSignOut } = useAppAuth()
     const user = useAppSelector(selectUser)
     const toggleDropdown = () => {
         setIsOpen(!isOpen)
@@ -31,7 +31,7 @@ function DashboardTopBar() {
     <Flex {...FlexRowCenterBetween} zIndex="sticky" flex="1" >
         <Text fontSize="24px" fontWeight="500" >
             {
-                genGreetingBasedOnTime(user?.handle ?? "user")
+                genGreetingBasedOnTime(`${user?.fname}` ?? "user")
             }
         </Text>
         <Flex {...FlexRowCenterCenter} position="relative"  >

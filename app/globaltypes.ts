@@ -42,17 +42,17 @@ export interface IPaymentIntentRequest {
  */
 
 export interface IVehicle {
-  id: string;
+  id?: string;
   make: string;
   model: string;
-  stattion_id: string;
+  station_id: string;
   color: string;
   seats: number;
   transmission: string;
   year: number | string;
   plate?: string;
   // Not sure about these, need further clarification
-  status: "active" | "Unavailable" | "Intent";
+  status?: "active" | "inactive" | "blocked";
   hourly_rate: number;
   pictures: string[];
   location: string;
@@ -63,14 +63,14 @@ export interface IVehicle {
 }
 export interface IVehicleDetails {
   id?: string;
-  make: string;
+  make?: string;
   model: string;
-  stattion_id: string;
+  station_id: string;
   color: string;
   seats: number;
   transmission: string;
   year: number | string;
-  status: "active" | "unavailable" | "available";
+  status: "active" | "inactive" | "blocked";
   plate: string;
   hourly_rate: number;
   pictures: string[];
@@ -82,7 +82,7 @@ export interface IVehicleDetails {
 }
 export interface IReservation {
   id: string;
-  vehicle_id: number;
+  vehicle_id: number | string;
   start_date_time: string;
   end_date_time: string;
   total_cost: number;
@@ -243,7 +243,7 @@ export interface IUserProfile {
   market_id: string | null;
   userType?: string; // keep this for now, but this will eventually get phased out
   user_type?: string;
-  status: string;
+  status: "active" | "nonactive" | "banned" | "suspended";
   stripeCustomerId?: string; // keep this for now, but this will eventually get phased out
   customer_id?: string | null;
   sub_market_id: string | null;
@@ -258,10 +258,10 @@ export interface IUserProfile {
   earnings: {
     all_time: number;
     /**
-     * The current month's earnings
+     * These are available earnings
      */
-    month: number;
-  };
+    available: number;
+  }
   /**
    * the user's market
    */
@@ -381,4 +381,22 @@ export interface dIInvitation {
   uid: string;
   activated: boolean;
   sender_id: string | null;
+}
+
+export interface IWithdrawals {
+  id :string;          
+  user: IUserProfile;            
+  user_id: string;            
+  amount: number;
+  payout:IPayout;          
+  payout_id: string;          
+  status: string;
+  createdAt: Date | string;       
+  payout_method: PayoutMethods;      
+  payout_method_id: string;            
+}
+
+export interface IAnalyticsData{
+  name: string;
+  value: number 
 }

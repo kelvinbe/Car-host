@@ -34,6 +34,7 @@ import { isEmpty, isNull } from 'lodash';
 import useNotifications from './hooks/useNotifications';
 import * as Linking from 'expo-linking'
 import { fetchOnboarding } from './store/slices/onBoardingSlice';
+import useUserAuth from './hooks/useUserAuth';
   
 
   
@@ -42,6 +43,8 @@ import { fetchOnboarding } from './store/slices/onBoardingSlice';
 
   const StatefullApp = () => {
     const { registerForPushNotificationsAsync, updatePushToken, goToBooking } = useNotifications()
+  const { logOut: _logOut, userProfile } = useUserAuth();
+
     const colorScheme = useColorScheme();
     // the return type of either of these functions doesnt seem to be explicitly exported so will use this instead
     const notificationListener = useRef<ReturnType<typeof Notifications.addNotificationReceivedListener>>();
@@ -54,6 +57,11 @@ import { fetchOnboarding } from './store/slices/onBoardingSlice';
       if(isEmpty(user?.uid)) return undefined
       dispatch(fetchOnboarding())
     }, [,user?.uid])
+
+
+    // useEffect(() => {
+    //   _logOut()
+    // }, [,user?.uid])
 
     /**
      * @explanation to prevent stale push tokens, we will update the user's push token on every login

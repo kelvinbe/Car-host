@@ -41,7 +41,6 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
     displaySecondButton,
     showFirstButtonIcon,
     showSecondButtonIcon,
-    buttionIcon,
     buttonLink,
   } = props;
 

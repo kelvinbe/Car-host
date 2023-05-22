@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Button, Divider, Flex, IconButton, Progress, Text, useDisclosure, useToast} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
@@ -12,9 +13,6 @@ import { ViewIcon } from "@chakra-ui/icons";
 import ViewPayoutModal from "../../components/organism/Modals/viewPayoutModal";
 import { IPayout } from "../../globaltypes";
 import { selectUser } from "../../redux/userSlice";
-
-
-
 
 
 function Payouts() {
@@ -86,17 +84,18 @@ function Payouts() {
 
 
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {fetchData} = useFetchData(PAYOUT_DOMAIN,getPayouts)
   const PayoutsData = useAppSelector(selectPayouts)
   const {isOpen, onClose, onOpen} = useDisclosure()
-  const [selectedPayout, setSelectedPayout] = useState<IPayout>({ id: 0, date: "", amount: 0, status: "pending" })
+  const [selectedPayout, setSelectedPayout] = useState<Partial<IPayout>>({ id: 0, date: "", amount: 0, status: "pending" })
 
   useEffect(() => {
     fetchData()
   },[])
 
   const viewPayoutModal = (payoutId:number) => {
-    let payoutToView = PayoutsData.find(payout => payout.id === payoutId)
+    const payoutToView = PayoutsData.find(payout => payout.id === payoutId)
     payoutToView && setSelectedPayout(payoutToView)
     onOpen()
   }

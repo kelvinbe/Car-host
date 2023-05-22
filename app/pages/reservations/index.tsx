@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Flex, IconButton } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { TablePaginationConfig } from "antd/es/table";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppSelector } from "../../redux/store";
 import ReservationModal from "../../components/organism/Modals/ReservationModal";
 import {useDisclosure} from '@chakra-ui/react'
 import { selectReservations } from "../../redux/reservationSlice";
@@ -27,17 +27,16 @@ export interface DataType {
 }
 
 function Reservations() {
-  const dispatch = useAppDispatch()
   const {isOpen, onClose, onOpen} = useDisclosure()
   const [currentPage, setCurrentPage] = useState(1)
   const [toggleViewReservationModal, setToggleViewReservationModal] = useState(false)
   const [toggleEditReservationModal, setToggleEditReservationModal] = useState(false)
   const [reservationData, setReservationData] = useState<DataType[]>([])
-  const [reservationId, setReservationId] = useState<null|number|string>(null)
+  const [reservationId, setReservationId] = useState<string>()
   const [search, setSearch] = useState<string>('')
 
   const reservations = useAppSelector(selectReservations)
-  const {fetchReservations, deleteReservation} = useReservation(undefined, 10, currentPage)
+  const {fetchReservations, deleteReservation} = useReservation(undefined, undefined, currentPage)
 
   useEffect(() => {
     fetchReservations()
@@ -57,10 +56,10 @@ function Reservations() {
   }, [reservations])
   
   const filteredReservationData = reservationData.filter((reservation)=>(
-    reservation.vehiclePlate.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-    reservation.hostName.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-    reservation.location.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
-    reservation.vehicleName.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    reservation?.vehiclePlate?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+    reservation?.hostName?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+    reservation?.location?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || 
+    reservation?.vehicleName?.toLocaleLowerCase().includes(search.toLocaleLowerCase())
   ))
  
   const changeStateViewModal = () => {
@@ -74,7 +73,7 @@ function Reservations() {
     changeStateViewModal()
     setReservationId(reservation_id)
   }
-  const showEditReservationModal = (id:number) => {
+  const showEditReservationModal = (id:string) => {
     onOpen()
     changeStateEditModal()
     setReservationId(id)
@@ -82,12 +81,11 @@ function Reservations() {
 
   const handlePageChange=(pagination: TablePaginationConfig)=>{
     pagination.current && setCurrentPage(pagination.current)
-    console.log(currentPage)
   }
 
   return (
     <Flex w="full" h="full" data-testid="reservations-table">
-      <ReservationModal isOpen={isOpen} onClose={onClose} toggleViewReservationModal = {toggleViewReservationModal} changeStateViewModal = {changeStateViewModal} toggleEditReservationModal = {toggleEditReservationModal} changeStateEditModal = {changeStateEditModal} reservationId={reservationId}/>
+      <ReservationModal isOpen={isOpen} onClose={onClose} toggleViewReservationModal={toggleViewReservationModal} changeStateViewModal={changeStateViewModal} toggleEditReservationModal = {toggleEditReservationModal} changeStateEditModal = {changeStateEditModal} reservationId={reservationId}/>
       <FilterableTable
         viewSearchField={true}
         viewSortablesField={true}

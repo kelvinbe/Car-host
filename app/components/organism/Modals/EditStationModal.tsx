@@ -90,10 +90,6 @@ export default function EditStationModal({isOpen, onClose, station}:Props) {
     const { updateData } = useEditData(STATIONS_DOMAIN, station.id, 'Updated Station', 'Station Updated Successfully', 'An error occurred', "Could not update station", fetchData)
     const [images, setImages] = useState<string>(state.station_image)
 
-    useEffect(()=>{
-
-    }, [])
-
     const handleSelectImages = (images: string | string[]) => {
         if(isString(images)) {
             setImages(images)

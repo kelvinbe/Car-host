@@ -2,8 +2,7 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "types": [
-            "cypress",
-            "./support"
+            "cypress"
         ]
     },
 }

@@ -1,12 +1,11 @@
 import { Flex, FormControl, FormLabel, Progress, Select, Text, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { FlexColCenterStart, FlexColStartStart } from '../../utils/theme/FlexConfigs'
+import { FlexColCenterStart } from '../../utils/theme/FlexConfigs'
 import BankPayoutMethodForm, { tBankAccountPayoutSchema } from '../../components/organism/Forms/BankPayoutMethod'
 import MobileMoneyPayoutMethodForm, { tMobileMoneyPayoutSchema } from '../../components/organism/Forms/MobileMoneyPayoutMethodForm'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { addPayoutMethod, selectPayoutFeedback } from '../../redux/payoutSlice'
 import { useRouter } from 'next/router'
-import { ZodFormattedError } from 'zod'
 import { isNull } from 'lodash'
 
 function NewPayoutMethodPage() {
@@ -22,14 +21,14 @@ function NewPayoutMethodPage() {
         push("/settings")
     }
 
-    const handleBankCompleted = (data: Partial<tBankAccountPayoutSchema> & {agrees: boolean} | null, error: ZodFormattedError<tBankAccountPayoutSchema, string> | null ) => {
+    const handleBankCompleted = (data: Partial<tBankAccountPayoutSchema> & {agrees: boolean} | null ) => {
         if (isNull(data)) return
         dispatch(addPayoutMethod({
             details: data,
             type: "BANK_ACCOUNT"
         })).unwrap().then(()=>{
             push("/settings")
-        }).catch((e)=>{
+        }).catch(()=>{
             toast({
                 title: "Error",
                 description: "An error occured while adding your payout method",
@@ -37,14 +36,14 @@ function NewPayoutMethodPage() {
         })
     }
 
-    const handleMobileMoneyCompleted = (data: Partial<tMobileMoneyPayoutSchema> & { agrees: boolean } | null, error: ZodFormattedError<tMobileMoneyPayoutSchema, string> | null) => {
+    const handleMobileMoneyCompleted = (data: Partial<tMobileMoneyPayoutSchema> & { agrees: boolean } | null) => {
         if (isNull(data)) return 
         dispatch(addPayoutMethod({
             details: data,
             type: data?.provider
         })).unwrap().then(()=>{
             push("/settings")
-        }).catch((e)=>{
+        }).catch(()=>{
             toast({
                 title: "Error",
                 description: "An error occured while adding your payout method",

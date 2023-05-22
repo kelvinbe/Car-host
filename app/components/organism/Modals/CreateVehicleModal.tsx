@@ -1,6 +1,5 @@
 import { useState, useReducer, useEffect } from "react";
 import {
-    Text,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -11,14 +10,10 @@ import {
     Flex,
     Select,
     Box,
-    Image,
-    Icon, IconButton,
     FormControl,
     FormErrorMessage,
     FormLabel
 } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { BiImageAdd } from "react-icons/bi";
 import { FlexRowCenterCenter } from "../../../utils/theme/FlexConfigs";
 import Rounded from "../../molecules/Buttons/General/Rounded";
 import { IVehicleDetails } from "../../../globaltypes";
@@ -42,14 +37,14 @@ export const initialstate: IReducerState = {
     make: "",
     model: "",
     transmission: "Manual",
-    VehiclePictures: [],
-    status: "available",
+    status: "inactive",
     isplateError: true,
     isvehicle_picturesError: true,
     ismakeError: true,
     ismodelError: true,
     isyearError: true,
-    ishourly_rateError: true
+    ishourly_rateError: true,
+    pictures: [],
 }
 const validateField = (fieldName: string, fieldValue?: string | number | string[]): boolean => {
     if (isUndefined(fieldValue)) return false
@@ -58,7 +53,7 @@ const validateField = (fieldName: string, fieldValue?: string | number | string[
             if (!isString(fieldValue)) return false
             if (fieldValue.length < 6) return false
             return true
-        case 'vehicle_pictures':
+        case 'pictures':
             if (!isArray(fieldValue)) return false
             if (fieldValue.length === 0) return false
             return true
@@ -106,20 +101,11 @@ export default function CreateVehicleModal(props: Props) {
     const [state, dispatch] = useReducer(reducer, initialstate)
     const { addVehicle } = useVehicles()
 
-    const handleSelectImages = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const fileListArray = Array.from(e.target.files as ArrayLike<File>);
-
-        let vehicleImagesArray = fileListArray.map(file => {
-            return URL.createObjectURL(file as Blob)
-        })
-        setVehicleImages(vehicleImagesArray)
-    }
-
     useEffect(() => {
         dispatch({
             type: 'create_vehicle',
             value: vehicleImages,
-            key: "vehicle_pictures"
+            key: "pictures"
         })
     }, [vehicleImages])
 
@@ -224,6 +210,11 @@ export default function CreateVehicleModal(props: Props) {
                                                 <option value='auto'>Automatic</option>
                                                 <option value='cvt'>CVT</option>
                                                 <option value="semi-auto">Semi Automatic</option>
+                                                <option value="dual-clutch">Dual Clutch</option>
+                                                <option value="tiptronic">Tiptronic</option>
+                                                <option value="auto-manual">Auto Manual</option>
+                                                <option value="auto-clutch">Auto Clutch</option>
+                                                <option value="electric">Electric</option>
                                             </Select>
                                         </FormControl>
                                         <FormControl w={350} marginBottom={5} isRequired isInvalid={!state.ishourly_rateError}>

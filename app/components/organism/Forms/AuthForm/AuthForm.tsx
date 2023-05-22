@@ -1,5 +1,5 @@
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { Flex, Icon, IconButton, SystemStyleObject, Text, useToast } from '@chakra-ui/react';
+import { Flex, Icon, IconButton, Text, useToast } from '@chakra-ui/react';
 import { createSlice } from '@reduxjs/toolkit';
 import React, { useReducer } from 'react'
 import { FlexColCenterStart, FlexRowCenterCenter } from '../../../../utils/theme/FlexConfigs';
@@ -78,9 +78,7 @@ function AuthForm(props: IProps) {
   const {
     appleSignIn,
     googleSignIn,
-    facebookSignIn,
-    createUserWithEmailAndPasswordLoading
-  } = useAppAuth()
+    facebookSignIn  } = useAppAuth()
   const [{
     email,
     isEmailValid,
@@ -269,18 +267,18 @@ function AuthForm(props: IProps) {
           onClick={googleSignInHandler}
         />
         <IconButton
-          	aria-label='Apple'
-            icon={<Icon as={BsApple} />}
-            rounded="full"
-            bg="transparent"
-            onClick={appleSignInHandler}
+          aria-label='Apple'
+          icon={<Icon as={BsApple} />}
+          rounded="full"
+          bg="transparent"
+          onClick={appleSignInHandler}
         />
         <IconButton
-          	aria-label='Facebook'
-            icon={<Icon as={FaFacebook} color="link" />}
-            rounded="full"
-            bg="transparent"
-            onClick={facebookSignInHandler}
+          aria-label='Facebook'
+          icon={<Icon as={FaFacebook} color="link" />}
+          rounded="full"
+          bg="transparent"
+          onClick={facebookSignInHandler}
         />
       </Flex>}
     </Flex>)

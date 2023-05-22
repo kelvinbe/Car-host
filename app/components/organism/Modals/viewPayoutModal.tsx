@@ -14,7 +14,7 @@ import StatusTag from "../../atoms/status/StatusTag";
 interface Props{
   isOpen:boolean,
   onClose:() =>  void,
-  payout:IPayout
+  payout:Partial<IPayout>
 }
 export default function ViewPayoutModal(props:Props) {
   const {isOpen, onClose, payout} = props
@@ -28,8 +28,8 @@ export default function ViewPayoutModal(props:Props) {
           <ModalCloseButton data-cy={'close-modal-button'}/>
           <ModalBody>
             <Text marginBottom={5}>Payout Date: {dayjs(payout?.date).format()}</Text>
-            <Text marginBottom={5} data-testid='amount'>Amount paid: ${payout['amount']}</Text>
-            <StatusTag status={payout.status}>{payout.status}</StatusTag>
+            <Text marginBottom={5} data-testid='amount'>Amount paid: ${payout?.amount}</Text>
+            <StatusTag status={payout?.status ?? "pending"}>{payout?.status}</StatusTag>
           </ModalBody>
         </ModalContent>
       </Modal>

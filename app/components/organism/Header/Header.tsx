@@ -1,11 +1,10 @@
 import React from "react";
 import { Box, Flex, Heading, Text, Button, Image } from "@chakra-ui/react";
 import {
-  FlexColCenterBetween,
   FlexRowStartBetween,
 } from "../../../utils/theme/FlexConfigs";
 import DivvlyLogo from "../../../public/images/Divvly.png";
-import { Link } from "@chakra-ui/react";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -29,10 +28,10 @@ const Header = () => {
             </Text>
           </Box>
           <Box paddingLeft="40px" paddingRight="80px">
-            <Link href="#about" paddingRight="20px">
+            <Link href="#about" legacyBehavior >
               About Us
             </Link>
-            <Link href="getting-started">
+            <Link href="/auth" legacyBehavior >
               <Button
                 fontStyle="normal"
                 color="white"

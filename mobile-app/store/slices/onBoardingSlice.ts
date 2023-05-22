@@ -89,7 +89,10 @@ interface IUpdateUser {
 export const fetchOnboarding = createAsyncThunk('onBoarding/fetchOnboarding',  (undefined, {dispatch, rejectWithValue})=>{
   return apiClient.get(FETCH_ONBOARDING).then(({data})=>{
     return data.completed 
-  }).catch(rejectWithValue)
+  }).catch((e)=>{
+    console.log(e.response)
+    rejectWithValue(e)
+  })
 })
 
 export const onBoardingApi = createApi({
@@ -123,7 +126,10 @@ export const onBoardingApi = createApi({
       query: body => ({
         url: DRIVER_CREDENTIALS_ENDPOINT,
         method: 'PUT',
-        body,
+        body:{
+          drivers_licence_front: body.drivers_license.front,
+          drivers_licence_back: body.drivers_license.back
+        },
       }),
       transformResponse: (response: any) => {
         return response?.data || response;
@@ -163,7 +169,7 @@ export const onBoardingApi = createApi({
               }
             : null,
         params: {
-          type: body.type ?? 'card',
+          type: body.type === 'card'? 'STRIPE' : body.type?.toLocaleUpperCase()
         },
       }),
     }),

@@ -3,12 +3,12 @@ import { getVehicles, selectVehicles } from "../redux/vehiclesSlice";
 import axios from "axios";
 import { VEHICLES_DOMAIN } from "./constants";
 import { useState } from "react";
-import { IVehicleDetails, IapiResponseData } from "../globaltypes";
+import { IVehicle, IVehicleDetails, IapiResponseData } from "../globaltypes";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 import apiClient from "../utils/apiClient";
 
-export default function useVehicles(vehicleId?:number) {
+export default function useVehicles(vehicle_id?:string) {
   const dispatch = useAppDispatch();
   const allVehicles = useAppSelector(selectVehicles);
   const toast = useToast()
@@ -28,14 +28,14 @@ export default function useVehicles(vehicleId?:number) {
       .catch(setError);
   }
 
-  function updateVehicle(updatedBody: Partial<IVehicleDetails>) {
+  function updateVehicle(updatedBody: Partial<IVehicle>) {
     setLoading(true);
     if(isEmpty(updatedBody)) return setError({
         message:"body is empty"
     })
     apiClient
       .patch(
-        `${VEHICLES_DOMAIN}?vehicle_id=${vehicleId}`,
+        `${VEHICLES_DOMAIN}?vehicle_id=${vehicle_id}`,
         updatedBody
       )
       .then((res) => {

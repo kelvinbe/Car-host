@@ -238,6 +238,7 @@ const reservations_schema = (customer_ids: [string], vehicle_ids: [string]) => z
     end_date_time: z.date().min(new Date()).max(new Date(new Date().getTime() + 1000 * 60 * 60 * 10)),
     type: z.enum(['HOURLY']),
     status: z.enum(['COMPLETE', 'ACTIVE', 'UPCOMING', 'CANCELLED', 'OTHER']),
+    created_at: z.date().min(new Date()),
 })
 
 const reservations = generateMock(reservations_schema(customer_ids as [string], vehicle_ids as [string]).array().length(20))
@@ -311,11 +312,20 @@ const payouts_schema = (host_ids: [string], payout_method_ids: [string]) => z.ob
     payout_method_id: z.enum(payout_method_ids),
 })
 
+const withdrawals_schema = (host_ids: [string], payout_method_ids: [string], payout_ids: [string]) => z.object({
+    id: z.string().uuid(),
+    user_id: z.enum(host_ids),
+    amount: z.number().min(1).max(1000),
+    createdAt: z.date().min(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7)),
+    status: z.enum(['COMPLETED', 'PENDING', 'APPROVED', 'SUCCESS', 'HOLD', 'FAILED', 'CANCELLED']),
+    payout_id: z.enum(payout_ids),
+    payout_method_id: z.enum(payout_method_ids),
+})
+
 const payout_method_ids = payout_methods.map(p => p.id)
-
 const payouts = generateMock(payouts_schema(host_ids as [string], payout_method_ids as [string]).array().length(30))
-
-
+const payout_ids = payouts.map(payout=>payout.id)
+const withdrawals = generateMock(withdrawals_schema(host_ids as [string], payout_method_ids as [string], payout_ids as [string]).array().length(30))
 
 const all_data = {
     markets,
@@ -331,7 +341,7 @@ const all_data = {
                 user_settings: settings.find(s => s.user_id === user.id),
                 earnings: {
                     all_time: payouts.filter(p => p.user_id === user.id).reduce((acc, curr) => acc + curr.amount, 0),
-                    month: payouts.filter(p => p.user_id === user.id && p.date.getMonth() === new Date().getMonth()).reduce((acc, curr) => acc + curr.amount, 0),
+                    available: 328,
                 }
             }
         }else {
@@ -435,7 +445,15 @@ const all_data = {
     payment_types,
     settings,
     driver_credentials,
-    invitations
+    invitations,
+    withdrawals: withdrawals.map((withdrawal)=>{
+        return{
+            ...withdrawal,
+            payout: payouts.find((payout)=>payout.id===withdrawal.payout_id),
+            user: users.find((user)=>user.id===withdrawal.user_id),
+            payout_method: payout_methods.find((payment_method)=>payment_method.id === withdrawal.payout_method_id)
+        }
+    }),
 }
 
 

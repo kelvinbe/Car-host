@@ -10,7 +10,7 @@ export const billingApi = createApi({
     baseQuery: fetchBaseQuery({
         prepareHeaders: async (headers) => {
             const token = await auth.currentUser?.getIdToken()
-            headers.set('token', `Bearer ${token}`)
+            headers.set('Authorization', `Bearer ${token}`)
             headers.set('x-user', 'CUSTOMER')
             return headers
         }
@@ -32,13 +32,13 @@ export const billingApi = createApi({
                     ...body,
                 },
                 params: {
-                    type: body.type
+                    type: body.type === 'card' ? 'STRIPE' : body.type?.toLocaleUpperCase()
                 }
             }),
         }),
         setPaymentMethod: builder.mutation<any, IRawPaymentMethodDetails<any>>({
             query: (body) => ({
-                url: "/api/paymentMethods",
+                url: PAYMENT_METHOD_ENDPOINT,
                 method: "POST",
                 body
             })

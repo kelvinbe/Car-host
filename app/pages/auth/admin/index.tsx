@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import { FlexColCenterCenter, FlexRowCenterCenter } from '../../../utils/theme/FlexConfigs'
 import { useRouter } from 'next/router'
 import { USERS_DOMAIN } from '../../../hooks/constants'
-import axios from 'axios'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
 import { app } from '../../../firebase/firebaseApp'
 import { isEmpty } from 'lodash'
@@ -26,7 +25,7 @@ const requestForLoginToken = async (data: {code: string, email: string}) => {
 
 function Admin() {
 
-    const { query, pathname, push  } = useRouter()
+    const { query, push  } = useRouter()
     const dispatch = useAppDispatch()
     const toast = useToast({
         position: 'top',
@@ -45,7 +44,7 @@ function Admin() {
                             if(token.claims.admin){
                                 dispatch(fetchUser()).then(()=>{
                                     push("/dashboard")
-                                }).catch((e)=>{
+                                }).catch(()=>{
                                     toast({
                                         title: "Unable to sign you in",
                                         description: "Try again later",
@@ -63,7 +62,7 @@ function Admin() {
                                     isClosable: true,
                                 })
                             }
-                        }).catch((e)=>{
+                        }).catch(()=>{
                             toast({
                                 title: "Unable to sign you in",
                                 description: "Please check the link and try again",
@@ -79,7 +78,7 @@ function Admin() {
                             isClosable: true,
                         })
                     }
-                }).catch((e)=>{
+                }).catch(()=>{
                     toast({
                         title: "Unable to sign you in",
                         description: "Please check the link and try again",
@@ -87,7 +86,7 @@ function Admin() {
                         isClosable: true,
                     })
                 })
-            }).catch((e)=>{
+            }).catch(()=>{
                 toast({
                     title: "Unable to validate invite link",
                     description: "Please check the link and try again",

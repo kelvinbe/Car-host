@@ -10,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useReservation from "../../../hooks/useReservation";
+import { IReservation } from "../../../globaltypes";
 
 export default function BlockoutModal({
   isOpen,
@@ -18,7 +19,15 @@ export default function BlockoutModal({
   endTime,
   event,
   eventId,
-}: any) {
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  startTime: string;
+  endTime: string;
+  event: Partial<IReservation>;  
+  eventId: string;
+
+}) {
   const { addReservation } = useReservation(eventId);
   function handleEventBlock() {
     addReservation(event);

@@ -1,7 +1,4 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
-import { app } from '../firebase/firebaseApp';
 import { Flex, useToast } from '@chakra-ui/react';
 import { FlexColCenterBetween, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter } from '../utils/theme/FlexConfigs';
 import Logo from '../components/atoms/Brand/Logo';
@@ -10,11 +7,8 @@ import HelperLinkText from '../components/atoms/HelperLinkText/HelperLinkText';
 import React, {  useState } from 'react';
 import useAppAuth from '../hooks/useAppAuth';
 
-const provider = new GoogleAuthProvider();
-const auth = getAuth(app);
 
 export default function Home() {
-  const [user, loading, error] = useAuthState(auth);
   const [authState, setAuthState] = useState<"signup"|"signin"|"forgot">("signin")
   const { push } = useRouter();
 
@@ -36,8 +30,7 @@ export default function Home() {
       signInWithEmailAndPassword({email, password})
     }else if(authState === "signup"){
       createUserWithEmailAndPassword(email, password).then(()=>{
-        push("/dashboard")
-        console.log("Signed up")
+        push("/onboarding")
       }).catch((e)=>{
         console.log(e)
         toast({

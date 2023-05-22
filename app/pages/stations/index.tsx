@@ -1,20 +1,15 @@
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { Flex, IconButton } from "@chakra-ui/react";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { insertTableActions } from "../../utils/tables/utils";
 import {
   FlexColCenterStart,
   FlexRowCenterAround,
 } from "../../utils/theme/FlexConfigs";
-import { useFetchData } from "../../hooks";
-import { STATIONS_DOMAIN } from "../../hooks/constants";
-import { useAppSelector } from "../../redux/store";
 import { useDisclosure } from "@chakra-ui/react";
-import useDeleteData from "../../hooks/useDeleteData";
 import { IStation } from "../../globaltypes";
-import { getStations, useDeleteStationMutation, useGetStationsQuery } from "../../redux/stationSlice";
-import { selectStations } from "../../redux/stationSlice";
+import { useDeleteStationMutation, useGetStationsQuery } from "../../redux/stationSlice";
 import { StationTableColumns } from "../../utils/tables/TableTypes";
 import StationActionModal from "../../components/organism/Modals/StationActionModal"
 import ViewStationModal from "../../components/organism/Modals/ViewStationModal"
@@ -68,7 +63,7 @@ function Stations() {
       key:"isViewModalOpen",
       value:true
     })
-    let station = data?.find(station => station.id === stationId)
+    const station = data?.find(station => station.id === stationId)
     station && setSelectedStation(station)
     station && onOpen()
   }
@@ -78,7 +73,7 @@ function Stations() {
       key:"isEditModalOpen",
       value:true
     })
-    let station = data?.find(station => station.id === stationId)
+    const station = data?.find(station => station.id === stationId)
     station && setSelectedStation(station)
     onOpen()
   }
@@ -166,7 +161,6 @@ function Stations() {
           position: ["bottomCenter"],
         }}
         data={data ?? []}
-        dataFetchFunction={() => {}}
       />
     </Flex>
   );

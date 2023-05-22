@@ -1,8 +1,8 @@
-import { Flex, chakra } from '@chakra-ui/react'
+import { chakra } from '@chakra-ui/react'
 import React from 'react'
 
 interface IProps {
-    image: string,
+    image?: string,
     size: "small" | "large" | "mid"
 }
 

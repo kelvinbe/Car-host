@@ -7,8 +7,17 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
 import store from '../redux/store'
 import Head from 'next/head'
+import LogRocket from 'logrocket';
+import React, {useEffect} from 'react'
 
 export default function App({ Component, pageProps }: AppProps<IStaticProps>) {
+
+  useEffect(()=>{
+    LogRocket.init('jnm7z6/divvly');
+    LogRocket.getSessionURL((sessionURL)=>{
+
+    })
+  },[])
   return (
     <Provider store={store} >
       <ChakraProvider theme={theme} >
@@ -18,7 +27,6 @@ export default function App({ Component, pageProps }: AppProps<IStaticProps>) {
         <meta name="description" content="Divvly allows AirBnB hosts rent cars to their tenants." />
         <meta property="og:title" content="Divvly" />
         <meta property="og:description" content="Divvly allows AirBnB hosts rent cars to their tenants." />
-        {/* <meta property="og:image" content="https://example.com/my-image.jpg" /> */}
       </Head>
         <Component {...pageProps} />
       </Layouts>

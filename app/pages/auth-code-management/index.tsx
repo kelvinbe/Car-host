@@ -72,7 +72,6 @@ function AuthCodeManagement() {
           );
         })}
         data={showRequestsTable ? requestsData : authcodeData}
-        dataFetchFunction={() => {}}
         pagination={{
           position: ["bottomCenter"],
         }}

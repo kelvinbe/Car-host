@@ -11,7 +11,7 @@ import Loading from '../../../molecules/Feedback/Loading/Loading';
 import { useAppDispatch } from '../../../../store/store';
 import { isEmpty, isNull } from 'lodash';
 import BookingCarComponent from './BookingCarComponent';
-import { SearchScreenParamList } from '../../../../types';
+import { IReservation, SearchScreenParamList } from '../../../../types';
 import { useConfirmPaymentQuery } from '../../../../store/slices/billingSlice';
 
 interface IProps {
@@ -80,13 +80,18 @@ const BookingScreen = (props: Props) => {
       if (confirmationData) {
         reduxDispatch(clearBookingState());
         addReservation({
+          body: {
           station_id: vehicle?.station_id,
           vehicle_id: vehicle?.id,
-          start_date_time,
-          end_date_time,
-        }).then(()=>{
+          start_date_time: new Date(start_date_time).getTime(),
+          end_date_time: new Date(end_date_time).getTime(),
+        },
+        headers:booking_payment_authorization ?? ""
+      }).unwrap().then((reservation)=>{
+        console.log("Here is the ere", reservation)
+        const res = reservation as Partial<IReservation>
           navigate('BookingConfirmationScreen', {
-            reservationId: ''
+            reservationId: res?.id ?? ""
           });
         }).catch((e)=>{
           toast({

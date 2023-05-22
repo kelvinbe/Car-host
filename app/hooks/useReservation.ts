@@ -120,7 +120,7 @@ export default function useReservation(reservationId?: string | number, size?:nu
       });
   }
 
-  function addReservation(reservation: IReservation) {
+  function addReservation(reservation: Partial<IReservation>) {
     setLoadingAdd(true);
     if (isEmpty(reservation))
       return setAddErrors({

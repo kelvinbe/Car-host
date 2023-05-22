@@ -1,15 +1,16 @@
-import { IAPIDto, IReservation, IVehicle } from './../../types';
+import { IAPIDto, IReservation, IVehicle} from './../../types';
 import { DOMAIN, RESERVATIONS_ENDPOINT } from './../../hooks/constants';
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
 import { auth } from '../../firebase/firebaseApp';
+
 
 export const reservationsApi = createApi({
     reducerPath: "reservationsApi",
     baseQuery: fetchBaseQuery({
         prepareHeaders: async (headers) =>{
             const token = await auth.currentUser?.getIdToken()
-            headers.set('token', `Bearer ${token}`)
+            headers.set('Authorization', `Bearer ${token}`)
             headers.set('x-user', 'CUSTOMER')
             return headers
         }
@@ -39,11 +40,17 @@ export const reservationsApi = createApi({
                 return response.data?.[0] ?? null
             }
         }),
-        addReservation: builder.mutation<Partial<IReservation>, Partial<IReservation> & Partial<IVehicle>>({
-            query: (body) => ({
+        addReservation: builder.mutation<Partial<IReservation>, {
+            body: Partial<IReservation> & Partial<IVehicle>,
+            headers: string
+        }>({
+            query: (data) => ({
                 url: RESERVATIONS_ENDPOINT,
                 method: 'POST',
-                body
+                body: data.body,
+                headers: {
+                    "X-Payment-Authorization": data.headers
+                }
             }),
             transformResponse: (response: any) => {
                 return response.data

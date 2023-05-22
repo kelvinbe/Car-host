@@ -19,7 +19,7 @@ const vehicles: IVehicleDetails[] =[{
 const testFunc = jest.fn()
 describe('Tests the EditVehicleModal component', ()=>{
     it('Tests if the component mounts', ()=>{
-        const{baseElement}=render(<Provider store={store}><EditVehicleModal isOpen onClose={testFunc} vehicleId={1} vehicles={vehicles}/></Provider>);
+        const { baseElement } = render(<Provider store={store}><EditVehicleModal isOpen onClose={testFunc} vehicle_id={1} vehicles={vehicles} /></Provider>);
         expect(baseElement).toBeTruthy()
         const inputs = screen.getAllByRole('textbox')
         expect(screen.getByText('Edit vehicle details')).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe('Tests the EditVehicleModal component', ()=>{
     });
 
     it('Tests edit form fields', ()=>{
-        render(<Provider store={store}><EditVehicleModal isOpen onClose={testFunc} vehicleId={1} vehicles={vehicles}/></Provider>);
+        render(<Provider store={store}><EditVehicleModal isOpen onClose={testFunc} vehicle_id={1} vehicles={vehicles} /></Provider>);
         const inputs = screen.getAllByRole('textbox')
         const button = screen.getByText('Edit')
 

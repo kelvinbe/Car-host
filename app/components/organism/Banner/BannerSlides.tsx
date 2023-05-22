@@ -1,8 +1,14 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box} from "@chakra-ui/react";
 import BannerInfo from "../../molecules/BannerInfo/BannerInfo";
 
-export const SlideWithBgImage = ({ banner }:any) => {
+export const SlideWithBgImage = ({ banner }:{
+  banner: {
+    id: number;
+    image: string;
+    disImage?: string;
+  }
+}) => {
   return (
     <Box
       w="full"
@@ -27,7 +33,7 @@ export const SlideWithBgImage = ({ banner }:any) => {
           letterSpacing=""
           direction="row"
           display="block"
-          image={banner.disImage}
+          image={banner.disImage ?? ""}
           textColor=""
           boxWidth="full"
           imageWidth="1000px"
@@ -48,7 +54,7 @@ export const SlideWithBgImage = ({ banner }:any) => {
           letterSpacing=""
           direction="row"
           display="block"
-          image={banner.disImage}
+          image={banner.disImage ?? ""}
           textColor=""
           boxWidth="1000px"
           imageWidth="1000px"
@@ -64,7 +70,7 @@ export const SlideWithBgImage = ({ banner }:any) => {
           letterSpacing="1em"
           direction="row"
           display="none"
-          image={banner.disImage}
+          image={banner.disImage ?? ""}
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
@@ -83,7 +89,13 @@ export const SlideWithBgImage = ({ banner }:any) => {
   );
 };
 
-export const Slide = ({ banner }:any) => {
+export const Slide = ({ banner }:{
+  banner: {
+    id: number;
+    image: string;
+    disImage?: string;
+  }
+}) => {
   return (
     <Box
       w="full"
@@ -103,7 +115,7 @@ export const Slide = ({ banner }:any) => {
         letterSpacing="1em"
         direction="row"
         display="block"
-        image={banner.disImage}
+        image={banner.disImage ?? ""}
         textColor=""
         flexDirection="column"
         justifyContent="center"
@@ -119,7 +131,13 @@ export const Slide = ({ banner }:any) => {
   );
 };
 
-export const BannerSlides = ({ banner }:any) => {
+export const BannerSlides = ({ banner }:{
+  banner: {
+    id: number;
+    image: string;
+    disImage?: string;
+  }
+}) => {
   return (
     <section data-testid='slide-with-bg-image'>
       <SlideWithBgImage banner={banner} />

@@ -36,7 +36,7 @@ export const theme = extendTheme({
             1000: "rgba(56, 176, 0, 1)",
             100: "rgba(56, 176, 0, 0.1)",
         },
-        cancelled: {
+        hold: {
             1000: "rgba(191, 6, 3, 1)",
             100: "rgba(191, 6, 3, 0.1)",
         },
@@ -51,6 +51,62 @@ export const theme = extendTheme({
         pending: {
             1000: "rgba(251, 188, 5, 1)",
             100: "rgba(251, 188, 5, 0.1)",
+        },
+        cancelled: {
+            100: "#f7a8aa",
+            1000: "#ab0306",
+        },
+        denied: {
+            100: "#F1A293 ",
+            1000: "#EE4120 ",
+        },
+        success: {
+            100: "#E1F8FF ",
+            1000: "#02C4FE ",
+        },
+        complete: {
+            100: "#E0FEE4 ",
+            1000: "#0CD225 ",
+        },
+        blocked: {
+            100: "#a69091",
+            1000: "#ab070a",
+        },
+        inactive: {
+            100: "#e8e8e6",
+            1000:"#7d7d7a",
+        },
+        incomplete: {
+            100: "#FEFDE5 ",
+            1000:"#D7D304  ",
+        },
+        expired: {
+            100: "#e8e8e6",
+            1000:"#7d7d7a",
+        },
+        nonactive: {
+            100: "#e8e8e6",
+            1000:"#7d7d7a",
+        },
+        revoked: {
+            100: "#F1A293 ",
+            1000: "#EE4120 ",
+        },
+        other: {
+            100: "#EBF5FB ",
+            1000:"#2874A6  ",
+        },
+        failed: {
+            100: "#f7a8aa",
+            1000: "#ab0306",
+        }, 
+        completed: {
+            100: "#E0FEE4 ",
+            1000: "#0CD225 ",
+        },
+        approved:{
+            100: "#E1F8FF ",
+            1000: "#02C4FE ",
         },
         link: "#1877F2"
     },

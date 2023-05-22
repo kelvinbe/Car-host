@@ -1,6 +1,6 @@
 import ModalTemplate from "./ModalTemplate";
-import React, { useEffect, useState } from "react";
-import { Box, Heading, Select, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Heading, Select } from "@chakra-ui/react";
 import { PayoutMethods } from "../../../globaltypes";
 import Rounded from "../../molecules/Buttons/General/Rounded";
 import usePayoutMethods from "../../../hooks/usePayoutMethods";

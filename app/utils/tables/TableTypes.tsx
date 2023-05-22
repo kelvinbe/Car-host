@@ -151,6 +151,49 @@ export const ReservationTableColumns: ColumnsType<DataType> = [
   }
 ];
 
+export const AnalyticsTableColums: ColumnsType<DataType>=[
+  {
+    title: "Reservation ID",
+    dataIndex: "reservationId",
+    key: "reservationId",
+  },
+  {
+    title: "Date",
+    dataIndex: "start_date_time",
+    key: "start_date_time",
+    render: (v, { startDateTime }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {dayjs(startDateTime).format('DD MMM, YYYY')}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Cost",
+    dataIndex: "total",
+    key: "total",
+    align:'center',
+    render: (v, { totalCost }) => (
+      <Flex {...FlexColCenterCenter}>
+        <Text fontSize="14px" fontWeight="500">
+          {totalCost}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    align: "center",
+    render: (v, { status }) => (
+      <Flex {...FlexColCenterCenter}>
+        <StatusTag status={status as any}>{status}</StatusTag>
+      </Flex>
+    ),
+  }
+]
 export const PayoutsTableColumns: ColumnsType<IPayout> = [
   {
     title: "Payout Date",
@@ -159,7 +202,45 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     render: (v, { date: payout_date }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {payout_date}
+          {dayjs(payout_date).format('DD MMM, YYYY')}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Amount",
+    dataIndex: "amount",
+    key: "amount",
+    render: (v, { amount }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          ${amount}
+        </Text>
+      </Flex>
+    ),
+    sortDirections: ["descend", "ascend"],
+    sorter: (a, b) => a.amount - b.amount,
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart}>
+        <StatusTag status={status as any}>{status}</StatusTag>
+      </Flex>
+    ),
+  },
+];
+export const WithdrawalsTableColumns: ColumnsType<IPayout> = [
+  {
+    title: "Withdrawal Date",
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (v, { date: payout_date }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {dayjs(payout_date).format('DD MMM, YYYY')}
         </Text>
       </Flex>
     ),
@@ -440,14 +521,14 @@ export const ReservationColumns: ColumnsType<any> = [
     ),
   },
 ];
-export const VehicleManagementTableColumns: ColumnsType<IVehicleDetails> = [
+export const VehicleManagementTableColumns: ColumnsType<Partial<IVehicle>> = [
   {
     title: "Vehicle",
     dataIndex: "vehicle",
     key: "vehicle",
-    render: (v, { VehiclePictures: vehicle_pictures }) => (
+    render: (v, { pictures: vehicle_pictures }) => (
       <Flex {...FlexColStartStart} w="full">
-        <VehiclePic image={vehicle_pictures[0]} size="small" />
+        <VehiclePic image={vehicle_pictures?.[0]} size="small" />
       </Flex>
     ),
   },
@@ -522,7 +603,7 @@ export const VehicleManagementTableColumns: ColumnsType<IVehicleDetails> = [
         </Text>
       </Flex>
     ),
-    sorter: (a: IVehicleDetails, b: IVehicleDetails) => a.hourly_rate - b.hourly_rate,
+    sorter: (a: Partial<IVehicle>, b: Partial<IVehicle>) => (a?.hourly_rate ?? 0) - (b?.hourly_rate ?? 0),
     sortDirections: ["descend", "ascend"],
   },
   {

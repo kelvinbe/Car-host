@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 import apiClient from "../utils/apiClient";
 
-export default function useEditData(url:string, id:number, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
+export default function useEditData(url:string, id:number | string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
 
   const [loading, setLoading] = useState(false);

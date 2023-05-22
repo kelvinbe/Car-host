@@ -157,18 +157,18 @@ server.get("/users/onboarding", (req: { headers: { authorization: string; }; }, 
       // get onboarding detials
       onboarding = {
         completed: {
-          location: true,
-          payment_method: true,
-          drivers_license: true,
+          location: false,
+          payment_method: false,
+          drivers_license: false,
         }
       }
   } else {
       const user = db.get("users").find({uid}).value()
       onboarding = {
         completed: {
-          location: true,
-          payment_method: true,
-          drivers_license: true,
+          location: false,
+          payment_method: false,
+          drivers_license: false,
         }
       }
   }

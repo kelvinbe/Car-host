@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Divider, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select, Text, useToast } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Button, Checkbox, Divider, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select, Text } from '@chakra-ui/react'
 import { FlexColCenterStart, FlexRowCenterBetween } from '../../../../utils/theme/FlexConfigs'
 import PhoneInputWithCountrySelect from 'react-phone-number-input'
 import { ZodFormattedError, z } from 'zod'
@@ -31,9 +31,6 @@ interface FormState {
 
 function MobileMoneyPayoutMethodForm(props: Props) {
     const { onDone, onCancel } = props
-    const toast = useToast({
-        position: "top"
-    })
     const [inputState, setInputState] = useState<FormState>({
         state: null,
         errors: null,
@@ -132,7 +129,7 @@ function MobileMoneyPayoutMethodForm(props: Props) {
                 <Select value={inputState?.state?.id_type} placeholder="Select option" onChange={(e)=> handleStateChange("id_type", e.target.value)} >
                     <option value="national_id">National ID</option>
                     <option value="passport">Passport</option>
-                    <option value="drivers_licence">Driver's Licence</option>
+                    <option value="drivers_licence">{`Driver's Licence`}</option>
                 </Select>
             </FormControl>
             <Checkbox isChecked={inputState?.agrees} onChange={(e)=> setInputState({

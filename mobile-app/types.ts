@@ -251,8 +251,8 @@ export interface IReservation {
   id: string;
   user_id: string;
   vehicle_id: string;
-  start_date_time: string;
-  end_date_time: string;
+  start_date_time: string | number;
+  end_date_time: string | number;
   created_at: string;
   updated_at: string;
   status: string;
@@ -289,6 +289,7 @@ export interface IVehicle {
   location: any; // will be phased out
   VehiclePictures?: string[];
 }
+
 
 /**
  * @name PaymentMethod

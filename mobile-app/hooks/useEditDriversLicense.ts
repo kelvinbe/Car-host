@@ -25,7 +25,7 @@ export default function useEditDriversLicense() {
         await getAuth(app)?.currentUser?.getIdToken().then(async (token)=>{
             setLoading(true)
             await apiClient.put(DRIVER_CREDENTIALS_ENDPOINT, {
-                [side]: license
+                [`drivers_licence_${side}`]: license
             }).then(()=>{
                 setLoading(false);
             }).catch((e)=>{

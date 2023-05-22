@@ -1,10 +1,9 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { createSlice } from '@reduxjs/toolkit';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { useDisclosure } from '@chakra-ui/react';
 import EventMainModal from '../Modals/EventMainModal';
@@ -12,6 +11,7 @@ import { eIReservation } from '../../../entities';
 import useEventData from '../../../hooks/useEventData';
 import useResourceData from '../../../hooks/useResourceData';
 import { useToast } from '@chakra-ui/react';
+import { IReservation } from '../../../globaltypes';
 
 function handleEventContent(eventInfo: any){
   return (
@@ -22,7 +22,7 @@ function handleEventContent(eventInfo: any){
   )
 }
 
-const initialState: eIReservation = {
+const initialState: Partial<IReservation> = {
   type: "",
   start_date_time: '',
   end_date_time: '',
@@ -66,7 +66,7 @@ function FullCallender() {
     setIsEvent(true)
     setStartTime(eventInfo.startStr)
     setEndTime(eventInfo.endStr)
-    let duration: number = 0
+    let duration = 0
     const durationInHours: number = ((new Date(eventInfo.endStr).getHours() - (new Date(eventInfo.startStr)).getHours()))
     const durationInMinutes: number = ((new Date(eventInfo.endStr).getMinutes() - (new Date(eventInfo.startStr)).getMinutes()))
     if(durationInMinutes < 0){

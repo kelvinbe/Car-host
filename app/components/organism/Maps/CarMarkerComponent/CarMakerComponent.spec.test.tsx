@@ -4,7 +4,7 @@ import { render } from "@testing-library/react";
 
 describe('Tests the CarMarkerComponent', ()=>{
     it('Tests if the component mounts', ()=>{
-        const{baseElement}=render(<CarMarkerComponent vehicleId="2" vehicleMake="Toyota-Camri" vehicleModel="C-49"/>);
+        const{baseElement}=render(<CarMarkerComponent />);
         expect(baseElement).toBeTruthy()
     })
 })

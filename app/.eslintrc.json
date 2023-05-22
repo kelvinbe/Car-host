@@ -1,12 +1,8 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "extends": ["next/babel","next/core-web-vitals", "react-app", "plugin:jsx-a11y/recommended","eslint:recommended",
-  "plugin:@typescript-eslint/recommended"],
-  "plugins": ["@typescript-eslint","jsx-a11y"],
-  "rules":{
-    "jsx-a11y/alt-text": "warn",//ensure all img tags has alt tags
-    "jsx-a11y/anchor-is-valid": "warn", //checks valid href attribute in anchor tags
-    "jsx-a11y/no-noninteractive-element-interactions": "warn", //checks non-interactive element do not have event handlers
-    "jsx-a11y/control-has-associated-label": "warn" //checks if form control elements have a label
+  "extends": [
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
   }
 }

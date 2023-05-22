@@ -26,7 +26,7 @@ type IapiInfo = {
     year: string
 }
 
-type IstateApiData = IapiInfo[] | any[]
+type IstateApiData = IapiInfo[] 
 
 const reducer = (state:IvehicleApiInfo, action:{type:string, payload:string, key:string}): IvehicleApiInfo=>{
     const { type, payload, key} = action
@@ -59,6 +59,7 @@ const validateField = (fieldname:string, fieldValue:string): boolean =>{
             if(fieldValue.length < 2) return true
             return false
         case 'year':
+            // eslint-disable-next-line no-case-declarations
             const re = /(?:(?:19|20|21)[0-9]{2})/
             if(!re.test(fieldValue)) return true
             return false

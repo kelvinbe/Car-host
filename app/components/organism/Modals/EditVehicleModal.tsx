@@ -1,4 +1,5 @@
-import { useState, useReducer } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useReducer, useEffect } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -13,20 +14,22 @@ import {
     FormErrorMessage,
     FormLabel
   } from "@chakra-ui/react";
-  import useVehicleFilter from "../../../hooks/useVehicleFilter"
-  import { IVehicleDetails } from "../../../globaltypes";
+  import { IVehicle } from "../../../globaltypes";
   import useVehicles from "../../../hooks/useVehicles";
   import Rounded from "../../molecules/Buttons/General/Rounded";
   import { FlexRowCenterCenter } from "../../../utils/theme/FlexConfigs";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import { fetchVehicle, selectFetchVehicleFeedback } from "../../../redux/vehiclesSlice";
+import { isArraySame } from "../../../utils/utils";
 
   interface Props{
     isOpen:boolean,
     onClose:() => void,
-    vehicleId:number,
-    vehicles:IVehicleDetails[]
+    vehicle_id?: string,
+    vehicles:Partial<IVehicle>[]
 }
 
-const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:null|string|number|string[]}) => {
+const reducer = (state:Partial<IVehicle> | null, action:{type:string, key:string, value:null|string|number|string[]}) => {
     switch (action.type) {
         case "update_vehicle":
             return {
@@ -39,51 +42,51 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
 }
   
   export default function EditVehicleModal(props:Props) { 
-    const {isOpen, onClose, vehicleId, vehicles} = props
-    const selectedVehicle = useVehicleFilter(vehicleId, vehicles)
-    const {updateVehicle} = useVehicles(vehicleId)
+      const reduxDispatch = useAppDispatch()
+      const { data: selectedVehicle } = useAppSelector(selectFetchVehicleFeedback)
+      const [state, dispatch] = useReducer(reducer, selectedVehicle)
+      const { isOpen, onClose, vehicle_id } = props
+      const {updateVehicle} = useVehicles(vehicle_id)
+
+
+
+      useEffect(() => {
+          reduxDispatch(fetchVehicle({
+              vehicle_id
+          }))
+      }, [vehicle_id])
+
+
     const [isPlateError, setIsPlateError] = useState(false)
     const [isMakeError, setIsMakeError] = useState(false)
     const [isModelError, setIsModelError] = useState(false)
     const [isYearError, setIsYearError] = useState(false)
     const [isRateError, setIsRateError] = useState(false)
-
-    const initialstate:IVehicleDetails= {
-        plate:selectedVehicle?.['plate'] as string,
-        make:selectedVehicle?.['make'] as string,
-        model:selectedVehicle?.['model'] as string,
-        year:selectedVehicle?.['year'] as number,
-        transmission:selectedVehicle?.['transmission'] as string,
-        hourly_rate:selectedVehicle?.['hourly_rate'] as number,
-        status:selectedVehicle?.['status'] as "active" | "unavailable" | "available",
-        VehiclePictures: selectedVehicle?.['VehiclePictures'] as string[]
-    }
     
-    const [state, dispatch] = useReducer(reducer, initialstate)
     const handleEdit = () => {
-        state.plate === '' && setIsPlateError(true)
-        state.make === '' && setIsMakeError(true)
-        state.model === '' && setIsModelError(true)
-        !state.year && setIsYearError(true)
-        !state.hourly_rate && setIsRateError(true)
+        state?.plate === '' && setIsPlateError(true)
+        state?.make === '' && setIsMakeError(true)
+        state?.model === '' && setIsModelError(true)
+        !state?.year && setIsYearError(true)
+        !state?.hourly_rate && setIsRateError(true)
 
-        if (state.plate === '' || state.VehiclePictures?.length === 0 || state.make === "" || state.model === "" || !state.year || !state.hourly_rate) {
+        if (state?.plate === '' || state?.pictures?.length === 0 || state?.make === "" || state?.model === "" || !state?.year || !state?.hourly_rate) {
             return;
         }else{
             updateVehicle({
-                plate:selectedVehicle?.plate === state.plate ? undefined : state.plate,
+                plate: selectedVehicle?.plate === state.plate ? undefined : state.plate,
                 make: selectedVehicle?.make === state.make ? undefined : state.make,
                 model: selectedVehicle?.model === state.model ? undefined : state.model,
                 year: selectedVehicle?.year === state.year ? undefined : state.year,
                 transmission: selectedVehicle?.transmission === state.transmission ? undefined : state.transmission,
                 hourly_rate: selectedVehicle?.hourly_rate === state.hourly_rate ? undefined : state.hourly_rate,
                 status: selectedVehicle?.status === state.status ? undefined : state.status,
-                VehiclePictures: selectedVehicle?.VehiclePictures === state.VehiclePictures ? undefined : state.VehiclePictures
+                pictures: isArraySame(selectedVehicle?.pictures, state.pictures) ? undefined : state.pictures,
             })
             onClose()
         }
     }
-    if(!selectedVehicle) return null
+
     return (
       <>
         <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
@@ -96,7 +99,7 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                     <Flex w={'100%'} flexWrap='wrap' flexDirection={"row"} justifyContent={'space-between'} h='100%'>
                         <FormControl w={350} isRequired marginBottom={5} isInvalid={isPlateError}>
                             <FormLabel htmlFor="plate">Plate</FormLabel>
-                            <Input type='text' id='plate' placeholder='ABC-123' w={240} value={state.plate} onChange={e =>
+                            <Input type='text' id='plate' placeholder='ABC-123' w={240} value={state?.plate} onChange={e =>
                                 dispatch({
                                 type:'update_vehicle',
                                 value:e.target.value,
@@ -107,7 +110,7 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                         </FormControl>
                         <FormControl w={240} isRequired isInvalid={isMakeError} flexDirection={'column'} marginBottom={5}>
                             <FormLabel htmlFor="make">Make</FormLabel>
-                            <Input type='text' id='make' placeholder='Toyota' w={240} value={state.make} onChange={e => 
+                            <Input type='text' id='make' placeholder='Toyota' w={240} value={state?.make} onChange={e => 
                                 dispatch({
                                     type:'update_vehicle',
                                     value:e.target.value,
@@ -118,7 +121,7 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                         </FormControl>
                         <FormControl w={240} isRequired isInvalid={isModelError} marginBottom={5}>
                             <FormLabel htmlFor="model">Model</FormLabel>
-                            <Input type='text' id='model' placeholder='Camry' w={240} value={state.model} onChange={e =>       dispatch({
+                            <Input type='text' id='model' placeholder='Camry' w={240} value={state?.model} onChange={e =>       dispatch({
                                     type:'update_vehicle',
                                     value:e.target.value,
                                     key:"model"
@@ -128,7 +131,7 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                         </FormControl>
                         <FormControl w={240} isRequired isInvalid={isYearError} marginBottom={5}>
                             <FormLabel htmlFor="year">Year</FormLabel>
-                            <Input type='number' id='year' placeholder='2018' max={4} w={240} value={state.year} onChange={e => dispatch({
+                            <Input type='number' id='year' placeholder='2018' max={4} w={240} value={state?.year} onChange={e => dispatch({
                                 type:'update_vehicle',
                                 value:e.target.value,
                                 key:"year"
@@ -137,7 +140,7 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                         </FormControl>
                         <FormControl w={240} marginBottom={5} isRequired>
                             <FormLabel htmlFor="transmission">Transmission</FormLabel>
-                            <Select w={240} value={state.transmission} onChange={e => dispatch({
+                            <Select w={240} value={state?.transmission} onChange={e => dispatch({
                                 type:'update_vehicle',
                                 value:e.target.value,
                                 key:"transmission"
@@ -146,11 +149,16 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                                 <option value='auto'>Automatic</option>
                                 <option value='cvt'>CVT</option>
                                 <option value="semi-auto">Semi Automatic</option>
+                                <option value="dual-clutch">Dual Clutch</option>
+                                <option value="tiptronic">Tiptronic</option>
+                                <option value="auto-manual">Auto Manual</option>
+                                <option value="auto-clutch">Auto Clutch</option>
+                                <option value="electric">Electric</option>
                             </Select>
                         </FormControl>
                         <FormControl w={240} marginBottom={5} isRequired>
                             <FormLabel htmlFor="status">Status</FormLabel>
-                            <Select w={240} value={state.status} onChange={e => dispatch({
+                            <Select w={240} value={state?.status} onChange={e => dispatch({
                                 type:'update_vehicle',
                                 value:e.target.value,
                                 key:"status"
@@ -162,7 +170,7 @@ const reducer = (state:IVehicleDetails, action:{type:string, key:string, value:n
                         </FormControl>
                         <FormControl w={240} marginBottom={5} isRequired isInvalid={isRateError}>
                             <FormLabel htmlFor="rate">Rate</FormLabel>
-                            <Input type='number' id='rate' placeholder='$' w={240} value={state.hourly_rate} onChange={e => dispatch({
+                            <Input type='number' id='rate' placeholder='$' w={240} value={state?.hourly_rate} onChange={e => dispatch({
                                 type:'update_vehicle',
                                 value:e.target.value,
                                 key:"hourly_rate"

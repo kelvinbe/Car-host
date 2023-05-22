@@ -46,7 +46,7 @@ function useBookingActions() {
     const payWithStripe = async () => {
       const { vehicle, start_date_time, end_date_time } = bookingDetails
       setLoading(true)
-      apiClient.post(`${PAYMENT_ENDPOINT}/stripe`, {
+      apiClient.post(`${PAYMENT_ENDPOINT}`, {
         amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
         currency: vehicle?.host?.market?.currency ?? 'USD',
         payment_method: bookingDetails?.paymentType?.stripe_payment_method_id
@@ -108,9 +108,11 @@ function useBookingActions() {
      */
     const payWithMpesa = async () => {
       setLoading(true)
-      const { vehicle, start_date_time, end_date_time } = bookingDetails
+      const { vehicle, start_date_time, end_date_time, paymentType } = bookingDetails
       await apiClient.post(`${PAYMENT_ENDPOINT}/mpesa`, {
         amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+        vehicle_id: vehicle?.id,
+        payment_type_id: paymentType?.id
       }).then(({data})=>{
         setPaymentOption({payment_method: 'mpesa'})
         // set the payment authorization code
@@ -142,7 +144,7 @@ function useBookingActions() {
       setLoading(true)
       const { vehicle, start_date_time, end_date_time } = bookingDetails
 
-      await apiClient.post(`${PAYMENT_ENDPOINT}/payments/mtn`, {
+      await apiClient.post(`${PAYMENT_ENDPOINT}/mtn`, {
         amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
         vehicle_id: vehicle?.id,
         payment_type_id: bookingDetails?.paymentType?.id

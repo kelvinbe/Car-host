@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { lowerCase } from "lodash";
 import React, { useEffect, useState } from "react";

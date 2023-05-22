@@ -3,10 +3,9 @@ import { Grid, GridItem, useToast } from '@chakra-ui/react'
 import { Steps } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
-import { updateOnboardingDetails, selectCompleted, selectOnBoardingError, selectOnBoardingLoading, fetchOnboardingDetails } from '../../redux/onboardingSlice'
+import { updateOnboardingDetails, selectCompleted, selectOnBoardingError, fetchOnboardingDetails } from '../../redux/onboardingSlice'
 import { isNull, isUndefined } from 'lodash'
 import { IUserProfile } from '../../globaltypes'
-import { GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/router'
 import OnBoardingProfileInfo from '../../components/organism/OnBoarding/OnBoardingProfileInfo'
 import OnBoardinLocation from '../../components/organism/OnBoarding/OnBoardingLocation'
@@ -17,7 +16,6 @@ import OnBoardingPayoutMethod from '../../components/organism/OnBoarding/OnBoard
 function Onboarding() {
     const toast = useToast()
     const completed = useAppSelector(selectCompleted)
-    const onBoardingLoading = useAppSelector(selectOnBoardingLoading)
     const onBoardingError = useAppSelector(selectOnBoardingError)
     const dispatch = useAppDispatch()
     const { push } = useRouter()
@@ -145,7 +143,7 @@ function Onboarding() {
 export default Onboarding
 
 
-export const getStaticProps = async (context: GetStaticPropsContext) => {
+export const getStaticProps = async () => {
     return {
         props: {
             adminonly: false,

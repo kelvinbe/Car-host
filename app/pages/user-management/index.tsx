@@ -1,7 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
 import BaseTable from '../../components/organism/Table/BaseTable/BaseTable'
-import { IUserProfile } from '../../globaltypes'
 import { UserTableColumns } from '../../utils/tables/TableTypes'
 import { FlexColCenterStart } from '../../utils/theme/FlexConfigs'
 
@@ -11,7 +10,6 @@ function UserManagement() {
       <BaseTable
         data={[]}
         columns={UserTableColumns}
-        dataFetchFunction={() => {}}
 
         />
     </Flex>

@@ -11,6 +11,7 @@ import useToast from '../../../../hooks/useToast';
 import { DropdownData, SelectDropdown } from 'expo-select-dropdown';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PaymentDetailsScreenParamList } from '../../../../types';
+import { setSelectedType } from '../../../../store/slices/paymentMethodSlice';
 
 interface IProps {
 
@@ -62,8 +63,10 @@ const MobileMoneyDetails = (props: Props) => {
         key: "M-Pesa",
         value: "MPESA"
     })
+    
     const handleAddPaymentMethod = async () =>{
         const number = parseInt(mpesa_number?.replace("+", "") ??"")
+
         if(isNaN(number)) return toast({
             message: "Invalid phone number",
             type: "primary"

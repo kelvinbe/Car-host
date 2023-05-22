@@ -1,6 +1,7 @@
 import EventModal from "./ReservedEventModal";
 import BlockoutModal from "./BlockoutModal";
 import useReservation from "../../../hooks/useReservation";
+import { IReservation } from "../../../globaltypes";
 
 export default function EventMainModal({
   eventId,
@@ -10,7 +11,18 @@ export default function EventMainModal({
   startTime,
   endTime,
   event,
-}: any) {
+}: {
+  eventId: string;
+  isEvent: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+  startTime: string;
+  endTime: string;
+  event: Partial<IReservation> & {
+    entityId?: string
+  };
+
+}) {
   const { selectedReservation } = useReservation(eventId);
     return (
         <>

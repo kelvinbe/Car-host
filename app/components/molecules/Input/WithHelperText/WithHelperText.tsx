@@ -22,7 +22,6 @@ function WithHelperText(props: IProps) {
     const {
         formLabel,
         placeholder,
-        errorMessage,
         helperTextTop,
         helperTextBottom,
         onChangeText,
@@ -30,7 +29,6 @@ function WithHelperText(props: IProps) {
         customTopHelperStyle,
         onClickHelperText,
         rightIcon,
-        customBottomHelperStyle,
         type,
         value
     } = props;

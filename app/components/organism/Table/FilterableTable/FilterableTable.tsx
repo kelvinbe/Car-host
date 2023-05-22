@@ -1,5 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
-import React, { ChangeEvent, useEffect, useReducer, useState } from "react";
+import React, { ChangeEvent, useEffect, useReducer } from "react";
 import {
   FlexColCenterStart,
   FlexRowCenterBetween,
@@ -13,6 +13,7 @@ import BaseTable from "../BaseTable/BaseTable";
 import { SearchIcon } from "@chakra-ui/icons";
 import Rounded from "../../../molecules/Buttons/General/Rounded";
 import { Input } from "@chakra-ui/react";
+import { SortOrder } from "antd/es/table/interface";
 interface IProps {
   /**
    * @sortables 👉 an array with the column keys of the sortable columns
@@ -21,14 +22,14 @@ interface IProps {
     columnKey?: string;
     columnName?: string;
   }[];
-  data?: any[];
-  columns?: ColumnsType<any>;
+  data?: unknown[];
+  columns?: ColumnsType;
   dataFetchFunction?: (fetchStatus: "pending" | "error" | "success") => void;
   addValue?:() =>void;
   buttonName?: string;
-  viewSearchField: Boolean;
-  viewAddFieldButton?: Boolean;
-  viewSortablesField?: Boolean;
+  viewSearchField: boolean;
+  viewAddFieldButton?: boolean;
+  viewSortablesField?: boolean;
   openCreateModal?:() => void
   modalComponent?: React.ReactNode;
   pagination?: TablePaginationConfig | false;
@@ -37,7 +38,7 @@ interface IProps {
 }
 
 interface IReducer {
-  tableColumnDefinitions: ColumnsType<any> | null;
+  tableColumnDefinitions: ColumnsType<unknown> | null;
 }
 
 const initialState: IReducer = {
@@ -80,8 +81,6 @@ function FilterableTable(props: IProps) {
     viewAddFieldButton,
     viewSortablesField,
     openCreateModal,
-    modalComponent,
-    pagination,
     setSearch,
     handlePageChange
   } = props;
@@ -90,8 +89,10 @@ function FilterableTable(props: IProps) {
     initialState
   );
 
-  const onSort = (sort: any) => {
-    console.log("New sort on::::;", sort);
+  const onSort = (sort: {
+    columnKey: string,
+    order: SortOrder,
+}) => {
     dispatchActions(setTableColumnDefinitions(sort));
   };
 
@@ -99,7 +100,6 @@ function FilterableTable(props: IProps) {
     setSearch && setSearch((e.target as HTMLInputElement).value)
   }
   useEffect(() => {
-    console.log("columns::::", columns);
     columns && dispatchActions(initColumnDefinitions(columns));
   }, [columns]);
 
@@ -154,7 +154,7 @@ function FilterableTable(props: IProps) {
       <Flex w="full" {...FlexColCenterStart}>
         <BaseTable
           //@todo modify type definitions
-          columns={tableColumnDefinitions as any}
+          columns={tableColumnDefinitions ?? []}
           data={data || []}
           dataFetchFunction={dataFetchFunction}
           pagination={props.pagination ? props.pagination : false}

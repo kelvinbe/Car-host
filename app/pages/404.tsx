@@ -8,7 +8,6 @@ export default function PageNotFound(){
         fontWeight: 900,
         textColor: "#33415C",
     }
-
     const divStyle:{} = {
         width: "80%",
         marginLeft: "auto",

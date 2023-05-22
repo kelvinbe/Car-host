@@ -1,10 +1,10 @@
 import 'react-phone-number-input/style.css'
 import { Button, Checkbox, Divider, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select, Text, useToast } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { FlexColCenterCenter, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter, FlexRowCenterStart } from '../../../../utils/theme/FlexConfigs'
+import { FlexColCenterCenter, FlexRowCenterBetween, FlexRowCenterCenter, FlexRowCenterStart } from '../../../../utils/theme/FlexConfigs'
 import PhoneInput from 'react-phone-number-input'
 import useLocation from '../../../../hooks/useLocation'
-import { ZodError, ZodFormattedError, z } from 'zod'
+import { ZodFormattedError, z } from 'zod'
 import { isEmpty, uniqBy } from 'lodash'
 
 
@@ -42,7 +42,7 @@ function BankPayoutMethodForm(props: IProps) {
         agrees: false
     })
 
-    const { markets, submarkets, fetchMarkets, fetchSubmarkets } = useLocation()
+    const { markets, fetchMarkets } = useLocation()
     useEffect(() => {
         fetchMarkets()
     }, [])
@@ -172,7 +172,7 @@ function BankPayoutMethodForm(props: IProps) {
                         Passport
                     </option>
                     <option value="drivers_licence" >
-                        Driver's License
+                        {`Driver's License`}
                     </option>
                 </Select>
                 <FormErrorMessage>

@@ -4,16 +4,16 @@ import { IVehicle } from '../../../../globaltypes'
 import { useGetCurrentLocationQuery } from '../../../../redux/locationsSlice'
 import Marker from '../Marker/Marker'
 
-interface IProps extends IVehicle {
+interface IProps extends Partial<IVehicle> {
     map?: google.maps.Map
 }
 
 function CarMarkerComponent( props: IProps ) {
     
-    const { vehicleId, vehicleMake, vehicleModel } = props
+    const { id } = props
     const [latitude, setLatitude] = useState<number>(0)
     const [longitude, setLongitude] = useState<number>(0)
-    const {data: locationData, isLoading, error} = useGetCurrentLocationQuery(vehicleId, {
+    const {data: locationData} = useGetCurrentLocationQuery(id ?? "", {
         pollingInterval: 3000,
         skip: isEmpty(localStorage.getItem("idToken"))
     })

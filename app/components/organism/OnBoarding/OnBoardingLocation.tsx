@@ -34,7 +34,7 @@ const OnBoardinLocation = (props: StepProps) => {
 
     useEffect(() => {
         marketId && fetchSubmarkets(marketId as string)
-    }, [,marketId])
+    }, [marketId])
 
     const handleContinue = () => {
         onCompleted({

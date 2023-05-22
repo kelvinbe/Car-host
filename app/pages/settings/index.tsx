@@ -1,11 +1,16 @@
-import { Button, Divider, Flex, Grid, GridItem, Progress, Radio, RadioGroup, Stack, Switch, Text, useToast } from "@chakra-ui/react";
+import { Button, Divider, Flex, Grid, Progress, Stack, Switch, Text, useToast, List, ListItem, Box, useDisclosure } from "@chakra-ui/react";
 import { GetStaticProps, NextPage } from "next";
-import { FlexColCenterStart, FlexColStartStart, FlexRowCenterBetween, FlexRowCenterStart } from "../../utils/theme/FlexConfigs";
+import { FlexColCenterStart, FlexColStartStart, FlexRowCenterBetween, FlexColCenterBetween, FlexColStartBetween, FlexRowStartBetween } from "../../utils/theme/FlexConfigs";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectUpdateUserSettingsFeedback, selectUser, updateUserSettings } from "../../redux/userSlice";
+import { updatePayoutMethod } from '../../redux/payoutSlice'
 import { useRouter } from "next/router";
-import { PayoutMethods } from "../../globaltypes";
 import { tBankAccountPayoutSchema } from "../../components/organism/Forms/BankPayoutMethod";
+import { DeleteIcon } from '@chakra-ui/icons'
+import WithDrawalModal from '../../components/organism/Modals/WithDrawalModal'
+import Image from 'next/image';
+
+
 
 
 
@@ -19,15 +24,17 @@ const SettingsPage: NextPage = () => {
     const settingsUpdateFeedback = useAppSelector(selectUpdateUserSettingsFeedback)
     const dispatch = useAppDispatch()
     const { push } = useRouter()
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
 
     const newPayoutMethod = () => {
         push("/settings/new-payout-method")
     }
 
-    const updateSettings = ( setting: 'notifications_enabled' | 'tracking_enabled' ) => {
+    const updateSettings = (setting: 'notifications_enabled' | 'tracking_enabled') => {
         dispatch(updateUserSettings({
             [setting]: !user?.user_settings?.[setting]
-        })).unwrap().catch((e)=>{
+        })).unwrap().catch(() => {
             toast({
                 title: "Something went wrong",
                 description: 'Try again later'
@@ -35,116 +42,138 @@ const SettingsPage: NextPage = () => {
         })
     }
 
-    
 
-     return (
+
+    const handleDelete = (id: string) => {
+        dispatch(updatePayoutMethod({
+            id: id,
+            status: "INACTIVE"
+        })).then(() => {
+            toast({
+                title: 'Success',
+                description: 'Payout Method Deleted'
+            })
+        }).catch(() => {
+            toast({
+                title: 'Error',
+                description: 'An Error occured while deleteing the payout method'
+            })
+        })
+    }
+
+
+    return (
         <Flex {...FlexColCenterStart} w="full" h="full" >
-            <Text 
+            <Text
                 w="full"
-                fontSize={"3xl"}
+                fontSize={"2xl"}
                 fontWeight="bold"
-                color="gray.700"
+                color="#E63B2E"
             >Settings</Text>
             {
                 settingsUpdateFeedback?.loading && <Progress isIndeterminate w="full" colorScheme="primary.1000" />
             }
-            <Grid templateColumns={"1fr 1fr"} w="full" columnGap={"20px"} rowGap="20px"  >
-                <Flex w="full" ring={"1px"} rounded="md"  p="10px 10px" display={"flex"} {...FlexRowCenterBetween} >
+            <Flex p='40px'  w="full" h={'151px'} rounded='3xl' boxShadow={'lg'} columnGap={"20px"} rowGap="20px"  >
+                <Flex w="full" rounded="md" p="10px 10px" display={"flex"} {...FlexColStartBetween} >
+                    <Flex w='full' display={"flex"}  {...FlexRowCenterBetween}>
                     <Text fontSize="xl" fontWeight="semibold" color="gray.800" >
                         Notifications Enabled
                     </Text>
                     <Switch
                         isChecked={user?.user_settings?.notifications_enabled}
-                        onChange={()=>updateSettings('notifications_enabled')}
+                        onChange={() => updateSettings('notifications_enabled')}
                     />
-                </Flex>
-                <Flex w="full" ring={"1px"} rounded="md"  p="10px 10px" display={"flex"} {...FlexRowCenterBetween} >
+                    </Flex>
+                
+                    <Flex w='full' display={"flex"} marginTop='10px'  {...FlexRowCenterBetween}>
                     <Text fontSize="xl" fontWeight="semibold" color="gray.800" >
                         Tracking enabled
                     </Text>
                     <Switch
                         isChecked={user?.user_settings?.tracking_enabled}
-                        onChange={()=>updateSettings('tracking_enabled')}
+                        onChange={() => updateSettings('tracking_enabled')}
                     />
+                    </Flex>
                 </Flex>
-            </Grid>
+
+            </Flex>
             <Divider my="20px" />
-            <Grid experimental_spaceY="10px" w="full" >
-                <Text 
+            <Grid rounded='3xl' p='40px' experimental_spaceY="10px" w="full" h="309px" boxShadow={'lg'}  >
+                <Text
                     w="full"
                     fontSize={"3xl"}
                     fontWeight="bold"
                     color="gray.700"
-                >Earnings</Text>
+                >Earnings Summary</Text>
 
-                <Grid templateColumns={"1fr 1fr"} w="full" columnGap={"20px"} rowGap="20px"  >
-                    <Flex w="full" ring={"1px"} rounded="md"  p="10px 10px" {...FlexColStartStart} >
-                        <Text fontSize="xl" fontWeight="semibold" color="gray.800"  >
-                            All Time 
+                <Grid templateColumns={"1fr 1fr"} w="full" rounded='md' justifyContent={'space-around'} h={'122px'} columnGap={"20px"} rowGap="20px"  >
+                    <Flex p='20px' w="543px" h='140px' marginRight={'148px'} backgroundColor={'#ebedef'} marginBottom='18px' rounded="md"  {...FlexColStartStart} >
+                        <Text marginLeft='20px' fontSize="xl" fontWeight="semibold" color="gray.800"  >
+                            All Time
                         </Text>
-                        <Text fontSize="xl" fontWeight="semibold" color="gray.800"  >
+                        <Text marginLeft='20px'  marginTop={7} fontSize="xl" fontWeight="semibold" color="gray.800"  >
                             {user?.market?.currency} {user?.earnings?.all_time}
                         </Text>
                     </Flex>
-                    <Flex w="full" ring={"1px"} rounded="md"  p="10px 10px" {...FlexColStartStart} >
-                        <Text fontSize="xl" fontWeight="semibold" color="gray.800"  >
-                            This Month
+                    <Flex p='20px' w="543px" h='140px' backgroundColor={'#ebedef'}  marginBottom='18px' rounded="md"  {...FlexColStartStart} >
+                        <Text marginLeft='20px'  fontSize="xl" fontWeight="semibold" color="gray.800"  >
+                            Balance
                         </Text>
-                        <Flex {...FlexRowCenterBetween} w="full"  >
-                            <Text fontSize="xl" fontWeight="semibold" color="gray.800"  >
+                        <Flex {...FlexRowCenterBetween}   w="full"  >
+                            <Text  marginLeft='20px' marginTop={7} fontSize="xl" fontWeight="semibold" color="gray.800"  >
                                 {
                                     user?.market?.currency
                                 }
                                 {
-                                    user?.earnings?.month
+                                    user?.earnings?.available
                                 }
                             </Text>
 
-                            <Text fontWeight="medium" color="gray.500" fontSize={"sm"} >
-                                This amount will get sent to your primary payout method at the end of the month.
-                            </Text>
+                            <Button backgroundColor={'#2E72CA'} marginTop='20px'  color='white' onClick={onOpen}>Withdraw</Button>
                         </Flex>
-                        
+                        <WithDrawalModal isOpen={isOpen} onClose={onClose} />
                     </Flex>
                 </Grid>
             </Grid>
-            <Divider my="20px" /> 
-            <Flex {...FlexColStartStart} w="full" experimental_spaceY={"10px"} >
-                <Text fontSize={"2xl"} fontWeight="semibold"  >
+            <Divider my="20px" />
+            <Flex rounded='3xl' p='25px' {...FlexColStartStart} w="full" h={'417px'}  experimental_spaceY={"10px"} boxShadow={'lg'} >
+                <Text marginLeft='10px' fontSize={"2xl"} fontWeight="semibold"  >
                     Payout Methods
                 </Text>
-                <Text fontSize={"md"} fontWeight="semibold" color="gray.500" my="10px" >
+                <Text marginLeft='10px' fontSize={"md"} fontWeight="semibold" color="gray.500" my="10px" >
                     To change your primary payout method, choose from the list below.
                 </Text>
-                <RadioGroup p="10px" ring="1px" w="full" rounded="md"  >
+                <List p="10px" height='290px' w="full" rounded="md"  >
                     <Stack spacing={4} direction={"column"} >
                         {
-                            user?.PayoutMethods?.map((method)=>{
+                            user?.PayoutMethods?.map((method) => {
                                 return (
-                                    <Radio key={method.id} value={method.id} >
-                                        <Flex {...FlexRowCenterStart} >
-                                            <Text fontSize={"lg"} fontWeight="semibold" color="gray.700" >
-                                                {
-                                                    method?.type === "PAYPAL" ? method?.paypal_email :
-                                                    method?.type === "BANK_ACCOUNT" ? (method?.details as Partial<tBankAccountPayoutSchema>)?.account_number :
-                                                    method?.type === "MPESA" ? method?.details?.phone_number :
-                                                    method?.type === "MTN" ? method?.details?.phone_number :
-                                                    null
-                                                } ({method?.type})
-                                            </Text>
-                                        </Flex>
-                                    </Radio>
+                                    <>
+                                        <ListItem ring='1px' padding='8px' rounded='2xl' key={method.id} value={method.id} >
+                                            <Flex {...FlexRowCenterBetween} >
+                                                <Box style={{ marginLeft: 20 }}>
+                                                {method?.type === "MPESA" ? <Image src={"/images/mpesa.png"} width={40} height={40} alt='img' /> : method?.type === "PAYPAL" ? <Image src={"/images/paypal.png"} width={40} height={40} alt='img' /> : method?.type === "BANK_ACCOUNT" ? <Image src={"/images/visa.png"} width={40} height={40} alt='img' /> : method?.type === "MTN" ? <Image src={"/images/mtn.png"} width={40} height={40} alt='img' /> : null}
+                                                </Box>
+                                                <Box style={{ marginRight: 20 }}>
+                                                    <DeleteIcon boxSize={6} onClick={() => handleDelete(method.id)} />
+                                                </Box>
+
+                                            </Flex>
+                                        </ListItem>
+                                    </>
                                 )
                             })
                         }
                     </Stack>
-                </RadioGroup>
-                <Button colorScheme="green" onClick={newPayoutMethod} >
+                </List>
+                
+                <Button marginLeft='10px' backgroundColor="#38b0008f" color='white' height='53px' rounded='xl' onClick={newPayoutMethod} >
                     New Payout Method
                 </Button>
+            
             </Flex>
         </Flex>
-     )
+    )
 }
 
 

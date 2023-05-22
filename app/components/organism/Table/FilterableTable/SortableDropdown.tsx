@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, MouseEvent } from 'react'
+import React, { useState, useRef} from 'react'
 import { Flex, Button, Text, Icon } from "@chakra-ui/react"
 import { FlexColStartStart, FlexRowCenterCenter } from '../../../../utils/theme/FlexConfigs'
 import { BsChevronDown } from 'react-icons/bs'
@@ -20,18 +20,7 @@ function SortableDropdown( props: IProps ) {
     const { onSort, columnKey, columnName, sortOrder } = props
     const [open, setOpen] = useState<boolean>(false)
     const optionsRef = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-      
-    console.log("Setting Sortable for ::::: to:::::::",open)
-      return () => {
-        
-      }
-    }, [open])
     
-
-    
-
     const setAscending = () => {
         onSort && onSort({
             columnKey: columnKey || "",
@@ -48,7 +37,7 @@ function SortableDropdown( props: IProps ) {
         handleClose()
     }
 
-    const handleOpen = (e: MouseEvent) => {
+    const handleOpen = () => {
         setOpen(true)
         document.addEventListener('click', handleClickOutside)
     }
@@ -67,11 +56,11 @@ function SortableDropdown( props: IProps ) {
         }
     }
 
-    const toggleDropdown = (e: MouseEvent) => {
+    const toggleDropdown = () => {
         if(open){
             handleClose()
         }else{
-            handleOpen(e)
+            handleOpen()
         }
     }
     

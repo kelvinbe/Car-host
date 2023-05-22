@@ -8,7 +8,6 @@ import { LocationVehicleMapTableColumns } from "../../utils/tables/TableTypes";
 import VehicleManagement from "../vehicle-management";
 import Reservations from "../reservations";
 import { Flex } from "@chakra-ui/react";
-import dynamic from "next/dynamic";
 import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
 
 function AllMapView() {
@@ -18,27 +17,6 @@ function AllMapView() {
   const [noneSelected, setNoneSelected] = useState(true);
   const StationsData = useAppSelector(selectStations)
 
-  const mapContainerStyle = {
-    height: "400px",
-    width: "100%",
-    border: "1px solid #e0dede",
-    borderRadius: "30px",
-  };
-
-  let activeStyling = {
-    color: "#E63B2E",
-    borderBottom: "2px solid #E63B2E",
-  };
-  const center = {
-    lat: -1.2921,
-    lng: 36.8219,
-  };
-  const onLoad = (streetViewService:any) => {
-    streetViewService.getPanorama({
-      location: center,
-      radius: 50,
-    });
-  };
   return (
     <Grid
       w="full"
@@ -58,7 +36,6 @@ function AllMapView() {
           viewSortablesField={false}
           columns={LocationVehicleMapTableColumns}
           data={StationsData}
-          dataFetchFunction={() => {}}
         />
       </GridItem>
       <GridItem colSpan={3}>

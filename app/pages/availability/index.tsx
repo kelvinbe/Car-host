@@ -1,5 +1,5 @@
 import FullCallender from "../../components/organism/Availability/FullCallender"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useReservation from '../../hooks/useReservation';
 import useEventData from "../../hooks/useEventData";
 import useResourceData from "../../hooks/useResourceData";
@@ -16,9 +16,9 @@ export function getStaticProps() {
 
 function Availability() {
 
-  const {fetchReservations, loading, errors, reservations, activeReservations}=useReservation()
-  const {fetchEvents, events}=useEventData()
-  const {fetchResources, resources}=useResourceData()
+  const {fetchReservations, reservations}=useReservation()
+  const {fetchEvents}=useEventData()
+  const {fetchResources}=useResourceData()
   useEffect(()=>{
     fetchReservations()
     fetchEvents()

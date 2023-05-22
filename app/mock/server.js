@@ -39,7 +39,8 @@ server.use(rewriter);
 const db = router.db
 
 const jwt = require('jsonwebtoken');
-const { isEmpty } = require("lodash")
+const { isEmpty, sumBy, range, uniq } = require("lodash");
+const dayjs = require('dayjs')
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY,{
   apiVersion: '2022-11-15',
@@ -297,6 +298,53 @@ server.put("/settings", (req, res)=>{
     message: "Success",
     status: "success"
   })
+})
+
+server.get("/earnings", (req, res)=>{
+  const token = req.headers.authorization.split(" ")[1];
+  const uid =jwt.decode(token).user_id
+  const user = db.get('users').find({uid}).value();
+  const reservations=db.get('reservations').value();
+  if(!user) return null
+  const time_range = req.query.time_range;
+  const earnings= reservations.filter(reservation=>reservation.vehicle.user_id===user.id).map((reservation)=>{
+    return {
+        month: dayjs(reservation.created_at).format('MMMM'),
+        year: new Date(reservation.created_at).getFullYear(),
+        amount: reservation.payment?.amount ?? 0,
+        vehicle_id: reservation.vehicle_id,
+    }
+}) 
+const currentMonth = dayjs().month();
+const monthsArr = range(currentMonth + 1);
+const months = monthsArr.map((month) => dayjs().month(month).format("MMMM"));
+const years = uniq(earnings.map((earning)=>earning.year))
+const vehicleEarnings = earnings.filter((earning)=>earning.vehicle_id === req.query.vehicle_id);
+
+let userEarnings = [];
+if(time_range==='monthly'){
+  userEarnings = [...months.map((month)=>{
+    return{
+      name: month,
+      value: sumBy(vehicleEarnings.filter((earning)=>earning.month===month), (item)=>item.amount)
+    }
+  }), {name: "",}]
+}
+
+if(time_range==="yearly"){
+  userEarnings = years.map((year)=>{
+    return{
+      name: year,
+      value: sumBy(vehicleEarnings.filter((earning)=>earning.year===year), (item)=>item.amount)
+    }
+  })
+}
+
+res.json({
+  data: userEarnings,
+  message: "success",
+  status: "success"
+})
 })
 
 server.use(router);

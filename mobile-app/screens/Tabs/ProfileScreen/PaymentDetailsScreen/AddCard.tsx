@@ -14,8 +14,9 @@ import { setCardCvv, setCardName, setCardNum, setCardExp } from '../../../../sto
 import { useDispatch, useSelector } from 'react-redux'
 import { useAddPaymentMethodMutation } from '../../../../store/slices/billingSlice'
 import Error from '../../../../components/molecules/Feedback/Error/Error'
-import { fetchUserData } from '../../../../store/slices/userSlice'
-import { useAppDispatch } from '../../../../store/store'
+import { fetchUserData, selectUserProfile } from '../../../../store/slices/userSlice'
+import { useAppDispatch, useAppSelector } from '../../../../store/store'
+import { isUndefined } from 'lodash'
 
 type Props = NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
 
@@ -117,22 +118,40 @@ function AddCard(props: Props){
         }))
     }
 
-
+    const user = useAppSelector(selectUserProfile)
 
     const handleAddCard = async () => {
-        if (!isCardNumberValid || !isExpDateValid || !isCvvValid || name.length === 0)  return toast({
-            type: "error",
-            message: "Please fill in all the fields correctly"
-        })
-        await addPaymentMethod({
-            card_number: cardNumber,
-            cvc: cvv,
-            exp_month: expDate?.slice(0,2),
-            exp_year: expDate?.slice(2,4),
-            type: "card"
-        })
-        dispatch(fetchUserData(null))
+    
+        if(isUndefined(cardNumber)){
+            return 
+        }
+        const strinigfiedCardNumber = cardNumber?.toString()
+        try {
+            if (!isCardNumberValid || !isExpDateValid || !isCvvValid || name.length === 0)  return toast({
+                type: "error",
+                message: "Please fill in all the fields correctly"
+            })
+            await addPaymentMethod({
+                card_number: strinigfiedCardNumber?.replace(/\s/g, ''),
+                customer_id: user?.customer_id??undefined,
+                cvc: cvv,
+                exp_month: Number(expDate?.slice(0,2)),
+                exp_year: Number(expDate?.slice(2,5)?.replace("/", ''))+2000,
+                type: "card"
+            })
+            dispatch(fetchUserData(null))
         props.navigation.goBack()
+            
+        } catch (error) {
+            console.log('error', error)
+            toast({
+                title: 'Error',
+                message: 'Somethoing went wrong',
+                type: 'error'
+            })
+        }
+        
+        
     }
     const styles = useStyles(props)   
 

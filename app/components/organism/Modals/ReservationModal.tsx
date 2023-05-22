@@ -25,7 +25,15 @@ export default function ReservationModal({
   toggleEditReservationModal,
   changeStateEditModal,
   reservationId,
-}: any) {
+}: Partial<{
+  isOpen: boolean;
+  onClose: () => void;
+  toggleViewReservationModal: boolean;
+  changeStateViewModal: () => void;
+  toggleEditReservationModal: boolean;
+  changeStateEditModal: () => void;
+  reservationId: string;
+}>) {
   const [editStartTimeString, setEditStartTimeString] = useState("");
   const [editEndTimeString, setEditEndTimeString] = useState("");
 
@@ -53,10 +61,10 @@ export default function ReservationModal({
   }, [editReservation]);
 
   const calculateTotalCost = () => {
-    let editedDurationHours =
+    const editedDurationHours =
       new Date(editEndTimeString).getHours() -
       new Date(editStartTimeString).getHours();
-    let editedDurationMinutes =
+    const editedDurationMinutes =
       new Date(editEndTimeString).getMinutes() -
       new Date(editStartTimeString).getMinutes();
     let totalEditedDurationInMinutes;
@@ -70,14 +78,14 @@ export default function ReservationModal({
       totalEditedDurationInMinutes =
         editedDurationHours * 60 + editedDurationMinutes;
     }
-    let getVehicle = allVehicles.filter(
+    const getVehicle = allVehicles.filter(
       (vehicle) => vehicle?.plate === editReservation?.vehicle.plate
     );
-    return (totalEditedDurationInMinutes / 60) * getVehicle?.[0]?.hourly_rate;
+    return (totalEditedDurationInMinutes / 60) * (getVehicle?.[0]?.hourly_rate ?? 0);
   };
 
   const handleEditReservation = () => {
-    let totalCost = calculateTotalCost();
+    const totalCost = calculateTotalCost();
     updateReservation(
       {
         start_date_time: editStartTimeString,
@@ -87,18 +95,18 @@ export default function ReservationModal({
       "Updated",
       "Your reservation has been updated"
     );
-    onClose();
-    changeStateEditModal();
+    onClose?.();
+    changeStateEditModal?.();
   };
   const handleCloseModal = () => {
-    toggleViewReservationModal && changeStateViewModal();
-    toggleEditReservationModal && changeStateEditModal();
-    onClose();
+    toggleViewReservationModal && changeStateViewModal?.();
+    toggleEditReservationModal && changeStateEditModal?.();
+    onClose?.();
   };
   return (
     <>
       <Modal
-        isOpen={isOpen}
+        isOpen={isOpen ?? false}
         onClose={handleCloseModal}
         blockScrollOnMount={false}
         size="xl"

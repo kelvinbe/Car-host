@@ -1,7 +1,7 @@
-import { Text, FormControl, FormLabel, Input, Box, Flex } from "@chakra-ui/react";
+import { Text, FormControl, FormLabel, Flex } from "@chakra-ui/react";
 import ModalTemplate from "./ModalTemplate";
 import { useState } from "react";
-import { FlexRowCenterBetween, FlexRowCenterEnd } from "../../../utils/theme/FlexConfigs";
+import { FlexRowCenterBetween } from "../../../utils/theme/FlexConfigs";
 import randomstring from 'randomstring'
 import Rounded from "../../molecules/Buttons/General/Rounded";
 import useAddNewData from '../../../hooks/useAddNewData'
@@ -38,7 +38,7 @@ export default function CreateAuthCodeModal({isOpen, onClose, authcodeId, showRe
         )
     } 
     const handleCreateAuthcode = () => {
-        let selectedUser = users.find(user => user.user_id === userId)
+        const selectedUser = users.find(user => user.user_id === userId)
         deleteData(authcodeId)
         addData({
             user_image: selectedUser && selectedUser.profile_pic_url,

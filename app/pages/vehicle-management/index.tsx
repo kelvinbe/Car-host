@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Flex, IconButton } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import React from "react";
-import { IVehicleDetails } from "../../globaltypes";
+import { IVehicle } from "../../globaltypes";
 import { VehicleManagementTableColumns } from "../../utils/tables/TableTypes";
 import { FlexColCenterStart } from "../../utils/theme/FlexConfigs";
 import { useAppSelector } from "../../redux/store";
@@ -17,8 +18,8 @@ import useVehicles from "../../hooks/useVehicles";
 import EditVehicleModal from "../../components/organism/Modals/EditVehicleModal";
 
 function VehicleManagement() {
-  const [vehiclesData, setVehicleData] = useState<IVehicleDetails[]>([])
-  const [vehicleId, setVehicleId] = useState<number|null>(null)
+  const [vehiclesData, setVehicleData] = useState<Partial<IVehicle>[]>([])
+  const [vehicleId, setVehicleId] = useState<string>()
   const [isCreateModalOpen ,setIsCreateModalOpen] = useState<boolean>(false)
   const [isViewModalOpen ,setIsViewModalOpen] = useState<boolean>(false)
   const [isEditModalOpen ,setIsEditModalOpen] = useState<boolean>(false)
@@ -43,7 +44,7 @@ function VehicleManagement() {
     })))
   },[vehicles])
 
-  const viewVehicle = (id:number) => {
+  const viewVehicle = (id: string) => {
     setVehicleId(id)
     setIsViewModalOpen(true)
     onOpen()
@@ -54,21 +55,21 @@ function VehicleManagement() {
   }
   const closeViewModal = () => {
     setIsViewModalOpen(false)
-    setVehicleId(null)
+    setVehicleId(undefined)
     onClose()
   }
   const closeCreateModal = () => {
     setIsCreateModalOpen(false)
     onClose()
   }
-  const openEditModal = (id:number) => {
+  const openEditModal = (id: string) => {
     setVehicleId(id)
     setIsEditModalOpen(true)
     onOpen()
   }
   const closeEditModal = () => {
     setIsEditModalOpen(false)
-    setVehicleId(null)
+    setVehicleId(undefined)
     onClose()
   }
   return (
@@ -77,9 +78,9 @@ function VehicleManagement() {
       w="full"
       data-testid="vehicle-management-table"
     >
-      {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId as number} vehicles = {vehicles }/>}
+      {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles={vehicles} />}
       {isCreateModalOpen && <CreateVehicleModal isOpen ={isOpen} onClose={closeCreateModal}/>}
-      {isEditModalOpen && <EditVehicleModal isOpen ={isOpen} onClose={closeEditModal} vehicleId={vehicleId as number} vehicles = {vehicles}/>}
+      {isEditModalOpen && <EditVehicleModal isOpen={isOpen} onClose={closeEditModal} vehicle_id={vehicleId} vehicles={vehicles} />}
       <FilterableTable
         viewAddFieldButton={true}
         viewSearchField={true}
@@ -130,7 +131,6 @@ function VehicleManagement() {
           position: ["bottomCenter"],
         }}
         data={vehiclesData}
-        dataFetchFunction={() => {}}
       />
     </Flex>
   );

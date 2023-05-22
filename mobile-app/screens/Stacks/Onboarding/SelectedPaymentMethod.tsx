@@ -10,6 +10,14 @@ import AppCardForm from '../../../components/organisms/Forms/PaymentMethods/Card
 import useOnBoarding from '../../../hooks/useOnBoarding'
 import MobileMoneyForm from '../../../components/organisms/Forms/PaymentMethods/MobileMoney'
 import useToast from '../../../hooks/useToast'
+import { useAddPaymentMethodMutation } from '../../../store/slices/billingSlice'
+import { fetchUserData, selectUserProfile } from '../../../store/slices/userSlice'
+import { useAppDispatch, useAppSelector } from '../../../store/store'
+import { useDispatch } from 'react-redux'
+import { selectedType} from '../../../store/slices/paymentMethodSlice'
+
+
+
 
 
 type Props = NativeStackScreenProps<UserOnboardingParamList, "SelectedPaymentMethod">
@@ -54,36 +62,65 @@ const useStyles = makeStyles((theme)=>{
 const SelectedPaymentMethod = (props: Props) => {
   const toast = useToast()
   const styles = useStyles()
-  const [details, setDetails] = useState<Partial<PaymentDetails>|null>(null)
+  const [details, setDetails] = useState<Partial<PaymentDetails> & {cvv: string, exp: string}|null>(null)
   const { setPaymentMethod } = useOnBoarding()
+  const [addPaymentMethod, { isLoading, isError }] = useAddPaymentMethodMutation()
+  const user = useAppSelector(selectUserProfile)
+  const dispatch = useAppDispatch()
+  const selectType = useAppSelector(selectedType)
 
 
 
-  const handleCard = () => {
-    if (isNull(details)) return toast({
-        type: "error",
-        message: "Please enter your card details"
-    })
-    props.route.params?.payment_method && setPaymentMethod({
-        type: props.route.params?.payment_method,
-        details
-    })
-    props.navigation.navigate("SelectPaymentMethod",
-    {
-        payment_method_added: true
-    })
+  const handleCard = async () => {
+
+    try {
+        if (isNull(details)) return toast({
+            type: "error",
+            message: "Please enter your card details"
+        })
+    
+        props.route.params?.payment_method && setPaymentMethod({
+            type: props.route.params?.payment_method,
+            details
+        })
+        const month = Number(details?.exp?.slice(0, 2))
+        const year = Number(details?.exp?.slice(2, 5)?.replace('/', ''))+2000
+        await addPaymentMethod({
+            card_number: details.card_number?.replace(/\s/g, ''),
+            cvc: details.cvv,
+            exp_month: month,
+            exp_year: year,
+            customer_id: user?.customer_id??undefined,
+            type: 'card'
+        })
+        dispatch(fetchUserData(null))
+        props.navigation.navigate("SelectPaymentMethod",
+        {
+            payment_method_added: true
+        })
         
-   }
+    } catch (error) {
+        console.log('error', error)
+        toast({
+            title: 'Error',
+            message: 'Somethoing went wrong',
+            type: 'error'
+        })
+    }
+}
 
 
     
 
 
-  const handleMobileMoneyPaymentMethod = (data: Partial<PaymentDetails> | null, error?: string) => {
+  const handleMobileMoneyPaymentMethod = async (data: Partial<PaymentDetails> | null, error?: string) => {
     if(isNull(data)) return toast({
         type: "error",  
         message: "Please enter your mobile money details"
     })
+
+    
+    const phoneNumber = Number(data?.phone_number?.toString()?.replace("+", "") ??"")
     if(error){
         // error already handled in the form
         return
@@ -92,10 +129,24 @@ const SelectedPaymentMethod = (props: Props) => {
         type: "mobile_money",
         details: data
     })
-    props.navigation.navigate("SelectPaymentMethod",
+
+    await addPaymentMethod({
+        phone_number: phoneNumber,
+        type: selectType
+    }).then(() => {
+        dispatch(fetchUserData(null))
+        props.navigation.navigate("SelectPaymentMethod",
     {
         payment_method_added: true
     })
+
+    }).catch(() => {
+        toast({
+            message: "Please try again",
+            type: "error"
+        })
+    })
+    
   }
 
   return (
@@ -132,13 +183,8 @@ const SelectedPaymentMethod = (props: Props) => {
             ) :
             null //for now, will add other payment methods later
         }
-
-        
-        
-
-    
     </View>
-  )
+)
 }
 
 export default SelectedPaymentMethod

@@ -10,11 +10,12 @@ interface Props{
     isError?:boolean,
     handleSelectImages?:(e:ChangeEvent) => void, // being phased out
     images?:string[],
+    // eslint-disable-next-line no-empty-pattern
     setter?:([]) => void, // being phased out
     onChange: (images: string[] | string) => void,
     multiple?:boolean
 }
-const UploadImage = ({isError, handleSelectImages, images, setter, onChange, multiple}:Props) => {
+const UploadImage = ({isError, images, onChange, multiple}:Props) => {
 
     const [imageUrls, setImageUrls] = useState<(string)[]>(images || [])
     const [loading, setLoading] = useState<boolean>(false)
@@ -40,7 +41,7 @@ const UploadImage = ({isError, handleSelectImages, images, setter, onChange, mul
             const bloburl = URL.createObjectURL(file)
             return await uploadToFirebase(bloburl, file.name, file.type ).then((url)=>{
                 return url
-            }).catch((e)=>{
+            }).catch(()=>{
                 toast({
                     title: "Image Upload failed",
                     status: "error",
@@ -55,7 +56,7 @@ const UploadImage = ({isError, handleSelectImages, images, setter, onChange, mul
             const last_image = last(url_strings) as string
             setImageUrls((prev)=>multiple ? [...prev, ...url_strings] : isEmpty(last_image) ? [] : [last_image])
             onChange(multiple ? [...imageUrls, ...url_strings] : last_image  ?? '')
-        }).catch((e)=>{
+        }).catch(()=>{
             // toasts have already been displayed
             /**
              * @todo logrocket implementation

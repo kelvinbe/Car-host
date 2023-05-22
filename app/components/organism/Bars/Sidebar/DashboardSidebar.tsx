@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useReducer, useState } from "react";
-import { Flex, Grid, GridItem, Divider } from "@chakra-ui/react";
+import { Flex, Grid, Divider } from "@chakra-ui/react";
 import {
-  FlexColCenterStart,
   FlexRowCenterCenter,
 } from "../../../../utils/theme/FlexConfigs";
 // import Logo from '../../../atoms/Brand/Logo'
@@ -40,7 +39,7 @@ const reducerSlice = createSlice({
 export const { setActiveRoute, setActiveTab } = reducerSlice.actions;
 
 function DashboardSidebar() {
-  const [{ activeRoute, activeTab }, dispatchAction] = useReducer(
+  const [{ activeTab }, dispatchAction] = useReducer(
     reducerSlice.reducer,
     initialState
   );
@@ -55,7 +54,7 @@ function DashboardSidebar() {
     } else {
       setIsAdmin(false);
     }
-  }, [,user?.is_admin]);
+  }, [user?.is_admin]);
 
   useEffect(() => {
     if (pathname && !pathname.includes(activeTab)) {

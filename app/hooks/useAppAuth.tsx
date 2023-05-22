@@ -90,7 +90,7 @@ function useAppAuth() {
             password: z.string().min(8)
         }).required().parseAsync(credentials).then((credentials)=>{
             dispatchAction(setSignInLoading(true))
-            signInWithEmailAndPassword(getAuth(app), credentials.email, credentials.password).then(()=>{
+            signInWithEmailAndPassword(getAuth(app), credentials.email, credentials.password).then((user)=>{
                 dispatchAction(setSignInLoading(false))
                 dispatch(fetchUser())
                 push("/dashboard")

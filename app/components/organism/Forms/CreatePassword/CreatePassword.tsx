@@ -9,8 +9,8 @@ import ValidityCheck from '../../../atoms/Feedback/ValidityCheck/ValidityCheck'
 import WithHelperText from '../../../molecules/Input/WithHelperText/WithHelperText'
 
 interface IProps {
-    onValidPasswordCreated: (password: string) => void,
-    onValidConfirmPassword: (confirmPasswordValid: boolean) => void,
+    onValidPasswordCreated?: (password: string) => void,
+    onValidConfirmPassword?: (confirmPasswordValid: boolean) => void,
     onForgotPasswordHandler?: () => void,
     hasForgotPassword?: boolean
 }
@@ -79,12 +79,12 @@ function CreatePassword(props: IProps) {
     useEffect(()=>{
         
         if(isPasswordMatch && isPasswordValid && isConfirmPasswordValid){
-            onValidPasswordCreated(password)
+            onValidPasswordCreated?.(password)
         }
         if(isPasswordMatch){
-            onValidConfirmPassword(isPasswordMatch)
+            onValidConfirmPassword?.(isPasswordMatch)
         }else{
-            onValidConfirmPassword(isPasswordMatch)
+            onValidConfirmPassword?.(isPasswordMatch)
         }
 
     }, [password, confirmPassword])

@@ -1,6 +1,6 @@
 import { Flex, FormControl, FormLabel, Grid, GridItem, Input, Button, FormHelperText, Text, useToast, FormErrorMessage } from '@chakra-ui/react'
 import React, { ChangeEvent, useState } from 'react'
-import { FlexColStartStart, FlexRowCenterBetween, FlexRowCenterStart } from '../../../utils/theme/FlexConfigs'
+import { FlexColStartStart } from '../../../utils/theme/FlexConfigs'
 import { NextPageContext } from 'next'
 import { dIInvitation } from '../../../globaltypes'
 import { ColumnsType } from 'antd/es/table'
@@ -81,7 +81,7 @@ function Invites() {
             setLoading(true)
             await sendInvite(value).then(()=>{
                 dispatch(fetchUser())
-            }).catch((e)=>{
+            }).catch(()=>{
                 toast({
                     title: 'Error',
                     description: "An error occured"
@@ -153,7 +153,7 @@ function Invites() {
 
 export default Invites
 
-export function getStaticProps(context: NextPageContext) {
+export function getStaticProps() {
     return {
       props: {
         adminonly: true,

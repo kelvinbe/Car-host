@@ -10,7 +10,7 @@ const user = {
     handle: 'tester',
     email: 'test@test.com',
     phone: '+254729737263',
-    status: 'paid'
+    status: 'active'
 }
 const testFunc = jest.fn()
 

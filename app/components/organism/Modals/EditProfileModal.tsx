@@ -19,7 +19,7 @@ export default function EditProfileModal ({isOpen, onClose, user}:IProps) {
     const [handle, setHandle] = useState(user.handle)
     const {editUserProfile} = useUsers()
     const handleEditProfile = () => {
-        editUserProfile(user.id,{
+        editUserProfile({
             ...user,
             fname: fName,
             lname: lName,

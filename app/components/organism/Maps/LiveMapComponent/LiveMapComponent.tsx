@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
-import Marker from "../Marker/Marker";
 import { IVehicle } from "../../../../globaltypes";
 import CarMarkerComponent from "../CarMarkerComponent/CarMarkerComponent";
 import { Flex } from "@chakra-ui/react";
@@ -8,12 +7,12 @@ import { FlexRowCenterCenter } from "../../../../utils/theme/FlexConfigs";
 import getConfig from "next/config";
 
 interface IProps {
-  vehicles?: IVehicle[];
+  vehicles?: Partial<IVehicle>[];
   marketId?: string;
 }
 
 const LiveMapComponent = (props: IProps) => {
-  const { vehicles, marketId } = props;
+  const { vehicles} = props;
   /**
    * @todo add logic to fetch the location of the market id
    */

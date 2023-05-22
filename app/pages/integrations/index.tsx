@@ -1,33 +1,6 @@
 import React from "react";
-import { Flex, IconButton } from "@chakra-ui/react";
-import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { ColumnsType } from "antd/es/table";
-import { HamburgerIcon, DeleteIcon } from "@chakra-ui/icons";
-import { IIntegrations } from "../../globaltypes";
-import { IntegrationsTableColumns } from "../../utils/tables/TableTypes";
-import { insertTableActions } from "../../utils/tables/utils";
-import {
-  FlexRowCenterAround,
-  FlexRowStartStart,
-  FlexColStartEnd,
-} from "../../utils/theme/FlexConfigs";
-import { MdEdit } from "react-icons/md";
+import { Flex } from "@chakra-ui/react";
 import ComingSoon from "../../components/molecules/ComingSoon/ComingSoon";
-
-const IntegrationsData: IIntegrations[] = [
-  {
-    integrationName: "Integration One",
-    status: "active",
-  },
-  {
-    integrationName: "Integration Two",
-    status: "reserved",
-  },
-  {
-    integrationName: "Integration Three",
-    status: "cancelled",
-  },
-];
 
 function Integrations() {
   return (

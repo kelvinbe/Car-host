@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { isNull, last } from "lodash";
+import { last } from "lodash";
 import React, { useRef, useEffect, useState } from "react";
 
 interface Props {
@@ -15,7 +15,7 @@ const Map = (props: Props) => {
     const ref = React.useRef(null);
     const [map, setMap] = React.useState<google.maps.Map | null>(null);
     const prevMarkersRef = useRef<google.maps.Marker[]>([]);
-    const [pins, setPins] = useState<string>("no pins")
+    const [pins, ] = useState<string>("no pins")
 
     const addMarker = (location: google.maps.LatLngLiteral, map: google.maps.Map) => {
         last(prevMarkersRef.current)?.setMap(null);
@@ -52,7 +52,12 @@ const Map = (props: Props) => {
 
 
     useEffect(() => {
-        map && google.maps.event.addListener(map, "click", (event: any) => {
+        map && google.maps.event.addListener(map, "click", (event: {
+            latLng: {
+                lat: () => number;
+                lng: () => number;
+            }
+        }) => {
             addMarker({
                 lat: event.latLng.lat(),
                 lng: event.latLng.lng()

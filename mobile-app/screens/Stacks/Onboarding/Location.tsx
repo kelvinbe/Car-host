@@ -8,6 +8,8 @@ import useLocation from '../../../hooks/useLocation'
 import { isEmpty, isNull } from 'lodash'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import useOnBoarding from '../../../hooks/useOnBoarding'
+import { useAppDispatch } from '../../../store/store'
+import { updateUserData } from '../../../store/slices/userSlice'
 
 type IProps = NativeStackScreenProps<UserOnboardingParamList, "Location">
 
@@ -90,7 +92,7 @@ const Location = (props: IProps) => {
         value: market.name
       }
     })
-  }, [markets.loading, markets.error])
+  }, [,markets.loading, markets.error])
 
 
 
@@ -102,13 +104,13 @@ const Location = (props: IProps) => {
         value: subMarket.name
       }
     })
-  }, [subMarkets.loading, subMarkets.error])
+  }, [,subMarkets.loading, subMarkets.error, country])
 
   useEffect(()=>{
     if (!isEmpty(country) && !isEmpty(city)) {
       setLocation({
         market_id: country.key,
-        submarket_id: city.key
+        sub_market_id: city.key
       })
     }
   }, [country, city])

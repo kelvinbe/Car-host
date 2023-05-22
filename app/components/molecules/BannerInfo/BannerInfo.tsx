@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Text,
-  Button,
   Image,
   Flex,
   VStack,
@@ -16,7 +15,7 @@ interface iProps {
   letterSpacing?: string;
   direction: 'row'|'column';
   display: string;
-  image: {src:string};
+  image: string;
   disImage?:string,
   textColor: string;
   boxWidth?: string;
@@ -62,10 +61,6 @@ const BannerInfo = (props: iProps) => {
     left,
   } = props;
 
-  const imageStyle = {
-    position: boxPosition,
-    right: right
-  }
   return (
     <Box>
       <Box>
@@ -119,7 +114,7 @@ const BannerInfo = (props: iProps) => {
             </Stack>
           </VStack>
           <Box display={display} width={boxWidth}>
-            <Image src={image ? image?.src : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly'/>
+            <Image src={image ? `/images/${image}` : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly'/>
           </Box>
         </Flex>
       </Box>

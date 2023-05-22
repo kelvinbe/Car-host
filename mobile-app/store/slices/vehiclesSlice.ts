@@ -12,6 +12,7 @@ export const vehiclesApi = createApi({
         prepareHeaders: async (headers ) => {
             await getAuth(app).currentUser?.getIdToken().then((token)=>{
                 headers.set('Authorization', `Bearer ${token}`)
+                headers.set('x-user', `CUSTOMER`)
             })
         }
      }),

@@ -170,3 +170,18 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
         })
     }
  })
+
+/**
+ * isArraySame
+ * @param arr1 
+ * @param arr2 
+ * @returns {boolean}
+ */
+ export const isArraySame = <T>(arr1?: T[], arr2?: T[]) => {
+    if (!arr1 || !arr2) {
+        return false;
+    }
+    const a = JSON.stringify(arr1);
+    const b = JSON.stringify(arr2);
+    return a === b;
+ }

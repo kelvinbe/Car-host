@@ -50,7 +50,7 @@ export const fetchUserData = createAsyncThunk<any, any>(
 });
 
 export const updateUserData = createAsyncThunk('user/update', (data: Partial<IUserProfile>, {rejectWithValue, dispatch})=>{
-  return apiClient.patch(USER_ENDPOINT, data).then(()=>{
+  return apiClient.put(USER_ENDPOINT, data).then(()=>{
     dispatch(fetchUserData({}));
     return null
   }).catch(rejectWithValue)

@@ -18,7 +18,7 @@ interface StepProps {
 }
 
 const OnBoardingProfileInfo = (props: StepProps) => {
-    const { onBack, onCompleted } = props
+    const { onCompleted } = props
     const toast = useToast()
     const dispatch = useAppDispatch()
     const fname = useAppSelector(selectFName)

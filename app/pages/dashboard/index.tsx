@@ -1,19 +1,13 @@
-import { useState, useRef, useEffect } from "react";
-import { getAuth } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import { NextPageContext } from "next";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Grid, GridItem, Box, Flex, Text } from "@chakra-ui/react";
 import BaseTable from "../../components/organism/Table/BaseTable/BaseTable";
-import { app } from "../../firebase/firebaseApp";
 import {
   PayoutsTableColumns,
   ReservationTableColumns,
 } from "../../utils/tables/TableTypes";
 import PreviewTableContainer from "../../components/organism/Table/TableContainer/TableContainer";
 import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
-import { NextFetchEvent } from "next/server";
 import VehiclePic from "../../components/atoms/images/VehiclePic";
 import Rounded from "../../components/molecules/Buttons/General/Rounded";
 import useVehicles from "../../hooks/useVehicles";
@@ -22,13 +16,11 @@ import { selectFetchedPayouts } from "../../redux/paySlice";
 import { useAppDispatch } from "../../redux/store";
 import { useAppSelector } from "../../redux/store";
 import { fetchPayouts } from "../../redux/paySlice";
-import { orderBy, sortBy } from "lodash";
-
+import { first, orderBy } from "lodash";
+import Image from "next/image";
+import noData from '../../public/images/no_available_data.png'
 
 export default function Dashboard() {
-  const auth = getAuth(app);
-  const [user, loading] = useAuthState(auth);
-  const router = useRouter();
   const [viewButton, setViewButton] = useState<string | number>("");
   const [currentPage, setCurrentPage] = useState<number>(1)
 
@@ -38,8 +30,6 @@ export default function Dashboard() {
   const dispatch = useAppDispatch();
   const {
     payouts,
-    loading: payoutsLoading,
-    error,
   } = useAppSelector(selectFetchedPayouts);
 
   useEffect(() => {
@@ -53,8 +43,8 @@ export default function Dashboard() {
       })
     );
 
-    dispatch(fetchVehicles)
-    dispatch(fetchReservations)
+    fetchVehicles()
+    fetchReservations()
   }, [currentPage]);
 
   const sortedPayouts=orderBy(payouts, (payout) => new Date(payout.date), 'desc').slice(0, 10)
@@ -99,6 +89,7 @@ export default function Dashboard() {
             bg="white"
             borderColor="gray.300"
           >
+            {allVehicles.length < 1 && <Flex marginY={'8'}><Image src={noData} alt="no data" width={100} height={100}/></Flex>}
             {allVehicles.map((vehicleInfo) => (
               <Flex
                 w="40%"
@@ -134,7 +125,7 @@ export default function Dashboard() {
                   key={vehicleInfo.id}
                   data-testid={"vehicle-image-container"}
                 >
-                  <VehiclePic image={vehicleInfo.pictures[0]} size="mid" />
+                  <VehiclePic image={first(vehicleInfo?.pictures) ?? ""} size="mid" />
                   {viewButton === vehicleInfo.id && (
                     <Box
                       position="absolute"
@@ -178,7 +169,7 @@ export default function Dashboard() {
   );
 }
 
-export function getStaticProps(context: NextPageContext) {
+export function getStaticProps() {
   return {
     props: {
       adminonly: false,

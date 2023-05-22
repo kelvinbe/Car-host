@@ -37,12 +37,21 @@ export const MARKETS_API = `${DOMAIN}/location/markets`
  */
 export const PAYOUTMETHODS_API = `${DOMAIN}/payouts`
 
-
+/**
+ * @name WITHDRAWALS_API
+ * @description - all withdrawals related endpoints are accessible through this api route
+ */
+export const WITHDRAWALS_API = `${DOMAIN}/withdrawals`
 /**
  * @name USERSETTINGS_API
  * @description - all user settings related endpoints are accessible through this api route
  */
 export const USERSETTINGS_API = `${DOMAIN}/settings`
+/**
+ * @name EARNINGS_API
+ * @description - all user earnings related endpoints are accessible through this api route
+ */
+export const EARNINGS_API = `${DOMAIN}/earnings`
 
 
 
