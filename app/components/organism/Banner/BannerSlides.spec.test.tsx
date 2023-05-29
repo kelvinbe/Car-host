@@ -1,6 +1,7 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { SlideWithBgImage, Slide, BannerSlides } from "./BannerSlides";
+import { async } from "@firebase/util";
 
 describe("SlideWithBgImage", () => {
   const banner = {
@@ -11,7 +12,7 @@ describe("SlideWithBgImage", () => {
 
   it("renders banner info with correct props if banner id is 1", () => {
     render(<SlideWithBgImage banner={banner} />);
-    const bannerInfo = screen.getByTestId("banner-info");
+    const bannerInfo = screen.getByTestId("banner-slide");
     expect(bannerInfo).toBeInTheDocument();
   });
 
@@ -21,21 +22,24 @@ describe("SlideWithBgImage", () => {
       id: 2,
     };
     render(<SlideWithBgImage banner={bannerWithId2} />);
-    const bannerInfo = screen.getByTestId("banner-info");
+    const bannerInfo = screen.getByTestId("banner-slide");
     expect(bannerInfo).toBeInTheDocument();
     expect(bannerInfo).not.toHaveAttribute("left");
     expect(bannerInfo).not.toHaveAttribute("right");
     expect(bannerInfo).not.toHaveAttribute("marginTop");
   });
 
-  it("renders banner info with correct props if banner id is 3", () => {
+  it("renders banner info with correct props if banner id is 3", async() => {
     const bannerWithId3 = {
-      ...banner,
+      image: "bg-image-1.jpg",
+      disImage: "banner-image-1.jpg",
       id: 3,
     };
     render(<SlideWithBgImage banner={bannerWithId3} />);
-    const bannerInfo = screen.getByTestId("banner-info");
-    expect(bannerInfo).toBeInTheDocument();
+    await waitFor(()=>{
+      const bannerInfo = screen.getByTestId("banner-slide");
+      expect(bannerInfo).toBeInTheDocument();
+    }) 
   });
 });
 

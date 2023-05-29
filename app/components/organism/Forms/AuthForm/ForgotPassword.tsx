@@ -80,7 +80,7 @@ function ForgotPassword() {
                             }
                     />
                     ) : step === 1 ? (
-                        <Text w="full" textAlign="center" data-testid='reset-instruction' >
+                        <Text w="full" textAlign="center" data-testid="reset-instruction">
                             An email with instruction to Reset your password has been sent to <strong>{email}</strong> 
                         </Text>
                     ) : step === 2? (
@@ -92,11 +92,11 @@ function ForgotPassword() {
             </Flex>
             {
                 step === 0 ? (
-                    <Rounded onClick={submitEmail} variant="solid" fullWidth rounded='full' >
+                    <Rounded onClick={submitEmail} variant="solid" fullWidth rounded='full'>
                         Continue
                     </Rounded>
                 ) : step === 1 ? null : step === 2 ? (
-                    <Rounded variant="solid" fullWidth rounded='full' >
+                    <Rounded variant="solid" fullWidth rounded='full'>
                         Continue
                     </Rounded>
                 ) : null

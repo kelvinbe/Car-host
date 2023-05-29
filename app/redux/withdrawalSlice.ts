@@ -3,6 +3,7 @@ import apiClient from "../utils/apiClient";
 import { WITHDRAWALS_API } from "../hooks/constants";
 import { RootState } from ".";
 import { IWithdrawals } from "../globaltypes";
+import LogRocket from "logrocket";
 
 export const fetchWithdrawals = createAsyncThunk(
   "withdrawals/fetchWithdrawals",
@@ -25,6 +26,7 @@ export const fetchWithdrawals = createAsyncThunk(
         const withdrawals = await apiClient.get(WITHDRAWALS_API, {params: data})
         return withdrawals.data
     }catch(e){
+        LogRocket.error(e)
         rejectWithValue(e)
     }
   }

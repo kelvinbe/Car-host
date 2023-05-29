@@ -1,5 +1,5 @@
 import { View, FlatList } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { UpcomingParamList } from '../../../types';
 import { makeStyles } from '@rneui/themed';
 import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard';
@@ -65,6 +65,10 @@ const UpcomingHomeScreen = (props: Props) => {
   useEffect(() => {
     fetchUpcoming()
   },[])
+
+  useLayoutEffect(()=>{
+    fetchUpcoming()
+  }, [])
   return isLoading || loading ? (
     <Loading />
   ) : error || fetchError ? (

@@ -2,12 +2,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import LocationMarkerIcon from '../../../../assets/icons/location-marker.svg'
-import { LocationObject } from 'expo-location'
+import { LocationObjectCoords } from 'expo-location'
 import { Marker } from 'react-native-maps'
 import ChevronDown from "../../../../assets/icons/chevron-down.svg"
+import { useAppSelector } from '../../../../store/store'
+import { selectCoords } from '../../../../store/slices/searchSlice'
+import { Image } from 'react-native'
 
 interface IProps {
-    location?: LocationObject,
+    location?: LocationObjectCoords,
     title?: string,
     description?: string,
 }
@@ -63,29 +66,24 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const LocationMarker = (props: Props) => {
+    const {data: coords} = useAppSelector(selectCoords)
     const styles = useStyles(props)
+
   return (
     <ThemeConsumer>
         {({theme})=>(
             <Marker
                 coordinate={{
-                    latitude: props?.location?.coords?.latitude || 0,
-                    longitude: props?.location?.coords?.longitude || 0,
+                    latitude: coords?.latitude || 0,
+                    longitude: coords?.longitude || 0,
                 }}
                 style={styles.marker}
                 title={props.title}
                 description={props.description}
+                anchor={{x: 0.5, y: 1}}
             >
-                    <View style={styles.tooltip} >
-                        <Text style={styles.tooltipText} >
-                            5km
-                        </Text>
-                        <ChevronDown style={styles.pin} width={20} height={20} fill={theme.colors.primary} stroke={theme.colors.primary} />
-                    </View>
-                    <LocationMarkerIcon
-                        width={40}
-                        height={40}
-                        fill={theme.colors.primary}
+                    <Image
+                        source={require("../../../../assets/images/location-pin.png")}
                     />
             </Marker>
         )}

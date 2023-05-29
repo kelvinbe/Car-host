@@ -9,8 +9,7 @@ import Error from '../../molecules/Feedback/Error/Error';
 import { IVehicle } from '../../../types';
 import useBookingActions from '../../../hooks/useBookingActions';
 import useToast from '../../../hooks/useToast';
-import { calcDuration } from '../../../utils/utils';
-import { useSelector } from 'react-redux';
+import { add_padding, calcDuration } from '../../../utils/utils';
 import { useAppSelector } from '../../../store/store';
 import { selectChosenHostCode, selectUsersLocation } from '../../../store/slices/bookingSlice';
 import { isEmpty } from 'lodash';
@@ -94,9 +93,9 @@ return (
                 contentContainerStyle={{
                     marginTop: -40
                 }}
-                keyExtractor={(item, index)=>index.toString()}
+                keyExtractor={(item, index)=>item.id}
                 stickyHeaderHiddenOnScroll
-                data={data ? [data?.[0],...data, data?.[0]] : []}
+                data={data ? add_padding(1, data) : []}
                 showsVerticalScrollIndicator={false}
                 renderItem={
                     ({item, index})=>{
@@ -143,7 +142,7 @@ return (
                         return index == 0 ? <View style={{
                             height: itemSize,
                             backgroundColor: "transparent"
-                        }} ></View> : index == (data?.length ?? 0) + 1  ? (
+                        }} ></View> : index == (data?.length ?? 0) + 1 ? (
                             <View style={{
                                 height: itemSize,
                                 backgroundColor: "transparent"

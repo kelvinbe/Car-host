@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../redux/store'
 import { fetchOnboardingDetails, selectCompleted } from '../redux/onboardingSlice'
 import { useToast } from '@chakra-ui/react'
 import { selectUser } from '../redux/userSlice'
+import LogRocket from 'logrocket'
 
 interface IProps {
     pageProps: IStaticProps,
@@ -73,6 +74,7 @@ function CheckAuthorization(props: IProps) {
                                     status: "error",
                                     duration: 5000,
                                 })
+                                LogRocket.error(e)
                                 push("/").then(()=>{
                                     checked(true)
                                 })

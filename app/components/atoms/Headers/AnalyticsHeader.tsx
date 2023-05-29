@@ -49,7 +49,7 @@ const AnalyticsHeader = (props: IProps) => {
         <Flex marginLeft={'20px'}>
             <Text as={'b'}>Select Vehicle:</Text>
             <Flex gap={'4'} marginLeft={'10px'}>
-            <Select border={'1px'} style={{color: 'gray'}} marginTop={'-1'} onChange={onVehicleSelect}>
+            <Select border={'1px'} style={{color: 'gray'}} marginTop={'-1'} onChange={onVehicleSelect} placeholder="Select Vehicle">
               {vehicles.map((vehicle)=><option value={vehicle?.id} key={vehicle?.id}>{`${vehicle?.make} ${vehicle?.model}`}</option>)}
             </Select>
             <Select border={'1px'} borderRadius={'lg'} style={{color: 'gray'}} marginTop={'-1'} onChange={onCalendarTypeSelect}>

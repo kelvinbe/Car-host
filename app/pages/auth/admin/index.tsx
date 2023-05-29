@@ -9,6 +9,7 @@ import { isEmpty } from 'lodash'
 import { useAppDispatch } from '../../../redux/store'
 import { fetchUser } from '../../../redux/userSlice'
 import apiClient from '../../../utils/apiClient'
+import LogRocket from 'logrocket'
 
 
 /**
@@ -44,13 +45,14 @@ function Admin() {
                             if(token.claims.admin){
                                 dispatch(fetchUser()).then(()=>{
                                     push("/dashboard")
-                                }).catch(()=>{
+                                }).catch((error)=>{
                                     toast({
                                         title: "Unable to sign you in",
                                         description: "Try again later",
                                         status: "error",
                                         isClosable: true,
                                     })
+                                    LogRocket.error(error)
                                     push("/")
                                 })
                                 push("/dashboard")
@@ -62,13 +64,14 @@ function Admin() {
                                     isClosable: true,
                                 })
                             }
-                        }).catch(()=>{
+                        }).catch((error)=>{
                             toast({
                                 title: "Unable to sign you in",
                                 description: "Please check the link and try again",
                                 status: "error",
                                 isClosable: true,
                             })
+                            LogRocket.error(error)
                         })
                     }else{
                         toast({
@@ -78,21 +81,23 @@ function Admin() {
                             isClosable: true,
                         })
                     }
-                }).catch(()=>{
+                }).catch((error)=>{
                     toast({
                         title: "Unable to sign you in",
                         description: "Please check the link and try again",
                         status: "error",
                         isClosable: true,
                     })
+                    LogRocket.error(error)
                 })
-            }).catch(()=>{
+            }).catch((error)=>{
                 toast({
                     title: "Unable to validate invite link",
                     description: "Please check the link and try again",
                     status: "error",
                     isClosable: true,
                 })
+                LogRocket.error(error)
             })
         }else{
             toast({

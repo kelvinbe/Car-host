@@ -10,8 +10,9 @@ import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOut
 import { LinearGradient } from 'expo-linear-gradient';
 import useToast from '../../../hooks/useToast';
 import { isEmpty, isUndefined } from 'lodash';
-import { useAppDispatch } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setHostCode } from '../../../store/slices/bookingSlice';
+import { searchLocally, selectCoords } from '../../../store/slices/searchSlice';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -120,25 +121,41 @@ const SearchScreenHome = (
   const maxWidth = useWindowDimensions().width;
   const dispatch = useAppDispatch()
   const toast = useToast();
+  const { loading } = useAppSelector(selectCoords)
   const { route } = props
 
   
-  const hostCodeSearch = (value: any) => {
+  const hostCodeSearch = async (value: any) => {
     if (isEmpty(value)) return toast({
       message: 'Please enter a host code',
       type: "primary",
       duration: 3000,
     })
+    
+    await dispatch(searchLocally()).unwrap()
+
     dispatch(setHostCode(value))
     props.navigation.navigate('MapScreen', {
       searchType: 'host',
       hostCode: value,
     });
   };
-  const searchLocally = (marketId: any) => {
-    props.navigation.navigate('MapScreen', {
-      searchType: 'local',
-    });
+
+  const search_locally = async () => {
+    try {
+      await dispatch(searchLocally()).unwrap()
+      console.log("___search___locally") // For some reason the code below is unreachable unless I add a log.
+      props.navigation.push('MapScreen', {
+        searchType: 'local',
+      });
+    } catch (e) {
+      console.log("An error occured::", e)
+      toast({
+        message: "Something went wrong, please try again later.",
+        type: "primary",
+        duration: 3000,
+      })
+    }
   };
 
   return (
@@ -192,7 +209,7 @@ const SearchScreenHome = (
                 </View>
               </View>
               <Text style={styles.orText}>Or</Text>
-              <RoundedOutline fullWidth onPress={searchLocally}>
+              <RoundedOutline loading={loading} fullWidth onPress={search_locally}>
                 Search Locally
               </RoundedOutline>
             </View>

@@ -6,7 +6,7 @@ import { app } from '../firebase/firebaseApp';
 import { createSlice } from "@reduxjs/toolkit";
 import { ILocation } from "../globaltypes";
 import { RootState } from ".";
-
+import LogRocket from 'logrocket';
 const locations:ILocation[] = []
 const locationsSlice = createSlice({
     name: 'locations',
@@ -31,10 +31,8 @@ export const locationsApi = createApi({
         prepareHeaders: async (headers)=> {
             getAuth(app).currentUser?.getIdToken().then((idToken)=>{
                 headers.set("Authorization", `Bearer ${idToken}`);
-            }).catch(()=>{
-                /**
-                 * @todo: add log rocket in to pick up on this error
-                 */
+            }).catch((error)=>{
+                LogRocket.error(error)
             })
         }
     }),

@@ -144,6 +144,7 @@ const MapScreenBottomSheet = (props: Props) => {
   const {
     setVehicle,
     bookingDetails: { vehicle },
+    clearBookingState
   } = useBookingActions();
 
   const openAuthorizationCode = () => {
@@ -175,6 +176,7 @@ const MapScreenBottomSheet = (props: Props) => {
   const closeBottomSheet = () => {
     props.onClose();
     dispatchAction({ type: 'closeBottomSheet' });
+    clearBookingState();
   };
 
   const openModifyBooking = () => {

@@ -5,6 +5,7 @@ import { getEvents, selectedEvents } from "../redux/eventSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/store";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useEventData(){
     const [loadingEvents, setLoadingEvents] =useState(false);
@@ -18,6 +19,7 @@ export default function useEventData(){
             dispatch(getEvents(data))
         }).catch((e)=>{
             setLoadingEvents(false)
+            LogRocket.error(e)
         })
     }
 

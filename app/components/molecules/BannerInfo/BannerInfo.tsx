@@ -114,7 +114,7 @@ const BannerInfo = (props: iProps) => {
             </Stack>
           </VStack>
           <Box display={display} width={boxWidth}>
-            <Image src={image ? `/images/${image}` : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly'/>
+            <Image src={image ? `/images/${image}` : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly' data-testid='banner-info-img'/>
           </Box>
         </Flex>
       </Box>

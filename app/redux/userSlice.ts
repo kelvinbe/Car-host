@@ -7,6 +7,7 @@ import { IUserProfile, IUserSettings } from "../globaltypes";
 import { USERSETTINGS_API, USERS_DOMAIN } from '../hooks/constants';
 import apiClient from '../utils/apiClient';
 import { isNull } from 'lodash';
+import LogRocket from 'logrocket';
 
 const users:IUserProfile[] = []
 
@@ -44,6 +45,7 @@ export const createUser = createAsyncThunk('user/create', async (undefined, {rej
         })
         return result.data
     } catch (e) {
+        LogRocket.error(e)
         return rejectWithValue(e)
     }
 })
@@ -71,6 +73,7 @@ export const fetchUser = createAsyncThunk('user/fetchProfile', (undefined, {reje
             return result.data.data
 
         } catch (e) {
+            LogRocket.error(e)
             return rejectWithValue(e)
         }
     }).catch(rejectWithValue)
@@ -88,6 +91,7 @@ export const updateUserSettings = createAsyncThunk('user/updateSettings', async 
         await dispatch(fetchUser())
         return result.data
     } catch (e) {
+        LogRocket.error(e)
         return rejectWithValue(e)
     }
 })
@@ -98,6 +102,7 @@ export const updateUserProfile= createAsyncThunk('user/updateUserProfile', async
         await dispatch(fetchUser())
         return updatedUser.data
     } catch (e){
+        LogRocket.error(e)
         return rejectWithValue(e)
     }
 })

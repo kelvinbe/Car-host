@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import { z } from "zod"
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage"
 import { app } from "../firebase/firebaseApp"
+import { isUndefined } from "lodash"
 
 /**
  * @name addSpacingAfterEveryFourDigits
@@ -55,7 +56,7 @@ export const hasSpecialCharacter = (str: string) => /[@$!%*?&]/.test(str);
  * @name calcDuration
  * @description Calculates the duration between two dates
  */
-export const calcDuration = ( startDateTime: string, endDateTime: string ) => {
+export const calcDuration = ( startDateTime: string | number, endDateTime: string | number ) => {
     const start = dayjs(startDateTime)
     const end = dayjs(endDateTime)
     const duration = end.diff(start, 'minutes') / 60
@@ -75,7 +76,7 @@ export const timeTilEndOfDay = () =>{
     const timeToAddToEvenOut = duration % 30
     const startTime = now.add(timeToAddToEvenOut, 'minutes').add(1, "minute")
     const all30minIntervals = Array.from({length: duration / 30}, (_, i) => i)
-    const times = all30minIntervals.map((_, i) => startTime.add(i * 30, 'minutes').format('dddd, MMMM D, YYYY h:mm A'))
+    const times = all30minIntervals.map((_, i) => startTime.add(i * 30, 'minutes').toISOString())
     const labelAndValue = times.map(time => ({label: dayjs(time).format("h:mm"), value: time}))
     return labelAndValue
 }
@@ -92,7 +93,7 @@ export const timeTilEndOfNewDay = ( fromToday: number ) =>{
     const endOfDay = then.endOf('day')
     const duration = endOfDay.diff(startOfDay, 'minutes')
     const all30minIntervals = Array.from({length: duration / 30}, (_, i) => i)
-    const times = all30minIntervals.map((_, i) => startOfDay.add(i * 30, 'minutes').format('dddd, MMMM D, YYYY h:mm A'))
+    const times = all30minIntervals.map((_, i) => startOfDay.add(i * 30, 'minutes').toISOString())
     const labelAndValue = times.map(time => ({label: dayjs(time).format("h:mm"), value: time}))
     return labelAndValue
 }
@@ -110,8 +111,11 @@ export const daysOfTheWeekFromToday = () => {
 }
 
 
-export const isAm = (time: string) => {
-    return time?.includes('AM') 
+export const isAm = (time?: string | number) => {
+    if (isUndefined(time)) return true 
+    if (typeof time === 'number') return time < 12
+    const hour = new Date(time).getHours()
+    return hour < 12
 }
 
 /**
@@ -194,9 +198,20 @@ export const uploadToFirebase = (uri: string, filename: string, file_type: strin
         }).catch((e)=>{
             rej(e)
         })
-    })
-    
+    }) 
+}
 
-    
-    
-  }
+const generateId = () => {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+
+export const add_padding = (num: number = 1, data: Array<unknown>) =>{
+    const left = Array(num).fill({
+        id: generateId(),
+    })
+    const right = Array(num).fill({
+        id: generateId(),
+    })
+    return [...left, ...data, ...right]
+}   

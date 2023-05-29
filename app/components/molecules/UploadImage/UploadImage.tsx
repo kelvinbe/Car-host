@@ -5,6 +5,7 @@ import { FlexRowCenterCenter } from '../../../utils/theme/FlexConfigs'
 import { BiImageAdd } from 'react-icons/bi'
 import { uploadToFirebase } from '../../../utils/utils'
 import { isEmpty, last } from 'lodash'
+import LogRocket from 'logrocket';
 
 interface Props{
     isError?:boolean,
@@ -41,14 +42,12 @@ const UploadImage = ({isError, images, onChange, multiple}:Props) => {
             const bloburl = URL.createObjectURL(file)
             return await uploadToFirebase(bloburl, file.name, file.type ).then((url)=>{
                 return url
-            }).catch(()=>{
+            }).catch((error)=>{
                 toast({
                     title: "Image Upload failed",
                     status: "error",
                 })
-                /**
-                 * @todo logrocket implementation
-                 */
+                LogRocket.error(error)
                 return null
             })
         })).then((urls)=>{
@@ -56,11 +55,9 @@ const UploadImage = ({isError, images, onChange, multiple}:Props) => {
             const last_image = last(url_strings) as string
             setImageUrls((prev)=>multiple ? [...prev, ...url_strings] : isEmpty(last_image) ? [] : [last_image])
             onChange(multiple ? [...imageUrls, ...url_strings] : last_image  ?? '')
-        }).catch(()=>{
+        }).catch((error)=>{
             // toasts have already been displayed
-            /**
-             * @todo logrocket implementation
-             */
+            LogRocket.error(error)
             
         }).finally(()=>{
             setLoading(false)

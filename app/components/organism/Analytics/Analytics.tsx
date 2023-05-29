@@ -39,8 +39,8 @@ const Analytics = () => {
   };
 
   return (
-    <Flex direction={["column", "row"]} gap={8} width={"full"} height={"700px"}>
-      <Flex borderRadius={"lg"} width={"65%"}>
+    <Flex direction={["column", "row"]} gap={8} width={"full"} height={"550px"}>
+      <Flex borderRadius={"lg"} width={"68%"}>
         <AnalyticsChart
           setVehicleId={setVehicleId}
           vehicleId={vehicleId}
@@ -51,7 +51,7 @@ const Analytics = () => {
           earnings={earnings}
         />
       </Flex>
-      <Flex borderRadius={"lg"} width={"35%"}>
+      <Flex borderRadius={"lg"} width={"32%"}>
         <VehicleReportDetails vehicle={vehicle} earnings={earnings} />
       </Flex>
     </Flex>

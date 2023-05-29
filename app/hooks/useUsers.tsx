@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { useToast } from "@chakra-ui/react";
 import { selectUpdateUserProfile, updateUserProfile } from "../redux/userSlice";
+import LogRocket from "logrocket";
 
 export default function useUsers() {
   const dispatch = useAppDispatch();
@@ -17,7 +18,7 @@ export default function useUsers() {
         isClosable: true,
         status: "success",
       });
-    }).catch(()=>{
+    }).catch((error)=>{
       toast({
         position: "top",
         title: "Error",
@@ -26,6 +27,7 @@ export default function useUsers() {
         isClosable: true,
         status: "error",
       });
+      LogRocket.error(error)
     })
   }
   return { editUserProfile, loading, error, user };

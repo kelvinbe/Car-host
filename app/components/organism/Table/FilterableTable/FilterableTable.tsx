@@ -23,7 +23,7 @@ interface IProps {
     columnName?: string;
   }[];
   data?: unknown[];
-  columns?: ColumnsType;
+  columns?: ColumnsType<any>;
   dataFetchFunction?: (fetchStatus: "pending" | "error" | "success") => void;
   addValue?:() =>void;
   buttonName?: string;

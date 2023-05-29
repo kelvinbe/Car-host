@@ -3,6 +3,7 @@ import apiClient from "../utils/apiClient";
 import { uniq } from "lodash";
 import { PAYOUT_DOMAIN } from "../hooks/constants";
 import { RootState } from ".";
+import LogRocket from "logrocket";
 
 interface InitialState {
   data: any[];
@@ -32,6 +33,7 @@ export const fetchPayouts = createAsyncThunk(
       })
       return payouts;
     } catch (e) {
+      LogRocket.error(e)
       rejectWithValue(e);
     }
   }

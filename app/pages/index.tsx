@@ -6,7 +6,7 @@ import AuthForm from '../components/organism/Forms/AuthForm/AuthForm';
 import HelperLinkText from '../components/atoms/HelperLinkText/HelperLinkText';
 import React, {  useState } from 'react';
 import useAppAuth from '../hooks/useAppAuth';
-
+import LogRocket from 'logrocket'
 
 export default function Home() {
   const [authState, setAuthState] = useState<"signup"|"signin"|"forgot">("signin")
@@ -32,7 +32,7 @@ export default function Home() {
       createUserWithEmailAndPassword(email, password).then(()=>{
         push("/onboarding")
       }).catch((e)=>{
-        console.log(e)
+        LogRocket.error(e)
         toast({
           title: "Error",
           description: "An Error Occured",

@@ -26,7 +26,7 @@ export const SlideWithBgImage = ({ banner }:{
       bgSize={banner.id === 2 ? "" : "cover"}
       opacity={10}
       bgPosition={banner.id === 2 ? "right !important" : ""}
-      data-testid='banner-info'
+      data-testid='banner-slide'
     >
       {banner.id === 1 ? (
         <BannerInfo

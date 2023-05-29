@@ -11,6 +11,10 @@ import { uploadToFirebase } from '../../utils/utils'
 import { IUserProfile } from '../../globaltypes'
 import useUsers from '../../hooks/useUsers'
 import { isEmpty } from 'lodash'
+import LogRocket from 'logrocket'
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorFallback from '../../components/organism/ErrorFallback'
+import {logError} from '../../utils/utils'
 
 function Profile() {
     const user:IUserProfile|null = useAppSelector(selectUser)
@@ -37,15 +41,14 @@ function Profile() {
                     title: "Image Upload failed",
                     status: "error",
                 })
-                /**
-                 * @todo logrocket implementation
-                 */
+                LogRocket.error(e)
                 setLoading(false)
                 return null
             })
         })
     }
   return (
+  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
     <Flex justifyContent={'space-between'}>
         {user && <EditProfileModal isOpen={isOpen} onClose={onClose} user={user}/>}
         <Box>
@@ -100,6 +103,7 @@ function Profile() {
             <Rounded variant={'solid'} setWidth={'150px'} rounded={'md'} onClick={onOpen}>Edit</Rounded>
         </Box>
     </Flex>
+  </ErrorBoundary>
   )
 }
 

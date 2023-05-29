@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useAppDispatch } from '../redux/store';
 import apiClient from '../utils/apiClient';
+import LogRocket from "logrocket";
 
 type Error = any;
 
@@ -21,7 +22,10 @@ export default function useFetchData<T>(url:string, actionFunc:(responseData: T)
             setLoading(false);
             setErrors(null);
           })
-          .catch(err => setErrors(err));
+          .catch(err => {
+            setErrors(err)
+            LogRocket.error(err)
+          });
     }
     return {
         fetchData,

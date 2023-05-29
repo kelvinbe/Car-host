@@ -6,6 +6,7 @@ import { fetchUser } from '../redux/userSlice';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase/firebaseApp';
 import apiClient from '../utils/apiClient';
+import LogRocket from "logrocket";
 
 export default function usePayoutMethods(){
     const dispatch = useAppDispatch()
@@ -33,7 +34,7 @@ export default function usePayoutMethods(){
 
         return response.data;
       } catch (error) {
-        console.error(error);
+        LogRocket.error(error);
         toast({
             position: "top",
             title: "Error",

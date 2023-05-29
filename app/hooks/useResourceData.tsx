@@ -5,6 +5,7 @@ import { getResources, selectedResources } from "../redux/resourceSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../redux/store";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useResourceData(){
     const [loadingResources, setLoadingResources] =useState(false);
@@ -18,6 +19,7 @@ export default function useResourceData(){
             dispatch(getResources(data))
         }).catch((e)=>{
             setLoadingResources(false)
+            LogRocket.error(e)
         })
     }
 

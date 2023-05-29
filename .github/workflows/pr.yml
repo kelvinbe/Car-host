@@ -2,11 +2,25 @@ name: PR Checks
 
 on:
   pull_request:
-    branches: ["*"]
+    branches: 
+      - main 
+      - WAK-Sprint-2023-*
 
 jobs:
   build-and-test:
+    
     runs-on: self-hosted
+    environment: Staging
+    env:
+      NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
+      NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
+      NEXT_PUBLIC_messagingSenderId: ${{ secrets.NEXT_PUBLIC_messagingSenderId }}
+      NEXT_PUBLIC_storageBucket: ${{ secrets.NEXT_PUBLIC_storageBucket }}
+      NEXT_PUBLIC_projectId: ${{ secrets.NEXT_PUBLIC_projectId }}
+      NEXT_PUBLIC_authDomain: ${{ secrets.NEXT_PUBLIC_authDomain }}
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+      NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
+      NEXT_PUBLIC_LOGROCKET_APP_ID: ${{ NEXT_PUBLIC_LOGROCKET_APP_ID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,10 +38,6 @@ jobs:
         working-directory: ./app
         run: npm install
 
-      - name: Build
-        working-directory: ./app
-        run: npm run build
-
       - name: Test
         working-directory: ./app
         run: npm run test
@@ -35,3 +45,7 @@ jobs:
       - name: Lint
         working-directory: ./app
         run: npm run lint
+
+      - name: Build
+        working-directory: ./app
+        run: npm run build

@@ -4,6 +4,7 @@ import { IPayout, PayoutMethods } from "../globaltypes";
 import apiClient from "../utils/apiClient";
 import { PAYOUTMETHODS_API } from "../hooks/constants";
 import { fetchUser } from "./userSlice";
+import LogRocket from "logrocket";
 
 
 /**
@@ -32,6 +33,7 @@ export const addPayoutMethod = createAsyncThunk("payout/add", async (payoutMetho
         dispatch(fetchUser())
         return null
     } catch (e) {
+        LogRocket.error(e)
         return rejectWithValue(e)
     }
 })
@@ -48,7 +50,9 @@ export const updatePayoutMethod = createAsyncThunk("payout/update", async (payou
         dispatch(fetchUser())
         return null
     }catch (e) {
+        LogRocket.error(e)
         return rejectWithValue(e)
+
     }
 })
 
@@ -64,6 +68,7 @@ export const createWithDrawal = createAsyncThunk("payout/createWithDrawal", asyn
         dispatch(fetchUser())
         return null
     }catch(e){
+        LogRocket.error(e)
         return rejectWithValue(e)
     }   
 })

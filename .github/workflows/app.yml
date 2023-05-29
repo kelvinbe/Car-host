@@ -1,11 +1,23 @@
 name: divvly
 
 on:
-  push:
-    branches: [staging]
+  pull_request:
+    branches: 
+      - WAK-Sprint-2023-*
 
 jobs:
   Test:
+    environment: Staging
+    env:
+      NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
+      NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
+      NEXT_PUBLIC_messagingSenderId: ${{ secrets.NEXT_PUBLIC_messagingSenderId }}
+      NEXT_PUBLIC_storageBucket: ${{ secrets.NEXT_PUBLIC_storageBucket }}
+      NEXT_PUBLIC_projectId: ${{ secrets.NEXT_PUBLIC_projectId }}
+      NEXT_PUBLIC_authDomain: ${{ secrets.NEXT_PUBLIC_authDomain }}
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+      NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
+      NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
     if: true
     runs-on: self-hosted
     steps:
@@ -29,9 +41,38 @@ jobs:
   Deploy:
     needs: Test
     runs-on: self-hosted
+    environment: Staging
+    env:
+      NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
+      NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
+      NEXT_PUBLIC_messagingSenderId: ${{ secrets.NEXT_PUBLIC_messagingSenderId }}
+      NEXT_PUBLIC_storageBucket: ${{ secrets.NEXT_PUBLIC_storageBucket }}
+      NEXT_PUBLIC_projectId: ${{ secrets.NEXT_PUBLIC_projectId }}
+      NEXT_PUBLIC_authDomain: ${{ secrets.NEXT_PUBLIC_authDomain }}
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+      NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
+      NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
     steps:
+      - name: Make script executable
+        run: chmod +x ./scripts/cleanup.sh
+
+
+      - name: Cleanup
+        run: sudo ./scripts/cleanup.sh
+
       - name: Build the docker image
         working-directory: ./app
-        run: docker build -t divvly-cp .
+        run: |
+            docker build -t divvly-cp \
+            --build-arg NEXT_PUBLIC_apiKey=$NEXT_PUBLIC_apiKey \
+            --build-arg NEXT_PUBLIC_appId=$NEXT_PUBLIC_appId \
+            --build-arg NEXT_PUBLIC_messagingSenderId=$NEXT_PUBLIC_messagingSenderId \
+            --build-arg NEXT_PUBLIC_storageBucket=$NEXT_PUBLIC_storageBucket \
+            --build-arg NEXT_PUBLIC_projectId=$NEXT_PUBLIC_projectId \
+            --build-arg NEXT_PUBLIC_authDomain=$NEXT_PUBLIC_authDomain \
+            --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY \
+            --build-arg NEXT_PUBLIC_API_DOMAIN=$NEXT_PUBLIC_API_DOMAIN \
+            --build-arg NEXT_PUBLIC_LOGROCKET_APP_ID=$NEXT_PUBLIC_LOGROCKET_APP_ID \
+            .
       - name: Start the docker container
-        run: docker run -dp 3000:3000 divvly-cp
+        run: docker run -dp 3001:3000 divvly-cp

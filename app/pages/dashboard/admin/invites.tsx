@@ -10,6 +10,10 @@ import { fetchUser, selectUser } from '../../../redux/userSlice'
 import apiClient from '../../../utils/apiClient'
 import { USERS_DOMAIN } from '../../../hooks/constants'
 import { z } from 'zod'
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../../components/organism/ErrorFallback";
+import { logError } from "../../../utils/utils";
+import LogRocket from 'logrocket'
 
 
 const InvitationTableColumnDefinition: ColumnsType<dIInvitation> = [
@@ -17,7 +21,7 @@ const InvitationTableColumnDefinition: ColumnsType<dIInvitation> = [
         title: 'Email',
         dataIndex: 'email',
         key: 'email',
-        render: (v, {email}) => (
+        render: (v, { email }) => (
             <Text>
                 {email}
             </Text>
@@ -27,7 +31,7 @@ const InvitationTableColumnDefinition: ColumnsType<dIInvitation> = [
         title: "Status",
         dataIndex: "activated",
         key: "activated",
-        render: (v, {activated}) => (
+        render: (v, { activated }) => (
             <>
                 {
                     activated ? (
@@ -57,7 +61,7 @@ const InvitationTableColumnDefinition: ColumnsType<dIInvitation> = [
  * - this will only be used here so no need for a hook, avoiding unnecessary boilerplate
  */
 
-const sendInvite = (email: string) => apiClient.post(`${USERS_DOMAIN}/admin/invite`, {email})
+const sendInvite = (email: string) => apiClient.post(`${USERS_DOMAIN}/admin/invite`, { email })
 
 function Invites() {
     const [email, setEmail] = useState<{
@@ -75,90 +79,93 @@ function Invites() {
     })
     const user = useAppSelector(selectUser)
 
-    const handleInvite = async () =>{
-        const { value, isInvalid } = email 
-        if (!isInvalid){
+    const handleInvite = async () => {
+        const { value, isInvalid } = email
+        if (!isInvalid) {
             setLoading(true)
-            await sendInvite(value).then(()=>{
+            await sendInvite(value).then(() => {
                 dispatch(fetchUser())
-            }).catch(()=>{
+            }).catch((error) => {
                 toast({
                     title: 'Error',
                     description: "An error occured"
                 })
-            }).finally(()=>{
+                LogRocket.error(error)
+            }).finally(() => {
                 setLoading(false)
             })
         }
     }
 
     const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmail(()=>({
+        setEmail(() => ({
             value: e.target.value,
             isInvalid: !z.string().email().optional().safeParse(e.target.value).success
         }))
     }
 
-  return (
-    <Grid w="100vw" h="100%" templateRows="200px 1fr" rowGap="20px" data-cy={'invites-container'}>
-        <GridItem w="100%"  >
-            <Flex {...FlexColStartStart} data-cy={'email-form-container'} >
-                <FormControl
-                    isRequired
-                    isInvalid={email.isInvalid}
-                    data-cy={'email-form'}
-                >
-                    <FormLabel>
-                        Email
-                    </FormLabel>
-                    <Input 
-                        placeholder="Email"
-                        type='email'
-                        rounded="full"
-                        w="400px"
-                        value={email.value}
+    return (
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+        <Grid w="100vw" h="100%" templateRows="200px 1fr" rowGap="20px" data-cy={'invites-container'}>
+            <GridItem w="100%"  >
+                <Flex {...FlexColStartStart} data-cy={'email-form-container'} >
+                    <FormControl
+                        isRequired
                         isInvalid={email.isInvalid}
-                        onChange={onEmailChange}
+                        data-cy={'email-form'}
+                    >
+                        <FormLabel>
+                            Email
+                        </FormLabel>
+                        <Input
+                            placeholder="Email"
+                            type='email'
+                            rounded="full"
+                            w="400px"
+                            value={email.value}
+                            isInvalid={email.isInvalid}
+                            onChange={onEmailChange}
+                        />
+                        <FormHelperText>
+                            The email to the user you want to invite.
+                        </FormHelperText>
+                        <FormErrorMessage data-cy={'error-message'}>
+                            Enter a valid email
+                        </FormErrorMessage>
+                    </FormControl>
+                    <Button
+                        bg="primary.1000"
+                        color="white"
+                        isLoading={loading}
+                        loadingText='Sending...'
+                        rounded="full"
+                        mt="20px"
+                        onClick={handleInvite}
+                    >
+                        Invite
+                    </Button>
+                </Flex>
+            </GridItem>
+            <GridItem w="70%" >
+                    <FilterableTable
+                        columns={InvitationTableColumnDefinition}
+                        data={user?.sent_invites ?? []}
+                        viewSearchField={false}
                     />
-                    <FormHelperText>
-                        The email to the user you want to invite.
-                    </FormHelperText>
-                    <FormErrorMessage data-cy={'error-message'}>
-                        Enter a valid email
-                    </FormErrorMessage>
-                </FormControl>
-                <Button
-                    bg="primary.1000"
-                    color="white"
-                    isLoading={loading}
-                    loadingText='Sending...'
-                    rounded="full"
-                    mt="20px"
-                    onClick={handleInvite}
-                >
-                    Invite
-                </Button>
-            </Flex>
-        </GridItem>
-        <GridItem w="70%" >
-            <FilterableTable 
-                columns={InvitationTableColumnDefinition}
-                data={user?.sent_invites ?? []}
-                viewSearchField={false}
-            />
-        </GridItem>
-    </Grid>
-  )
+            </GridItem>
+        </Grid>
+    </ErrorBoundary>
+    )
 }
 
 export default Invites
 
 export function getStaticProps() {
     return {
-      props: {
-        adminonly: true,
-        dashboard: true,
-        authonly: true,
-      },
+        props: {
+            adminonly: true,
+            dashboard: true,
+            authonly: true,
+        },
     };
-  }
+}

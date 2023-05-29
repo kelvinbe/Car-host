@@ -42,7 +42,8 @@ const auth= () => ({
     const signOut= () => Promise.resolve()
     const signInWithPopup= (arg)=>{}
     const signInWithCustomToken=(arg)=>{}
-    const getAuth= (arg)=>{}
+    const getAuth= (args)=>{}
+    const sendPasswordResetEmail=(...args)=>Promise.resolve()
 export {
     initializeApp,
     auth,
@@ -54,6 +55,7 @@ export {
     signOut,
     getAuth,
     onAuthStateChanged,
+    sendPasswordResetEmail,
   };
   
  

@@ -35,6 +35,7 @@ import useNotifications from './hooks/useNotifications';
 import * as Linking from 'expo-linking'
 import { fetchOnboarding } from './store/slices/onBoardingSlice';
 import useUserAuth from './hooks/useUserAuth';
+import ErrorBoundary from './components/ErrorHandler/ErrorBoundary';
   
 
   
@@ -145,23 +146,25 @@ import useUserAuth from './hooks/useUserAuth';
     )
   } else{
     return (
-      <Provider store={store}>
-        <StripeProvider 
-            publishableKey={STRIPE_PUBLISHABLE_KEY} 
-            //@TODO: add merchant id when available
-        >
-        <ThemeProvider theme={theme} >
-          <SafeAreaProvider>
-          {/* <StatusBar backgroundColor={theme.lightColors?.white} style="dark" /> */}
-            {/* <SafeAreaView style={{width: "100%", height: "100%"}}> */}
-              <StatefullApp/>
-              
-            {/* </SafeAreaView> */}
-            <ToastContainer/>
-          </SafeAreaProvider>
-        </ThemeProvider>
-        </StripeProvider>
-      </Provider>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <StripeProvider 
+              publishableKey={STRIPE_PUBLISHABLE_KEY} 
+              //@TODO: add merchant id when available
+          >
+          <ThemeProvider theme={theme} >
+            <SafeAreaProvider>
+            {/* <StatusBar backgroundColor={theme.lightColors?.white} style="dark" /> */}
+              {/* <SafeAreaView style={{width: "100%", height: "100%"}}> */}
+                <StatefullApp/>
+                
+              {/* </SafeAreaView> */}
+              <ToastContainer/>
+            </SafeAreaProvider>
+          </ThemeProvider>
+          </StripeProvider>
+        </Provider>
+      </ErrorBoundary>
     );
   }
 }

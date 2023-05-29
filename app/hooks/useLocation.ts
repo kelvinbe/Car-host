@@ -4,6 +4,7 @@ import { MARKETS_API, SUBMARKETS_API } from "./constants"
 import axios from "axios"
 import { useState } from "react"
 import apiClient from "../utils/apiClient"
+import LogRocket from "logrocket"
 
 type dataState = {
     error: any | null,
@@ -48,6 +49,7 @@ const useLocation = () => {
                 ...prev,
                 loading: false,
             }))
+            LogRocket.error(e)
         }
     }
 

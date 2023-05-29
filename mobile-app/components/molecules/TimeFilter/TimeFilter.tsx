@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@rneui/themed';
 import Dropdown from '../Dropdown/Dropdown';
 import dayjs from 'dayjs';
-import { isArray } from 'lodash';
+import { first, isArray } from 'lodash';
 import {
   daysOfTheWeekFromToday,
   isAm,
@@ -52,18 +52,15 @@ const TimeFilter = (props: Props) => {
   const [viewDayDropdown, setViewDayDropdown] = useState<boolean>(false);
   const [chosenDay, setChosenDay] = useState(0);
   const [ times, setTimes] = useState<{ label: string; value: string }[]>([]);
-  const selectStartTime = useSelector(selectStartDateTime)
-  const selectEndDateTimes = useSelector(selectEndDateTime)
-  const [status, setStatus] = useState('Available')
   
 
   const handlePickupTime = (v: any) => {
-    props.setStartDateTime && props.setStartDateTime(dayjs(v?.[0]).toISOString());
+    props.setStartDateTime && props.setStartDateTime(dayjs(first(v)).toISOString());
   };
 
 
   const handleDropOffTime = (v: any) => {
-    props.setEndDateTime && props.setEndDateTime(dayjs(v?.[0]).toISOString());
+    props.setEndDateTime && props.setEndDateTime(dayjs(first(v)).toISOString());
   };
 
 
@@ -81,7 +78,7 @@ const TimeFilter = (props: Props) => {
         <Dropdown
           key={times?.length}
           dropdownOpen={setViewDayDropdown}
-          defaultValue={daysOfTheWeekFromToday()?.[0]?.label}
+          defaultValue={first(daysOfTheWeekFromToday())?.label}
           items={daysOfTheWeekFromToday()}
           onChange={v => {
             setChosenDay(v as any);
@@ -95,9 +92,17 @@ const TimeFilter = (props: Props) => {
               key={times?.length}
               items={times}
               onChange={handlePickupTime}
-              defaultValue={times?.[0]?.label}
-              defaultAdditionalFilter={isAm(times?.[0]?.value) ? 'AM' : 'PM'}
+              defaultValue={first(times)?.label}
+              defaultAdditionalFilter={isAm(first(times)?.value) ? 'AM' : 'PM'}
               additionalFilter={['AM', 'PM']}
+              filter={(chosenFilter, item)=>{
+                if (chosenFilter === 'AM') {
+                  return isAm(item?.value);
+                } else if (chosenFilter === 'PM') {
+                  return !isAm(item?.value);
+                }
+                return true;
+              }}
             />
           </View>
         )}
@@ -107,8 +112,8 @@ const TimeFilter = (props: Props) => {
             key={times?.length}
             items={times}
             onChange={handleDropOffTime}
-            defaultValue={times?.[0]?.label}
-            defaultAdditionalFilter={isAm(times?.[0]?.value) ? 'AM' : 'PM'}
+            defaultValue={first(times)?.label}
+            defaultAdditionalFilter={isAm(first(times)?.value) ? 'AM' : 'PM'}
             additionalFilter={['AM', 'PM']}
           />
         </View>

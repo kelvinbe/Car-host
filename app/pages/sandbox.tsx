@@ -1,8 +1,12 @@
 import React from 'react'
 
 function SandboxPage() {
+
+
   return (
-    <div>SandboxPage</div>
+    <div className="w-screen h-screen flex flex-col items-center justify-center">
+      
+    </div>
   )
 }
 

@@ -17,6 +17,10 @@ interface IProps {
     dropdownOpen?: (v: boolean) => void,
     defaultValue?: string,
     defaultAdditionalFilter?: string,
+    filter?: (chosenFilter: string, item: Partial<{
+        label: string;
+        value: string | number;
+    }>)=> boolean
 }
 
 type Props = IProps;
@@ -101,7 +105,8 @@ const useStyles = makeStyles((theme, props: Props) =>{
 })
 
 const Dropdown = (props: Props) => {
-    const {items, onChange, placeholder, additionalFilter, dropdownOpen, defaultAdditionalFilter, defaultValue} = props
+
+    const {items, onChange, placeholder, additionalFilter, dropdownOpen, defaultAdditionalFilter, defaultValue, filter} = props
     const [open, setOpen] = useState<boolean>(false)
     const [currentValue, setCurrentValue] = useState<string>( defaultValue || placeholder || "Select " )
     const [chosenFilter, setChosenFilter] = useState<string>( defaultAdditionalFilter || additionalFilter?.[0] || "")
@@ -120,11 +125,22 @@ const Dropdown = (props: Props) => {
 
     const handleSelect = (index: number) =>{
         toggleDropdown()
-        setCurrentValue(items?.filter(({label, value})=>additionalFilter ? isString(value) ?  value?.includes(chosenFilter) : true : true)?.find((_, i)=> i== index)?.label || "")
+        setCurrentValue(
+            items?.
+            filter((item)=>filter ? filter?.(chosenFilter, item) : true)?.
+            find((_, i)=> i== index)?.label || ""
+        )
         if(additionalFilter){
-            onChange && onChange([items?.filter(({label, value})=>additionalFilter ? isString(value) ?  value?.includes(chosenFilter) : true : true)?.find((_, i)=> i== index)?.value || "", chosenFilter])
+            onChange && onChange(
+                [
+                    items?.
+                    filter((item)=>filter ? filter?.(chosenFilter, item) : true)?.
+                    find((_, i)=> i== index)?.value || "", chosenFilter
+                ])
         }else{
-            onChange && onChange(items?.find((_, i)=> i== index)?.value || "")
+            onChange && onChange(
+                items?.find((_, i)=> i== index)?.value || ""
+                )
         }
     }
   return (
@@ -156,7 +172,9 @@ const Dropdown = (props: Props) => {
                 </View>
                 { open && <ScrollView style={styles.dropdownValuesContainer} >
                     {
-                        items?.filter(({label, value})=>additionalFilter ? isString(value) ?  value?.includes(chosenFilter) : true : true).map((item, i)=>(
+                        items?.
+                        filter((item)=>filter ? filter?.(chosenFilter, item) : true)
+                        .map((item, i)=>(
                             <TouchableOpacity key={i} onPress={()=>{
                                 handleSelect(i)
                                 }}  style={styles.dropdownValue} >

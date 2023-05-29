@@ -7,6 +7,7 @@ import { IVehicle, IVehicleDetails, IapiResponseData } from "../globaltypes";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useVehicles(vehicle_id?:string) {
   const dispatch = useAppDispatch();
@@ -60,6 +61,7 @@ export default function useVehicles(vehicle_id?:string) {
           isClosable: true,
           status: "error",
         })
+        LogRocket.error(error)
       });
   }
 
@@ -80,6 +82,7 @@ export default function useVehicles(vehicle_id?:string) {
           isClosable: true,
           status: "success",
         })
+        LogRocket.error(error)
     })
     .catch(error=>{
       setError({message:error})
@@ -91,6 +94,7 @@ export default function useVehicles(vehicle_id?:string) {
         isClosable: true,
         status: "error",
       })
+      LogRocket.error(error)
     })
   }
   function deleteVehicle(id: number){
@@ -122,6 +126,7 @@ export default function useVehicles(vehicle_id?:string) {
         isClosable: true,
         status: "error",
       })
+      LogRocket.error(error)
     })
   }
 
@@ -149,6 +154,7 @@ export default function useVehicles(vehicle_id?:string) {
         isClosable: true,
         status: "error",
       })
+      LogRocket.error(error)
     })
   }
   return {

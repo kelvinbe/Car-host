@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useDeleteData(url:string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
@@ -34,6 +35,7 @@ export default function useDeleteData(url:string, successTitle:string, successDe
         isClosable: true,
         status: "error",
       })
+      LogRocket.error(error)
     })
   }
   

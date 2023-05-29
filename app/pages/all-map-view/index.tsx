@@ -9,6 +9,9 @@ import VehicleManagement from "../vehicle-management";
 import Reservations from "../reservations";
 import { Flex } from "@chakra-ui/react";
 import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/organism/ErrorFallback";
+import { logError } from "../../utils/utils";
 
 function AllMapView() {
   const [viewReservations, setViewReservations] = useState(false);
@@ -18,6 +21,7 @@ function AllMapView() {
   const StationsData = useAppSelector(selectStations)
 
   return (
+  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
     <Grid
       w="full"
       templateColumns="repeat(3, 1fr)"
@@ -27,16 +31,16 @@ function AllMapView() {
       data-cy={'all-map-view-container'}
     >
       <GridItem colSpan={2}>
-        <LiveMapComponent />
+          <LiveMapComponent />
       </GridItem>
       <GridItem>
-        <FilterableTable
-          viewAddFieldButton={false}
-          viewSearchField={false}
-          viewSortablesField={false}
-          columns={LocationVehicleMapTableColumns}
-          data={StationsData}
-        />
+          <FilterableTable
+            viewAddFieldButton={false}
+            viewSearchField={false}
+            viewSortablesField={false}
+            columns={LocationVehicleMapTableColumns}
+            data={StationsData}
+          />
       </GridItem>
       <GridItem colSpan={3}>
         <Flex borderBottom="2px" borderColor="gray.200" w={"30%"}>
@@ -95,14 +99,15 @@ function AllMapView() {
             Vehicle Data
           </Text>
         </Flex>
-        <Box marginTop="20px">
-          {noneSelected && <Reservations />}
-          {viewReservations && <Reservations />}
-          {viewLocation && <Locations />}
-          {viewVehicle && <VehicleManagement />}
-        </Box>
+          <Box marginTop="20px">
+            {noneSelected && <Reservations />}
+            {viewReservations && <Reservations />}
+            {viewLocation && <Locations />}
+            {viewVehicle && <VehicleManagement />}
+          </Box>
       </GridItem>
     </Grid>
+  </ErrorBoundary>
   );
 }
 

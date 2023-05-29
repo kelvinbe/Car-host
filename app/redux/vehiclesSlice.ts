@@ -3,6 +3,7 @@ import { RootState } from ".";
 import { IVehicle } from "../globaltypes";
 import apiClient from "../utils/apiClient";
 import { VEHICLES_DOMAIN } from "../hooks/constants";
+import LogRocket from "logrocket";
 
 export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (data: {
     page?: number,
@@ -17,6 +18,7 @@ export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (d
         console.log("Here is the res::", res)
         return res.data
     } catch (e) {
+        LogRocket.error(e)
         rejectWithValue(e as string)
     }
 })
@@ -34,6 +36,7 @@ export const fetchVehicle = createAsyncThunk('vehicles/fetchVehicle', async (dat
         console.log("Here is the res::", res)
         return res?.data ?? null
     } catch (e) {
+        LogRocket.error(e)
         rejectWithValue(e as string)
     }
 })

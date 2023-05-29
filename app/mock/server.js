@@ -348,7 +348,6 @@ res.json({
 })
 
 server.use(router);
-
 if(!process.env.NGROK_AUTH_TOKEN){
   console.log(`
       ❗❗ IMPORTANT ❗❗
@@ -371,9 +370,6 @@ if(!process.env.NGROK_AUTH_TOKEN){
     `)
   })
 }
-
-
-
 server.listen(4000, () => {
   console.log('JSON Server is running on port 4000');
 });

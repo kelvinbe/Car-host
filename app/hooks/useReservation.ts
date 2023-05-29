@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { IReservation } from "../globaltypes";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useReservation(reservationId?: string | number, size?:number, page?:number, status?: string) {
   const reservations = useAppSelector(selectReservations);
@@ -43,7 +44,10 @@ export default function useReservation(reservationId?: string | number, size?:nu
         setLoading(false);
         setErrors(null);
       })
-      .catch(setErrors);
+      .catch(error=>{
+        setErrors(error)
+        LogRocket.error(error)
+      });
   }
 
   function updateReservation(
@@ -88,6 +92,7 @@ export default function useReservation(reservationId?: string | number, size?:nu
           isClosable: true,
           status: "error",
         });
+        LogRocket.error(error)
       });
   }
 
@@ -117,6 +122,7 @@ export default function useReservation(reservationId?: string | number, size?:nu
           isClosable: true,
           status: "error",
         });
+        LogRocket.error(error)
       });
   }
 
@@ -159,6 +165,7 @@ export default function useReservation(reservationId?: string | number, size?:nu
           isClosable: true,
           status: "success",
         });
+        LogRocket.error(error)
       });
   }
 

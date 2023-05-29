@@ -2,6 +2,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/firebaseApp";
 
 import { GenerateDataTransferObject } from './../globaltypes';
+import LogRocket from "logrocket";
 /**
  * @name loadEnv 
  * @params {string} envVariableName
@@ -163,9 +164,11 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
             getDownloadURL(_ref).then((url)=>{
                 res(url);
             }).catch((e)=>{
+                LogRocket.error(e)
                 rej(e)
             })
         }).catch((e)=>{
+            LogRocket.error(e)
             rej(e)
         })
     }
@@ -184,4 +187,9 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
     const a = JSON.stringify(arr1);
     const b = JSON.stringify(arr2);
     return a === b;
+ }
+
+ export const logError = (error: Error, info: { componentStack: string })=>{
+    LogRocket.error(error)
+    LogRocket.info(info)
  }

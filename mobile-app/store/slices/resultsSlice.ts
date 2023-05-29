@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { number } from "@storybook/addon-knobs";
 
 interface VehiclePic {
     id: string;

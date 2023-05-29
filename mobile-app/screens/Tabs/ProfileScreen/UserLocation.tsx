@@ -3,13 +3,14 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProfileScreenParamList } from '../../../types'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import { DropdownData, SelectDropdown } from "expo-select-dropdown"
 import useLocation from '../../../hooks/useLocation'
 import { isEmpty, isNull } from 'lodash'
 import { useAppDispatch, useAppSelector } from '../../../store/store'
 import { selectUserProfile } from '../../../store/slices/userSlice'
 import { updateUserData } from '../../../store/slices/userSlice'
 import useToast from '../../../hooks/useToast'
+import { DropdownData } from '../../../components/organisms/select-dropdown/types'
+import SelectDropdown from '../../../components/organisms/select-dropdown'
 
 type IProps = NativeStackScreenProps<ProfileScreenParamList, "UserLocation">
 

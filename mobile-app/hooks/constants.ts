@@ -1,4 +1,4 @@
-import { API_URL } from "@env";
+import { API_URL, TRACKING_SERVICE_HOST as t_host } from "@env";
 import Constants from "expo-constants";
 const { manifest } = Constants;
 
@@ -152,5 +152,5 @@ export const ISSUES_ENDPOINT = DOMAIN + '/api/issues';
  * for testing, i.e until we get a valid https certificate, we will use ngrok
  */
 
-export const TRACKING_SERVICE_HOST = '0b94-41-215-129-67.jp.ngrok.io';
+export const TRACKING_SERVICE_HOST = t_host
 

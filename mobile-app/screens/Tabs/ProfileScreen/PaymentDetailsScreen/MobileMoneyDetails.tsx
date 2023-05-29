@@ -8,10 +8,11 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import { fetchUserData, selectUserProfile } from '../../../../store/slices/userSlice';
 import { isNaN } from 'lodash';
 import useToast from '../../../../hooks/useToast';
-import { DropdownData, SelectDropdown } from 'expo-select-dropdown';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PaymentDetailsScreenParamList } from '../../../../types';
 import { setSelectedType } from '../../../../store/slices/paymentMethodSlice';
+import { DropdownData } from '../../../../components/organisms/select-dropdown/types';
+import SelectDropdown from '../../../../components/organisms/select-dropdown';
 
 interface IProps {
 
@@ -64,8 +65,10 @@ const MobileMoneyDetails = (props: Props) => {
         value: "MPESA"
     })
     
+    
     const handleAddPaymentMethod = async () =>{
         const number = parseInt(mpesa_number?.replace("+", "") ??"")
+
 
         if(isNaN(number)) return toast({
             message: "Invalid phone number",

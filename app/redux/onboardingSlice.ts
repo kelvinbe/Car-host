@@ -11,6 +11,7 @@ import axios, { AxiosError } from "axios";
 import { USERS_DOMAIN } from "../hooks/constants";
 import apiClient from "../utils/apiClient";
 import { isEmpty } from "lodash";
+import LogRocket from "logrocket";
 
 interface UserData extends Partial<IUserProfile> {}
 
@@ -28,6 +29,7 @@ export const updateOnboardingDetails = createAsyncThunk(
       };
     } catch (e) {
       return rejectWithValue(e);
+      LogRocket.error(e)
     }
   }
 );
@@ -43,6 +45,7 @@ export const fetchOnboardingDetails = createAsyncThunk("onboarding/fetch", async
         }
     } catch (e) {
         return rejectWithValue(e);
+        LogRocket.error(e)
     }
 })
 
@@ -58,6 +61,7 @@ export const setHandle = createAsyncThunk(
       return isHandleTaken
     }catch(e){
       rejectWithValue(e)
+      LogRocket.error(e)
     }
   }
 );

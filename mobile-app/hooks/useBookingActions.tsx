@@ -21,7 +21,7 @@ function useBookingActions() {
     const toast = useToast()
 
     const reduxDispatch = useAppDispatch()
-    // Selectors
+  // Selectors
     const bookingDetails = useAppSelector(selectBookingData)
     const customerId = useAppSelector(selectStripeCustomerId)
     const user = useAppSelector(selectUserProfile)

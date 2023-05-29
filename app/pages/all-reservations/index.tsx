@@ -5,6 +5,9 @@ import React, { useEffect, useState } from "react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import useReservation from "../../hooks/useReservation";
 import { AllReservationColumns } from "../../utils/tables/TableTypes";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/organism/ErrorFallback";
+import { logError } from "../../utils/utils";
 
 export function getStaticProps() {
   return {
@@ -38,7 +41,7 @@ function AllReservations() {
     fetchReservations();
   }, [currentPage]);
 
-  const handlePageChange = (page: number)=>{
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
   }
 
@@ -62,24 +65,26 @@ function AllReservations() {
 
   if (!reservations) return null;
   return (
+  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
     <Flex w="full" h="full" data-testid="all-reservations-table">
-      <FilterableTable
-        viewSearchField={true}
-        viewSortablesField={true}
-        columns={AllReservationColumns}
-        data={reservationData}
-        sortables={[
-          {
-            columnKey: "totalCost",
-            columnName: "Total Cost",
-          },
-        ]}
-        pagination={{
-          position: ["bottomCenter"],
-          onChange: handlePageChange
-        }}
-      />
+        <FilterableTable
+          viewSearchField={true}
+          viewSortablesField={true}
+          columns={AllReservationColumns}
+          data={reservationData}
+          sortables={[
+            {
+              columnKey: "totalCost",
+              columnName: "Total Cost",
+            },
+          ]}
+          pagination={{
+            position: ["bottomCenter"],
+            onChange: handlePageChange
+          }}
+        />      
     </Flex>
+  </ErrorBoundary>
   );
 }
 

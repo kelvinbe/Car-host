@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAppDispatch } from '../redux/store';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import apiClient from '../utils/apiClient';
-
+import LogRocket from "logrocket";
 type Error = any;
 
 export default function useFetchRequestedAuthCode<T>(url:string, actionFunc:(responseData:T) => void){
@@ -20,7 +20,10 @@ export default function useFetchRequestedAuthCode<T>(url:string, actionFunc:(res
             setLoading(false);
             setErrors(null);
           })
-          .catch(err => setErrors(err));
+          .catch(err => {
+            setErrors(err)
+            LogRocket.error(err)
+          });
     }
     return {
         fetchRequests,

@@ -3,13 +3,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { UserOnboardingParamList } from '../../../types'
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import { DropdownData, SelectDropdown } from "expo-select-dropdown"
 import useLocation from '../../../hooks/useLocation'
 import { isEmpty, isNull } from 'lodash'
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded'
 import useOnBoarding from '../../../hooks/useOnBoarding'
-import { useAppDispatch } from '../../../store/store'
-import { updateUserData } from '../../../store/slices/userSlice'
+import { DropdownData } from '../../../components/organisms/select-dropdown/types'
+import SelectDropdown from '../../../components/organisms/select-dropdown'
 
 type IProps = NativeStackScreenProps<UserOnboardingParamList, "Location">
 

@@ -6,7 +6,7 @@ export const EVENT_DATA_DOMAIN = `${DOMAIN}/reservations/calendar`
 export const RESOURCE_DATA_DOMAIN = `${DOMAIN}/reservations/calendar/resources`
 export const VEHICLES_DOMAIN = `${DOMAIN}/vehicles`
 export const PAYOUT_DOMAIN = `${DOMAIN}/payouts`
-export const LOCATIONS_DOMAIN = `${DOMAIN}/locations`
+export const LOCATIONS_DOMAIN = `${DOMAIN}/location`
 export const AUTHCODE_DOMAIN = `${DOMAIN}/authcodes`
 export const REQUESTED_AUTHCODE_DOMAIN = `${DOMAIN}/authcodes?status=INACTIVE`
 export const USERS_DOMAIN = `${DOMAIN}/users`

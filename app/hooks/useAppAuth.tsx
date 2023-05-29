@@ -8,6 +8,7 @@ import z from "zod"
 import { useToast } from '@chakra-ui/react'
 import { useAppDispatch } from '../redux/store'
 import { fetchUser } from '../redux/userSlice'
+import LogRocket from "logrocket";
 
 interface IReducerState {
     signOutLoading: boolean,
@@ -131,6 +132,7 @@ function useAppAuth() {
             dispatchAction(setSignOutLoading(false))
             push("/")
         }).catch((e)=>{
+            LogRocket.error(e)
             dispatchAction(setSignOutError(e.message))
         })
     }

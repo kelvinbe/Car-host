@@ -9,7 +9,10 @@ import { tBankAccountPayoutSchema } from "../../components/organism/Forms/BankPa
 import { DeleteIcon } from '@chakra-ui/icons'
 import WithDrawalModal from '../../components/organism/Modals/WithDrawalModal'
 import Image from 'next/image';
-
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/organism/ErrorFallback";
+import { logError } from "../../utils/utils";
+import LogRocket from "logrocket";
 
 
 
@@ -34,11 +37,12 @@ const SettingsPage: NextPage = () => {
     const updateSettings = (setting: 'notifications_enabled' | 'tracking_enabled') => {
         dispatch(updateUserSettings({
             [setting]: !user?.user_settings?.[setting]
-        })).unwrap().catch(() => {
+        })).unwrap().catch((error) => {
             toast({
                 title: "Something went wrong",
                 description: 'Try again later'
             })
+            LogRocket.error(error)
         })
     }
 
@@ -53,16 +57,18 @@ const SettingsPage: NextPage = () => {
                 title: 'Success',
                 description: 'Payout Method Deleted'
             })
-        }).catch(() => {
+        }).catch((error) => {
             toast({
                 title: 'Error',
                 description: 'An Error occured while deleteing the payout method'
             })
+            LogRocket.error(error)
         })
     }
 
 
     return (
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
         <Flex {...FlexColCenterStart} w="full" h="full" >
             <Text
                 w="full"
@@ -173,6 +179,7 @@ const SettingsPage: NextPage = () => {
             
             </Flex>
         </Flex>
+      </ErrorBoundary>
     )
 }
 

@@ -3,6 +3,7 @@ import { RootState } from ".";
 import { EARNINGS_API } from "../hooks/constants";
 import apiClient from "../utils/apiClient";
 import { IAnalyticsData } from "../globaltypes";
+import LogRocket from "logrocket";
 
 export const fetchEarnings = createAsyncThunk(
   "earnings/fetchEarnings",
@@ -18,6 +19,7 @@ export const fetchEarnings = createAsyncThunk(
       return earnings.data;
     } catch (e) {
       rejectWithValue(e);
+      LogRocket.error(e)
     }
   }
 );

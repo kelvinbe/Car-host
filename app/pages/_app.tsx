@@ -13,7 +13,11 @@ import React, {useEffect} from 'react'
 export default function App({ Component, pageProps }: AppProps<IStaticProps>) {
 
   useEffect(()=>{
-    LogRocket.init('jnm7z6/divvly');
+    LogRocket.init(process.env.NEXT_PUBLIC_LOGROCKET_APP_ID as string,{
+      console: {
+        isEnabled: false,
+      },
+    });
     LogRocket.getSessionURL((sessionURL)=>{
 
     })

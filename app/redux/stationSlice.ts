@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { http_methods, STATIONS_API } from "../hooks/constants";
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase/firebaseApp";
-
+import LogRocket from 'logrocket';
 
 export const stationsApi = createApi({
     reducerPath: 'stationsApi',
@@ -16,10 +16,7 @@ export const stationsApi = createApi({
                 headers.set('x-user', 'HOST')
                 headers.set("ngrok-skip-browser-warning", "true")
             }).catch((e)=>{
-                console.log(e)
-                /**
-                 * @todo add logic to handle error {logrocket}
-                 */
+                LogRocket.error(e)
             })
         }
     }),

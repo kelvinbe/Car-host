@@ -19,6 +19,7 @@ import startReservationSlice from './startReservationSlice';
 import vehiclesSlice from './vehiclesSlice';
 import onBoardingSlice, { onBoardingApi } from './onBoardingSlice';
 import paymentMethodSlice from './paymentMethodSlice';
+import searchSlice from './searchSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -43,8 +44,8 @@ const rootReducer = combineReducers({
   vehicles: vehiclesSlice,
   onboarding: onBoardingSlice,
   [onBoardingApi.reducerPath]: onBoardingApi.reducer,
-  paymentMethodSlice: paymentMethodSlice
-
+  paymentMethodSlice: paymentMethodSlice,
+  search: searchSlice,
 });
 
 export default rootReducer;

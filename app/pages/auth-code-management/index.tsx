@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { insertTableActions } from "../../utils/tables/utils";
@@ -16,28 +16,31 @@ import { useAppSelector } from "../../redux/store";
 import { useDisclosure } from "@chakra-ui/react";
 import Rounded from "../../components/molecules/Buttons/General/Rounded";
 import CreateAuthCodeModal from "../../components/organism/Modals/CreateAuthCodeModal";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/organism/ErrorFallback";
+import { logError } from "../../utils/utils";
 
 function AuthCodeManagement() {
   const [showRequestsTable, setShowRequestsTable] = useState<boolean>(false)
-  const {fetchData} = useFetchData(AUTHCODE_DOMAIN, getAuthcode)
-  const {fetchRequests} = useFetchRequestedAuthCode(REQUESTED_AUTHCODE_DOMAIN, getRequestedAuthCode)
+  const { fetchData } = useFetchData(AUTHCODE_DOMAIN, getAuthcode)
+  const { fetchRequests } = useFetchRequestedAuthCode(REQUESTED_AUTHCODE_DOMAIN, getRequestedAuthCode)
   const authcodeData = useAppSelector(selectAuthcode)
   const requestsData = useAppSelector(selectRequestedAuthCode)
   const [createAuthCodeModal, setCreateAuthCodeModal] = useState<boolean>(false)
-  const {isOpen, onOpen, onClose} = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [authcodeId, setAuthcodeId] = useState<number>()
   const [userId, setUserId] = useState<number>()
 
   useEffect(() => {
     fetchData()
-  },[])
+  }, [])
 
   const toggleRequestsTable = () => {
     setShowRequestsTable(!showRequestsTable)
     fetchRequests()
   }
 
-  const openCreateAuthCodeModal = (id:number, userId:number) => {
+  const openCreateAuthCodeModal = (id: number, userId: number) => {
     setCreateAuthCodeModal(true)
     setAuthcodeId(id)
     setUserId(userId)
@@ -48,35 +51,37 @@ function AuthCodeManagement() {
     onClose()
   }
   return (
+  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
     <Flex
       {...FlexColCenterStart}
       w="full"
       h="full"
       data-testid="auth-code-management-table"
     >
-      {createAuthCodeModal && authcodeId && userId && <CreateAuthCodeModal isOpen={isOpen} onClose={closeCreateAuthCodeModal} authcodeId={authcodeId} showRequestsTable={toggleRequestsTable} userId={userId}/>}
-      <FilterableTable
-        viewAddFieldButton={true}
-        viewSearchField={true}
-        viewSortablesField={false}
-        buttonName={showRequestsTable ? 'View All Authcodes': 'View Requests'}
-        openCreateModal={toggleRequestsTable}
-        columns={!showRequestsTable? AuthCodeTableColumns : insertTableActions(RequestedAuthCodeTableColumns, (i, data) => {
-          return (
-            <Flex {...FlexRowCenterStart}>
-              <Rounded variant="solid" setWidth={200} rounded="md" onClick = {() =>
-                openCreateAuthCodeModal(data.id, data.user_id)}>
-                <Text cursor="pointer">Create</Text>
-              </Rounded>
-            </Flex>
-          );
-        })}
-        data={showRequestsTable ? requestsData : authcodeData}
-        pagination={{
-          position: ["bottomCenter"],
-        }}
-      />
+        {createAuthCodeModal && authcodeId && userId && <CreateAuthCodeModal isOpen={isOpen} onClose={closeCreateAuthCodeModal} authcodeId={authcodeId} showRequestsTable={toggleRequestsTable} userId={userId} />}
+        <FilterableTable
+          viewAddFieldButton={true}
+          viewSearchField={true}
+          viewSortablesField={false}
+          buttonName={showRequestsTable ? 'View All Authcodes' : 'View Requests'}
+          openCreateModal={toggleRequestsTable}
+          columns={!showRequestsTable ? AuthCodeTableColumns : insertTableActions(RequestedAuthCodeTableColumns, (i, data) => {
+            return (
+              <Flex {...FlexRowCenterStart}>
+                <Rounded variant="solid" setWidth={200} rounded="md" onClick={() =>
+                  openCreateAuthCodeModal(data.id, data.user_id)}>
+                  <Text cursor="pointer">Create</Text>
+                </Rounded>
+              </Flex>
+            );
+          })}
+          data={showRequestsTable ? requestsData : authcodeData}
+          pagination={{
+            position: ["bottomCenter"],
+          }}
+        />
     </Flex>
+  </ErrorBoundary>
   );
 }
 

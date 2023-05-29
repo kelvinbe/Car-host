@@ -24,7 +24,6 @@ declare global {
 
 export type BottomTabParamList = {
   SearchScreen: undefined;
-  Storybook: undefined;
   History: undefined;
   UpcomingReservationsHome: undefined;
   Upcoming: undefined;

@@ -26,14 +26,12 @@ class ErrorBoundary extends React.Component<any, any> {
         {({theme})=>(
           <View style={styles.container}>
             <Text style={{
-              color: theme.colors.error,
+              color: "#E63B2E",
               fontSize: 18,
               fontWeight: 'bold'
 
             }} >
-              {
-                this.state.error?.message
-              }
+              Something went wrong.
             </Text>
           </View>
         )}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useEditData(url:string, id:number | string, successTitle:string, successDescription:string, errorTitle:string, errorDescription:string, fetchDataFunc: () => void) {
   const toast = useToast()
@@ -42,6 +43,7 @@ export default function useEditData(url:string, id:number | string, successTitle
           isClosable: true,
           status: "error",
         })
+        LogRocket.error(error)
       });
   }
   

@@ -2,13 +2,14 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import useToast from '../../../../../hooks/useToast'
 import { makeStyles } from '@rneui/themed'
-import { DropdownData, SelectDropdown } from 'expo-select-dropdown'
 import BaseInput from '../../../../atoms/Input/BaseInput/BaseInput'
 import Rounded from '../../../../atoms/Buttons/Rounded/Rounded'
 import { useAddPaymentMethodMutation } from '../../../../../store/slices/billingSlice'
 import { useAppDispatch } from '../../../../../store/store'
 import { useTheme } from '@rneui/themed'
 import { fetchUserData } from '../../../../../store/slices/userSlice'
+import SelectDropdown from '../../../select-dropdown'
+import { DropdownData } from '../../../select-dropdown/types'
 
 
 const useStyles = makeStyles((theme, props) => ({

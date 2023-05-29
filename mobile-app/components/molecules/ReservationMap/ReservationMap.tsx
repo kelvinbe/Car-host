@@ -7,6 +7,8 @@ import * as Location from 'expo-location';
 import LocationMarker from '../../../components/atoms/GeoMarkers/LocationMarker/LocationMarker';
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import useBookingActions from '../../../hooks/useBookingActions';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { searchLocally, selectCoords } from '../../../store/slices/searchSlice';
 
 const useStyles = makeStyles(theme => ({
   map: {
@@ -82,6 +84,8 @@ const ReservationMap = () => {
   const [state, dispatchAction] = useReducer(reducer, initialState);
   const styles = useStyles();
   const { clearBookingState } = useBookingActions();
+  const dispatch = useAppDispatch()
+  const data = useAppSelector(selectCoords)
 
   const getCoords = async () => {
     Location.getCurrentPositionAsync({
@@ -100,6 +104,7 @@ const ReservationMap = () => {
   };
 
   useEffect(() => {
+    dispatch(searchLocally())
     return () => {
       clearBookingState();
     };
@@ -120,35 +125,28 @@ const ReservationMap = () => {
         ) : (
           <View>
             <View>
-              {state?.location && (
+              {data?.loading && (
                 <MapView
                   provider={PROVIDER_GOOGLE}
                   style={styles.map}
-                  mapType="mutedStandard"
                   initialRegion={{
-                    latitude: state?.location?.coords?.latitude || 0,
-                    longitude: state?.location?.coords?.longitude || 0,
-                    latitudeDelta: 0.005,
-                    longitudeDelta: 0.005,
-                  }}
-                  region={{
-                    latitude: state?.location?.coords?.latitude || 0,
-                    longitude: state?.location?.coords?.longitude || 0,
+                    latitude: data?.data?.latitude || 0,
+                    longitude: data?.data?.longitude || 0,
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005,
                   }}>
                   <Circle
                     center={{
-                      latitude: state?.location?.coords?.latitude || 0,
-                      longitude: state?.location?.coords?.longitude || 0,
+                      latitude: data?.data?.latitude || 0,
+                      longitude: data?.data?.longitude || 0,
                     }}
-                    radius={300}
+                    radius={5000}
                     strokeColor={theme.colors.primary}
                     fillColor={theme.colors.fadedPrimary}
                   />
-                  {state.location && (
+                  {data?.data && (
                     <LocationMarker
-                      location={state.location}
+                      location={data?.data}
                       title="Current Location"
                       description="This is your current location"
                     />

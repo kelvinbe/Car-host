@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import MapView, { Circle } from 'react-native-maps';
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded';
@@ -11,12 +11,13 @@ import { SearchScreenParamList } from '../../../types';
 import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet';
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import useBookingActions from '../../../hooks/useBookingActions';
-import { isUndefined } from 'lodash';
+import { first, isUndefined } from 'lodash';
 import { timeTilEndOfDay } from '../../../utils/utils';
 import dayjs from 'dayjs';
 import { useNavigation } from '@react-navigation/native';
-import { useAppDispatch } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setLocation } from '../../../store/slices/bookingSlice';
+import { selectCoords } from '../../../store/slices/searchSlice';
 
 interface IProps {
   inReservation?: boolean;
@@ -113,6 +114,7 @@ const MapScreen = (props: Props) => {
   const { setStartDateTime, setEndDateTime } = useBookingActions();
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch()
+  const {data: coords, loading} = useAppSelector(selectCoords)
   
  
   const onOpen = () => {
@@ -123,47 +125,21 @@ const MapScreen = (props: Props) => {
     setOpen(false);
   };
 
-  const getCoords = async () => {
-    const searchType = props.route.params?.searchType
-    if(searchType === "local") { // only get user's location if they are searching locally
-      Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Low,
-      })
-      .then(location => {
-        dispatch(setLocation(location))
-        dispatchAction({
-          type: 'setLocation',
-          payload: location,
-        });
-      })
-      .catch(e => {
-        console.log(e);
-      });
-    } else {
-      dispatchAction({
-        type: 'setLocation',
-        payload: null
-      })
-    }
-    
-  };
-
   useEffect(() => {
     if (isUndefined(props.inReservation)) {
       const times = timeTilEndOfDay();
-      setStartDateTime(dayjs(times?.[0]?.value).toISOString());
-      setEndDateTime(dayjs(times?.[0]?.value).toISOString());
+      try {
+        setStartDateTime(dayjs(first(times)?.value).toISOString());
+        setEndDateTime(dayjs(first(times)?.value).toISOString());
+
+      } catch (e) {
+        console.log("Here is the error::", e)
+      }
     }
   }, [props.inReservation]);
 
   useEffect(() => {
-    // getCoords().then(()=>{
-    //     console.log("Location fetched")
-    // }).catch((e)=>{
-    //     console.log(e)
-    // })
     return () => {
-      /* clearBookingState() */
       clearBookingState();
     };
   }, []);
@@ -174,7 +150,7 @@ const MapScreen = (props: Props) => {
         state.loading ? (
           <View style={[styles.statusContainer]}>
             <Text style={[styles.loadingText]}>Loading...</Text>
-            <Rounded onPress={getCoords}>Refetch</Rounded>
+            {/* <Rounded onPress={getCoords}>Refetch</Rounded> */}
           </View>
         ) : state.errorMessage ? (
           <View style={styles.statusContainer}>
@@ -183,41 +159,39 @@ const MapScreen = (props: Props) => {
         ) : (
           <View style={styles.container}>
             <View style={styles.mapContainer}>
-              {state?.location && (
+             
                 <MapView
                   provider={PROVIDER_GOOGLE}
-                  style={styles.map}
-                  mapType="mutedStandard"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  // mapType="mutedStandard"
                   initialRegion={{
-                    latitude: state?.location?.coords?.latitude || 0,
-                    longitude: state?.location?.coords?.longitude || 0,
+                    latitude: coords?.latitude || 0,
+                    longitude: coords?.longitude || 0,
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005,
                   }}
-                  region={{
-                    latitude: state?.location?.coords?.latitude || 0,
-                    longitude: state?.location?.coords?.longitude || 0,
-                    latitudeDelta: 0.005,
-                    longitudeDelta: 0.005,
-                  }}>
+                  >
                   <Circle
                     center={{
-                      latitude: state?.location?.coords?.latitude || 0,
-                      longitude: state?.location?.coords?.longitude || 0,
+                      latitude: coords?.latitude || 0,
+                      longitude: coords?.longitude || 0,
                     }}
-                    radius={300}
+                    radius={500}
                     strokeColor={theme.colors.primary}
                     fillColor={theme.colors.fadedPrimary}
                   />
-                  {state.location && (
+                  {coords && (
                     <LocationMarker
-                      location={state.location}
+                      location={coords}
                       title="Current Location"
                       description="This is your current location"
                     />
                   )}
                 </MapView>
-              )}
+              
             </View>
             {(props?.inReservation ? false : !open) && (
               <TimeFilter

@@ -101,9 +101,9 @@ const AuthorizationBottomSheet = (props: Props) => {
     }
 
     const handleRequestAuthCode = async () => {
-        vehicle?.host?.id && vehicle?.vehicle_id && await requestAuthCode({
+        vehicle?.user_id && vehicle?.id && await requestAuthCode({
             host_id: vehicle?.host?.id,
-            vehicle_id: vehicle.vehicle_id
+            vehicle_id: vehicle.id
         })
     }
 

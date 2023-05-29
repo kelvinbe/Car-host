@@ -10,7 +10,9 @@ import { useRouter } from 'next/router'
 import OnBoardingProfileInfo from '../../components/organism/OnBoarding/OnBoardingProfileInfo'
 import OnBoardinLocation from '../../components/organism/OnBoarding/OnBoardingLocation'
 import OnBoardingPayoutMethod from '../../components/organism/OnBoarding/OnBoardingPayoutMethod'
-
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorFallback from '../../components/organism/ErrorFallback'
+import { logError } from '../../utils/utils'
 
 
 function Onboarding() {
@@ -103,6 +105,7 @@ function Onboarding() {
         }
     }, [onBoardingError])
     return (
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
         <Grid w="100vw" h='100vh' templateColumns={"1fr 1fr 1fr 1fr"} padding="20px" >
             <GridItem colSpan={0} rowSpan={1} bg="blackAlpha.100" padding="10px" >
                 <Steps
@@ -137,6 +140,7 @@ function Onboarding() {
                 </Grid>
             </GridItem>
         </Grid>
+      </ErrorBoundary>
     )
 }
 

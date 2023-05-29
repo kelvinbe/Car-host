@@ -7,6 +7,10 @@ import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { addPayoutMethod, selectPayoutFeedback } from '../../redux/payoutSlice'
 import { useRouter } from 'next/router'
 import { isNull } from 'lodash'
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorFallback from '../../components/organism/ErrorFallback'
+import { logError } from '../../utils/utils'
+import LogRocket from 'logrocket'
 
 function NewPayoutMethodPage() {
     const toast = useToast({
@@ -28,11 +32,12 @@ function NewPayoutMethodPage() {
             type: "BANK_ACCOUNT"
         })).unwrap().then(()=>{
             push("/settings")
-        }).catch(()=>{
+        }).catch((error)=>{
             toast({
                 title: "Error",
                 description: "An error occured while adding your payout method",
             })
+            LogRocket.error(error)
         })
     }
 
@@ -43,14 +48,16 @@ function NewPayoutMethodPage() {
             type: data?.provider
         })).unwrap().then(()=>{
             push("/settings")
-        }).catch(()=>{
+        }).catch((error)=>{
             toast({
                 title: "Error",
                 description: "An error occured while adding your payout method",
             })
+            LogRocket.error(error)
         })
     }
   return (
+  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
     <Flex w="full" p="20px" {...FlexColCenterStart} >
         <Flex {...FlexColCenterStart} experimental_spaceY={"5px"} >
             <Text
@@ -72,11 +79,11 @@ function NewPayoutMethodPage() {
                     {/* OThers can be added here */}
                 </Select>
             </FormControl>
-            <Flex {...FlexColCenterStart} flex="1" px="20px" py="20px" >
+              <Flex {...FlexColCenterStart} flex="1" px="20px" py="20px" >
                 {
                     payout_method === "bank" ? <BankPayoutMethodForm onDone={handleBankCompleted} onCancel={onBack} /> : <MobileMoneyPayoutMethodForm onDone={handleMobileMoneyCompleted} onCancel={onBack} />
                 }
-            </Flex>
+              </Flex>
             {
                 feedback.loading && <Progress w="full"
                     isIndeterminate
@@ -84,6 +91,7 @@ function NewPayoutMethodPage() {
             }
         </Flex>
     </Flex>
+  </ErrorBoundary>
   )
 }
 

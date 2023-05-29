@@ -16,6 +16,9 @@ import { useDisclosure } from "@chakra-ui/react";
 import CreateVehicleModal from "../../components/organism/Modals/CreateVehicleModal";
 import useVehicles from "../../hooks/useVehicles";
 import EditVehicleModal from "../../components/organism/Modals/EditVehicleModal";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/organism/ErrorFallback";
+import { logError } from "../../utils/utils";
 
 function VehicleManagement() {
   const [vehiclesData, setVehicleData] = useState<Partial<IVehicle>[]>([])
@@ -73,66 +76,68 @@ function VehicleManagement() {
     onClose()
   }
   return (
+  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
     <Flex
       {...FlexColCenterStart}
       w="full"
       data-testid="vehicle-management-table"
     >
-      {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles={vehicles} />}
-      {isCreateModalOpen && <CreateVehicleModal isOpen ={isOpen} onClose={closeCreateModal}/>}
-      {isEditModalOpen && <EditVehicleModal isOpen={isOpen} onClose={closeEditModal} vehicle_id={vehicleId} vehicles={vehicles} />}
-      <FilterableTable
-        viewAddFieldButton={true}
-        viewSearchField={true}
-        viewSortablesField={true}
-        openCreateModal= {openCreateModal}
-        buttonName="Add new vehicle"
-        sortables={[
-          {
-            columnKey: "rate",
-            columnName: "Rate",
-          },
-        ]}
-        columns={insertTableActions(VehicleManagementTableColumns, (i, data) => {
-          return (
-            <Flex {...FlexRowCenterBetween}>
-              <IconButton
-                aria-label="View"
-                icon={<ViewIcon />}
-                size="sm"
-                onClick={() => viewVehicle(data.vehicle_id)}
-                marginRight='4'
-                data-cy={'view-button'}
-              />
-              <IconButton
-                aria-label="Edit"
-                icon={<EditIcon />}
-                size="sm"
-                onClick={() => {
-                  openEditModal(data.vehicle_id)
-                }}
-                marginRight='4'
-                data-cy={'edit-button'}
-              />
-              <IconButton
-                aria-label="Delete"
-                icon={<DeleteIcon />}
-                size="sm"
-                onClick={() => {
-                  deleteVehicle(data.vehicle_id)
-                }}
-                color="cancelled.1000"
-                data-cy={'delete-button'}
-              />
-            </Flex>
-          );
-        })}
-        pagination={{
-          position: ["bottomCenter"],
-        }}
-        data={vehiclesData}
-      />
+        {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles={vehicles} />}
+        {isCreateModalOpen && <CreateVehicleModal isOpen ={isOpen} onClose={closeCreateModal}/>}
+        {isEditModalOpen && <EditVehicleModal isOpen={isOpen} onClose={closeEditModal} vehicle_id={vehicleId} vehicles={vehicles} />}
+        <FilterableTable
+          viewAddFieldButton={true}
+          viewSearchField={true}
+          viewSortablesField={true}
+          openCreateModal= {openCreateModal}
+          buttonName="Add new vehicle"
+          sortables={[
+            {
+              columnKey: "rate",
+              columnName: "Rate",
+            },
+          ]}
+          columns={insertTableActions(VehicleManagementTableColumns, (i, data) => {
+            return (
+              <Flex {...FlexRowCenterBetween}>
+                <IconButton
+                  aria-label="View"
+                  icon={<ViewIcon />}
+                  size="sm"
+                  onClick={() => viewVehicle(data.vehicle_id)}
+                  marginRight='4'
+                  data-cy={'view-button'}
+                />
+                <IconButton
+                  aria-label="Edit"
+                  icon={<EditIcon />}
+                  size="sm"
+                  onClick={() => {
+                    openEditModal(data.vehicle_id)
+                  }}
+                  marginRight='4'
+                  data-cy={'edit-button'}
+                />
+                <IconButton
+                  aria-label="Delete"
+                  icon={<DeleteIcon />}
+                  size="sm"
+                  onClick={() => {
+                    deleteVehicle(data.vehicle_id)
+                  }}
+                  color="cancelled.1000"
+                  data-cy={'delete-button'}
+                />
+              </Flex>
+            );
+          })}
+          pagination={{
+            position: ["bottomCenter"],
+          }}
+          data={vehiclesData}
+        />     
     </Flex>
+  </ErrorBoundary>
   );
 }
 

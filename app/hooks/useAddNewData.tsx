@@ -3,6 +3,7 @@ import { useState } from "react";
 import { isEmpty } from "lodash";
 import { useToast } from "@chakra-ui/react";
 import apiClient from "../utils/apiClient";
+import LogRocket from "logrocket";
 
 export default function useAddNewData(url:string, fetchDataFunc: () => void, showToast?:boolean, successTitle?:string, successDescription?:string, errorTitle?:string, errorDescription?:string) {
   const toast = useToast()
@@ -38,6 +39,7 @@ export default function useAddNewData(url:string, fetchDataFunc: () => void, sho
         isClosable: true,
         status: "error",
       })
+      LogRocket.error(error)
     })
   }
   

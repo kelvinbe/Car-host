@@ -92,7 +92,7 @@ const SelectPaymentMethod = (props: Props) => {
 
     const handlePress = () => {
         switch (paymentMethodType){
-            case "card":
+            case "card":{
                 !payment_method_added && props.navigation.navigate("SelectedPaymentMethod", {
                     payment_method: "card"
                 })
@@ -101,12 +101,15 @@ const SelectPaymentMethod = (props: Props) => {
                 })
                 payment_method_added && props.navigation.navigate("OnboardingHome")
                 break;
-            case "cash":
+            }
+            case "cash":{
                 setCompleted({
                     payment_method: true
                 })
                 props.navigation.navigate("OnboardingHome")
-            case "mobile_money":
+                break;
+            }
+            case "mobile_money":{
                 !payment_method_added && props.navigation.navigate("SelectedPaymentMethod", {
                     payment_method: "mobile_money"
                 })
@@ -114,6 +117,8 @@ const SelectPaymentMethod = (props: Props) => {
                     payment_method: true
                 })
                 payment_method_added && props.navigation.navigate("OnboardingHome")
+                break;
+            }
         }
     }
 

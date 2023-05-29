@@ -9,7 +9,6 @@ import {
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Platform } from 'react-native';
-// import StorybookScreen from '../screens/Tabs/StorybookScreen';
 import { BottomTabParamList, RootStackParamList, UserOnboardingParamList } from '../types';
 import LoginScreen from '../screens/Stacks/LoginScreen';
 import RegisterScreen from '../screens/Stacks/RegisterScreen';
@@ -287,19 +286,6 @@ function BottomTabNavigator(props: Props) {
               tabBarButton: () => <></>,
             }}
           />
-          {/* <Tabs.Screen
-            name="Storybook"
-            component={StorybookScreen}
-            options={{
-              tabBarIcon: ({ focused, color }) => (
-                <BookIcon width={24} height={24} fill={ focused ? theme.colors.primary:  theme.colors.grey0?.trim()}  />
-              ),
-              title: "Storybook",
-              tabBarActiveTintColor: theme.colors.primary,
-              tabBarInactiveTintColor: theme.colors.grey0,
-              
-            }}
-          /> */}
           <Tabs.Screen
             name="History"
             component={HistoryScreen}
