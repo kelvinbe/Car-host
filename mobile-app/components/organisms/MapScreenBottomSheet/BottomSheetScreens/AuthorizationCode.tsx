@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme, props: Props) => {
             height: "100%",
             padding: 20,
             textAlign: "center",
+            justifyContent: 'space-between'
         },
         contentTitleStyle: {
             width: "100%",
@@ -90,9 +91,10 @@ const AuthorizationBottomSheet = (props: Props) => {
     }
 
     const handleVerify = async () => {
-        await verifyAuthCode(code).then(()=>{
+        verifyAuthCode(verificationInput).then((code)=>{
+            setAuthCode(code)
             close()
-        }).catch((e)=>{
+        }).catch(()=>{
             toast({
                 type: "error",
                 message: "Check the authcode provided and try again"
@@ -106,10 +108,6 @@ const AuthorizationBottomSheet = (props: Props) => {
             vehicle_id: vehicle.id
         })
     }
-
-    useEffect(()=>{
-        verificationInput && setAuthCode(verificationInput)
-    }, [verificationInput])
 
     useEffect(()=>{
         if(!isEmpty(requestAuthCodeResponse.error)) {

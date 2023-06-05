@@ -125,7 +125,7 @@ function AuthForm(props: IProps) {
   const googleSignInHandler = () => {
     googleSignIn().then(()=>{
       dispatch(fetchUser()).then(()=>{
-        push("/dashboard")
+        push("/onboarding")
       })
     }).catch((e)=>{
       toast({
@@ -141,7 +141,7 @@ function AuthForm(props: IProps) {
   const facebookSignInHandler = () => {
     facebookSignIn().then(()=>{
       dispatch(fetchUser()).then(()=>{
-        push("/dashboard")
+        push("/onboarding")
       })
     }).catch((e)=>{
       toast({
@@ -157,7 +157,7 @@ function AuthForm(props: IProps) {
   const appleSignInHandler = () => {
     appleSignIn().then(()=>{
       dispatch(fetchUser()).then(()=>{
-        push("/dashboard")
+        push("/onboarding")
       })
     }).catch((e)=>{
       toast({
@@ -187,14 +187,6 @@ function AuthForm(props: IProps) {
           }
         </Text>
       </Flex>
-      {
-        type === "signup" && <WithHelperText
-        type="text"
-        formLabel='Name'
-        placeholder="Enter your fullname"
-        onChangeText={setNameHandler}
-        />
-      }
       <WithHelperText
         type="email"
         formLabel='Email Address'

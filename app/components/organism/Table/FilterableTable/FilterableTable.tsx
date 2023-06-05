@@ -153,7 +153,6 @@ function FilterableTable(props: IProps) {
       </Flex>
       <Flex w="full" {...FlexColCenterStart}>
         <BaseTable
-          //@todo modify type definitions
           columns={tableColumnDefinitions ?? []}
           data={data || []}
           dataFetchFunction={dataFetchFunction}

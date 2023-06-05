@@ -15,7 +15,6 @@ export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (d
                 ...data
             }
         }))
-        console.log("Here is the res::", res)
         return res.data
     } catch (e) {
         LogRocket.error(e)
@@ -33,8 +32,7 @@ export const fetchVehicle = createAsyncThunk('vehicles/fetchVehicle', async (dat
                 ...data
             }
         }))
-        console.log("Here is the res::", res)
-        return res?.data ?? null
+        return res?.data?.[0] ?? null
     } catch (e) {
         LogRocket.error(e)
         rejectWithValue(e as string)

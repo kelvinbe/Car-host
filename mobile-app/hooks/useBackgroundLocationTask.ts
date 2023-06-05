@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IReservation } from '../types';
 import useToast from './useToast';
 import { TRACKING_SERVICE_HOST } from './constants';
-import { merge } from 'lodash';
+import { isArray, isEmpty, isNull, merge } from 'lodash';
 
 const VEHICLE_TRACKING_TASK = 'vehicle-tracking-task';
 
@@ -80,7 +80,7 @@ class StreamLocationToServer {
         }
     }
 
-    async get_reservation_details():Promise<IReservation|null>{
+    async get_reservation_details():Promise<Array<IReservation>|null>{
         const reservation_details = await AsyncStorage.getItem("activated_reservation_details").catch((e)=>{
             console.log("Error getting reservation details", e) // TODO: logging service
         })
@@ -95,22 +95,30 @@ class StreamLocationToServer {
         if(this.hold_because_of_error) return
         if(!this.is_ws_initialized) return
         const reservation_details = await this.get_reservation_details()
-        if(!reservation_details){
+        if(isEmpty(reservation_details) || !isArray(reservation_details)){
             return
         }
-        const location_data = {
-            reservation_id: reservation_details.id,
-            vehicle_id: reservation_details.vehicle_id,
-            latitude: location.coords.latitude.toString(),
-            longitude: location.coords.longitude.toString(),
-        }
-        try {
-            this.ws?.send(JSON.stringify(location_data))
-        } catch(e) {
-            this.hold_because_of_error = true
-            setTimeout(()=>{
-                this.hold_because_of_error = false
-            }, 5000)
+
+        for (const reservation of reservation_details){
+
+            if(isEmpty(reservation) || isNull(reservation)) {
+                continue
+            }
+
+            const location_data = {
+                reservation_id: reservation.id,
+                vehicle_id: reservation.vehicle_id,
+                latitude: location.coords.latitude.toString(),
+                longitude: location.coords.longitude.toString(),
+            }
+            try {
+                this.ws?.send(JSON.stringify(location_data))
+            } catch(e) {
+                this.hold_because_of_error = true
+                setTimeout(()=>{
+                    this.hold_because_of_error = false
+                }, 5000)
+            }
         }
     }
     
@@ -204,11 +212,13 @@ const useBackgroundLocationTask = () => {
     const [trackingState, setTrackingState] = useState<{
         isRegistered: boolean,
         status: BackgroundFetch.BackgroundFetchStatus | null,
-        loading: boolean
+        loading: boolean,
+        backgroundLocationStatus: string | null
     }>({
         isRegistered: false,
         status: null,
-        loading: false
+        loading: false,
+        backgroundLocationStatus: null
     })
 
     const updateTrackingState = async () => {
@@ -228,6 +238,11 @@ const useBackgroundLocationTask = () => {
             loading: true
         }))
         const done = await requestLocationPermissions()
+        setTrackingState((prev)=>({
+            ...prev,
+            loading: true,
+            backgroundLocationStatus: 'granted'
+        }))
         if(done){
             updateTrackingState()
         }else{

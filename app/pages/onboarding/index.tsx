@@ -4,7 +4,7 @@ import { Steps } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { updateOnboardingDetails, selectCompleted, selectOnBoardingError, fetchOnboardingDetails } from '../../redux/onboardingSlice'
-import { isNull, isUndefined } from 'lodash'
+import { isNull, isUndefined, isEmpty } from 'lodash'
 import { IUserProfile } from '../../globaltypes'
 import { useRouter } from 'next/router'
 import OnBoardingProfileInfo from '../../components/organism/OnBoarding/OnBoardingProfileInfo'
@@ -13,6 +13,7 @@ import OnBoardingPayoutMethod from '../../components/organism/OnBoarding/OnBoard
 import { ErrorBoundary } from 'react-error-boundary'
 import ErrorFallback from '../../components/organism/ErrorFallback'
 import { logError } from '../../utils/utils'
+import LogRocket from 'logrocket'
 
 
 function Onboarding() {
@@ -33,7 +34,20 @@ function Onboarding() {
     })
 
     useEffect(()=>{
-        dispatch(fetchOnboardingDetails())
+        (async()=>{
+            try {
+                await dispatch(fetchOnboardingDetails()).unwrap()
+            } catch (e) {
+                LogRocket.error(e)
+                toast({
+                    title: "An error occured", 
+                    description: "Something went wrong try again later",
+                    position: 'top',
+                    id: 'onboarding-error'
+                })
+            }
+
+        })()
     }, [])
 
 
@@ -43,7 +57,7 @@ function Onboarding() {
                 ...currentStep,
                 current:  0
             })
-        }else if(completed.location && !completed.profile && !completed.payout_method){
+        }else if(completed.location && completed.profile && !completed.payout_method){
             setCurrentStep({
                 ...currentStep,
                 current:  1
@@ -94,16 +108,6 @@ function Onboarding() {
         })
     }
 
-    useEffect(() => {
-        if (onBoardingError) {
-            toast({
-                title: "Error",
-                description: "An error occured, try again later",
-                status: "error",
-                position: "top"
-            })
-        }
-    }, [onBoardingError])
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
         <Grid w="100vw" h='100vh' templateColumns={"1fr 1fr 1fr 1fr"} padding="20px" >

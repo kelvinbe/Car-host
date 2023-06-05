@@ -90,6 +90,8 @@ const useStyles = makeStyles((theme, props: IProps) => {
 const DriversLicense = (props: IProps) => {
 
   const { userProfile  } = useUserAuth()
+  const { setLicence, driversLicense, setCompleted } = useOnBoarding()
+
 
   const styles = useStyles()
   const [currentStep, setCurrentStep] = useState<number>(0)
@@ -97,6 +99,9 @@ const DriversLicense = (props: IProps) => {
 
   const { updateDriverCredentials, loading, error } = useEditDriversLicense()
   const handleSave = () => {
+    setCompleted({
+      drivers_license: true
+    })
       props.navigation.navigate("ProfileScreenHome")
   }
 
@@ -118,7 +123,10 @@ const DriversLicense = (props: IProps) => {
           <View style={styles.topContainer} >
             <ImageUploader
               getImage={(image) => {
-                updateDriverCredentials(currentStep === 0 ? "front" : "back", image)
+                setLicence(image, currentStep === 0 ? "front" : "back")
+                if (currentStep === 0) {
+                  setCurrentStep(1)
+                }
               }}
               customIcon={
                 <FontAwesome

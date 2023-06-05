@@ -25,7 +25,7 @@ const AnalyticsHeader = (props: IProps) => {
         <Heading as={"h3"} size={"md"}>
           Analytics
         </Heading>
-        <Text paddingTop={'2'}>Total Balance: <b>$ {user?.earnings.all_time}</b></Text>
+        <Text paddingTop={'2'}>Total Balance: <b>$ {user?.earnings.available}</b></Text>
       </Flex>
       <Flex width={"75%"}>
         <Flex>

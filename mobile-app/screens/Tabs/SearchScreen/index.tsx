@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
-import { BottomTabParamList, SearchScreenParamList } from '../../../types';
+import { BottomTabParamList, RootStackParamList, SearchScreenParamList } from '../../../types';
 import { ThemeConsumer } from '@rneui/themed';
 import { View } from 'react-native';
 import SearchScreenHome from './SearchScreen';
@@ -8,9 +8,22 @@ import BookingConfirmationScreen from './BookingConfirmationScreen';
 import BaseTopBar from '../../../navigation/TopBar/BaseTopBar';
 import MapScreen from './MapScreen';
 import AddCard from '../ProfileScreen/PaymentDetailsScreen/AddCard';
+import { isNull } from 'lodash';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../../firebase/firebaseApp';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { fetchOnboarding } from '../../../store/slices/onBoardingSlice';
+import { fetchUserData } from '../../../store/slices/userSlice';
+import { selectChosenHostCode } from '../../../store/slices/bookingSlice';
 const SearchScreenStacks = createNativeStackNavigator<SearchScreenParamList>();
 
+
+
 const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchScreen'>) => {
+  const [user] = useAuthState(auth);
+  const dispatch = useAppDispatch();
+  const host_code = useAppSelector(selectChosenHostCode)
+
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -60,7 +73,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                     title={
                       (props.route.params as any)?.searchType === 'local'
                         ? 'Search Locally'
-                        : 'Host: Jesse()'
+                        : `${host_code}'s Vehicles`
                     }
                     {...props}
                   />

@@ -19,8 +19,8 @@ interface Props{
     
     return (
         <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size={modalSize || "2xl"}  isCentered motionPreset="slideInBottom">
-          <ModalOverlay />
-          <ModalContent >
+          <ModalOverlay/>
+          <ModalContent borderRadius={'3xl'}>
             <ModalHeader textAlign={'center'}>{headerTitle ?? ""}</ModalHeader>
             <ModalCloseButton data-cy="close-modal-button"/>
             <ModalBody>

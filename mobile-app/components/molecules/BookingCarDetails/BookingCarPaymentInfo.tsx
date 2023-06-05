@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import VisaIcon from '../../../assets/icons/visa.svg';
 import useBookingActions from '../../../hooks/useBookingActions';
 import { calcDuration } from '../../../utils/utils';
-import { isNull } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 
 interface IProps {
   openSelectPaymentMethod?: () => void;
@@ -59,12 +59,12 @@ const useStyles = makeStyles((theme, props: Props) => {
 const BookingCarPaymentInfo = (props: Props) => {
   const styles = useStyles(props);
   const {
-    bookingDetails: { vehicle, start_date_time: startDateTime, end_date_time: endDateTime, billingInfo, paymentType },
+    bookingDetails: { vehicle, start_date_time: startDateTime, end_date_time: endDateTime, billingInfo, paymentType,reservation_id },
   } = useBookingActions();
 
   const calcAmount = () => {
     if (isNull(vehicle)) return 0;
-    return (calcDuration(startDateTime, endDateTime) * (vehicle?.hourly_rate ?? 0))?.toFixed(2);
+    return (calcDuration(startDateTime, endDateTime) * (vehicle?.hourly_rate ?? 0))?.toFixed();
   };
 
   return (
@@ -83,7 +83,7 @@ const BookingCarPaymentInfo = (props: Props) => {
           </View>
           <View style={[styles.section, { justifyContent: 'space-between' }]}>
             <Text style={styles.sectionTitle}> {calcAmount()} {vehicle?.host?.market?.currency}</Text>
-            {!paymentType && (
+            {(!paymentType && isEmpty(reservation_id)) && (
               <TouchableOpacity
                 onPress={props.openSelectPaymentMethod}
                 style={[styles.actionButton]}>

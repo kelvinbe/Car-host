@@ -90,7 +90,6 @@ export const fetchOnboarding = createAsyncThunk('onBoarding/fetchOnboarding',  (
   return apiClient.get(FETCH_ONBOARDING).then(({data})=>{
     return data.completed 
   }).catch((e)=>{
-    console.log(e.response)
     rejectWithValue(e)
   })
 })

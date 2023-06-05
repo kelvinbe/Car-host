@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
 import { IStation } from "../globaltypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { http_methods, STATIONS_API } from "../hooks/constants";
+import { http_methods, STATIONS_API, STATION_API } from "../hooks/constants";
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase/firebaseApp";
 import LogRocket from 'logrocket';
@@ -23,7 +23,7 @@ export const stationsApi = createApi({
     endpoints: (builder) => ({
         addStation: builder.mutation<any, any>({
             query: (data) => ({
-                url: STATIONS_API,
+                url: STATION_API,
                 method: http_methods.post,
                 body: data,
 
@@ -31,7 +31,7 @@ export const stationsApi = createApi({
         }),
         updateStation: builder.mutation<any, any>({
             query: (data) => ({
-                url: `${STATIONS_API}?station_id=${data.station_id}`,
+                url: `${STATION_API}?station_id=${data.station_id}`,
                 method: http_methods.patch,
                 body: data
             })
@@ -48,11 +48,14 @@ export const stationsApi = createApi({
         deleteStation: builder.mutation<any, any>({
             query: (id: string)=>{
                 return {
-                    url: STATIONS_API,
-                    method: http_methods.delete,
+                    url: STATION_API,
+                    method: http_methods.put,
                     params: {
                         station_id: id
                     },
+                    body: {
+                        status: "INACTIVE"
+                    }
                 }
             }
         })

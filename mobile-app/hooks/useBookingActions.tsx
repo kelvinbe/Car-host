@@ -47,9 +47,13 @@ function useBookingActions() {
       const { vehicle, start_date_time, end_date_time } = bookingDetails
       setLoading(true)
       apiClient.post(`${PAYMENT_ENDPOINT}`, {
-        amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+        amount: Number(((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed()) * (
+          ['RWF']?.includes(vehicle?.host?.market?.currency ?? "USD") ? 1 : // rwf is a zero decimal currency
+          100
+        ),
         currency: vehicle?.host?.market?.currency ?? 'USD',
-        payment_method: bookingDetails?.paymentType?.stripe_payment_method_id
+        payment_method: bookingDetails?.paymentType?.stripe_payment_method_id,
+        reservation_id: bookingDetails?.reservation_id
       }).then(({data})=>{
         return initPaymentSheet({
             paymentIntentClientSecret: data.client_secret,
@@ -110,9 +114,10 @@ function useBookingActions() {
       setLoading(true)
       const { vehicle, start_date_time, end_date_time, paymentType } = bookingDetails
       await apiClient.post(`${PAYMENT_ENDPOINT}/mpesa`, {
-        amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+        amount: Number(((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed()),
         vehicle_id: vehicle?.id,
-        payment_type_id: paymentType?.id
+        payment_type_id: paymentType?.id,
+        reservation_id: bookingDetails?.reservation_id
       }).then(({data})=>{
         setPaymentOption({payment_method: 'mpesa'})
         // set the payment authorization code
@@ -145,9 +150,10 @@ function useBookingActions() {
       const { vehicle, start_date_time, end_date_time } = bookingDetails
 
       await apiClient.post(`${PAYMENT_ENDPOINT}/mtn`, {
-        amount: ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)),
+        amount: Number(((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed()),
         vehicle_id: vehicle?.id,
-        payment_type_id: bookingDetails?.paymentType?.id
+        payment_type_id: bookingDetails?.paymentType?.id,
+        reservation_id: bookingDetails?.reservation_id
       }).then(({data})=>{
           setPaymentOption({payment_method: 'mtn'})
           // set the payment authorization code 

@@ -1,103 +1,41 @@
-import { useRouter } from 'next/router';
-import { Flex, useToast } from '@chakra-ui/react';
-import { FlexColCenterBetween, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter } from '../utils/theme/FlexConfigs';
-import Logo from '../components/atoms/Brand/Logo';
-import AuthForm from '../components/organism/Forms/AuthForm/AuthForm';
-import HelperLinkText from '../components/atoms/HelperLinkText/HelperLinkText';
-import React, {  useState } from 'react';
-import useAppAuth from '../hooks/useAppAuth';
-import LogRocket from 'logrocket'
+import React from "react";
+import Header from "../components/organism/Header/Header";
+import Banner from "../components/organism/Banner/Banner";
+import Footer from "../components/organism/Footer/Footer";
+import AboutUs from "../components/organism/AboutUs/AboutUs";
+import BookRide from "../components/organism/BookRide/BookRide";
+import AppFeature from "../components/organism/AppFeature/Appfeature";
+import Head from "next/head";
 
-export default function Home() {
-  const [authState, setAuthState] = useState<"signup"|"signin"|"forgot">("signin")
-  const { push } = useRouter();
-
-  const toast = useToast({
-    position: "top",
-  })
-                                                                                                                                     
-  const {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPasswordLoading,
-    signInLoading
-  } = useAppAuth() 
-
-
-
-  const onSubmitHandler = (email: string, password: string) => {
-    if(authState === "signin"){
-      signInWithEmailAndPassword({email, password})
-    }else if(authState === "signup"){
-      createUserWithEmailAndPassword(email, password).then(()=>{
-        push("/onboarding")
-      }).catch((e)=>{
-        LogRocket.error(e)
-        toast({
-          title: "Error",
-          description: "An Error Occured",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top"
-        })
-      })
-    }
-  }
-
+const LandingPage = () => {
   return (
-    <Flex 
-      w="100vw" 
-      h="100vh"
-      {...FlexRowCenterBetween} 
-    >
-      <Flex w="50%" h="full" {...FlexColCenterBetween} padding="40px 20px" >
-        <Flex {...FlexRowCenterCenter} w="full" >
-          <Logo/>
-        </Flex>
-        <Flex w="80%" {...FlexColCenterStart} >
-          <AuthForm
-            type={authState}
-            onSubmit={onSubmitHandler}
-            changeAuthState={setAuthState}
-            loading={
-              authState === "signin" ? signInLoading : authState === "signup" ? createUserWithEmailAndPasswordLoading : false
-            }
-          />
-        </Flex>
-        <Flex 
-          w="full"
-          {...FlexRowCenterCenter}
-        >
-          <HelperLinkText
-            onClick={()=>{
-              if(authState === "signin"){
-                setAuthState("signup")
-              }else if(authState === "forgot"){
-                setAuthState("signin")
-              }else{
-                setAuthState("signin")
-              }
-            }}
-            linkText={
-              authState === "signin" ? "Sign Up" : authState === "forgot" ? "Back to Login" : "Sign In" 
-            }
-          >
-            {
-              authState === "signin" ? "Don't have an account?" : authState === "forgot" ? "Not you?" : "Already have an account?"
-            }
-          </HelperLinkText>
-        </Flex>
-      </Flex>
+    <html lang="en">
+      <Head>
+        <title>Divvly. Rent a car</title>
+        <meta name="description" content="Divvly allows AirBnB hosts rent cars to their tenants." />
+        <meta property="og:title" content="Divvly. Rent a car" />
+        <meta property="og:description" content="Divvly allows AirBnB hosts rent cars to their tenants." />
+        {/* <meta property="og:image" content="https://example.com/my-image.jpg" /> */}
+      </Head>
+      <body className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full" >
+        <Header />
+        <Banner />
+        <section id="about">
+          <AboutUs />
+        </section>
+        <section id="app-feature">
+          <AppFeature />
+        </section>
+        <section id="book-ride">
+          <BookRide/>
+        </section>  
+        <footer className="w-full">
+          <Footer />
+        </footer>  
+      </body>
+      
+    </html>
+  );
+};
 
-      <Flex 
-        w="50%"
-        h="full"	 
-        {...FlexColCenterStart}
-        bgImage="/images/AuthForm.png"
-        bgSize="cover"
-        bgRepeat="no-repeat"
-      ></Flex>
-    </Flex>
-  )
-}
+export default LandingPage;

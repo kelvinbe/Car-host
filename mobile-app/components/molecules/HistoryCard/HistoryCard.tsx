@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, StyleProp, ViewStyle, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import LocationIcon from '../../../assets/icons/location.svg';
 import CalendarIcon from '../../../assets/icons/calendar.svg';
@@ -8,6 +8,10 @@ import { Divider, Image } from '@rneui/base';
 import { IReservation } from '../../../types';
 import dayjs from 'dayjs';
 import { calcDuration } from '../../../utils/utils';
+import { useAppSelector } from '../../../store/store';
+import { selectLoadReservationDetailsFeedback } from '../../../store/slices/bookingSlice';
+import { isEmpty } from 'lodash';
+import useToast from '../../../hooks/useToast';
 
 interface IProps {
   customStyle?: StyleProp<ViewStyle>;
@@ -168,6 +172,9 @@ const useStyles = makeStyles((theme, props: Props) => ({
 }));
 
 const HistoryCard = (props: Props) => {
+  const [pressed, set_pressed] = useState(false)
+  const toast = useToast()
+  const feedback = useAppSelector(selectLoadReservationDetailsFeedback)
   const {
     onDetailsPress,
     id,
@@ -177,11 +184,26 @@ const HistoryCard = (props: Props) => {
   } = props;
   const styles = useStyles(props);
   const onPress = () => {
+    set_pressed(true)
     id && onDetailsPress && onDetailsPress(id);
   };
   const calTotalCost = () => {
-    return ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed(2)
+    return ((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed()
   }
+
+  useEffect(()=>{
+    if(!isEmpty(feedback.error)){
+      toast({
+        message: "Something went wrong. Please try again later.",
+        type: "error",
+        duration: 5000
+      })
+    } 
+
+    if(!feedback.loading && pressed){
+      set_pressed(false)
+    }
+  }, [feedback.error, feedback.loading])
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -197,9 +219,12 @@ const HistoryCard = (props: Props) => {
               />
               <Text style={styles.dateText}>{dayjs(start_date_time).format('DD MMM YYYY')}</Text>
             </View>
-            <TouchableOpacity onPress={onPress}>
+            {(feedback?.loading && pressed) ? <ActivityIndicator
+              size="small"
+              color={theme.colors.primary}
+            /> :<TouchableOpacity onPress={onPress}>
               <Text style={styles.link}>Details</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
           </View>
           <Divider style={styles.divider} />
           <View style={styles.rideInfo}>
@@ -208,7 +233,7 @@ const HistoryCard = (props: Props) => {
                 <Image
                   style={styles.vehicleImage}
                   source={{
-                    uri: vehicle?.VehiclePictures?.[0],
+                    uri: vehicle?.pictures?.[0],
                   }}
                 />
               </View>
@@ -229,11 +254,13 @@ const HistoryCard = (props: Props) => {
                   <LocationIcon stroke={theme.colors.stroke} style={styles.locationIcon} />
                   <Text style={styles.locationInfo}>{`${vehicle?.station?.name}`}</Text>
                 </View>
+                <View style={styles.rideInfoRight}>
+                  <Text style={styles.ridePrice}>{calTotalCost()} {vehicle?.host?.market?.currency}</Text>
+                </View>
               </View>
+              
             </View>
-            <View style={styles.rideInfoRight}>
-              <Text style={styles.ridePrice}>{calTotalCost()} {vehicle?.host?.market?.currency}</Text>
-            </View>
+            
           </View>
           <Divider style={styles.divider} />
           <View style={styles.rideTimeInfoContainer}>

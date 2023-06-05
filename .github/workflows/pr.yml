@@ -8,8 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    
-    runs-on: self-hosted
+    runs-on: [self-hosted, testing]
     environment: Staging
     env:
       NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
@@ -20,14 +19,14 @@ jobs:
       NEXT_PUBLIC_authDomain: ${{ secrets.NEXT_PUBLIC_authDomain }}
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
-      NEXT_PUBLIC_LOGROCKET_APP_ID: ${{ NEXT_PUBLIC_LOGROCKET_APP_ID }}
+      NEXT_PUBLIC_LOGROCKET_APP_ID: ${{ secrets.NEXT_PUBLIC_LOGROCKET_APP_ID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Use Node.js LTS
         uses: actions/setup-node@v2
-        with:
+        with: 
           node-version: "19.x"
       - name: cache node modules
         uses: actions/cache@v2
@@ -49,3 +48,26 @@ jobs:
       - name: Build
         working-directory: ./app
         run: npm run build
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C045FQ1QXJ9"
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

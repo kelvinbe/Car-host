@@ -3,48 +3,50 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import BlockoutModal from "./BlockoutModal";
 import { Provider } from "react-redux";
 import store from "../../../redux/store";
+import dayjs from "dayjs";
+import useReservation from "../../../hooks/useReservation";
+import { IReservation } from "../../../globaltypes";
 
-const startTime = '2023-05-05 10:30'
-const endTime = '2023-05-05 12:30'
-const testFunc = jest.fn();
+const mockAddReservation = jest.fn();
 
-const event = {
-        type: "Blocked",
-        start_date_time: startTime,
-        end_date_time: endTime,
-        status: "Blocked",
-        vehicle_id: '3',
-        total_cost: 0,
-        hourly_rate: 20,
-        duration: 3,
-}
+jest.mock("../../../hooks/useReservation", () => {
+  return {
+    __esModule: true,  
+    default: () => {
+      return { addReservation: mockAddReservation };
+    },
+  };
+});
 
-describe('It tests the blockout modal',()=>{
-    it('Tests if the component mounts', ()=>{
-        const {baseElement}=render(<Provider store={store}><BlockoutModal 
-            startTime={startTime}
-            endTime={endTime}
-            isOpen
-            onClose={testFunc}
-            eventId={'2'} 
-            event={event}/>
-            </Provider>);
-        expect(baseElement).toBeTruthy();
-        expect(screen.getByTestId('header').textContent).toBe('Selected Slot');
-        expect(screen.getByTestId('blockout').textContent).toBe("Block from 10:30:00 AM to 12:30:00 PM")
-    })
 
-    it('Tests the Cancel button', ()=>{
-        render(<Provider store={store}><BlockoutModal 
-            startTime={startTime}
-            endTime={endTime}
-            isOpen
-            onClose={testFunc}
-            eventId={'2'} 
-            event={event}
-        /></Provider>);
-        const cancel = screen.getByTestId('cancel')
-        fireEvent.click(cancel)
-        expect(testFunc).toBeCalled()
-    })
-})
+describe("BlockoutModal", () => {
+  const testProps = {
+    isOpen: true,
+    onClose: jest.fn(),
+    startTime: new Date(2023, 5, 1, 9, 0, 0).toISOString(),
+    endTime: new Date(2023, 5, 1, 10, 0, 0).toISOString(),
+    event: { eventId: "1", eventDate: "2023-06-01", blocked: true } as Partial<IReservation>,
+    eventId: "1",
+  };
+
+  it("renders correctly", () => {
+    const { getByTestId } = render(<BlockoutModal {...testProps} />);
+
+    expect(getByTestId('header')).toHaveTextContent('Selected Slot');
+    expect(getByTestId('blockout')).toHaveTextContent('Block from 9:00:00 AM to 10:00:00 AM');
+    expect(getByTestId('cancel')).toHaveTextContent('Cancel');
+  });
+
+  it("calls the onClose prop when the cancel button is clicked", () => {
+    const { getByTestId } = render(<BlockoutModal {...testProps} />);
+    fireEvent.click(getByTestId('cancel'));
+    expect(testProps.onClose).toHaveBeenCalled();
+  });
+
+  it("calls addReservation and onClose when the Block Slot button is clicked", () => {
+    const { getByText } = render(<BlockoutModal {...testProps} />);
+    fireEvent.click(getByText('Block Slot'));
+    expect(mockAddReservation).toHaveBeenCalledWith(testProps.event);
+    expect(testProps.onClose).toHaveBeenCalled();
+  });
+});

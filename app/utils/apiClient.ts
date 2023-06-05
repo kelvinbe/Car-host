@@ -2,6 +2,7 @@ import axios from 'axios'
 import { getAuth } from 'firebase/auth'
 import { app } from '../firebase/firebaseApp'
 import { isEmpty } from 'lodash'
+import LogRocket from 'logrocket'
 
 const apiClient = axios.create({
     headers: {
@@ -14,6 +15,7 @@ apiClient.interceptors.request.use((config)=> {
     const currentUser = getAuth(app).currentUser
     if(isEmpty(currentUser)) return Promise.reject("User not logged in")
     return getAuth(app).currentUser?.getIdToken().then((token)=>{
+        localStorage.setItem("token", token)
         return {
             ...config,
             headers: {
@@ -21,6 +23,9 @@ apiClient.interceptors.request.use((config)=> {
                 "Authorization": `Bearer ${token}`
             }
         }
+    }).catch((e)=>{
+        LogRocket.error(e)
+        localStorage.removeItem("token")
     })
 })
 

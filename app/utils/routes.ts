@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 import { RxDashboard } from "react-icons/rx"
-import { RiReservedLine } from "react-icons/ri"
+import { RiReservedLine, RiDownload2Fill } from "react-icons/ri"
 import { SlLocationPin } from "react-icons/sl"
 import { TfiCar } from "react-icons/tfi"
 import { MdPowerInput } from "react-icons/md"
@@ -13,7 +13,7 @@ import { FiSend, FiUsers } from "react-icons/fi"
 // dashboard routes
 export const dashboardRoutes: {
     name: string;
-    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites",
+    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites" | "toWithdrawals",
     admin: boolean,
     icon?: IconType,
     link?: string,
@@ -67,6 +67,13 @@ export const dashboardRoutes: {
       admin: false,
       icon: CiWallet,
       link: "/payouts"
+    },
+    {
+      name: "withdrawals",
+      onClick: "toWithdrawals",
+      admin: false,
+      icon: RiDownload2Fill,
+      link: "/withdrawals"
     },
     {
       name: "integrations",

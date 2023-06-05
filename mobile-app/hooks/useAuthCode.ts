@@ -5,6 +5,10 @@ import { getAuth } from 'firebase/auth';
 import { app } from '../firebase/firebaseApp';
 import useToast from './useToast';
 import { isEmpty } from 'lodash';
+import apiClient from '../utils/apiClient';
+import { useAppSelector } from '../store/store';
+import { selectUserProfile } from '../store/slices/userSlice';
+import * as Linking from 'expo-linking';
 
 type tResponse = {
     data: Record<string, string> | null;
@@ -13,14 +17,15 @@ type tResponse = {
 }
 
 type RequestAuthCodeFn = ( data: {
-    host_id: string,
+    host_id?: string,
     vehicle_id: string
 } ) => Promise<void>
 
 
-type VerifyAuthCodeFn = (code?: string | null) => Promise<void>
+type VerifyAuthCodeFn = (code?: string | null) => Promise<string | null | undefined>
 
 export default function useAuthCode(){
+    const user = useAppSelector(selectUserProfile)
     const [requestAuthCodeResponse, setRequestAuthCodeResponse] = useState<tResponse>({
         data: null,
         loading: false,
@@ -39,44 +44,67 @@ export default function useAuthCode(){
      * @description send an authcode request to the server
      */
     const requestAuthCode: RequestAuthCodeFn = async (data) => {
-        setRequestAuthCodeResponse((prev)=>({
-            ...prev,
-            loading: true
-        }))
-        return getAuth(app).currentUser?.getIdToken().then(async (token)=>{
-            return await axios.post(REQUEST_AUTH_CODE_ENDPOINT, {
-                ...data
-            }, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "x-user": "CUSTOMER",
-                    "ngrok-skip-browser-warning": "true"
-                }
-            }).then(({data})=>{
+
+        if(!user?.user_settings?.notifications_enabled) {
+            Linking.openURL(Linking.createURL('/profile'))
+            .then(()=>{
                 toast({
-                    title: "Auth Code Requested",
-                    message: "Wait for the host to approve your request",
-                    type: "success"
+                    title: "Enable Notifications",
+                    message: "You need to enable notifications to request an auth code",
+                    type: "primary"
                 })
-                setRequestAuthCodeResponse((prev)=>({
-                    ...prev,
-                    data: data.data,
-                    loading: false
-                }))
+            })
+        }else {
+            setRequestAuthCodeResponse((prev)=>({
+                ...prev,
+                loading: true
+            }))
+            return getAuth(app).currentUser?.getIdToken().then(async (token)=>{
+                return await axios.post(REQUEST_AUTH_CODE_ENDPOINT, {
+                    ...data
+                }, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "x-user": "CUSTOMER",
+                        "ngrok-skip-browser-warning": "true"
+                    }
+                }).then(({data})=>{
+                    toast({
+                        title: "Auth Code Requested",
+                        message: "Wait for the host to approve your request",
+                        type: "success"
+                    })
+                    setRequestAuthCodeResponse((prev)=>({
+                        ...prev,
+                        data: data.data,
+                        loading: false
+                    }))
+                }).catch((e: AxiosError)=>{
+                    toast({
+                        title: "Error",
+                        message: "Something went wrong",
+                        type: "error"
+                    })
+                    setRequestAuthCodeResponse((prev)=>({
+                        ...prev,
+                        error: e.response?.data as object,
+                        loading: false
+                    }))
+                })
             }).catch((e: AxiosError)=>{
+                toast({
+                    title: "Error",
+                    message: "Something went wrong",
+                    type: "error"
+                })
                 setRequestAuthCodeResponse((prev)=>({
                     ...prev,
                     error: e.response?.data as object,
                     loading: false
                 }))
-            })
-        }).catch((e: AxiosError)=>{
-            setRequestAuthCodeResponse((prev)=>({
-                ...prev,
-                error: e.response?.data as object,
-                loading: false
-            }))
-        })  
+            })  
+
+        }
     }
 
     /**
@@ -86,46 +114,53 @@ export default function useAuthCode(){
      */
 
     const verifyAuthCode: VerifyAuthCodeFn = async (code) => {
-        if (isEmpty(code)) return Promise.reject(setVerifyAuthCodeResponse((prev)=>({
-            ...prev,
-            error: {
-                message: "Code is empty"
-            }
-        })))
+        if (isEmpty(code)) {
+            setVerifyAuthCodeResponse((prev)=>({
+                ...prev,
+                error: {
+                    message: "Code is empty"
+                }
+            }))
+            return Promise.reject(null)
+        }
         setVerifyAuthCodeResponse((prev)=>({
             ...prev,
             loading: true
         }))
-        return getAuth(app).currentUser?.getIdToken().then(async (token)=>{
-            return await axios.get(AUTH_CODE_ENDPOINT, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "x-user": "CUSTOMER",
-                    "ngrok-skip-browser-warning": "true"
-                },
+
+        try {
+            const data = (await apiClient.get(AUTH_CODE_ENDPOINT, {
                 params: {
                     code
                 }
-            }).then(({data})=>{
-                setVerifyAuthCodeResponse((prev)=>({
-                    ...prev,
-                    data: data.data?.code, // the verified auth code
-                    loading: false
-                }))
-            }).catch((e: AxiosError)=>{
-                setVerifyAuthCodeResponse((prev)=>({
-                    ...prev,
-                    error: e.response?.data as object,
-                    loading: false
-                }))
-            })
-        }).catch((e)=>{
+            })).data 
+
             setVerifyAuthCodeResponse((prev)=>({
                 ...prev,
-                error: e.response?.data as object,
+                data: data?.code, // the verified auth code
                 loading: false
             }))
-        })
+            toast({
+                title: "Auth Code Verified",
+                message: "You can now start the vehicle",
+                type: "success"
+            })
+            return data?.code
+        } catch (e) {
+            toast({
+                title: "Error",
+                message: "Enter a valid code",
+                type: "error"
+            })
+            setVerifyAuthCodeResponse((prev)=>({
+                ...prev,
+                error: {
+                    message: "Is the code correct?"
+                },
+                loading: false
+            }))
+            return Promise.reject(null)
+        }
     }
 
 

@@ -28,7 +28,7 @@ describe("Tests the BannerInfo component", () => {
     );
     expect(baseElement).toBeTruthy();
     expect(screen.getByTestId("banner-info").textContent).toBe(
-      "IntroducingAIRBNB CARSHARING APPLorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus."
+      "IntroducingHOST CARSHARING APPLorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus."
     );
 
     const links = screen.getAllByRole('link');

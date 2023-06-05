@@ -8,6 +8,8 @@ import { clearUserState, fetchUserData, selectAuthProviders, selectPasswordChang
 import { useAppDispatch, useAppSelector } from '../store/store'
 import useToast from './useToast'
 
+
+
 interface IReducerState {
   signInLoading: boolean,
   signUpLoading: boolean,
@@ -198,7 +200,7 @@ function useUserAuth() {
      */
     const signUp = (email: string, password: string, silent?: boolean) => {
         dispatchAction(setSignUpLoading(true))
-        createUserWithEmailAndPassword(auth, email, password).then((userCredential)=>{
+        return createUserWithEmailAndPassword(auth, email, password).then((userCredential)=>{
             handleSuccess("signUp", silent || true)
         }).catch((e)=>{
             dispatchAction(setSignUpError(e.message))
@@ -256,11 +258,11 @@ function useUserAuth() {
      * @description Update user profile
      * @param data
      */
-    const updateUserProfile = (data: any) => {
+  const updateUserProfile = (data: any) => {
       /**to simulate loading, adding timeout */
       dispatchAction(setUpdateProfileLoading(true))
       setTimeout(()=>{
-        reduxDispatch(updateUserData({uid: auth?.currentUser?.uid,  data})).unwrap().then(()=>{
+        reduxDispatch(updateUserData(data)).unwrap().then(()=>{
           dispatchAction(setUpdateProfileLoading(false))
           toast({
             message: "Profile Updated",

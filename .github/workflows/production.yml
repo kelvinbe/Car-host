@@ -1,13 +1,12 @@
-name: divvly
+name: divvly-production
 
 on:
-  pull_request:
-    branches: 
-      - WAK-Sprint-2023-*
+  push:
+    branches: [main]
 
 jobs:
   Test:
-    environment: Staging
+    environment: Production
     env:
       NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
       NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
@@ -19,7 +18,7 @@ jobs:
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
     if: true
-    runs-on: self-hosted
+    runs-on: [self-hosted, production]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,8 +29,8 @@ jobs:
       - name: cache node modules
         uses: actions/cache@v2
         with:
-            path: ~/.npm
-            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         working-directory: ./app
         run: npm install
@@ -40,8 +39,8 @@ jobs:
         run: npm run test
   Deploy:
     needs: Test
-    runs-on: self-hosted
-    environment: Staging
+    runs-on: [self-hosted, production]
+    environment: Production
     env:
       NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
       NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
@@ -54,25 +53,24 @@ jobs:
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
     steps:
       - name: Make script executable
-        run: chmod +x ./scripts/cleanup.sh
+        run: chmod +x ./scripts/cleanupProduction.sh
 
-
-      - name: Cleanup
-        run: sudo ./scripts/cleanup.sh
+      - name: CleanupProduction
+        run: sudo ./scripts/cleanupProduction.sh
 
       - name: Build the docker image
         working-directory: ./app
         run: |
-            docker build -t divvly-cp \
-            --build-arg NEXT_PUBLIC_apiKey=$NEXT_PUBLIC_apiKey \
-            --build-arg NEXT_PUBLIC_appId=$NEXT_PUBLIC_appId \
-            --build-arg NEXT_PUBLIC_messagingSenderId=$NEXT_PUBLIC_messagingSenderId \
-            --build-arg NEXT_PUBLIC_storageBucket=$NEXT_PUBLIC_storageBucket \
-            --build-arg NEXT_PUBLIC_projectId=$NEXT_PUBLIC_projectId \
-            --build-arg NEXT_PUBLIC_authDomain=$NEXT_PUBLIC_authDomain \
-            --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY \
-            --build-arg NEXT_PUBLIC_API_DOMAIN=$NEXT_PUBLIC_API_DOMAIN \
-            --build-arg NEXT_PUBLIC_LOGROCKET_APP_ID=$NEXT_PUBLIC_LOGROCKET_APP_ID \
-            .
+          docker build -t divvly-cp-production \
+          --build-arg NEXT_PUBLIC_apiKey=$NEXT_PUBLIC_apiKey \
+          --build-arg NEXT_PUBLIC_appId=$NEXT_PUBLIC_appId \
+          --build-arg NEXT_PUBLIC_messagingSenderId=$NEXT_PUBLIC_messagingSenderId \
+          --build-arg NEXT_PUBLIC_storageBucket=$NEXT_PUBLIC_storageBucket \
+          --build-arg NEXT_PUBLIC_projectId=$NEXT_PUBLIC_projectId \
+          --build-arg NEXT_PUBLIC_authDomain=$NEXT_PUBLIC_authDomain \
+          --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY \
+          --build-arg NEXT_PUBLIC_API_DOMAIN=$NEXT_PUBLIC_API_DOMAIN \
+          --build-arg NEXT_PUBLIC_LOGROCKET_APP_ID=$NEXT_PUBLIC_LOGROCKET_APP_ID \
+          .
       - name: Start the docker container
-        run: docker run -dp 3001:3000 divvly-cp
+        run: docker run -dp 3001:3000 divvly-cp-production

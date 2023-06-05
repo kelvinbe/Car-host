@@ -117,7 +117,7 @@ const BookingCarDetailsDriver = (props: Props) => {
                 marginRight: 10,
               }}
             />
-            <Text style={styles.locationInfoTitle}>{vehicle?.location?.address}</Text>
+            <Text style={styles.locationInfoTitle}>{vehicle?.station?.name}</Text>
           </View>
           {!props?.hasAuthorizationCode && (
             <View style={styles.authCodeContainer}>

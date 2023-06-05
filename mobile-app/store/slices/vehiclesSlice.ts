@@ -83,3 +83,6 @@ export default vehicleDataSlice.reducer;
 export const {setGetVehicleData} = vehicleDataSlice.actions
 
 export const selectVehicleData = (state:any) => state.vehicles.vehicleData
+
+
+export const selectVehicles = vehiclesApi.endpoints.getVehicles.select

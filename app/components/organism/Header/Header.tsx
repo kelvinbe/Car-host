@@ -28,9 +28,6 @@ const Header = () => {
             </Text>
           </Box>
           <Box paddingLeft="40px" paddingRight="80px">
-            <Link href="#about" legacyBehavior >
-              About Us
-            </Link>
             <Link href="/auth" legacyBehavior >
               <Button
                 fontStyle="normal"

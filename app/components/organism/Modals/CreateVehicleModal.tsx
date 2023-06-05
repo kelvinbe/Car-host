@@ -22,6 +22,8 @@ import { isArray, isEmpty, isString, isUndefined } from "lodash";
 import ApiVehicleDetails from "./ApiVehicleDetails";
 import UploadImage from "../../molecules/UploadImage/UploadImage";
 import { isValidNumberString, isYearStringValid } from "../../../utils/utils";
+import { z } from "zod";
+import { useGetStationsQuery } from "../../../redux/stationSlice";
 
 type IReducerState = Partial<IVehicleDetails> & {
     isplateError: boolean,
@@ -46,6 +48,19 @@ export const initialstate: IReducerState = {
     ishourly_rateError: true,
     pictures: [],
 }
+
+const tVehicleSchema = z.object({
+    plate: z.string(),
+    make: z.string(),
+    model: z.string(),
+    transmission: z.string(),
+    pictures: z.array(z.string()),
+    hourly_rate: z.number(),
+    color: z.string(),
+    year: z.number(),
+    seats: z.number()
+})
+
 const validateField = (fieldName: string, fieldValue?: string | number | string[]): boolean => {
     if (isUndefined(fieldValue)) return false
     switch (fieldName) {
@@ -99,7 +114,11 @@ export default function CreateVehicleModal(props: Props) {
     const [vehicleImages, setVehicleImages] = useState<string[]>([])
     const [isError, setIsError] = useState(false)
     const [state, dispatch] = useReducer(reducer, initialstate)
+    const [station_id, set_station_id] = useState<string>()
     const { addVehicle } = useVehicles()
+    const { data: stations, isLoading } = useGetStationsQuery(null)
+    const [color, setColor] = useState<string>("")
+    const [seats, setSeats] = useState<string>("")
 
     useEffect(() => {
         dispatch({
@@ -110,12 +129,22 @@ export default function CreateVehicleModal(props: Props) {
     }, [vehicleImages])
 
     const handleCreateVehicle = () => {
-        if (state.ishourly_rateError || state.ismakeError || state.ismodelError || state.isplateError || state.isvehicle_picturesError || state.isyearError || isEmpty(state)) {
+        const parsed = tVehicleSchema.safeParse({
+            ...state,
+            color,
+            hourly_rate: Number(state.hourly_rate ?? 0),
+            seats: Number( seats ?? 0 ),
+            year: Number(state?.year ?? 0)
+        })
+
+        if (!parsed.success){
             setIsError(true)
-        } else {
+        }else {
+            const data = parsed.data
             addVehicle({
-                ...state,
-            } as IVehicleDetails)
+                ...data,
+                station_id
+            })
             onClose()
         }
     }
@@ -155,6 +184,7 @@ export default function CreateVehicleModal(props: Props) {
                                         onChange={(images) => setVehicleImages(images as string[])}
                                     />
                                 </Box>
+                                
                                 <Flex w={2 / 3} flexDirection="column" gap="10px">
                                     <ApiVehicleDetails {...{ updateFormFields }} />
                                     <Flex flexWrap='wrap' flexDirection={"row"} justifyContent={'space-between'} h='100%'>
@@ -180,6 +210,32 @@ export default function CreateVehicleModal(props: Props) {
                                             />
                                             <FormErrorMessage>Vehicle make is required</FormErrorMessage>
                                         </FormControl>
+                                        <FormControl w={350} isRequired isInvalid={isEmpty(station_id)}  >
+                                            <FormLabel>
+                                                Station
+                                            </FormLabel>
+                                            <Select 
+                                                placeholder="Select a station"
+                                                value={station_id}
+                                                onChange={(e)=>{
+                                                    set_station_id(e.target.value)
+                                                }}
+                                            >
+                                                {
+                                                    stations?.map((station, i)=> {
+                                                        return (
+                                                            <option key={i} value={station?.id} >
+                                                                {
+                                                                    station?.name
+                                                                }
+                                                            </option>
+                                                        )
+                                                    })
+                                                }
+                                                <option key={3} >
+                                                </option>
+                                            </Select>
+                                        </FormControl>
                                         <FormControl w={350} isRequired isInvalid={!state.ismodelError} marginBottom={5}>
                                             <FormLabel htmlFor="model">Model</FormLabel>
                                             <Input type='text' id='model' placeholder='Camry' w={350} value={state.model} onChange={e => dispatch({
@@ -189,6 +245,22 @@ export default function CreateVehicleModal(props: Props) {
                                             })}
                                             />
                                             <FormErrorMessage>Vehicle model is required</FormErrorMessage>
+                                        </FormControl>
+                                        <FormControl w={350} isRequired isInvalid={isEmpty(color)} marginBottom={5}>
+                                            <FormLabel htmlFor="model">Color</FormLabel>
+                                            <Input type='text' id='model' placeholder='red' w={350} value={color} onChange={(e)=>{
+                                                setColor(e.target.value)
+                                            }}
+                                            />
+                                            <FormErrorMessage>Color is required</FormErrorMessage>
+                                        </FormControl>
+                                        <FormControl w={350} isRequired isInvalid={isEmpty(seats)} marginBottom={5}>
+                                            <FormLabel htmlFor="model">Seats</FormLabel>
+                                            <Input type='number' id='model' placeholder='e.g 4' w={350} value={seats} onChange={(e)=>{
+                                                setSeats(e.target.value)
+                                            }}
+                                            />
+                                            <FormErrorMessage>Number of seats is required</FormErrorMessage>
                                         </FormControl>
                                         <FormControl w={350} isRequired isInvalid={!state.isyearError} marginBottom={5}>
                                             <FormLabel htmlFor="year">Year</FormLabel>
@@ -201,7 +273,7 @@ export default function CreateVehicleModal(props: Props) {
                                         </FormControl>
                                         <FormControl w={350} marginBottom={5} isRequired>
                                             <FormLabel htmlFor="transmission">Transmission</FormLabel>
-                                            <Select w={350} value={state.transmission} onChange={e => dispatch({
+                                            <Select data-testid="transmission-select" w={350} value={state.transmission} onChange={e => dispatch({
                                                 type: 'create_vehicle',
                                                 value: e.target.value,
                                                 key: "transmission"

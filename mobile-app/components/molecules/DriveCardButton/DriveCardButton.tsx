@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, StyleProp, ViewStyle, Animated } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import { Image } from '@rneui/base'
+import { makeStyles, ThemeConsumer, Image } from '@rneui/themed'
 import LocationDirection from "../../../assets/icons/direction.svg"
 import { IVehicle, SearchScreenParamList } from '../../../types'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { first } from 'lodash'
 interface IProps {
     customContainerStyle?: StyleProp<ViewStyle>;
     onPress?: () => void;
@@ -130,9 +130,7 @@ const DriveCardButton = (props: Props) => {
             } ]} >
                 <TouchableOpacity onPress={props.onPress} style={styles.leftContainer} >
                     <View style={styles.carImageContainer} >
-                        <Image style={styles.carImage} source={{
-                              uri: props?.VehiclePictures?.[0]
-                        }} />
+                        <Image style={styles.carImage} source={{uri: first(props?.pictures) ?? ""}}/>
                     </View>
                     <View style={styles.driveInfoContainer} >
                         <View style={styles.driverInfoContainer} >

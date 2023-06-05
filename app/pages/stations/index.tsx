@@ -1,6 +1,6 @@
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { Flex, IconButton } from "@chakra-ui/react";
-import React, { useReducer, useState } from "react";
+import { Flex, IconButton, useToast } from "@chakra-ui/react";
+import React, { useReducer, useState, useEffect } from "react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import { insertTableActions } from "../../utils/tables/utils";
 import {
@@ -44,13 +44,19 @@ const reducer = (state:IReducerState, action:{type:string, key:string, value:boo
 }
 
 function Stations() {
-  const { data } = useGetStationsQuery(null)
-  console.log("Station data", data)
+  const toast = useToast({
+    position: 'top'
+  })
+  const { data, refetch } = useGetStationsQuery(null)
   const [selectedStation, setSelectedStation] = useState<Partial<IStation> | null>(null)
   const {onClose, isOpen, onOpen} = useDisclosure()
   const [state,dispatch] = useReducer(reducer, initialState)
+
+  useEffect(()=>{
+    refetch()
+  }, [])
   
-  const [deleteStation] = useDeleteStationMutation()
+  const [deleteStation, { isLoading: deleteLoading }] = useDeleteStationMutation()
  
   const showCreateStationModal = () => {
     dispatch({
@@ -149,11 +155,20 @@ function Stations() {
                   data-cy="edit-button"
                 />
                 <IconButton
+                  isLoading={deleteLoading}
+
                   aria-label="Delete"
                   icon={<DeleteIcon />}
                   size="sm"
                   onClick={() => {
-                    deleteStation(data.id)
+                    deleteStation(data.id).then(()=>{
+                      refetch()
+                    }).catch(()=>{
+                      toast({
+                        title: "An error occured",
+                        description: "Something went wrong"
+                      })
+                    })
                   }}
                   color="cancelled.1000"
                   data-cy="delete-button"

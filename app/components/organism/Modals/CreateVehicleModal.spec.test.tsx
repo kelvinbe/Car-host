@@ -1,56 +1,82 @@
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { setupServer } from 'msw/node'
+import { rest } from 'msw'
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import CreateVehicleModal from "./CreateVehicleModal";
-import { Provider } from "react-redux";
-import store from "../../../redux/store";
+import { IVehicleDetails } from "../../../globaltypes";
+import userEvent from '@testing-library/user-event';
+import { MARKETS_API, STATIONS_API, VEHICLES_DOMAIN } from '../../../hooks/constants';
+import { Provider } from 'react-redux';
+import store from '../../../redux/store';
 
-const testFunc = jest.fn()
-beforeEach(()=>{
-    const {baseElement} =render(<Provider store={store}><CreateVehicleModal isOpen onClose={testFunc}/></Provider>)
+const server = setupServer(
+  rest.post(VEHICLES_DOMAIN, (req, res, ctx) => {
+    return res(ctx.json({}))
+  }),
+  rest.get(STATIONS_API, (req, res, ctx) => {
+    return res(ctx.json({
+        data: [
+            {
+                "id": "b292c1d3-1918-46fd-99d2-f5fd34bbc722",
+                "name": "Troy Goodwin",
+                "description": "minus",
+                "image": "https://loremflickr.com/640/480/city",
+                "sub_market_id": "ab58c525-077c-48e4-b099-5ecc0eda9219",
+                "user_id": "bf62d12e-4cea-4fb4-939a-b8628bae9d3f",
+                "latitude": -31,
+                "longitude": -83,
+                "status": "ACTIVE",
+                "sub_market": {
+                    "id": "ab58c525-077c-48e4-b099-5ecc0eda9219",
+                    "market_id": "0cb3742f-3ae0-4a38-b341-008f7b3e2942",
+                    "name": "Belleville"
+                }
+            }
+        ]
+    }))
+  }),
+)
+const handleClose = jest.fn();
+
+beforeAll(() => {
+    server.listen()
 })
-
-describe('Tests the CreateVehicle Modal component', ()=>{
-    it('Tests if the component mounts', ()=>{
-        expect(screen.getAllByRole('textbox').length>=5).toBeTruthy();
-        expect(screen.getByRole('combobox')).toBeInTheDocument();
-        expect(screen.getAllByRole('button').length).toBe(3);
-    });
-
-    it('Tests the form fields', ()=>{
-        const inputs = screen.getAllByRole('textbox');
-        const select = screen.getByRole('combobox');
-        const button = screen.getByText('Create')
-
-        fireEvent.change(inputs[0], {target:{value: 'ABC-123'}})
-        expect(inputs[0].value).toBe('ABC-123')
-        fireEvent.change(inputs[1], {target:{value: 'Toyota'}})
-        expect(inputs[1].value).toBe('Toyota')
-        fireEvent.change(inputs[2], {target:{value: 'Camry'}})
-        expect(inputs[2].value).toBe('Camry')
-        fireEvent.change(inputs[3], {target:{value: '2018'}})
-        expect(inputs[3].value).toBe('2018')
-        fireEvent.change(inputs[4], {target:{value: '36'}})
-        expect(inputs[4].value).toBe('36')
-
-        fireEvent.change(select, {target: {value: 'auto'}})
-        fireEvent.click(button)
-        expect(testFunc).not.toBeCalled()
-    });
-
-    it('Tests the form fields errors', ()=>{
-        const inputs = screen.getAllByRole('textbox');
-        const select = screen.getByRole('combobox');
-        const button = screen.getByText('Create')
-
-        fireEvent.change(inputs[0], {target:{value: 'ABC-123'}})
-        expect(inputs[0].value).toBe('ABC-123')
-        fireEvent.change(inputs[1], {target:{value: 'Toyota'}})
-        expect(inputs[1].value).toBe('Toyota')
-        fireEvent.change(inputs[2], {target:{value: 'Camry'}})
-        expect(inputs[2].value).toBe('Camry')
-
-        fireEvent.click(button)
-        expect(testFunc).not.toBeCalled()
-        expect(screen.getByText('Ensure all fields are filled')).toBeInTheDocument()
-    })
+beforeEach(() => {
+    fetchMock.resetMocks()
 })
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
+
+describe("<CreateVehicleModal />", () => {
+  test("renders the CreateVehicleModal component", () => {
+
+    const { getByText } = render(
+        <Provider store={store}>
+            <CreateVehicleModal isOpen={true} onClose={handleClose} />
+        </Provider>
+    );
+
+    expect(getByText("Create Vehicle")).toBeInTheDocument();
+  });
+
+  test("allows user to fill out the form", async () => {
+    render(
+        <Provider store={store}>
+            <CreateVehicleModal isOpen={true} onClose={handleClose} />
+        </Provider>
+    );
+
+    userEvent.type(screen.getByPlaceholderText('ABC-123'), 'ABC-DEF');
+    userEvent.type(screen.getByPlaceholderText('Toyota'), 'Toyota');
+    userEvent.type(screen.getByPlaceholderText('Camry'), 'Camry');
+    userEvent.type(screen.getByPlaceholderText('2018'), '2018');
+    userEvent.type(screen.getByPlaceholderText('$'), '10');
+
+
+    expect(screen.getByPlaceholderText('ABC-123')).toHaveValue('ABC-DEF');
+    expect(screen.getByPlaceholderText('Toyota')).toHaveValue('Toyota');
+    expect(screen.getByPlaceholderText('Camry')).toHaveValue('Camry');
+    expect(screen.getByPlaceholderText('2018')).toHaveValue(2018);
+    expect(screen.getByPlaceholderText('$')).toHaveValue(10);
+  });
+
+});

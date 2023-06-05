@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Linking, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { Image } from '@rneui/base'
@@ -112,7 +112,7 @@ const AboutScreen = (props: Props) => {
                 <ActionButton
                     title='Privacy Policy'
                     image={<PrivacyPolicy stroke={theme.colors.primary} width={20} height={20}   />}
-                    onPress={goToPrivacyPolicy}
+                    onPress={goToPrivacyPolicy} //TODO Create Privacy Policy Screen(Add Static data  to screen)
                 />
                 <ActionButton
                     title='User Agreement'

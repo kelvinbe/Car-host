@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@rneui/themed';
 import Dropdown from '../Dropdown/Dropdown';
 import dayjs from 'dayjs';
-import { first, isArray } from 'lodash';
+import { first, isArray, uniq, uniqBy } from 'lodash';
 import {
   daysOfTheWeekFromToday,
   isAm,
@@ -17,11 +17,13 @@ import { useSelector } from 'react-redux';
 
 type Props = {
   customStyles?: StyleProp<ViewStyle>;
-  setStartDateTime?: (date: string) => void;
-  setEndDateTime?: (date: string) => void;
+  setStartDateTime?: (date: string) => void
+  setEndDateTime?: (date: string) => void
   displayDay: boolean;
   displayPickup: boolean;
   displayExtendText: boolean;
+  defaultStartDateTime?: {label: string, value: string};
+  defaultEndDateTime?:  {label: string, value: string};
 };
 
 const useStyles = makeStyles(theme => ({
@@ -52,12 +54,14 @@ const TimeFilter = (props: Props) => {
   const [viewDayDropdown, setViewDayDropdown] = useState<boolean>(false);
   const [chosenDay, setChosenDay] = useState(0);
   const [ times, setTimes] = useState<{ label: string; value: string }[]>([]);
+  const {setStartDateTime, setEndDateTime, defaultStartDateTime, defaultEndDateTime} = props
+  const [defaultTime, setDefaultTimes] = useState<{label: string, value: string}>()
   
+
 
   const handlePickupTime = (v: any) => {
     props.setStartDateTime && props.setStartDateTime(dayjs(first(v)).toISOString());
   };
-
 
   const handleDropOffTime = (v: any) => {
     props.setEndDateTime && props.setEndDateTime(dayjs(first(v)).toISOString());
@@ -66,11 +70,13 @@ const TimeFilter = (props: Props) => {
 
   useEffect(() => {
     if (chosenDay === 0) {
-      setTimes(() => timeTilEndOfDay() as any);
+      setTimes(() => timeTilEndOfDay() as any)
     } else {
-      setTimes(() => timeTilEndOfNewDay(chosenDay) as any);
+      setTimes(() => timeTilEndOfNewDay(chosenDay) as any)
     }
   }, [chosenDay]);
+
+
 
   return (
     <View style={[styles.container, props.customStyles]}>
@@ -78,8 +84,12 @@ const TimeFilter = (props: Props) => {
         <Dropdown
           key={times?.length}
           dropdownOpen={setViewDayDropdown}
-          defaultValue={first(daysOfTheWeekFromToday())?.label}
-          items={daysOfTheWeekFromToday()}
+          defaultValue={defaultStartDateTime ? dayjs(defaultStartDateTime?.value)?.format("dddd") :first(daysOfTheWeekFromToday())?.label}
+          items={uniqBy([{
+            label: dayjs(defaultStartDateTime?.value)?.format("dddd"),
+            value: daysOfTheWeekFromToday().length
+            },...daysOfTheWeekFromToday(), ], ({label})=>label)
+          }
           onChange={v => {
             setChosenDay(v as any);
           }}
@@ -92,7 +102,7 @@ const TimeFilter = (props: Props) => {
               key={times?.length}
               items={times}
               onChange={handlePickupTime}
-              defaultValue={first(times)?.label}
+              defaultValue={defaultStartDateTime ? defaultStartDateTime.label : first(times)?.label}
               defaultAdditionalFilter={isAm(first(times)?.value) ? 'AM' : 'PM'}
               additionalFilter={['AM', 'PM']}
               filter={(chosenFilter, item)=>{
@@ -112,7 +122,7 @@ const TimeFilter = (props: Props) => {
             key={times?.length}
             items={times}
             onChange={handleDropOffTime}
-            defaultValue={first(times)?.label}
+            defaultValue={defaultEndDateTime ? defaultEndDateTime.label : first(times)?.label}
             defaultAdditionalFilter={isAm(first(times)?.value) ? 'AM' : 'PM'}
             additionalFilter={['AM', 'PM']}
           />

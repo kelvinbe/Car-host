@@ -20,12 +20,11 @@ export default function EditProfileModal ({isOpen, onClose, user}:IProps) {
     const {editUserProfile} = useUsers()
     const handleEditProfile = () => {
         editUserProfile({
-            ...user,
-            fname: fName,
-            lname: lName,
-            email: email,
-            phone: phone,
-            handle: handle
+            fname: fName !== user?.fname ? fName : undefined,
+            lname: lName !== user?.lname ? lName : undefined,
+            email: email !== user?.email ? email : undefined,
+            phone: phone !== user?.phone ? phone : undefined,
+            handle: handle !== user?.handle ? handle : undefined,
         })
         onClose()
     }

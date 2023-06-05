@@ -105,9 +105,8 @@ const Onboarding = (props: Props) => {
     goToApp()
   }
 
-  useEffect(() => {
-    goToApp()
-  },[])
+
+
 
 
   return (

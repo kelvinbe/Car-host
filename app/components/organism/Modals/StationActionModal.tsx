@@ -1,17 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import ModalTemplate from "./ModalTemplate";
-import { Flex, FormControl, FormLabel, Input, FormErrorMessage, Select, Textarea, useToast } from "@chakra-ui/react";
+import { Flex, FormControl, FormLabel, Input, FormErrorMessage, Select, Textarea, useToast, Modal, ModalBody, ModalHeader, ModalContent, ModalOverlay, Text, ModalCloseButton } from "@chakra-ui/react";
 import Rounded from "../../molecules/Buttons/General/Rounded";
-import { FlexColCenterBetween, FlexRowCenterCenter } from "../../../utils/theme/FlexConfigs";
+import { FlexColCenterBetween, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter, FlexRowCenterStart } from "../../../utils/theme/FlexConfigs";
 import { useReducer, useState, useEffect, ChangeEvent } from "react";
-import { isEmpty, isUndefined } from "lodash";
+import { isEmpty, isUndefined } from "lodash"
 import UploadImage from "../../molecules/UploadImage/UploadImage";
-import { useAddStationMutation, useUpdateStationMutation } from "../../../redux/stationSlice";
+import { useAddStationMutation, useGetStationsQuery, useUpdateStationMutation } from "../../../redux/stationSlice";
 import { createSlice } from "@reduxjs/toolkit";
 import { z } from "zod";
 import dynamic from "next/dynamic";
 import useLocation from "../../../hooks/useLocation";
 import { IStation } from "../../../globaltypes";
+import { selectUser } from "../../../redux/userSlice";
+import { useAppSelector } from "../../../redux/store";
 const ChooseLocation = dynamic(() => import("../Maps/ChooseLocation/ChooseLocation"), {
     ssr: false
 })
@@ -88,6 +90,7 @@ interface Props {
     station?: Partial<IStation> | null
 }
 export default function StationActionModal({ isOpen, onClose, station }: Props) {
+    const user = useAppSelector(selectUser)
     const [submissions, setSubmissions] = useState(0)
     const [{
         image,
@@ -119,6 +122,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
 
     const [postStation, { isLoading }] = useAddStationMutation({})
     const [updateStation, { isLoading: updateLoading }] = useUpdateStationMutation({})
+    const { refetch } = useGetStationsQuery(null)
 
     useEffect(() => {
         if (!isUndefined(station) && !isEmpty(station)) {
@@ -134,11 +138,8 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
 
 
     useEffect(() => {
-        /**
-         * @todo pass in market id from the user's data {still has to be implemented}
-         */
-        station && fetchSubmarkets(station?.sub_market?.market_id ?? "")
-    }, [])
+       fetchSubmarkets(user?.market_id ?? "")
+    }, [user?.market_id])
 
     const stationAction = () => {
         if (!isUndefined(station) && !isEmpty(station)) {
@@ -157,6 +158,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
                     status: "success",
                     isClosable: true,
                 })
+                refetch()
                 onClose()
             }).catch((e) => {
                 toast({
@@ -175,6 +177,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
                 image,
                 description
             }).unwrap().then(() => {
+                refetch()
                 toast({
                     title: "Success",
                     description: "Station created successfully",
@@ -195,70 +198,85 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
 
 
     return (
-        <ModalTemplate headerTitle={isUndefined(station) ? "Create Station" : "Update Station"} isOpen={isOpen} onClose={onClose}>
-            <FormControl data-cy="station-modal">
-                <FormErrorMessage fontSize={16} fontWeight={600} paddingLeft={6} marginBottom={5}>Ensure all fields are filled</FormErrorMessage>
-                <Flex {...FlexColCenterBetween}>
-                    <FormControl w="100%" isRequired isInvalid={!isNameValid} flexDirection={'column'} marginBottom={5}>
-                        <FormLabel htmlFor="station_name">Station name</FormLabel>
-                        <Input type='text' id='station_name' placeholder='North Royalton Station' value={name} onChange={updateName} />
-                        <FormErrorMessage>A station name is required</FormErrorMessage>
-                    </FormControl>
-                    <FormControl w={"100%"} isInvalid={!isDescriptionValid} flexDirection={'column'} marginBottom={5}>
-                        <FormLabel htmlFor="description">Station description</FormLabel>
-                        <Textarea id='description' placeholder='19307 Bennett Rd, North Royalton, Ohio(OH), 44133' value={description} onChange={updateDescription}
-                        />
-                        <FormErrorMessage>A station description is required</FormErrorMessage>
-                    </FormControl>
-                    <FormControl w="full" mt="10px" mb="20px" isRequired isInvalid={!isSubMarketValid}>
-                        <FormLabel htmlFor="vehicle">Choose a submarket</FormLabel>
-                        <FormErrorMessage fontSize={16} fontWeight={600} marginBottom={3}>Select a sub market</FormErrorMessage>
-                        <Select placeholder="Select a submarket" value={station ? sub_market_id : undefined} onChange={updateSubMarket} >
-                            {
-                                submarkets?.data?.map(({ id, name }, i) => (
-                                    <option value={id} key={i} >
-                                        {name}
-                                    </option>
-                                ))
-                            }
-                        </Select>
-                    </FormControl>
-                    <UploadImage onChange={updateImage} images={station ? [station?.image ?? ""] : undefined} />
-                    <Flex w="full" h="400px" >
-                        <ChooseLocation
-                            key={station?.id}
-                            onChange={updateCoordinates}
-                            pin={station ? {
-                                lat: station?.latitude ?? 0,
-                                lng: station?.longitude ?? 0
-                            } : undefined}
-                        />
-                    </Flex>
-                    <Flex w='100%' {...FlexRowCenterCenter} padding="10px">
-                        <Rounded variant='solid' rounded='full' setWidth="80%"
-                            disabled={
-                                !isNameValid ||
-                                !isSubMarketValid ||
-                                !isImageValid ||
-                                !isDescriptionValid ||
-                                !isLatitudeValid ||
-                                !isLongitudeValid ||
-                                isEmpty(name) ||
-                                isEmpty(sub_market_id) ||
-                                isEmpty(image) ||
-                                isUndefined(latitude) ||
-                                isUndefined(longitude)
-                            }
-                            onClick={stationAction}
-                            loading={isLoading || updateLoading}
+        <Modal size="6xl" isOpen={isOpen} onClose={onClose} > 
+            <ModalOverlay/> 
+            <ModalContent>
+                <ModalBody>
+                    <ModalHeader>
+                        <Text>
+                            Create a station
+                        </Text>
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl data-cy="station-modal">
+                            <FormErrorMessage fontSize={16} fontWeight={600} paddingLeft={6} marginBottom={5}>Ensure all fields are filled</FormErrorMessage>
+                            <Flex {...FlexRowCenterBetween} w="full" experimental_spaceX={"10px"} >
+                                <Flex {...FlexColCenterStart} w="50%" >
+                                    <FormControl w="100%" isRequired isInvalid={!isNameValid} flexDirection={'column'} marginBottom={5}>
+                                        <FormLabel htmlFor="station_name">Station name</FormLabel>
+                                        <Input type='text' id='station_name' placeholder='North Royalton Station' value={name} onChange={updateName} />
+                                        <FormErrorMessage>A station name is required</FormErrorMessage>
+                                    </FormControl>
+                                    <FormControl w={"100%"} isInvalid={!isDescriptionValid} flexDirection={'column'} marginBottom={5}>
+                                        <FormLabel htmlFor="description">Station description</FormLabel>
+                                        <Textarea id='description' placeholder='19307 Bennett Rd, North Royalton, Ohio(OH), 44133' value={description} onChange={updateDescription}
+                                        />
+                                        <FormErrorMessage>A station description is required</FormErrorMessage>
+                                    </FormControl>
+                                    <FormControl w="full" mt="10px" mb="20px" isRequired isInvalid={!isSubMarketValid}>
+                                        <FormLabel htmlFor="vehicle">Choose a submarket</FormLabel>
+                                        <FormErrorMessage fontSize={16} fontWeight={600} marginBottom={3}>Select a sub market</FormErrorMessage>
+                                        <Select placeholder="Select a submarket" value={station ? sub_market_id : undefined} onChange={updateSubMarket} >
+                                            {
+                                                submarkets?.data?.map(({ id, name }, i) => (
+                                                    <option value={id} key={i} >
+                                                        {name}
+                                                    </option>
+                                                ))
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                    <UploadImage onChange={updateImage} images={station ? [station?.image ?? ""] : undefined} />
+                                    <Flex w='100%' {...FlexRowCenterStart} padding="10px">
+                                        <Rounded variant='solid' rounded='full' setWidth="80%"
+                                            disabled={
+                                                !isNameValid ||
+                                                !isSubMarketValid ||
+                                                !isImageValid ||
+                                                !isDescriptionValid ||
+                                                !isLatitudeValid ||
+                                                !isLongitudeValid ||
+                                                isEmpty(name) ||
+                                                isEmpty(sub_market_id) ||
+                                                isEmpty(image) ||
+                                                isUndefined(latitude) ||
+                                                isUndefined(longitude)
+                                            }
+                                            onClick={stationAction}
+                                            loading={isLoading || updateLoading}
+                                        >{
+                                                isUndefined(station) ? "Create Station" : "Update Station"
+                                            }</Rounded>
+                                    </Flex>
+                                </Flex>
+                                <Flex {...FlexColCenterStart} w="50%" h="400px" >
+                                    <ChooseLocation
+                                        key={station?.id}
+                                        onChange={updateCoordinates}
+                                        pin={station ? {
+                                            lat: station?.latitude ?? 0,
+                                            lng: station?.longitude ?? 0
+                                        } : undefined}
+                                    />
+                                </Flex>
+                            </Flex>
+                            
+                        </FormControl>
+                    </ModalBody>
+                </ModalBody>
+            </ModalContent>
+        </Modal>
 
-                        >{
-                                isUndefined(station) ? "Create Station" : "Update Station"
-                            }</Rounded>
-                    </Flex>
-                </Flex>
-            </FormControl>
-
-        </ModalTemplate>
     )
 }    

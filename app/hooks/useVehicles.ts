@@ -65,12 +65,18 @@ export default function useVehicles(vehicle_id?:string) {
       });
   }
 
-  function addVehicle(vehicle: IVehicleDetails){
+  function addVehicle(vehicle: Partial<IVehicle>){
     setLoading(true)
     if(isEmpty(vehicle)) return setError({
         message: "Vehicle data is empty"
     })
-    apiClient.post(VEHICLES_DOMAIN, vehicle)
+    apiClient.post(VEHICLES_DOMAIN, {
+      vehicle: {
+        ...vehicle,
+        pictures: undefined
+      },
+      pictures: vehicle?.pictures
+    })
     .then((res)=>{
         fetchVehicles()
         setLoading(false)
@@ -97,9 +103,11 @@ export default function useVehicles(vehicle_id?:string) {
       LogRocket.error(error)
     })
   }
-  function deleteVehicle(id: number){
+  function deleteVehicle(id: string){
     setLoading(true)
-    apiClient.delete(`${VEHICLES_DOMAIN}`, {
+    apiClient.put(`${VEHICLES_DOMAIN}`,{
+      status: 'INACTIVE'
+    }, {
         params: {
           vehicle_id: id
         }
@@ -127,6 +135,8 @@ export default function useVehicles(vehicle_id?:string) {
         status: "error",
       })
       LogRocket.error(error)
+    }).finally(()=>{
+      setLoading(false)
     })
   }
 
@@ -163,6 +173,7 @@ export default function useVehicles(vehicle_id?:string) {
     addVehicle,
     deleteVehicle,
     updateVehicle,
-    fetchApiVehicles
+    fetchApiVehicles,
+    loading
   };
 }

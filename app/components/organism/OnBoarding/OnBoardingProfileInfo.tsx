@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Grid, GridItem, Input, Spinner, Text, useToast } from "@chakra-ui/react"
 import { useAppDispatch, useAppSelector } from "../../../redux/store"
-import { selectFName, selectHandle, selectLName, selectProfilePicUrl, setFName, setHandle, setLName, setProfilePic } from "../../../redux/onboardingSlice"
+import { selectFName, selectHandle, selectLName, selectOnBoardingLoading, selectProfilePicUrl, setFName, setHandle, setLName, setProfilePic } from "../../../redux/onboardingSlice"
 import { IUserProfile } from "../../../globaltypes"
 import { useEffect, useRef, useState } from "react"
 import { z } from "zod"
@@ -26,6 +26,8 @@ const OnBoardingProfileInfo = (props: StepProps) => {
     const handle = useAppSelector(selectHandle)
     const profile_pic_url = useAppSelector(selectProfilePicUrl)
     const uploading_pic = useRef(false)
+    const loading = useAppSelector(selectOnBoardingLoading)
+    const [handle_value, set_handle_value] = useState<string>(handle?.handle ?? "")
     const [errors, setErrors] = useState<{
         fname: boolean,
         lname: boolean,
@@ -44,14 +46,19 @@ const OnBoardingProfileInfo = (props: StepProps) => {
                 fname: !z.string().nonempty().safeParse(fname).success,
                 lname: !z.string().nonempty().safeParse(lname).success,
                 profile_pic_url: !z.string().nonempty().safeParse(profile_pic_url).success,
-                handle: !z.string().min(3).safeParse(handle.handle).success,
+                handle: !z.string().min(3).safeParse(handle_value).success,
             }
         })
-    }, [lname, fname, profile_pic_url, handle.handle])
+    }, [lname, fname, profile_pic_url, handle_value])
 
     const updateFName = (e: React.ChangeEvent<HTMLInputElement>) => dispatch(setFName(e.target.value))
     const updateLName = (e: React.ChangeEvent<HTMLInputElement>) => dispatch(setLName(e.target.value))
-    const updateHandle = (e: React.ChangeEvent<HTMLInputElement>) => dispatch(setHandle(e.target.value))
+    const updateHandle = (e: React.ChangeEvent<HTMLInputElement>) => set_handle_value(e.target.value )
+
+    useEffect(()=>{
+        dispatch(setHandle(handle_value))
+    }, [handle_value])
+
     const updateProfilePicUrl = (url: string) => dispatch(setProfilePic(url))
 
     const { getInputProps, getRootProps, acceptedFiles } = useDropzone()
@@ -77,7 +84,7 @@ const OnBoardingProfileInfo = (props: StepProps) => {
         onCompleted({
             fname,
             lname,
-            handle: handle.handle,
+            handle: handle_value,
             profile_pic_url,
         })
     }
@@ -198,7 +205,9 @@ const OnBoardingProfileInfo = (props: StepProps) => {
 
                     <GridItem colSpan={1} >
                         <Flex w="full" {...FlexRowCenterStart} alignItems="center" justifyContent={"flex-start"} >
-
+                            {
+                                handle?.handleCheckLoading && <Spinner colorScheme="red" />
+                            }
                             <FormControl
                                 isRequired
                                 isInvalid={
@@ -211,7 +220,7 @@ const OnBoardingProfileInfo = (props: StepProps) => {
                                 <Input
                                     placeholder='Choose a handle'
                                     onChange={updateHandle}
-                                    value={handle.handle}
+                                    value={handle_value}
                                 />
                                 <FormHelperText>
                                     Your handle will be used to identify you on the platform
@@ -230,6 +239,7 @@ const OnBoardingProfileInfo = (props: StepProps) => {
                         errors.fname || errors.lname || errors.profile_pic_url || handle.isHandleTaken
                     }
                     onClick={handleContinue}
+                    isLoading={loading}
                 >
                     Continue
                 </Button>

@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import React from 'react';
 import { makeStyles, ThemeConsumer, useTheme } from '@rneui/themed';
 import { ProfileScreenParamList } from '../../../types';
@@ -13,13 +13,17 @@ import useToast from '../../../hooks/useToast';
 import { useAppSelector } from '../../../store/store';
 import { selectUserProfile } from '../../../store/slices/userSlice';
 import useNotifications from '../../../hooks/useNotifications';
+import {Dimensions, Linking} from 'react-native';
+
+
+
 
 type Props = NativeStackScreenProps<ProfileScreenParamList, 'ProfileScreenHome'>;
 
 const useStyles = makeStyles((theme, props: Props) => ({
   container: {
-    width: '100%',
-    height: '100%',
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
     backgroundColor: theme.colors.white,
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -167,7 +171,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   logoutSection: {
     width: '100%',
     paddingHorizontal: 20,
-    height: '20%',
+    marginTop: 30,
     justifyContent: 'flex-end',
   },
   topNavSection: {
@@ -338,7 +342,8 @@ const ProfileScreenHome = (props: Props) => {
               <ListItem
                 Component={TouchableOpacity}
                 containerStyle={styles.listItemContainerStyle}
-                onPress={goToPrivacyPolicy}>
+                onPress={goToPrivacyPolicy} // TODO Privacy Policy Page Creation(Pass in Static Data)
+                >
                 <ListItem.Content style={styles.listItemContent}>
                   <ListItem.Title style={styles.listItemTitleStyle}>Privacy Policy</ListItem.Title>
                 </ListItem.Content>

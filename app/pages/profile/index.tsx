@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Icon, Input, Spinner, useToast } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Heading, Icon, Input, Spinner, useToast } from '@chakra-ui/react'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import {AiFillCamera} from 'react-icons/ai'
@@ -54,7 +54,11 @@ function Profile() {
         <Box>
             <Box position='relative'>
                 {user && 
-                    <Image src={user?.profile_pic_url} width={220} height={220} alt={"User's profile image"} style={{borderRadius:'50%', border:"1px solid #E63B2E"}}/>
+                    <Avatar
+                        src={user?.profile_pic_url}
+                        size="2xl"
+                        name={`${user?.fname ?? ""} ${user?.lname ?? ""}`}
+                    />
                 }
                 <Input type="file" id='profile_image' accept="image/*" display='none' onChange={editProfileImage}/>
                 <label htmlFor="profile_image">
@@ -62,7 +66,7 @@ function Profile() {
                         thickness="4px"
                         speed="0.65s"
                         color="#E63B2E"
-                    /> : <Icon bg={'transparent'} position='absolute' bottom={0} right={0} as={AiFillCamera} color={'#E63B2E'} width={10} height={10}/>}
+                    /> : <Icon bg={'transparent'} cursor={"pointer"} position='absolute' bottom={0} right={0} as={AiFillCamera} color={'#E63B2E'} width={10} height={10}/>}
                 </label>
             </Box>
         </Box>

@@ -29,9 +29,10 @@ const useStyles = makeStyles((theme, props: Props) => ({
 
 const UpcomingHomeScreen = (props: Props) => {
   const {data, loading, error, fetchUpcoming} = useFetchUpcoming()
-
   const [isLoading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
+
+  useEffect(()=>{console.log(fetchError)},[fetchError])
 
   const styles = useStyles(props);
   const reduxDispatch = useAppDispatch();
@@ -57,6 +58,7 @@ const UpcomingHomeScreen = (props: Props) => {
         props.navigation.navigate('VehicleInspection');
       })
       .catch(e => {
+        console.log(e)
         setLoading(false);
         setFetchError(true);
       });

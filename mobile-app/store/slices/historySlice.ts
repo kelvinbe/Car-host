@@ -15,9 +15,14 @@ const initialState: {
 export const historyApi = createApi({
     reducerPath: "historyApi",
     baseQuery: fetchBaseQuery({
-        headers: {
-            token: `Bearer ${auth.currentUser?.getIdToken()}`
-        }
+       prepareHeaders: async (headers) =>{
+              const token = await auth.currentUser?.getIdToken(true)
+              if(token){
+                headers.set("Authorization", `Bearer ${token}`)
+                headers.set('x-user', "CUSTOMER")
+              }
+              return headers;
+       }
     }),
     endpoints: (builder) => ({
         getHistory: builder.query<IReservation[], any>({

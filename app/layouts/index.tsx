@@ -52,33 +52,18 @@ function Layouts(props: IProps) {
     }, dispatchAction] = useReducer(layoutReducer, initialState)
     const { pageProps, children } = props
     const { dashboard } = pageProps
-    const { pathname } = useRouter()
     const check = (proceed: boolean) => {
         dispatchAction(setProceed(proceed))
     }
-    const [user, setUser] = useState<User|null>(null)
-    const profile_fetched_n_times = useRef(0)
 
-    const dispatch = useAppDispatch()
+    const { pathname, events } = useRouter()
 
-    onAuthStateChanged(getAuth(app), (user)=>{
-        setUser(user)
-        if(!isNull(user) && profile_fetched_n_times.current < 1){
-            dispatch(fetchUser()).then(()=>{
-                profile_fetched_n_times.current += 1
-            })
-        }
-    })
 
-    useEffect(()=>{
-        if (isEmpty(user)){
-            check(false)
-        }
-    }, [pathname])
 
-    useEffect(() => {
-        dispatch(fetchUser())
-     }, [user?.uid])
+
+
+
+
 
   return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full ">

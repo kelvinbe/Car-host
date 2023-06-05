@@ -19,7 +19,7 @@ export const updateOnboardingDetails = createAsyncThunk(
   "onboarding/updateOnboardingDetails",
   async (args: UserData, { rejectWithValue, dispatch, getState }) => {
     try {
-      const updatedUser = (await apiClient.patch(USERS_DOMAIN, args)).data;
+      const updatedUser = (await apiClient.put(USERS_DOMAIN, args)).data;
 
       const onBoardingData = (await apiClient.get(`${USERS_DOMAIN}/onboarding`))
         .data;
@@ -28,8 +28,8 @@ export const updateOnboardingDetails = createAsyncThunk(
         ...onBoardingData,
       };
     } catch (e) {
-      return rejectWithValue(e);
       LogRocket.error(e)
+      return rejectWithValue(e);
     }
   }
 );
@@ -38,30 +38,39 @@ export const fetchOnboardingDetails = createAsyncThunk("onboarding/fetch", async
     try {
         const onBoardingData = (await apiClient.get(`${USERS_DOMAIN}/onboarding`))
         .data;
+        localStorage.setItem("onboarding", JSON.stringify(onBoardingData?.completed ?? {
+            location: false,
+            payout_method: false,
+            profile: false
+        }))
         const userData = (await apiClient.get(USERS_DOMAIN)).data;
         return {
             ...userData,
             ...onBoardingData
         }
     } catch (e) {
-        return rejectWithValue(e);
-        LogRocket.error(e)
+      LogRocket.error(e)
+      return rejectWithValue(e);
     }
 })
 
 export const setHandle = createAsyncThunk(
   "onboarding/setHandle",
-  async (handle: string, { rejectWithValue, dispatch }) => {
+  async (handle: string, { rejectWithValue, dispatch, getState }) => {
+    const state = getState() as RootState 
+    if (state?.users?.user?.handle === handle) return {
+      isHandleTaken: false
+    }
     try{
       const isHandleTaken = (await apiClient.get(`${USERS_DOMAIN}`, {
         params: {
           handle,
         }
       })).data
-      return isHandleTaken
+      return isHandleTaken 
     }catch(e){
-      rejectWithValue(e)
       LogRocket.error(e)
+      return rejectWithValue(e)
     }
   }
 );
@@ -134,7 +143,7 @@ const onBoardingSlice = createSlice({
     }),
     builder.addCase(setHandle.fulfilled, (state, action) => {
       state.handleCheckLoading = false;
-      state.isHandleTaken = action.payload;
+      state.isHandleTaken = action.payload?.isHandleTaken;
     }),
     builder.addCase(fetchOnboardingDetails.pending, (state, action) => {
       state.onBoardingLoading = true;

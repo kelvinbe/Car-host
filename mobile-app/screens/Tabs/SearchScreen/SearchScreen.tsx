@@ -132,8 +132,7 @@ const SearchScreenHome = (
       duration: 3000,
     })
     
-    await dispatch(searchLocally()).unwrap()
-
+    await dispatch(searchLocally())
     dispatch(setHostCode(value))
     props.navigation.navigate('MapScreen', {
       searchType: 'host',
@@ -143,8 +142,7 @@ const SearchScreenHome = (
 
   const search_locally = async () => {
     try {
-      await dispatch(searchLocally()).unwrap()
-      console.log("___search___locally") // For some reason the code below is unreachable unless I add a log.
+      await dispatch(searchLocally())
       props.navigation.push('MapScreen', {
         searchType: 'local',
       });

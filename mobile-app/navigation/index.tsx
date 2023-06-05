@@ -57,6 +57,7 @@ import { isNull } from 'lodash';
 import { fetchUserData } from '../store/slices/userSlice';
 import { useAppDispatch } from '../store/store';
 import linking from './LinkingConfiguration';
+import { fetchOnboarding } from '../store/slices/onBoardingSlice';
 
 const ScreensWithNoBottomNav = [
   'BookingConfirmationScreen',
@@ -120,6 +121,9 @@ export function UserOnboardingNavigation(props: onBoardingScreenProps) {
    * @description, to prevent a new reference of these functions being created on every render, we use React.useCallback
    *                it also ensures the components that receive these functions as props don't re-render unnecessarily
    */
+
+  const dispatch = useAppDispatch();
+
   const goToApp = React.useCallback(() =>{
     props.navigation.navigate("Root")
   }, [])
@@ -131,6 +135,8 @@ export function UserOnboardingNavigation(props: onBoardingScreenProps) {
   onAuthStateChanged(auth, (user)=>{
     if(isNull(user)){
       goToLogin()
+    }else {
+      dispatch(fetchUserData(null))
     }
   })
   return (
@@ -258,8 +264,10 @@ function BottomTabNavigator(props: Props) {
     if (isNull(user)) {
       props.navigation.navigate('Login')
     }else {
+      dispatch(fetchOnboarding())
       dispatch(fetchUserData(null))
     }
+
   }, [user]);
 
   return (

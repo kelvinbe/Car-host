@@ -13,6 +13,7 @@ import { isEmpty, isNull } from 'lodash';
 import BookingCarComponent from './BookingCarComponent';
 import { IReservation, SearchScreenParamList } from '../../../../types';
 import { useConfirmPaymentQuery } from '../../../../store/slices/billingSlice';
+import * as Linking from 'expo-linking'
 
 interface IProps {
   openAuthorization?: () => void;
@@ -54,7 +55,8 @@ const BookingScreen = (props: Props) => {
       start_date_time,
       vehicle,
       code,
-      paymentType
+      paymentType,
+      status
     },
     clearBookingState,
     payForReservation,
@@ -119,6 +121,10 @@ const BookingScreen = (props: Props) => {
     }
   }, [confirmationData]);
 
+  const onBack = () => {
+    Linking.openURL(Linking.createURL('/manage-reservations'))
+  }
+
   const makeBooking = () => {
     return payForReservation()
   };
@@ -133,19 +139,32 @@ const BookingScreen = (props: Props) => {
         openAuthorizationCode={props?.openAuthorization}
         openSelectPaymentMethod={props?.openSelectPaymentMethod}
       />
-      {props?.isReservation ? (
-        <View
-          style={[
-            styles.bottomSection,
-            { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
-          ]}>
-          <RoundedOutline onPress={props?.openCancelReservation} width="45%">
-            Cancel
-          </RoundedOutline>
-          <Rounded onPress={props?.openModifyReservation} width="45%">
-            Modify
+      {props?.isReservation ?  (
+        status === "COMPLETE" ? (<View style={[
+          styles.bottomSection,
+          { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
+        ]} >
+          <Rounded  onPress={onBack} >
+            Back
           </Rounded>
-        </View>
+        </View>) : (
+          <View
+            style={[
+              styles.bottomSection,
+              { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
+            ]}>
+            <RoundedOutline onPress={props?.openCancelReservation} width="45%">
+              {
+                status === "ACTIVE" ? "End" : "Cancel"
+              }
+            </RoundedOutline>
+            <Rounded
+             onPress={props?.openModifyReservation} 
+             width="45%">
+              Modify
+            </Rounded>
+          </View>
+        )
       ) : (
         <View style={styles.bottomSection}>
           <Rounded

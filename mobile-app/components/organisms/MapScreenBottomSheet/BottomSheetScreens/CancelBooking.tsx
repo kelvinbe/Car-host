@@ -7,6 +7,7 @@ import RoundedOutline from '../../../atoms/Buttons/Rounded/RoundedOutline'
 import useToast from '../../../../hooks/useToast';
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice'
+import useBookingActions from '../../../../hooks/useBookingActions'
 
 interface IProps {
     closeBottomSheet?: () => void;
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
 
 const CancelBookingBottomSheet = (props: Props) => {
     const toast = useToast();
-    
+    const { bookingDetails: { status } } = useBookingActions()
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = ["30%"]
     const styles = useStyles(props)
@@ -76,10 +77,10 @@ const CancelBookingBottomSheet = (props: Props) => {
 
     const handleCancel = () =>{
         dispatch(modifyCurrentReservation({
-            status: "CANCELLED"
+            status: status === "UPCOMING" ? "CANCELLED" : "COMPLETE"
         })).then(()=>{
             toast({
-                message: "Booking Cancelled",
+                message: status === "UPCOMING" ? "Booking cancelled" : "Booking completed",
                 type: "success"
             })
             close()
@@ -114,15 +115,21 @@ const CancelBookingBottomSheet = (props: Props) => {
                     </Text>
                     <View style={styles.descriptionContainer} >
                             <Text style={styles.textStyle} >
-                                Your Booking will be cancelled
+                                {
+                                    status === "UPCOMING" ? "You are about to cancel your booking" : "You are about to complete your booking"
+                                }
                             </Text>
                     </View>
                     <View style={styles.bottomButtonsContainer} >
                         <RoundedOutline loading={feedback.loading} onPress={handleCancel} width="45%" >
-                            Yes
+                            {
+                                status === "UPCOMING" ? "Cancel" : "Complete"
+                            }
                         </RoundedOutline>
                         <Rounded onPress={handleClose} width="45%" >
-                            No
+                            {
+                                status === "UPCOMING" ? "Keep" : "Back"
+                            }
                         </Rounded>
                     </View>
                 </View>

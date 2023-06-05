@@ -22,6 +22,7 @@ import noData from '../../public/images/no_available_data.png'
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+import { GetServerSideProps } from "next";
 
 export default function Dashboard() {
   const [viewButton, setViewButton] = useState<string | number>("");
@@ -174,7 +175,11 @@ export default function Dashboard() {
   );
 }
 
-export function getStaticProps() {
+export const getServerSideProps: GetServerSideProps<{
+  adminonly: boolean,
+  dashboard: boolean,
+  authonly: boolean
+}> = async () => {
   return {
     props: {
       adminonly: false,

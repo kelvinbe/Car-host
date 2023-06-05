@@ -52,7 +52,7 @@ export interface IVehicle {
   year: number | string;
   plate?: string;
   // Not sure about these, need further clarification
-  status?: "active" | "inactive" | "blocked";
+  status?: string;
   hourly_rate: number;
   pictures: string[];
   location: string;
@@ -251,6 +251,11 @@ export interface IUserProfile {
   user_settings: Partial<IUserSettings>;
   is_admin: boolean | null;
   sent_invites: dIInvitation[] | null;
+  sub_market?: {
+    id: string;
+    name: string;
+    market_id: string;
+  }
   /**
    * this will be a filled that will get recalculated everytime the user's profile is fetched
    * @todo Add support for this in the backend
@@ -274,6 +279,8 @@ export interface IAuthCode {
   user_id: string;
   user: Partial<IUserProfile>;
   vehicle_id: string;
+  vehicle: Partial<IVehicle>;
+  created_at: string 
 }
 export interface IRequestedAuthCode {
   user_id: number;
@@ -390,7 +397,7 @@ export interface IWithdrawals {
   amount: number;
   payout:IPayout;          
   payout_id: string;          
-  status: string;
+  status: "PENDING" | "APPROVED" | "COMPLETED" | "FAILED" | "CANCELLED";
   createdAt: Date | string;       
   payout_method: PayoutMethods;      
   payout_method_id: string;            

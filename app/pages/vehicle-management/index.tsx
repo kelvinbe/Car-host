@@ -21,31 +21,18 @@ import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
 
 function VehicleManagement() {
-  const [vehiclesData, setVehicleData] = useState<Partial<IVehicle>[]>([])
   const [vehicleId, setVehicleId] = useState<string>()
   const [isCreateModalOpen ,setIsCreateModalOpen] = useState<boolean>(false)
   const [isViewModalOpen ,setIsViewModalOpen] = useState<boolean>(false)
   const [isEditModalOpen ,setIsEditModalOpen] = useState<boolean>(false)
   const {isOpen, onClose, onOpen} = useDisclosure()
-  const {fetchVehicles,deleteVehicle} = useVehicles()
+  const {fetchVehicles,deleteVehicle, loading} = useVehicles()
   const vehicles = useAppSelector(selectVehicles)
 
   useEffect(() => {
     fetchVehicles()
   },[])
-  useEffect(() => {
-    setVehicleData(() => vehicles.map(vehicle => ({
-      ...vehicle,
-      vehicle_id: vehicle.id,
-      make:vehicle.make,
-      model:vehicle.model,
-      year:vehicle.year,
-      transmission:vehicle.transmission,
-      hourly_rate:vehicle.hourly_rate,
-      status:vehicle.status,
-      plate:vehicle.plate
-    })))
-  },[vehicles])
+
 
   const viewVehicle = (id: string) => {
     setVehicleId(id)
@@ -82,9 +69,9 @@ function VehicleManagement() {
       w="full"
       data-testid="vehicle-management-table"
     >
-        {isViewModalOpen && <ViewVehicleModal isOpen={isOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles={vehicles} />}
-        {isCreateModalOpen && <CreateVehicleModal isOpen ={isOpen} onClose={closeCreateModal}/>}
-        {isEditModalOpen && <EditVehicleModal isOpen={isOpen} onClose={closeEditModal} vehicle_id={vehicleId} vehicles={vehicles} />}
+        {isViewModalOpen && <ViewVehicleModal isOpen={isViewModalOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles={vehicles} />}
+        {isCreateModalOpen && <CreateVehicleModal isOpen ={isCreateModalOpen} onClose={closeCreateModal}/>}
+        {isEditModalOpen && <EditVehicleModal isOpen={isEditModalOpen} onClose={closeEditModal} vehicle_id={vehicleId} vehicles={vehicles} />}
         <FilterableTable
           viewAddFieldButton={true}
           viewSearchField={true}
@@ -104,7 +91,7 @@ function VehicleManagement() {
                   aria-label="View"
                   icon={<ViewIcon />}
                   size="sm"
-                  onClick={() => viewVehicle(data.vehicle_id)}
+                  onClick={() => viewVehicle(data.id)}
                   marginRight='4'
                   data-cy={'view-button'}
                 />
@@ -113,17 +100,18 @@ function VehicleManagement() {
                   icon={<EditIcon />}
                   size="sm"
                   onClick={() => {
-                    openEditModal(data.vehicle_id)
+                    openEditModal(data.id)
                   }}
                   marginRight='4'
                   data-cy={'edit-button'}
                 />
                 <IconButton
+                  isLoading={loading}
                   aria-label="Delete"
                   icon={<DeleteIcon />}
                   size="sm"
                   onClick={() => {
-                    deleteVehicle(data.vehicle_id)
+                    deleteVehicle(data.id)
                   }}
                   color="cancelled.1000"
                   data-cy={'delete-button'}
@@ -134,7 +122,7 @@ function VehicleManagement() {
           pagination={{
             position: ["bottomCenter"],
           }}
-          data={vehiclesData}
+          data={vehicles ?? []}
         />     
     </Flex>
   </ErrorBoundary>

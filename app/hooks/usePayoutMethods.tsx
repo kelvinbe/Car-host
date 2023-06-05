@@ -14,7 +14,7 @@ export default function usePayoutMethods(){
 
     async function deactivatePayout(id: string, updatedBody: object) {
       try {
-        const response = await apiClient.patch(PAYOUTMETHODS_API, 
+        const response = await apiClient.put(PAYOUTMETHODS_API, 
           {
             params:{
               id

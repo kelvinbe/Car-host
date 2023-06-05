@@ -6,7 +6,6 @@ import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelp
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
 import Divider from '../../components/atoms/Divider/Divider'
 import IconButton from '../../components/atoms/Buttons/Icon/IconButton'
-import { withTheme } from 'emotion-theming'
 import { Button, Icon, Image, Theme } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'

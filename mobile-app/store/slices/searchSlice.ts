@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as Location from 'expo-location'
 import { RootState } from ".";
+import { clearBookingState } from "./bookingSlice";
 
-export const searchLocally = createAsyncThunk('search/searchLocally', async (data,{rejectWithValue})=>{
+export const searchLocally = createAsyncThunk('search/searchLocally', async (data,{rejectWithValue, dispatch})=>{
+    dispatch(clearBookingState())
     try {
         const { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== 'granted') {
@@ -22,20 +24,24 @@ export const searchLocally = createAsyncThunk('search/searchLocally', async (dat
 interface ReducerState {
     coords: Location.LocationObjectCoords | null
     loadingCoords: boolean
-    errorCoords: string | null
+    errorCoords: string | null,
+    vehicle_positions: Array<Partial<Location.LocationObjectCoords>>
 }
 
 const initialState: ReducerState = {
     coords: null,
     loadingCoords: false,
-    errorCoords: null
+    errorCoords: null,
+    vehicle_positions: []
 }
 
 const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
-
+        setVehiclePositions: (state, action) => {
+            state.vehicle_positions = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(searchLocally.pending, (state, action) => {
@@ -56,11 +62,19 @@ const searchSlice = createSlice({
 
 export default searchSlice.reducer;
 
+export const { setVehiclePositions } = searchSlice.actions
+
 
 export const selectCoords = (state: RootState) => {
     return {
         data: state.search.coords,
         loading: state.search.loadingCoords,
         error: state.search.errorCoords
+    }
+}
+
+export const selectVehiclePositions = (state: RootState) => {
+    return {
+        data: state.search.vehicle_positions ?? []
     }
 }

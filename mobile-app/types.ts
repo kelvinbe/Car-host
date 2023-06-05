@@ -287,6 +287,7 @@ export interface IVehicle {
   station: IStation;
   location: any; // will be phased out
   VehiclePictures?: string[];
+  pictures?: string[]
 }
 
 

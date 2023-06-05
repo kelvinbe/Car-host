@@ -31,7 +31,7 @@ function DashboardTopBar() {
     <Flex {...FlexRowCenterBetween} zIndex="sticky" flex="1" >
         <Text fontSize="24px" fontWeight="500" >
             {
-                genGreetingBasedOnTime(`${user?.fname}` ?? "user")
+                genGreetingBasedOnTime(user?.fname)
             }
         </Text>
         <Flex {...FlexRowCenterCenter} position="relative"  >

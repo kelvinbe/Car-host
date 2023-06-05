@@ -9,7 +9,6 @@ import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelp
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
 import Divider from '../../components/atoms/Divider/Divider'
 import IconButton from '../../components/atoms/Buttons/Icon/IconButton'
-import { withTheme } from 'emotion-theming'
 import { Icon, Image, Theme } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -29,6 +28,7 @@ import { useAppDispatch } from '../../store/store';
 import { fetchUserData } from '../../store/slices/userSlice';
 import Logo from '../../components/atoms/Brand/Logo';
 import useOnBoarding from '../../hooks/useOnBoarding';
+import { fetchOnboarding } from '../../store/slices/onBoardingSlice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'> ;
 
@@ -113,6 +113,7 @@ const LoginScreen = (props: Props) => {
     const {  googleLogin, socialAuthLoading, socialAuthError, facebookLogin } = useSocialAuth()
     const { signIn: _signIn, signInLoading } = useUserAuth()
     const { completed, loading: onBoardingLoading } = useOnBoarding()
+    const dispatch = useAppDispatch()
 
     const toast = useToast()
 
@@ -141,22 +142,28 @@ const LoginScreen = (props: Props) => {
     }
 
     useEffect(()=>{
-        if (isEmpty(user) || socialAuthLoading || loading || onBoardingLoading ) return;
-        if (socialAuthError || signInError) {
+        if ( loading ) return () => {};
+        
+        if (user){
+            (async ()=>{
+                dispatch(fetchOnboarding()).unwrap().then((completed)=>{
+                    if (completed?.drivers_license && completed?.location && completed?.payment_method) {
+                        navigateToHome()
+                    } else {
+                        navigateToOnBoarding()
+                    }
+                    
+                })
+            })()
+        }else if (signInError) {
             toast({
                 message: "An error occured while signing you in",
                 type: "error",
                 title: "Error",
                 duration: 5000
             })
-        } else {
-            if (completed?.drivers_license && completed?.location && completed?.payment_method) {
-                navigateToHome()
-            } else {
-                navigateToOnBoarding()
-            }
         }
-    }, [user, socialAuthError, socialAuthLoading, loading, signInError, onBoardingLoading])
+    }, [,user])
 
     
    

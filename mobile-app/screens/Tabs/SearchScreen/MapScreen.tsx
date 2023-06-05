@@ -11,13 +11,15 @@ import { SearchScreenParamList } from '../../../types';
 import MapScreenBottomSheet from '../../../components/organisms/MapScreenBottomSheet/MapScreenBottomSheet';
 import { PROVIDER_GOOGLE } from 'react-native-maps';
 import useBookingActions from '../../../hooks/useBookingActions';
-import { first, isUndefined } from 'lodash';
+import { first, isEmpty, isUndefined } from 'lodash';
 import { timeTilEndOfDay } from '../../../utils/utils';
 import dayjs from 'dayjs';
 import { useNavigation } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { setLocation } from '../../../store/slices/bookingSlice';
-import { selectCoords } from '../../../store/slices/searchSlice';
+import { selectChosenHostCode, setLocation } from '../../../store/slices/bookingSlice';
+import { selectCoords, selectVehiclePositions } from '../../../store/slices/searchSlice';
+import { useGetVehiclesQuery } from '../../../store/slices/vehiclesSlice';
+import VehicleMarker from '../../../components/atoms/GeoMarkers/vehicle-marker';
 
 interface IProps {
   inReservation?: boolean;
@@ -115,6 +117,11 @@ const MapScreen = (props: Props) => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch()
   const {data: coords, loading} = useAppSelector(selectCoords)
+  const chosenHostCode = useAppSelector(selectChosenHostCode)
+  const { bookingDetails: {start_date_time, end_date_time} } = useBookingActions()
+
+  const vehicle_positions = useAppSelector(selectVehiclePositions)
+  
   
  
   const onOpen = () => {
@@ -190,7 +197,19 @@ const MapScreen = (props: Props) => {
                       description="This is your current location"
                     />
                   )}
-                </MapView>
+
+                  {
+                    vehicle_positions?.data?.map((coord, i)=>{
+                      return (
+                        <VehicleMarker
+                          key={i}
+                          latitude={coord?.latitude ?? 0}
+                          longitude={coord?.longitude ?? 0}
+                        />
+                      )
+                    })
+                  }
+              </MapView>
               
             </View>
             {(props?.inReservation ? false : !open) && (

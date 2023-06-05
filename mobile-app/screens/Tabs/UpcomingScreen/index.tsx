@@ -15,6 +15,7 @@ type Props = BottomTabScreenProps<BottomTabParamList, 'Upcoming'>;
 const UpcomingReservationsStack = createNativeStackNavigator<UpcomingParamList>();
 
 const UpcomingScreen = () => {
+  
   return (
       <UpcomingReservationsStack.Navigator initialRouteName="UpcomingReservationsHome">
         <UpcomingReservationsStack.Screen

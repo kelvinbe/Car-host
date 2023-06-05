@@ -71,7 +71,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       },
       package: 'com.niebex.divvly',
       googleServicesFile: './google-services.json',
-      versionCode: 17,
+      versionCode: 19,
     },
     web: {
       favicon: './assets/images/favicon.png',

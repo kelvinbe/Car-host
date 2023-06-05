@@ -108,7 +108,9 @@ let users = generateMock(user_schema(markets.map(m => m.id) as [string], submark
 users = users.map((user)=>{
     return {
         ...user,
-        is_admin: user.user_type === 'HOST' ? true : false // for testing all hosts, can be admins, changes can be made on this line to change the admin status
+        is_admin: user.user_type === 'HOST' ? true : false, // for testing all hosts, can be admins, changes can be made on this line to change the admin status
+        market: markets.find(m => m.id === user.market_id),
+        sub_market: submarkets.find(s => s.id === user.sub_market_id),
     }
 })
 
@@ -317,7 +319,7 @@ const withdrawals_schema = (host_ids: [string], payout_method_ids: [string], pay
     user_id: z.enum(host_ids),
     amount: z.number().min(1).max(1000),
     createdAt: z.date().min(new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7)),
-    status: z.enum(['COMPLETED', 'PENDING', 'APPROVED', 'SUCCESS', 'HOLD', 'FAILED', 'CANCELLED']),
+    status: z.enum(['COMPLETED', 'PENDING', 'APPROVED', 'FAILED', 'CANCELLED']),
     payout_id: z.enum(payout_ids),
     payout_method_id: z.enum(payout_method_ids),
 })

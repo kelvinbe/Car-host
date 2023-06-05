@@ -10,7 +10,8 @@ import {
   IIntegrations,
   IStation,
   IRequestedAuthCode,
-  PayoutMethods
+  PayoutMethods,
+  IWithdrawals
 } from "../../globaltypes";
 import dayjs from "dayjs";
 import { FlexColCenterCenter, FlexColStartStart, FlexRowStartStart } from "../theme/FlexConfigs";
@@ -232,18 +233,19 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     ),
   },
 ];
-export const WithdrawalsTableColumns: ColumnsType<IPayout> = [
+export const WithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
   {
     title: "Withdrawal Date",
     dataIndex: "createdAt",
     key: "createdAt",
-    render: (v, { date: payout_date }) => (
+    render: (v, { createdAt: createdAt }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {dayjs(payout_date).format('DD MMM, YYYY')}
+          {dayjs(createdAt).format('DD MMM, YYYY')}
         </Text>
       </Flex>
     ),
+    sorter: (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
   },
   {
     title: "Amount",
@@ -257,7 +259,6 @@ export const WithdrawalsTableColumns: ColumnsType<IPayout> = [
       </Flex>
     ),
     sortDirections: ["descend", "ascend"],
-    sorter: (a, b) => a.amount - b.amount,
   },
   {
     title: "Status",
@@ -270,6 +271,64 @@ export const WithdrawalsTableColumns: ColumnsType<IPayout> = [
     ),
   },
 ];
+
+export const AdminWithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
+  {
+    title: "Host",
+    dataIndex: "user",
+    key: "user_id",
+    render: (v, { user: user})=> (
+      <Flex gap={'3'} direction={'row'}>
+        <Avatar
+          src={user?.profile_pic_url}
+          size="sm"
+        />
+        <Flex align={'center'}>
+          <Text fontSize="14px" fontWeight="500">
+            {`${user.fname} ${user.lname}`}
+          </Text>
+        </Flex>       
+      </Flex>
+    ),
+  },
+  {
+    title: "Withdrawal Date",
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (v, { createdAt: createdAt }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {dayjs(createdAt).format('DD MMM, YYYY')}
+        </Text>
+      </Flex>
+    ),
+    sorter: (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
+  },
+  {
+    title: "Amount",
+    dataIndex: "amount",
+    key: "amount",
+    render: (v, { amount }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          ${amount}
+        </Text>
+      </Flex>
+    ),
+    sortDirections: ["descend", "ascend"],
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart}>
+        <StatusTag status={status as any}>{status}</StatusTag>
+      </Flex>
+    ),
+  },
+];
+
 export const AuthCodeTableColumns: ColumnsType<IAuthCode> = [
   {
     title: "Customer Image",

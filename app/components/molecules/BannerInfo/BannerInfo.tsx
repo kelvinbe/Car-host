@@ -81,7 +81,7 @@ const BannerInfo = (props: iProps) => {
             </Text>
             {showText && !noStyleText ? (
               <>
-                <Text fontSize="96px">AIRBNB CAR</Text>
+                <Text fontSize="96px">HOST CAR</Text>
                 <Text fontSize="96px">
                   <span style={{ color: "#FC346A" }}>SHARING</span> APP
                 </Text>
@@ -89,14 +89,14 @@ const BannerInfo = (props: iProps) => {
             ) : (
               !noStyleText && (
                 <Text letterSpacing="0.1955em" fontSize="96px">
-                  AIRBNB CAR <span style={{ color: "#FC346A" }}>SHARING</span>{" "}
+                  HOST CAR <span style={{ color: "#FC346A" }}>SHARING</span>{" "}
                   APP
                 </Text>
               )
             )}
             {noStyleText && (
               <Text letterSpacing="0.1955em" textColor="white" fontSize="96px">
-                AIRBNB CAR SHARING APP
+                HOST CAR SHARING APP
               </Text>
             )}
             <Text textColor={textColor} w={textWidth} textAlign={textAlign}>

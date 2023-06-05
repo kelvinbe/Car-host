@@ -42,14 +42,14 @@ export function generateResponseDataTransferObject<T>(type: "error" | "success",
  * @returns {string} greetings
  */
 
-export const genGreetingBasedOnTime = (name: string): string => {
+export const genGreetingBasedOnTime = (name?: string): string => {
     const hour = new Date().getHours();
     if (hour < 12) {
-        return `Good Morning, ${name}`;
+        return `Good Morning, ${name ?? ""}`;
     } else if (hour < 18) {
-        return `Good Afternoon, ${name}`;
+        return `Good Afternoon, ${name ?? ""}`;
     } else {
-        return `Good Evening, ${name}`;
+        return `Good Evening, ${name ?? ""}`;
     }
 }
 
@@ -189,7 +189,7 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
     return a === b;
  }
 
- export const logError = (error: Error, info: { componentStack: string })=>{
+ export const logError = (error: Error | null, info: { componentStack: string } | null)=>{
     LogRocket.error(error)
     LogRocket.info(info)
  }

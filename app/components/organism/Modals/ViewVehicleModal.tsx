@@ -36,7 +36,7 @@ export default function ViewVehicleModal(props:Props) {
   
 
   return (
-      <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
+      <Modal  isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
         <ModalOverlay />
         <ModalContent data-cy={'view-vehicle-modal'}>
           {

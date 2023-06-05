@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IVehicle } from "../../types";
 import { vehiclesApi } from './vehiclesSlice';
 import { reservationsApi } from './reservationSlice';
-import { isNull } from 'lodash';
+import { first, isNull } from 'lodash';
 import apiClient from '../../utils/apiClient';
 import { RESERVATIONS_ENDPOINT } from '../../hooks/constants';
 import { calcDuration } from '../../utils/utils';
@@ -23,7 +23,7 @@ export const loadBookingDetailsFromReservation = createAsyncThunk<any, any>(
             params: {
                 reservation_id: id
             }
-        }).then(({data})=>data).catch(rejectWithValue)
+        }).then(({data})=>first(data)).catch(rejectWithValue)
     }
 )
 
@@ -223,7 +223,7 @@ const bookingSlice = createSlice({
     },
     extraReducers(builder) {
         builder.addCase(loadBookingDetailsFromReservation.fulfilled, (state, action)=>{
-            const data = action.payload as IReservation
+            const data = action.payload as IReservation 
             // state.billingInfo = action.payload?.paymentMethod as any
             state.paymentDetails = data?.payment
             state.paymentType = data?.payment?.payment_type_fk ?? null
@@ -236,6 +236,8 @@ const bookingSlice = createSlice({
             state.reservation_id = data?.id
             state.status = data?.status ?? "UPCOMING"
             state.inspection = data?.inspection
+            state.loadReservationDetailsLoading = false
+            state.loadReservationDetailsError = null
         })
         builder.addCase(loadBookingDetailsFromReservation.pending, (state, action)=>{
             state.loadReservationDetailsLoading = true

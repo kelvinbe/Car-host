@@ -3,7 +3,7 @@ import React from "react";
 import { FlexRowCenterCenter } from "../../../utils/theme/FlexConfigs";
 
 interface IProps {
-  status: "active" | "cancelled" | "reserved" | "paid" | "pending" | "inactive" | "hold" | "denied" | "upcoming" | "success" | "complete" | "expired" | "revoked" | "nonactive" | "other" | "banned" | "suspended";
+  status: "active" | "cancelled" | "reserved" | "paid" | "pending" | "inactive" | "hold" | "denied" | "upcoming" | "success" | "complete" | "expired" | "revoked" | "nonactive" | "other" | "banned" | "suspended" | "unknown";
   children: React.ReactNode | string;
 }
 

@@ -67,11 +67,17 @@ const useStyles = makeStyles((theme, props)=>{
     }
 })
 
+    //@TODO: add correct copy to this screen in next sprint
+
+
+
 const SupportScreen = (props: Props) => {
     const styles = useStyles()
     const { theme } = useTheme() 
     const [toggleAnswer, setToggleAnswer] = useState<boolean>(false)
     const {data, fetchDivvlyInfo} = useFetchDivvlyInfo(FETCH_SUPPORT_ENDPOINT)
+
+
 
     useEffect(() => {
         fetchDivvlyInfo()

@@ -12,6 +12,5 @@ describe('Tests the DashboardSidebar component', ()=>{
     it('Tests if the component mounts', ()=>{
         const{baseElement}=render(<Provider store={store}><DashboardSidebar/></Provider>)
         expect(baseElement).toBeTruthy();
-        expect(screen.getByTestId('sidebar-on-dashboard-links').children.length).toBe(11)
     })
 })

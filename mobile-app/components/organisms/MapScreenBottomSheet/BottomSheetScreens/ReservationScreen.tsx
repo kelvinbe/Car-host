@@ -13,7 +13,7 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { UpcomingParamList } from '../../../../types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-
+import * as Linking from 'expo-linking'
 
 interface IProps {
   openAuthorization?: () => void;
@@ -80,6 +80,7 @@ const ReservationScreen = (props: Props) => {
   const bottom_sheet_ref = React.useRef<BottomSheet>(null)
   const snap_points = React.useMemo(() => ['30%'], [])
   const navProps = useNavigation<NavigationProp<UpcomingParamList>>()
+  const toast = useToast()
 
 
   const { requestLocationPermissions, trackingState, stopUpdates } = useBackgroundLocationTask()
@@ -94,22 +95,50 @@ const ReservationScreen = (props: Props) => {
   }
 
   const handleLocationPermissions = async () => {
-    const hasPermissions = await requestLocationPermissions()
-    if(hasPermissions){
-      navProps.navigate("LoadingScreen", {
-        reservation_id: bookingDetails.reservation_id
+    try {
+      const hasPermissions = await requestLocationPermissions()
+      if(hasPermissions){
+        navProps.navigate("LoadingScreen", {
+          reservation_id: bookingDetails.reservation_id
+        })
+        closeBottomSheet()
+      }else{
+        toast({
+          type:'error',
+          message: "We need access to your location to proceed with the ride."
+        })
+      }
+
+    } catch (e) {
+      toast({
+        type:'error',
+        message: "An error occurred while trying to enable location services. Please try again."
       })
-      closeBottomSheet()
     }
   }
 
   const startReservation = () => {
-    openBottomSheet()
+    if(trackingState?.backgroundLocationStatus === 'granted'){
+      navProps.navigate("LoadingScreen", {
+        reservation_id: bookingDetails.reservation_id
+      })
+      closeBottomSheet()
+    }else{
+      openBottomSheet()
+    }
   }
 
   const renderBackdrop = useCallback((props: any) => {
     return <BottomSheetBackdrop {...props} disappearsOnIndex={-1} />
   }, [])
+
+  useEffect(()=>{
+    if(props?.isCurrent){
+      Linking.openURL(Linking.createURL("/manage-reservations")).then(()=>{
+        Linking.openURL(Linking.createURL('upcoming'))
+      })
+    }
+  }, [props.isCurrent])
 
   return (
     <View style={styles.container}>

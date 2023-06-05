@@ -1,50 +1,94 @@
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import EditVehicleModal from "./EditVehicleModal";
+import { Middleware, configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import vehicleReducer, { fetchVehicle } from "../../../redux/vehiclesSlice";
 import { IVehicle } from "../../../globaltypes";
 import { Provider } from "react-redux";
-import store from "../../../redux/store";
-const vehicles: IVehicle[] =[{
-    id: '1',
-    transmission: 'auto',
-    year: 2017,
-    status: "active",
-    make: 'Toyota',
-    model: 'Camry',
-    plate: 'ABC-30',
-    hourly_rate: 36,
-    pictures: [],
-    station_id: '3',
-    color: 'red',
-    coords: {
-        latitude: 34,
-        longitude: 23
+import EditVehicleModal from "./EditVehicleModal";
+import { fireEvent, render, screen } from "@testing-library/react";
+
+// jest.mock("../../../redux/vehiclesSlice");
+
+const createMockStore = () => {
+  const mockAsyncActions: Middleware = ({ dispatch }) => next => action => {
+    if (action.type === 'vehicles/fetchVehicle/pending') {
+      return dispatch({
+        type: 'vehicles/fetchVehicle/fulfilled',
+        payload: { 
+            "id": "3f625e29-8648-4dae-b6fd-7cc7b0b12fd4",
+            "user_id": "2503d950-4ed7-402e-b97b-0f6471e948d8",
+            "station_id": "0c2a2303-5be8-4200-8349-35d70f6b8a66",
+            "color": "brown",
+            "seats": 5,
+            "plate": "ZX74OPY",
+            "make": "Mazda",
+            "model": "Grand Cherokee",
+            "year": 1927,
+            "hourly_rate": 56,
+            "status": "ACTIVE",
+            "tracking_device_id": "51dee53b-1316-4d6f-872f-4f2c04a4ecc5",
+            "pictures": [
+                "https://loremflickr.com/640/480/transport",
+                "https://loremflickr.com/640/480/transport",
+                "https://loremflickr.com/640/480/transport",
+                "https://loremflickr.com/640/480/transport"
+            ],
+            "transmission": "AUTOMATIC",
+        } as Partial<IVehicle>,
+      });
+    }
+    return next(action);
+  };
+
+  const middleware = getDefaultMiddleware().concat(mockAsyncActions);
+
+  return configureStore({
+    reducer: {
+      vehicles: vehicleReducer,
     },
-    seats: 4,
-    location: 'kenya'
-}]
+    middleware,
+  });
+};
 
-const testFunc = jest.fn()
-describe('Tests the EditVehicleModal component', ()=>{
-    it('Tests if the component mounts', ()=>{
-        const { baseElement } = render(<Provider store={store}><EditVehicleModal isOpen onClose={testFunc} vehicle_id={'1'} vehicles={vehicles} /></Provider>);
-        expect(baseElement).toBeTruthy()
-        const inputs = screen.getAllByRole('textbox')
-        expect(screen.getByText('Edit vehicle details')).toBeInTheDocument();
-        expect(screen.getAllByRole('combobox').length).toBe(2)
-        expect(inputs.length).toBe(3)
-        expect(inputs[0].placeholder).toBe('ABC-123')
+const store = createMockStore();
 
-    });
+describe('EditVehicleModal', () => {
+    const onCloseMock = jest.fn()
+    const vehicle_id = '1'
+    const vehicles = [] as IVehicle[]
+    let isOpen = true
+  
+    beforeEach(() => {
+      render(
+        <Provider store={store}>
+          <EditVehicleModal 
+            isOpen={isOpen}
+            onClose={onCloseMock}
+            vehicle_id={vehicle_id}
+          />
+        </Provider>
+      )
+    })
+  
+    test('renders modal', () => {
+      expect(screen.getByTestId('edit-vehicle-modal')).toBeInTheDocument()
+    })
+  
+    test('renders form fields correctly', () => {
+      expect(screen.getByPlaceholderText('ABC-123')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('Toyota')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('Camry')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('2018')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('$')).toBeInTheDocument()
+    })
+  
+    test('renders the modal close button', () => {
+      expect(screen.getByTestId('close-modal-button')).toBeInTheDocument()
+    })
+  
+    test('closes modal when close button is clicked', () => {
+      fireEvent.click(screen.getByTestId('close-modal-button'))
+      expect(onCloseMock).toHaveBeenCalledTimes(1)
+    })
 
-    it('Tests edit form fields', ()=>{
-        render(<Provider store={store}><EditVehicleModal isOpen onClose={testFunc} vehicle_id={'1'} vehicles={vehicles} /></Provider>);
-        const inputs = screen.getAllByRole('textbox')
-        const button = screen.getByText('Edit')
+  })
 
-        fireEvent.change(inputs[0], {target: {value: 'BCD-34'}})
-        expect(inputs[0].value).toBe('BCD-34')
-        fireEvent.click(button)
-    });
 
-})

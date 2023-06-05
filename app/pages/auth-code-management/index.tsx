@@ -1,98 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { Flex, Text } from "@chakra-ui/react";
-import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { insertTableActions } from "../../utils/tables/utils";
-import {
-  FlexColCenterStart,
-  FlexRowCenterStart,
-} from "../../utils/theme/FlexConfigs";
-import { AuthCodeTableColumns, RequestedAuthCodeTableColumns } from "../../utils/tables/TableTypes";
-import { AUTHCODE_DOMAIN, REQUESTED_AUTHCODE_DOMAIN } from "../../hooks/constants";
-import { getAuthcode, selectAuthcode } from "../../redux/authcodeSlice";
-import { useFetchData } from "../../hooks";
-import useFetchRequestedAuthCode from "../../hooks/useFetchRequestedAuthCode";
-import { getRequestedAuthCode, selectRequestedAuthCode } from "../../redux/requestedAuthCodeSlice";
-import { useAppSelector } from "../../redux/store";
-import { useDisclosure } from "@chakra-ui/react";
-import Rounded from "../../components/molecules/Buttons/General/Rounded";
-import CreateAuthCodeModal from "../../components/organism/Modals/CreateAuthCodeModal";
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../../components/organism/ErrorFallback";
-import { logError } from "../../utils/utils";
+import React, { useMemo, useState } from 'react'
+import AuthCodeTable from '../../components/organism/Table/authcode-table'
+import AuthCodeRequestForm from '../../components/organism/Forms/auth-code-request'
+import { IAuthCode, IUserProfile, IVehicle } from '../../globaltypes'
+import { CloseButton, Flex, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, useDisclosure, useModal } from '@chakra-ui/react'
+import { isEmpty } from 'lodash'
+import { FlexRowCenterEnd } from '../../utils/theme/FlexConfigs'
+import { ErrorBoundary } from 'react-error-boundary'
+import ErrorFallback from '../../components/organism/ErrorFallback'
+import { logError } from '../../utils/utils'
 
-function AuthCodeManagement() {
-  const [showRequestsTable, setShowRequestsTable] = useState<boolean>(false)
-  const { fetchData } = useFetchData(AUTHCODE_DOMAIN, getAuthcode)
-  const { fetchRequests } = useFetchRequestedAuthCode(REQUESTED_AUTHCODE_DOMAIN, getRequestedAuthCode)
-  const authcodeData = useAppSelector(selectAuthcode)
-  const requestsData = useAppSelector(selectRequestedAuthCode)
-  const [createAuthCodeModal, setCreateAuthCodeModal] = useState<boolean>(false)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [authcodeId, setAuthcodeId] = useState<number>()
-  const [userId, setUserId] = useState<number>()
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  const toggleRequestsTable = () => {
-    setShowRequestsTable(!showRequestsTable)
-    fetchRequests()
-  }
-
-  const openCreateAuthCodeModal = (id: number, userId: number) => {
-    setCreateAuthCodeModal(true)
-    setAuthcodeId(id)
-    setUserId(userId)
-    onOpen()
-  }
-  const closeCreateAuthCodeModal = () => {
-    setCreateAuthCodeModal(false)
-    onClose()
-  }
-  return (
-  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-    <Flex
-      {...FlexColCenterStart}
-      w="full"
-      h="full"
-      data-testid="auth-code-management-table"
-    >
-        {createAuthCodeModal && authcodeId && userId && <CreateAuthCodeModal isOpen={isOpen} onClose={closeCreateAuthCodeModal} authcodeId={authcodeId} showRequestsTable={toggleRequestsTable} userId={userId} />}
-        <FilterableTable
-          viewAddFieldButton={true}
-          viewSearchField={true}
-          viewSortablesField={false}
-          buttonName={showRequestsTable ? 'View All Authcodes' : 'View Requests'}
-          openCreateModal={toggleRequestsTable}
-          columns={!showRequestsTable ? AuthCodeTableColumns : insertTableActions(RequestedAuthCodeTableColumns, (i, data) => {
-            return (
-              <Flex {...FlexRowCenterStart}>
-                <Rounded variant="solid" setWidth={200} rounded="md" onClick={() =>
-                  openCreateAuthCodeModal(data.id, data.user_id)}>
-                  <Text cursor="pointer">Create</Text>
-                </Rounded>
-              </Flex>
-            );
-          })}
-          data={showRequestsTable ? requestsData : authcodeData}
-          pagination={{
-            position: ["bottomCenter"],
-          }}
-        />
-    </Flex>
-  </ErrorBoundary>
-  );
+interface AuthCodeRequest extends Partial<IAuthCode> {
+  vehicle?: Partial<IVehicle>
+  user?: Partial<IUserProfile>
 }
 
-export default AuthCodeManagement;
+function AuthCodeManagement() {
+  const [chosenCode, setChosenCode] = useState<AuthCodeRequest|null>(null)
+  const { isOpen, onClose, onOpen } = useDisclosure()
+  const open = useMemo(()=>{
+    return !isEmpty(chosenCode) && isOpen
+  }, [chosenCode, isOpen ])
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}  onError={logError} >
+      <div className="flex flex-col w-full h-full items-center justify-start">
+        <Modal size="5xl" isOpen={open} onClose={onClose} >
+          <ModalOverlay/>
+          <ModalContent>
+            <ModalHeader >
+              <Flex {...FlexRowCenterEnd} >
+                <CloseButton onClick={onClose} />
+              </Flex>
+            </ModalHeader>
+            <ModalBody>
+              {chosenCode && <AuthCodeRequestForm
+                data={chosenCode}
+              />}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+        <AuthCodeTable
+          onEdit={(data)=>{
+            onOpen()
+            setChosenCode(data)
+          }}
+        />
+      </div>
 
-export function getStaticProps() {
+    </ErrorBoundary>
+  )
+}
+
+export default AuthCodeManagement
+
+
+export function getServerSideProps () {
   return {
     props: {
-      adminonly: false,
       authonly: true,
       dashboard: true,
-    },
-  };
+      adminonly: false,
+    }
+  }
 }

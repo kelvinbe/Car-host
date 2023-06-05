@@ -7,7 +7,6 @@ describe('Tests the Header component', ()=>{
         render(<Header/>)
         expect(screen.getByText('Want to list your vehicle?')).toBeInTheDocument();
         expect(screen.getByText('Get Started')).toBeInTheDocument();
-        expect(screen.getByText('About Us')).toBeInTheDocument();
         expect(screen.getByRole('img')).toBeInTheDocument();
     })
 })

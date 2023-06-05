@@ -10,9 +10,11 @@ import { IVehicle } from '../../../types';
 import useBookingActions from '../../../hooks/useBookingActions';
 import useToast from '../../../hooks/useToast';
 import { add_padding, calcDuration } from '../../../utils/utils';
-import { useAppSelector } from '../../../store/store';
-import { selectChosenHostCode, selectUsersLocation } from '../../../store/slices/bookingSlice';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { selectChosenHostCode, selectUsersLocation, setHostCode } from '../../../store/slices/bookingSlice';
 import { isEmpty } from 'lodash';
+import { selectCoords, setVehiclePositions } from '../../../store/slices/searchSlice';
+import { LocationObjectCoords } from 'expo-location';
 
 
 interface IProps {
@@ -31,13 +33,17 @@ const useStyles = makeStyles((theme, props)=>{
 })
 
 const AnimatedScrollList = (props: Props) => {
-    const usersLocation = useAppSelector(selectUsersLocation)
+    const dispatch = useAppDispatch()
+    const {data: coords} = useAppSelector(selectCoords)
     const chosenHostCode = useAppSelector(selectChosenHostCode)
     const { bookingDetails: { start_date_time, end_date_time} } = useBookingActions()
-    const { data, isLoading, isError } = useGetVehiclesQuery({
-        longitude: usersLocation?.coords?.longitude.toString() ?? undefined,
-        latitude: usersLocation?.coords?.latitude.toString() ?? undefined,
-        host_code: !isEmpty(chosenHostCode) ? chosenHostCode : undefined,
+    const { data, isLoading, isError, refetch } = useGetVehiclesQuery({
+        ...(isEmpty(chosenHostCode) ? {
+            longitude: coords?.longitude.toString() ?? undefined,
+            latitude: coords?.latitude.toString() ?? undefined,
+        } : {
+            host_code: !isEmpty(chosenHostCode) ? chosenHostCode : undefined,
+        }),
         start_date_time: !isEmpty(start_date_time) ? start_date_time : undefined,
         end_date_time: !isEmpty(end_date_time) ? end_date_time : undefined,
     }, {
@@ -45,13 +51,39 @@ const AnimatedScrollList = (props: Props) => {
     })
     const toast = useToast()
     const styles = useStyles(props)
-    const scrollY = useRef(new Animated.Value(0)).current
+    const scrollY = useRef(new Animated.Value(0)).current 
+
+    useEffect(()=>{
+        if(!isEmpty(data)){
+            const coords = data?.map((vehicle: Partial<IVehicle>)=>{
+                return {
+                    latitude: vehicle?.station?.latitude,
+                    longitude: vehicle?.station?.longitude,
+                } as LocationObjectCoords
+            })
+
+            dispatch(setVehiclePositions(coords))
+        }
+    }, [data])
+
+    useEffect(()=>{
+        return ()=>{
+            scrollY.removeAllListeners()
+            dispatch(setHostCode(null))
+        }
+    },[])
 
 
-    const handlePress = (index: number) =>{
+    useEffect(()=>{
+        refetch()
+    }, [start_date_time, end_date_time])
+
+
+    const handlePress = (chosen_id: string) =>{
         if(start_date_time && end_date_time){
             if(calcDuration(start_date_time, end_date_time) > 0){
-                props.handleSelect && props.handleSelect(data ? data[index] : null);
+                const fetched = data?.find(({id}) => id === chosen_id)
+                props.handleSelect && props.handleSelect(fetched ? fetched : null);
             }else {
                 toast({
                     type: "primary",
@@ -149,7 +181,7 @@ return (
                             }} ></View>
                         ) : (
                             isLoading ? <Loading /> :  <DriveCardButton key={index} {...item} onPress={()=>{
-                                        handlePress(index)
+                                        handlePress(item.id)
                                     }} index={index} opacity={opacity} scale={scale} translateY={translateY} customContainerStyle={{
                                         marginBottom: 20
                                     }} />

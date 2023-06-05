@@ -60,7 +60,6 @@ export const fetchUser = createAsyncThunk('user/fetchProfile', (undefined, {reje
         const user = getAuth(app).currentUser
         try {
             if (isNull(user)) return rejectWithValue("Not logged in")
-            if (user.metadata.creationTime === user.metadata.lastSignInTime) await dispatch(createUser()) // if user is new, create a new user
 
             const result = await axios.get(USERS_DOMAIN, {
                 headers: {
@@ -98,7 +97,7 @@ export const updateUserSettings = createAsyncThunk('user/updateSettings', async 
 
 export const updateUserProfile= createAsyncThunk('user/updateUserProfile', async (updateData: Partial<IUserProfile>, {rejectWithValue, dispatch})=>{
     try{
-        const updatedUser= await apiClient.patch(USERS_DOMAIN, updateData)
+        const updatedUser= await apiClient.put(USERS_DOMAIN, updateData)
         await dispatch(fetchUser())
         return updatedUser.data
     } catch (e){
