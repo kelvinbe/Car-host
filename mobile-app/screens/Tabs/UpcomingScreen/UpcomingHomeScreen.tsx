@@ -10,6 +10,9 @@ import Empty from '../../../components/molecules/Feedback/Empty/Empty';
 import { useAppDispatch} from '../../../store/store';
 import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice';
 import { useFetchUpcoming } from '../../../hooks';
+import { selectCurrentScreen } from '../../../store/slices/navigationSlice'
+import { useSelector } from 'react-redux';
+
 
 type Props = NativeStackScreenProps<UpcomingParamList, 'UpcomingReservationsHome'>;
 
@@ -31,6 +34,7 @@ const UpcomingHomeScreen = (props: Props) => {
   const {data, loading, error, fetchUpcoming} = useFetchUpcoming()
   const [isLoading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<boolean>(false);
+  const currentScreen = useSelector(selectCurrentScreen)
 
   useEffect(()=>{console.log(fetchError)},[fetchError])
 
@@ -66,7 +70,10 @@ const UpcomingHomeScreen = (props: Props) => {
 
   useEffect(() => {
     fetchUpcoming()
-  },[])
+  },[,currentScreen])
+
+
+
 
   useLayoutEffect(()=>{
     fetchUpcoming()

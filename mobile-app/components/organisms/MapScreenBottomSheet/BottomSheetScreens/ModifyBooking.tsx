@@ -117,17 +117,22 @@ const ModifyBookingBottomSheet = (props: Props) => {
           duration: 3000,
         })
       })
+}else{
+  toast({
+    type: 'error',
+    message: 'Something went wrong',
+    duration: 3000
+  })
 }
 }
 
 useEffect(() => {
     if (!isEmpty(paymentOption)) {
       if(confirmationData){
-      dispatch(clearBookingState());
       dispatch(modifyCurrentReservation({
           vehicle_id: vehicle?.id,
-          start_date_time: bookingDetails.start_date_time,
-          end_date_time: bookingDetails.end_date_time,
+          start_date_time: new Date(bookingDetails.start_date_time).getTime(),
+          end_date_time:  new Date(bookingDetails.end_date_time).getTime()
         })).then(() => {
           toast({
             type: 'success',

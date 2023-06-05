@@ -181,7 +181,7 @@ export interface IPaymentType {
 
 export interface IPayment {
   id: string;
-  payment_type: string | null;
+  payment_type_id: string | null;
   account_number: string | null;
   authorization: string | null;
   paymentToken: string | null;
@@ -192,7 +192,7 @@ export interface IPayment {
   stripe_payment_id: string | null;
   user_id: string;
   receipt_number: string | null;
-  payment_type_fk: IPaymentType | null;
+  payment_type: IPaymentType | null;
   is_primary: boolean;
 }
 

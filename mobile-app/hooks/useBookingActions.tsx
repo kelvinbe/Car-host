@@ -122,12 +122,6 @@ function useBookingActions() {
         setPaymentOption({payment_method: 'mpesa'})
         // set the payment authorization code
         reduxDispatch(setBookingPaymentAuthorization(data.authorization))
-        toast({
-          message: "Payment Successful",
-          title: "Success",
-          type: "success",
-          duration: 4000
-        })
       }).catch((e)=>{
         setError(e)
         toast({

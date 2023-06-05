@@ -1,18 +1,19 @@
 import { StyleSheet, Text, View, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { BottomTabParamList, ManageResParamList } from '../../../types'
 import { ThemeConsumer, makeStyles } from '@rneui/themed'
 import HistoryCard from '../../../components/molecules/HistoryCard/HistoryCard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setChosenReservation, useGetReservationsQuery } from '../../../store/slices/reservationSlice'
 import Loading from '../../../components/molecules/Feedback/Loading/Loading'
 import Error from '../../../components/molecules/Feedback/Error/Error'
 import Empty from '../../../components/molecules/Feedback/Empty/Empty'
 import { useAppDispatch } from '../../../store/store'
 import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice'
+import { selectCurrentScreen } from '../../../store/slices/navigationSlice'
 
 type Props = NativeStackScreenProps<ManageResParamList, "ManageResHome">
 
@@ -32,11 +33,12 @@ const useStyles = makeStyles((theme, props: Props)=>({
 }))
 
 const ManageResHomeScreen = (props: Props) => {
-  const { data, isLoading, isError } = useGetReservationsQuery({
+  const { data, isLoading, isError, refetch } = useGetReservationsQuery({
     status: "ACTIVE"
   })
   const [loading, setLoading] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<boolean>(false)
+  const currentScreen = useSelector(selectCurrentScreen)
 
   const styles = useStyles(props)
   const reduxDispatch = useAppDispatch()
@@ -57,6 +59,11 @@ const ManageResHomeScreen = (props: Props) => {
       setFetchError(true)
     })
   }
+
+  useEffect(() => {
+    refetch()
+    
+  }, [currentScreen])
 
   return ( 
     <ThemeConsumer>

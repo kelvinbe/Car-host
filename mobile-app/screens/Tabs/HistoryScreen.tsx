@@ -12,6 +12,9 @@ import { useAppDispatch } from '../../store/store'
 import { loadBookingDetailsFromReservation } from '../../store/slices/bookingSlice'
 import useBookingActions from '../../hooks/useBookingActions'
 import useToast from '../../hooks/useToast'
+import { selectCurrentScreen } from '../../store/slices/navigationSlice'
+import { useSelector } from 'react-redux'
+
 
 type Props = BottomTabScreenProps<BottomTabParamList, "History">
 
@@ -32,8 +35,10 @@ const useStyles = makeStyles((theme, props: Props)=>({
 
 const HistoryScreen = ( props: Props) => {
   const reduxDispatch = useAppDispatch()
-  const { data, isError, isLoading } = useGetHistoryQuery(null)
+  const { data, isError, isLoading, refetch } = useGetHistoryQuery(null)
   const toast = useToast()
+  const currentScreen = useSelector(selectCurrentScreen)
+
   /**
    * @name onDetailsPress
    * @description This function is used to fetch the booking details from the reservation id, once the details are fetched, the booking details screen is opened
@@ -50,6 +55,9 @@ const HistoryScreen = ( props: Props) => {
       })
   }
   
+  useEffect(() => {
+    refetch()
+  }, [currentScreen])
 
 
   const styles = useStyles(props)
