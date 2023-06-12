@@ -36,6 +36,7 @@ const HomePageHeader = () => {
         justify={["center", "center", "center", "start"]}
         marginBottom={[4, 4, 4, 0]}
         marginX={["0", "0", "0", "20"]}
+        marginTop={'-18px'}
       >
         <Logo />
       </Flex>

@@ -8,11 +8,14 @@ import { app } from '../firebase/firebaseApp';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { selectNotificationsEnabled, selectUpdateSettings, updateSettings } from '../store/slices/userSlice';
 import useToast from './useToast';
-import { setNotification } from '../store/slices/bookingSlice';
-import { openURL } from 'expo-linking'
-import { selectExpoToken } from '../store/slices/notificationsSlice';
+import { tNotification } from '../store/slices/bookingSlice';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { isEmpty, isString } from 'lodash';
+import { setNavScreens } from '../store/slices/navigationSlice';
+import useBookingActions from './useBookingActions';
+import { location_search } from '../utils/utils';
+import { openChooseTimeAndBottomSheet, selectBottomSheetState, setBottomSheetNotification } from '../store/slices/mapBottomSheet';
+import * as Linking from 'expo-linking'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -115,7 +118,8 @@ const useNotifications = () => {
     const userNotificationsEnabled = useAppSelector(selectNotificationsEnabled)
     const updateSettingsFeedback = useAppSelector(selectUpdateSettings)
     const toast = useToast()
-    const token = useAppSelector(selectExpoToken)
+    const mapScreenState = useAppSelector(selectBottomSheetState)
+    const { setAuthCode } = useBookingActions()
 
     /**
      * @name togglePushNotifications
@@ -147,9 +151,27 @@ const useNotifications = () => {
      * @name goToBooking
      * @description sets the booking code and opens the vehicles booking screen for only that host
      */
-    const goToBooking = (data: object, link: string) => {
-      dispatch(setNotification(data))
-      link && openURL(link)
+    const goToBooking = async (data: tNotification, link: string) => {
+      location_search()
+      dispatch(setBottomSheetNotification(data))
+      if (mapScreenState?.authorizationOpen) {
+        setAuthCode(data?.code)
+        return
+      } 
+      if(mapScreenState?.open && !mapScreenState?.authorizationOpen){
+        setAuthCode(data?.code)
+        return
+      }
+      
+      setAuthCode(data?.code)
+      dispatch(openChooseTimeAndBottomSheet())
+      Linking.openURL(Linking.createURL("/map")).then(()=>{
+        dispatch(setNavScreens({
+          current: 'MapScreen',
+          previous: "SearchScreen"
+        }))
+      })
+    
     } 
 
     return {

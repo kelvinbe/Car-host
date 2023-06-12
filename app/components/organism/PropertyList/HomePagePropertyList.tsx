@@ -43,7 +43,7 @@ const properties = [
 ];
 const HomePagePropertyList = () => {
   return (
-    <Flex direction="column" marginX={["10", "20", "20"]}>
+    <Flex direction="column">
       <Flex direction={"column"} marginX={["5", "10"]}>
         <Heading textAlign={"center"}>What Would You Like To List?</Heading>
         <Flex
@@ -80,10 +80,10 @@ const HomePagePropertyList = () => {
             </Text>
           </Flex>
         </Flex>
-        <Flex width={["full", "full", "full", "70%"]} mt={['4', '4', '4', '0']}>
-          <Box paddingX={["0", "0", "0", "6"]} borderRadius={"25px"} w={"full"}>
+        <Flex width={["full", "full", "full", "70%"]} mt={['4', '4', '4', '0']} >
+          <Flex paddingX={["0", "0", "0", "6"]} borderRadius={"25px"} w={"full"} justify={'right'} align={'center'}>
             <Image src={cozy.src} alt="home" />
-          </Box>
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

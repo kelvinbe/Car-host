@@ -5,7 +5,39 @@ import { Provider } from "react-redux";
 import EditVehicleModal from "./EditVehicleModal";
 import { fireEvent, render, screen } from "@testing-library/react";
 
-// jest.mock("../../../redux/vehiclesSlice");
+jest.mock('../../../utils/apiClient', () => ({
+  create: jest.fn().mockReturnValue({
+      headers: {
+          "x-user": "HOST", 
+          "ngrok-skip-browser-warning": true
+      },
+      interceptors: {
+          request: {
+              use: jest.fn().mockImplementation((config) => {
+                  return {
+                      ...config,
+                      headers: {
+                          ...config.headers,
+                          "Authorization": `Bearer ${'mocked_token'}`
+                      }
+                  }
+              })
+          },
+          response: {
+              use: jest.fn().mockImplementation(() => ({
+                  data: 'mocked data',
+                  message: 'mocked message',
+                  status: 'mocked status'
+              }))
+          }
+      },
+  }),
+  db_user: {
+      getUser: jest.fn().mockResolvedValue({
+          getIdToken: jest.fn().mockResolvedValue('mocked_token')
+      })
+  },
+}));
 
 const createMockStore = () => {
   const mockAsyncActions: Middleware = ({ dispatch }) => next => action => {

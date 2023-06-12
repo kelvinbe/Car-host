@@ -1,18 +1,30 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
-import { IVehicle } from "../../../../globaltypes";
+import { IStation, IVehicle } from "../../../../globaltypes";
 import CarMarkerComponent from "../CarMarkerComponent/CarMarkerComponent";
 import { Flex } from "@chakra-ui/react";
 import { FlexRowCenterCenter } from "../../../../utils/theme/FlexConfigs";
 import getConfig from "next/config";
 
 interface IProps {
-  vehicles?: Partial<IVehicle>[];
+  vehicles?: Partial<IVehicle & {
+    station?: Partial<IStation>
+  }>[];
   marketId?: string;
 }
 
 const LiveMapComponent = (props: IProps) => {
-  const { vehicles} = props;
+  const { vehicles } = props;
+
+  const initialCenter = useMemo(()=>{
+    const firstStation = vehicles?.[0]?.station
+
+    return {
+      lat: firstStation?.latitude ?? 0,
+      lng: firstStation?.longitude ?? 0
+    }
+  }, [vehicles?.length])
+  
   /**
    * @todo add logic to fetch the location of the market id
    */
@@ -30,10 +42,9 @@ const LiveMapComponent = (props: IProps) => {
       <Wrapper apiKey={getConfig().publicRuntimeConfig.GOOGLE_MAPS_API_KEY}>
         <Map
           latitude={
-            // The values here will be fetched from the market id
-            0.39
+            initialCenter?.lat ?? 0
           }
-          longitude={37.64}
+          longitude={initialCenter?.lng ?? 0}
           zoom={
             // for now, the zoom will be fixed
             5

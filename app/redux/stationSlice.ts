@@ -1,17 +1,65 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
-import { IStation } from "../globaltypes";
+import { IStation, PaginationSupportState, asyncThinkFetchParams } from "../globaltypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { http_methods, STATIONS_API, STATION_API } from "../hooks/constants";
-import { getAuth } from "firebase/auth";
-import { app } from "../firebase/firebaseApp";
 import LogRocket from 'logrocket';
+import apiClient, { db_user } from "../utils/apiClient";
+import { isEmpty } from "lodash";
+
+
+export const fetchStations = createAsyncThunk('stations/fetchStations', async (args: Partial<asyncThinkFetchParams> | undefined | null = null, { rejectWithValue, dispatch, getState })=>{
+    const currentParams = (getState() as RootState).stations
+
+    const params = {
+        page: args?.page ?? currentParams.current_page,
+        size: args?.size ?? currentParams.current_size,
+        search: args?.search ?? isEmpty(currentParams.current_search) ? undefined : currentParams.current_search,
+        sort: args?.sort ?? currentParams.current_sort
+    }
+    dispatch(updateParams(params))
+    try {
+        const res = (await apiClient.get(STATIONS_API, {
+            params
+        }))
+        return res.data
+    } catch(e) 
+    {
+        LogRocket.error(e)
+        rejectWithValue(e as string)
+    }
+
+})
+
+
+export const updateStations = createAsyncThunk('stations/updateStations', async (data: Partial<IStation>, {rejectWithValue, dispatch})=>{
+    dispatch(
+        setActiveStationId(data.id)
+    )
+    try {
+        const res = (await apiClient.patch(STATION_API, {
+            ...data
+        }, {
+            params: {
+                station_id: data.id
+            }
+        }))
+
+        dispatch(fetchStations())
+
+        return res.data
+    } catch(e) {
+        LogRocket.error(e)
+        return rejectWithValue(e as string)
+    }
+})
 
 export const stationsApi = createApi({
     reducerPath: 'stationsApi',
     baseQuery: fetchBaseQuery({
         prepareHeaders: async (headers, {getState}) => {
-            await getAuth(app).currentUser?.getIdToken().then((token)=>{
+            const user = await db_user.getUser()
+            await user?.getIdToken().then((token)=>{
                 headers.set('Authorization', `Bearer ${token}`)
                 headers.set('x-user', 'HOST')
                 headers.set("ngrok-skip-browser-warning", "true")
@@ -70,14 +118,86 @@ const stationSlice = createSlice({
     name: 'stations',
     initialState: {
         stations: stations,
-    },
+        current_page: 1,
+        current_size: 10,
+        current_search: "",
+        current_sort: "",
+        fetchStationsError: null,
+        fetchStationsLoading: false,
+        updateStationError: null,
+        updateStationLoading: false,
+    } as {
+        stations: IStation[],
+        fetchStationsError: null | string,
+        fetchStationsLoading: boolean,
+        updateStationError: null | string,
+        updateStationLoading: boolean,
+        active_station_id?: string
+    } & PaginationSupportState,
     reducers: {
         getStations(state, action){
             state.stations= action.payload;
+        },
+        updateParams(state, action){
+            state.current_page = action.payload.page
+            state.current_size = action.payload.size
+            state.current_search = action.payload.search
+            state.current_sort = action.payload.sort
+        },
+        setActiveStationId(state, action){
+            state.active_station_id = action.payload
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchStations.pending, (state, action)=>{
+            state.fetchStationsLoading = true
+        })
+        builder.addCase(fetchStations.fulfilled, (state, action)=>{
+            state.fetchStationsLoading = false
+            state.stations = action.payload
+        })
+        builder.addCase(fetchStations.rejected, (state, action)=>{
+            state.fetchStationsLoading = false
+            state.fetchStationsError = action.error.message ?? null
+        })
+        builder.addCase(updateStations.fulfilled, (state, action)=>{
+            state.updateStationError = null
+            state.updateStationLoading = false
+        })
+        builder.addCase(updateStations.rejected, (state, action)=>{
+            state.updateStationError = action.error.message ?? null
+            state.updateStationLoading = false
+        })
+        builder.addCase(updateStations.pending, (state, action)=>{
+            state.updateStationError = null
+            state.updateStationLoading = true
+        })
     }
 })
 
+const reducer = stationSlice.reducer;
+export default reducer
+
 export const selectStations = (state: RootState)=>state.stations.stations
-export const { getStations } = stationSlice.actions;
-export default stationSlice.reducer;
+export const { getStations, updateParams, setActiveStationId } = stationSlice.actions;
+
+
+export const selectStationsFeedback = (state: RootState)=>({
+    loading: state.stations.fetchStationsLoading,
+    error: state.stations.fetchStationsError,
+    data: state.stations.stations
+})
+
+export const selectUpdateStationFeedback = (state: RootState)=>({
+    loading: state.stations.updateStationLoading,
+    error: state.stations.updateStationError,
+    id: state.stations.active_station_id
+})
+
+
+export const selectStationsPaginationState = (state: RootState)=>({
+    page: state.stations.current_page,
+    size: state.stations.current_size,
+    search: state.stations.current_search,
+    sort: state.stations.current_sort
+})

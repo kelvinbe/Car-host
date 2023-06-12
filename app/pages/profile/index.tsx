@@ -31,7 +31,6 @@ function Profile() {
             const bloburl = URL.createObjectURL(file)
             return uploadToFirebase(bloburl, file.name, file.type ).then((url)=>{
                 user && editUserProfile({
-                    ...user,
                     profile_pic_url: url
                 })
                 setLoading(false)
@@ -113,7 +112,7 @@ function Profile() {
 
 export default Profile
 
-export function getStaticProps() {
+export function getServerSideProps() {
     return {
         props: {
             adminonly: false,

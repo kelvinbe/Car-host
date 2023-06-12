@@ -160,7 +160,7 @@ function Invites() {
 
 export default Invites
 
-export function getStaticProps() {
+export function getServerSideProps() {
     return {
         props: {
             adminonly: true,

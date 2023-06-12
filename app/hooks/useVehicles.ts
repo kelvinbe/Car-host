@@ -30,14 +30,20 @@ export default function useVehicles(vehicle_id?:string) {
   }
 
   function updateVehicle(updatedBody: Partial<IVehicle>) {
+    if (isEmpty(vehicle_id)) return
     setLoading(true);
     if(isEmpty(updatedBody)) return setError({
         message:"body is empty"
     })
     apiClient
       .patch(
-        `${VEHICLES_DOMAIN}?vehicle_id=${vehicle_id}`,
-        updatedBody
+        `${VEHICLES_DOMAIN}`,
+        updatedBody,
+        {
+          params: {
+            vehicle_id
+          }
+        }
       )
       .then((res) => {
         fetchVehicles();

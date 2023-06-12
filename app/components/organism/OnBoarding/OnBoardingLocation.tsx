@@ -2,7 +2,7 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormHelperText, Grid, GridItem, Select, Text } from "@chakra-ui/react"
 import { IUserProfile } from "../../../globaltypes"
 import useLocation from "../../../hooks/useLocation"
-import { selectMarketId, selectSubMarketId, setMarketId, setSubMarketId } from "../../../redux/onboardingSlice"
+import { selectMarketId, selectOnBoardingLoading, selectSubMarketId, setMarketId, setSubMarketId } from "../../../redux/onboardingSlice"
 import { useAppDispatch, useAppSelector } from "../../../redux/store"
 import { FlexColCenterBetween, FlexRowCenterBetween } from "../../../utils/theme/FlexConfigs"
 import { isEmpty } from "lodash"
@@ -21,6 +21,7 @@ const OnBoardinLocation = (props: StepProps) => {
     const { onCompleted, onBack } = props
     const marketId = useAppSelector(selectMarketId)
     const submarketId = useAppSelector(selectSubMarketId)
+    const loading = useAppSelector(selectOnBoardingLoading)
 
     const dispatch = useAppDispatch()
 
@@ -111,10 +112,12 @@ const OnBoardinLocation = (props: StepProps) => {
                 <Flex w="full" {...FlexRowCenterBetween} >
                     <Button  data-testid='back'
                         onClick={onBack}
+                        disabled={loading}
                     >
                         Back
                     </Button>
                     <Button
+                        isLoading={loading}
                         disabled={isEmpty(marketId) || isEmpty(submarketId)}
                         onClick={handleContinue}
                         data-testid='continue'

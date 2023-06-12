@@ -9,7 +9,7 @@ import {
 import SortableDropdown from "./SortableDropdown";
 import { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { createSlice } from "@reduxjs/toolkit";
-import BaseTable from "../BaseTable/BaseTable";
+import BaseTable, { PrimitiveTableProps } from "../BaseTable/BaseTable";
 import { SearchIcon } from "@chakra-ui/icons";
 import Rounded from "../../../molecules/Buttons/General/Rounded";
 import { Input } from "@chakra-ui/react";
@@ -34,7 +34,8 @@ interface IProps {
   modalComponent?: React.ReactNode;
   pagination?: TablePaginationConfig | false;
   setSearch?: (search: string)=>void
-  handlePageChange?: (pagination: TablePaginationConfig)=>void
+  handlePageChange?: (pagination: TablePaginationConfig)=>void,
+  primitiveTableProps?: PrimitiveTableProps
 }
 
 interface IReducer {
@@ -82,7 +83,8 @@ function FilterableTable(props: IProps) {
     viewSortablesField,
     openCreateModal,
     setSearch,
-    handlePageChange
+    handlePageChange,
+    primitiveTableProps
   } = props;
   const [{ tableColumnDefinitions }, dispatchActions] = useReducer(
     FilterableTableSlice.reducer,
@@ -104,7 +106,7 @@ function FilterableTable(props: IProps) {
   }, [columns]);
 
   return (
-    <Flex w="full" {...FlexColCenterStart}>
+    <Flex w="full" h="full" {...FlexColCenterStart}>
       <Flex {...FlexRowCenterBetween} w="full" marginBottom="10px">
         <Flex {...FlexRowCenterBetween}>
           {viewSearchField && (
@@ -151,13 +153,14 @@ function FilterableTable(props: IProps) {
           </Flex>
         )}
       </Flex>
-      <Flex w="full" {...FlexColCenterStart}>
+      <Flex w="full" h="full" {...FlexColCenterStart}>
         <BaseTable
           columns={tableColumnDefinitions ?? []}
           data={data || []}
           dataFetchFunction={dataFetchFunction}
           pagination={props.pagination ? props.pagination : false}
           handlePageChange={handlePageChange}
+          primitiveProps={primitiveTableProps}
         />
       </Flex>
     </Flex>

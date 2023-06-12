@@ -1,18 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput';
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded';
 import { useAddPaymentMethodMutation } from '../../../../store/slices/billingSlice';
-import { useAppDispatch, useAppSelector } from '../../../../store/store';
-import { fetchUserData, selectUserProfile } from '../../../../store/slices/userSlice';
+import { useAppDispatch } from '../../../../store/store';
+import { fetchUserData } from '../../../../store/slices/userSlice';
 import { isNaN } from 'lodash';
 import useToast from '../../../../hooks/useToast';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PaymentDetailsScreenParamList } from '../../../../types';
-import { setSelectedType } from '../../../../store/slices/paymentMethodSlice';
 import { DropdownData } from '../../../../components/organisms/select-dropdown/types';
 import SelectDropdown from '../../../../components/organisms/select-dropdown';
+import { useMaskedInputProps } from 'react-native-mask-input'
+
+const PHONE_NUMBER = [
+    '0',
+    '7',
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+];
+  
 
 interface IProps {
 
@@ -64,6 +80,13 @@ const MobileMoneyDetails = (props: Props) => {
         key: "M-Pesa",
         value: "MPESA"
     })
+
+    const maskedInputProps = useMaskedInputProps({
+        value: mpesa_number,
+        onChangeText: (v)=>set_mpesa_number(v),
+        mask: PHONE_NUMBER,
+        placeholderFillCharacter: ' ',
+    })
     
     
     const handleAddPaymentMethod = async () =>{
@@ -112,10 +135,10 @@ const MobileMoneyDetails = (props: Props) => {
             />
             <View style={styles.inputContainerStyle} >
                 <BaseInput 
-                    value={mpesa_number}
-                    onChangeText={(v)=>set_mpesa_number(v)}
-                    label="Account Number"
-                    placeholder="+254xxxxxxxxx"
+                    {...maskedInputProps}
+                    label="Phone Number"
+                    placeholder='07XX-XXX-XXX'
+                    keyboardType="number-pad"
                 />
             </View>
         </View>

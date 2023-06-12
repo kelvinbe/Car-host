@@ -103,7 +103,7 @@ const TimeFilter = (props: Props) => {
               items={times}
               onChange={handlePickupTime}
               defaultValue={defaultStartDateTime ? defaultStartDateTime.label : first(times)?.label}
-              defaultAdditionalFilter={isAm(first(times)?.value) ? 'AM' : 'PM'}
+              defaultAdditionalFilter={isAm(defaultStartDateTime ? defaultStartDateTime.value : first(times)?.value) ? 'AM' : 'PM'}
               additionalFilter={['AM', 'PM']}
               filter={(chosenFilter, item)=>{
                 if (chosenFilter === 'AM') {
@@ -123,7 +123,7 @@ const TimeFilter = (props: Props) => {
             items={times}
             onChange={handleDropOffTime}
             defaultValue={defaultEndDateTime ? defaultEndDateTime.label : first(times)?.label}
-            defaultAdditionalFilter={isAm(first(times)?.value) ? 'AM' : 'PM'}
+            defaultAdditionalFilter={isAm(defaultEndDateTime ? defaultEndDateTime.value : first(times)?.value) ? 'AM' : 'PM'}
             additionalFilter={['AM', 'PM']}
           />
         </View>

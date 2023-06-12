@@ -5,19 +5,22 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { isUndefined } from 'lodash';
 import React, { useEffect } from 'react'
 import AntdProvider from '../../../providers/AntdProvider';
+import { TableProps } from 'antd/es/table/Table'
+
+export type PrimitiveTableProps<DataType = any> = Omit<Partial<TableProps<DataType>>, "columns" | "expandIcon" | "expandable">
 
 interface IProps<dT> {
     columns: ColumnsType<dT>,
     data: dT[],
     dataFetchFunction?: (fetchStatus: "pending" | "error" | "success") => void,
     pagination?: TablePaginationConfig | false;
-    handlePageChange?: (pagination: TablePaginationConfig) => void
-
+    handlePageChange?: (pagination: TablePaginationConfig) => void,
+    primitiveProps?: PrimitiveTableProps
 }
 
 function BaseTable(props: IProps<any>) {
     const [tableData, setTableData] = React.useState<any[]>([])
-    const { columns, data, dataFetchFunction, handlePageChange } = props
+    const { columns, data, dataFetchFunction, handlePageChange, primitiveProps } = props
 
     useEffect(() => {
         if (!isUndefined(data)) {
@@ -33,8 +36,9 @@ function BaseTable(props: IProps<any>) {
                 border="1px solid"
                 borderColor="gray.300"
                 w="full"
+                h="full"
                 overflow="hidden"
-                maxHeight='700px'
+                // maxHeight='700px'
                 data-cy={'base-table-container'}
                 data-testid='base-table'
             >
@@ -46,6 +50,9 @@ function BaseTable(props: IProps<any>) {
                     className="w-full h-full overflow-scroll"
                     pagination={props.pagination ? props.pagination : false}
                     onChange={handlePageChange}
+                   {
+                    ...primitiveProps
+                   }
                 />
             </Flex>
         </AntdProvider>

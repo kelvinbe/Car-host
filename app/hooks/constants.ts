@@ -42,7 +42,7 @@ export const PAYOUTMETHODS_API = `${DOMAIN}/payouts`
  * @name WITHDRAWALS_API
  * @description - all withdrawals related endpoints are accessible through this api route
  */
-export const WITHDRAWALS_API = `${DOMAIN}/withdrawals`
+export const WITHDRAWALS_API = `${DOMAIN}/payouts/withdrawals`
 /**
  * @name USERSETTINGS_API
  * @description - all user settings related endpoints are accessible through this api route
@@ -53,6 +53,11 @@ export const USERSETTINGS_API = `${DOMAIN}/settings`
  * @description - all user earnings related endpoints are accessible through this api route
  */
 export const EARNINGS_API = `${DOMAIN}/earnings`
+
+/**
+ * The tracking service's endpoint
+ */
+export const TRACKING_SERVICE = process.env.NEXT_PUBLIC_TRACKING_SERVICE 
 
 
 

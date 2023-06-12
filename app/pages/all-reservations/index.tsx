@@ -1,26 +1,21 @@
-import { Flex } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import { lowerCase } from "lodash";
 import React, { useEffect, useState } from "react";
+import { Flex, IconButton } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import ReservationModal from "../../components/organism/Modals/ReservationModal";
+import { useDisclosure } from "@chakra-ui/react";
+import { fetchReservations, selectReservations, selectReservationsFeedback, selectReservationsPaginationState } from "../../redux/reservationSlice";
 import useReservation from "../../hooks/useReservation";
-import { AllReservationColumns } from "../../utils/tables/TableTypes";
+import { insertTableActions } from "../../utils/tables/utils";
+import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
+import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
+import { isEmpty, lowerCase } from "lodash";
+import { ReservationColumns } from "../../utils/tables/TableTypes";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
-
-export function getStaticProps() {
-  return {
-    props: {
-      adminonly: false,
-      authonly: true,
-      dashboard: true,
-    },
-  };
-}
 export interface DataType {
   reservationId: string;
-  hostId: string;
   vehiclePlate: string;
   vehicleName: string;
   startEndTime: string;
@@ -31,61 +26,136 @@ export interface DataType {
   location: string;
   status: string;
 }
-function AllReservations() {
-  const [reservationData, setReservationData] = useState<DataType[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1)
 
-  const { fetchReservations, reservations } = useReservation(undefined, 10, currentPage);
+function Reservations() {
+  const feedback = useAppSelector(selectReservationsFeedback)
+  const { current_page, current_size} = useAppSelector(selectReservationsPaginationState)
+  const dispatch = useAppDispatch()
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [toggleViewReservationModal, setToggleViewReservationModal] =
+    useState(false);
+  const [toggleEditReservationModal, setToggleEditReservationModal] =
+    useState(false);
+  const [search, setSearch] = useState<string>("");
+  const { deleteReservation } = useReservation();
+  const [currentReservation, setCurrentReservation] = useState<string>()
+  const [currentVehicle, setCurrentVehicle] = useState<string>()
+
 
   useEffect(() => {
-    fetchReservations();
-  }, [currentPage]);
+    dispatch(fetchReservations({
+      search: isEmpty(search) ? undefined : search,
+    }))
+  }, [,search?.trim()?.length])
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+  const changeStateViewModal = () => {
+    setToggleViewReservationModal(!toggleViewReservationModal);
+  };
+  const changeStateEditModal = () => {
+    setToggleEditReservationModal(!toggleEditReservationModal);
+  };
+  const showViewReservationModal = (id: string) => {
+    setCurrentReservation(id)
+    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
+    setCurrentVehicle(reservation?.vehicle_id?.toString())
+    onOpen();
+    changeStateViewModal();
+  };
+  const showEditReservationModal = (id: string) => {
+    setCurrentReservation(id)
+    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
+    setCurrentVehicle(reservation?.vehicle_id?.toString())
+    onOpen();
+    changeStateEditModal();
 
-  useEffect(() => {
-    setReservationData(() =>
-      reservations.map((reservation) => ({
-        reservationId: reservation?.id,
-        hostId: reservation?.vehicle?.host?.id,
-        vehiclePlate: reservation?.vehicle?.plate,
-        vehicleName: `${reservation?.vehicle?.make} ${reservation?.vehicle?.model}`,
-        startEndTime: `${dayjs(reservation?.start_date_time).format(
-          "DD/MM/YYYY h:mm A"
-        )} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
-        totalCost: reservation?.payment?.amount,
-        hostName: reservation?.vehicle?.host?.handle,
-        location: `${reservation?.vehicle?.station?.name}`,
-        status: lowerCase(reservation?.status),
-      }))
-    );
-  }, [reservations]);
+  };
 
-  if (!reservations) return null;
   return (
-  <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-    <Flex w="full" h="full" data-testid="all-reservations-table">
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+      <Flex w="full" h="full" data-testid="reservations-table">
+        <ReservationModal
+          isOpen={isOpen}
+          onClose={onClose}
+          toggleViewReservationModal={toggleViewReservationModal}
+          changeStateViewModal={changeStateViewModal}
+          toggleEditReservationModal={toggleEditReservationModal}
+          changeStateEditModal={changeStateEditModal}
+          reservationId={currentReservation}
+          vehicleId={currentVehicle}
+        />
         <FilterableTable
           viewSearchField={true}
           viewSortablesField={true}
-          columns={AllReservationColumns}
-          data={reservationData}
-          sortables={[
-            {
-              columnKey: "totalCost",
-              columnName: "Total Cost",
-            },
-          ]}
+          columns={insertTableActions(ReservationColumns, (i, data) => {
+            return (
+              <Flex {...FlexRowCenterBetween}>
+                <IconButton
+                  aria-label="View"
+                  icon={<ViewIcon />}
+                  size="sm"
+                  onClick={() => showViewReservationModal(data.reservationId)}
+                  marginRight="4"
+                  data-cy={"view-button"}
+                />
+                <IconButton
+                  aria-label="Edit"
+                  icon={<EditIcon />}
+                  size="sm"
+                  onClick={() => {
+                    showEditReservationModal(data.reservationId);
+                  }}
+                  marginRight="4"
+                  data-cy={"edit-button"}
+                />
+                <IconButton
+                  aria-label="Delete"
+                  icon={<DeleteIcon />}
+                  size="sm"
+                  onClick={() => {
+                    deleteReservation(data.reservationId);
+                  }}
+                  color="cancelled.1000"
+                  data-cy={"delete-button"}
+                />
+              </Flex>
+            );
+          })}
           pagination={{
             position: ["bottomCenter"],
-            onChange: handlePageChange
+            onChange: (page, pageSize) => {
+              dispatch(fetchReservations({ page, size: pageSize }))
+            },
+            total: ((current_page ?? 0) * (current_size ?? 0)) + (
+              feedback?.data?.length < (current_size ?? 0) ? 0 : 1
+            ),
+            showSizeChanger: true, 
           }}
-        />      
-    </Flex>
-  </ErrorBoundary>
+          data={feedback?.data ?? [] } 
+          setSearch={setSearch}
+          sortables={[
+            {
+              columnKey: "payment",
+              columnName: "Total cost",
+            },
+          ]}
+          primitiveTableProps={{
+            loading: feedback?.loading,
+          }}
+          
+        />
+      </Flex>
+    </ErrorBoundary>
   );
 }
 
-export default AllReservations;
+export default Reservations;
+
+export function getServerSideProps() {
+  return {
+    props: {
+      adminonly: false,
+      authonly: true,
+      dashboard: true,
+    },
+  };
+}

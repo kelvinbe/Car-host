@@ -2,33 +2,27 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../utils/apiClient";
 import { WITHDRAWALS_API } from "../hooks/constants";
 import { RootState } from ".";
-import { IWithdrawals } from "../globaltypes";
+import { IPayout, IUserProfile, IWithdrawals, PaginationSupportState, PayoutMethods, asyncThinkFetchParams } from "../globaltypes";
 import LogRocket from "logrocket";
-import { useToast } from "@chakra-ui/react";
-import { useAppSelector } from "./store";
 
 export const fetchWithdrawals = createAsyncThunk(
   "withdrawals/fetchWithdrawals",
   async (
-    data: {
-      page?: number;
-      size?: number;
-      status?: string;
-      sort?: "asc" | "desc";
-    },
+    data: Partial<asyncThinkFetchParams> | null | undefined = null,
     { rejectWithValue, getState, dispatch }
   ) => {
     try {
-      const state: RootState = getState() as RootState;
-      state.withdrawals.status;
-      if (state.withdrawals.status !== data.status) {
-        dispatch(withdrawalSlice.actions.resetState);
-      }
-
-      const withdrawals = await apiClient.get(WITHDRAWALS_API, {
-        params: data,
+      const currentParams = (getState() as RootState).withdrawals;
+      const params = {
+        page: data?.page ?? currentParams.current_page,
+        size: data?.size ?? currentParams.current_size,
+        sort: data?.sort ?? currentParams.current_sort,
+      };
+      dispatch(updateParams(params));
+      const res = await apiClient.get(WITHDRAWALS_API, {
+        params,
       });
-      return withdrawals.data;
+      return res.data;
     } catch (e) {
       LogRocket.error(e);
       rejectWithValue(e);
@@ -49,11 +43,17 @@ export const updateWithdrawal = createAsyncThunk(
   }
 );
 
-interface InitialState {
-  data: IWithdrawals[];
+interface InitialState extends Partial<PaginationSupportState> {
+  data: Partial<IWithdrawals & Partial<{
+    user: Partial<IUserProfile>
+    payout: Partial<IPayout>
+    payout_method: Partial<PayoutMethods>
+  }>>[];
   loading: boolean;
   error: string | null;
   status: string;
+  updateLoading: boolean;
+  updateError: string | null;
 }
 
 const initialState: InitialState = {
@@ -61,6 +61,10 @@ const initialState: InitialState = {
   loading: false,
   error: "",
   status: "",
+  current_page: 1,
+  current_size: 10,
+  updateError: null,
+  updateLoading: false,
 };
 
 const withdrawalSlice = createSlice({
@@ -70,6 +74,12 @@ const withdrawalSlice = createSlice({
     resetState: (state) => {
       state.data = [];
     },
+    updateParams: (state, action) => {
+      state.current_page = action.payload.page;
+      state.current_size = action.payload.size;
+      state.current_sort = action.payload.sort;
+      state.current_search = action.payload.search;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchWithdrawals.pending, (state) => {
@@ -84,11 +94,23 @@ const withdrawalSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
     });
+    builder.addCase(updateWithdrawal.pending, (state) => {
+      state.updateLoading = true;
+      state.updateError = null;
+    })
+    builder.addCase(updateWithdrawal.fulfilled, (state) => {
+      state.updateLoading = false;
+      state.updateError = null;
+    })
+    builder.addCase(updateWithdrawal.rejected, (state, action) => {
+      state.updateLoading = false;
+      state.updateError = action.payload as string;
+    })
   },
 });
 
 export default withdrawalSlice.reducer;
-export const { resetState } = withdrawalSlice.actions;
+export const { resetState, updateParams } = withdrawalSlice.actions;
 export const selectWithdrawals = (state: RootState) => {
   return {
     withdrawals: state.withdrawals.data,
@@ -97,3 +119,23 @@ export const selectWithdrawals = (state: RootState) => {
     status: state.withdrawals.status,
   };
 };
+
+
+export const selectUpdateWithdrawalFeedback = (state: RootState) => {
+  return {
+    loading: state.withdrawals.updateLoading,
+    error: state.withdrawals.updateError,
+
+  }
+}
+
+export const selectWithdrawalsPagination = (state: RootState) => {
+  return {
+    current_page: state.withdrawals.current_page,
+    current_size: state.withdrawals.current_size,
+    current_sort: state.withdrawals.current_sort,
+    current_search: state.withdrawals.current_search,
+  };
+}
+
+

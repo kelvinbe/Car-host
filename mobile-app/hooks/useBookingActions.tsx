@@ -1,8 +1,5 @@
 import { initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native'
-import axios from 'axios'
-import { isEmpty } from 'lodash'
-import React, { useEffect, useState } from 'react'
-import { auth } from '../firebase/firebaseApp'
+import React, { useState } from 'react'
 import { selectBookingData, setAuthCode, setBillingInfo, setEndDateTime, setHostId, setStartDateTime, setStatus, setVehicle, clearBookingState, setPaymentType, selectBookingPaymentAuthorization, setBookingPaymentAuthorization } from '../store/slices/bookingSlice'
 import { selectStripeCustomerId, selectUserProfile } from '../store/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../store/store'
@@ -37,6 +34,8 @@ function useBookingActions() {
     const _setBillingInfo = (billingInfo: IPaymentMethod<any>) => reduxDispatch(setBillingInfo({billingInfo}))
     const _clearBookingState = () => reduxDispatch(clearBookingState())
     const _setPaymentType = (paymentType: any) => reduxDispatch(setPaymentType(paymentType))
+    const clearBookingOption = () => setPaymentOption(null)
+
 
 
     /**
@@ -152,12 +151,6 @@ function useBookingActions() {
           setPaymentOption({payment_method: 'mtn'})
           // set the payment authorization code 
           reduxDispatch(setBookingPaymentAuthorization(data.authorization))
-          toast({
-            message: "Payment Successful",
-            title: "Success",
-            type: "success",
-            duration: 4000
-          })
       }).catch((e)=>{   
         setError(e)
         toast({
@@ -222,7 +215,8 @@ function useBookingActions() {
     payForReservationError: error,
     payForReservationLoading: loading,
     paymentOption,
-    booking_payment_authorization
+    booking_payment_authorization,
+    clearBookingOption
   }
 }
 

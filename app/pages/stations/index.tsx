@@ -9,13 +9,15 @@ import {
 } from "../../utils/theme/FlexConfigs";
 import { useDisclosure } from "@chakra-ui/react";
 import { IStation } from "../../globaltypes";
-import { useDeleteStationMutation, useGetStationsQuery } from "../../redux/stationSlice";
+import { fetchStations, selectStationsFeedback, updateStations, useDeleteStationMutation, useGetStationsQuery } from "../../redux/stationSlice";
 import { StationTableColumns } from "../../utils/tables/TableTypes";
 import StationActionModal from "../../components/organism/Modals/StationActionModal"
 import ViewStationModal from "../../components/organism/Modals/ViewStationModal"
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectPaginationState } from "../../redux/authcodeSlice";
 
 
 type IReducerState = {
@@ -47,13 +49,16 @@ function Stations() {
   const toast = useToast({
     position: 'top'
   })
-  const { data, refetch } = useGetStationsQuery(null)
+  const feedback = useAppSelector(selectStationsFeedback)
+  // const { data, refetch } = useGetStationsQuery(null)
   const [selectedStation, setSelectedStation] = useState<Partial<IStation> | null>(null)
   const {onClose, isOpen, onOpen} = useDisclosure()
   const [state,dispatch] = useReducer(reducer, initialState)
+  const reduxDispatch = useAppDispatch()
+  const {current_page, current_size} = useAppSelector(selectPaginationState)
 
   useEffect(()=>{
-    refetch()
+    reduxDispatch(fetchStations())
   }, [])
   
   const [deleteStation, { isLoading: deleteLoading }] = useDeleteStationMutation()
@@ -72,7 +77,7 @@ function Stations() {
       key:"isViewModalOpen",
       value:true
     })
-    const station = data?.find(station => station.id === stationId)
+    const station = feedback?.data?.find(station => station.id === stationId)
     station && setSelectedStation(station)
     station && onOpen()
   }
@@ -82,7 +87,7 @@ function Stations() {
       key:"isEditModalOpen",
       value:true
     })
-    const station = data?.find(station => station.id === stationId)
+    const station = feedback?.data?.find(station => station.id === stationId)
     station && setSelectedStation(station)
     onOpen()
   }
@@ -156,13 +161,12 @@ function Stations() {
                 />
                 <IconButton
                   isLoading={deleteLoading}
-
                   aria-label="Delete"
                   icon={<DeleteIcon />}
                   size="sm"
                   onClick={() => {
                     deleteStation(data.id).then(()=>{
-                      refetch()
+                      reduxDispatch(fetchStations())
                     }).catch(()=>{
                       toast({
                         title: "An error occured",
@@ -178,8 +182,21 @@ function Stations() {
           })}
           pagination={{
             position: ["bottomCenter"],
+            onChange: (page, size) => {
+              reduxDispatch(fetchStations({
+                page,
+                size: size
+              }))
+            },
+            total: ((current_page ?? 0) * (current_size ?? 0)) + (
+              feedback?.data?.length < (current_size ?? 0) ? 0 : 1
+            ),
+            showSizeChanger: true, 
           }}
-          data={data ?? []}
+          data={feedback?.data ?? []}
+          primitiveTableProps={{
+            loading: feedback?.loading,
+          }}
         />
     </Flex>
   </ErrorBoundary>
@@ -188,7 +205,7 @@ function Stations() {
 
 export default Stations;
 
-export function getStaticProps() {
+export function getServerSideProps() {
   return {
     props: {
       adminonly: false,

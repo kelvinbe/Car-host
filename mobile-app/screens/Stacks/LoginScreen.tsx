@@ -1,31 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { makeStyles, useTheme } from '@rneui/themed'
+import { makeStyles } from '@rneui/themed'
 import { auth } from '../../firebase/firebaseApp'
-import {  GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
 import Divider from '../../components/atoms/Divider/Divider'
 import IconButton from '../../components/atoms/Buttons/Icon/IconButton'
-import { Icon, Image, Theme } from '@rneui/base'
+import { Icon } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import useToast from '../../hooks/useToast'
-import { StatusBar } from 'expo-status-bar';
 import GoogleIcon from "../../assets/icons/google.svg"
 import FacebookIcon from "../../assets/icons/facebook.svg"
 import AppleIcon from "../../assets/icons/apple.svg"
 import Loading from '../../components/molecules/Feedback/Loading/Loading';
-import { isEmpty } from 'lodash';
 import useSocialAuth from '../../hooks/useSocialAuth';
-import { ResponseType } from 'expo-auth-session';
-import * as Facebook from 'expo-auth-session/providers/facebook';
 import useUserAuth from '../../hooks/useUserAuth';
 import { useAppDispatch } from '../../store/store';
-import { fetchUserData } from '../../store/slices/userSlice';
 import Logo from '../../components/atoms/Brand/Logo';
 import useOnBoarding from '../../hooks/useOnBoarding';
 import { fetchOnboarding } from '../../store/slices/onBoardingSlice';
@@ -198,15 +191,15 @@ const LoginScreen = (props: Props) => {
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
                         <IconButton name="google" containerStyle={{
-                            // marginRight: 20
+                            marginRight: Platform.OS === 'ios' ? 0 : 20
                         }} onPress={()=>googleLogin()} iconType='font-awesome' >
                             <GoogleIcon width={24} height={24} />
                         </IconButton>
-                        <IconButton shadow containerStyle={{
+                        {Platform.OS === 'ios' ? <IconButton shadow containerStyle={{
                             marginHorizontal: 10
                         }} name="apple" iconType='font-awesome' >
                             <AppleIcon fill="black" width={24} height={24} />
-                        </IconButton>
+                        </IconButton> : null}
                         <IconButton onPress={()=>facebookLogin()} name="facebook" iconType='font-awesome' >
                             <FacebookIcon width={24} height={24} />
                         </IconButton>

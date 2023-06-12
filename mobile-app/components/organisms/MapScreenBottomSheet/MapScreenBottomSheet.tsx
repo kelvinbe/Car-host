@@ -1,17 +1,30 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useRef, useReducer } from 'react';
+import { View } from 'react-native';
+import React, { useRef, useEffect } from 'react';
 import { makeStyles } from '@rneui/themed';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BottomSheetParamList, IVehicle } from '../../../types';
+import {  IVehicle } from '../../../types';
 import BookingScreen from './BottomSheetScreens/BookingScreen';
 import PaymentBottomSheet from './BottomSheetScreens/PaymentBottomSheet';
 import AuthorizationBottomSheet from './BottomSheetScreens/AuthorizationCode';
-import DriveCardButton from '../../molecules/DriveCardButton/DriveCardButton';
 import AnimatedScrollList from '../AnimatedScrollList/AnimatedScrollList';
 import ModifyBookingBottomSheet from './BottomSheetScreens/ModifyBooking';
 import CancelBookingBottomSheet from './BottomSheetScreens/CancelBooking';
 import useBookingActions from '../../../hooks/useBookingActions';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { selectBottomSheetState,
+  openAuthorizationCode as openAuthorizationCodeAction,
+  openSelectPaymentMethod as openSelectPaymentMethodAction,
+  startedJourney as startedJourneyAction,
+  closeAuthorizationBottomSheet as closeAuthorizationBottomSheetAction,
+  closePaymentBottomSheet as closePaymentBottomSheetAction,
+  openBottomSheet as openBottomSheetAction,
+  closeBottomSheet as closeBottomSheetAction,
+  modifyBooking as modifyBookingAction,
+  cancelBooking as cancelBookingAction,
+  closeModifyBooking as closeModifyBookingAction,
+  closeCancelBooking as closeCancelBookingAction
+} from '../../../store/slices/mapBottomSheet';
+import ChooseTimeBottomSheet from './BottomSheetScreens/ChooseTime';
 
 interface IProps {
   onClose: () => void;
@@ -19,16 +32,6 @@ interface IProps {
   inReservation?: boolean;
   isCurrent?: boolean;
   isUpcoming?: boolean;
-}
-
-interface IState {
-  open: boolean;
-  upcoming: boolean;
-  current: boolean;
-  authorizationOpen: boolean;
-  paymentOpen: boolean;
-  modifyBooking: boolean;
-  cancelBooking: boolean;
 }
 
 type Props = IProps;
@@ -57,87 +60,9 @@ const useStyles = makeStyles((theme, props: Props) => ({
   },
 }));
 
-const BottomSheetNavigator = createNativeStackNavigator<BottomSheetParamList>();
-
-const initialState: IState = {
-  open: false,
-  upcoming: true,
-  current: false,
-  authorizationOpen: false,
-  paymentOpen: false,
-  modifyBooking: false,
-  cancelBooking: false,
-};
-
-const reducer = (state: IState, action: any) => {
-  switch (action.type) {
-    case 'openAuthorizationCode':
-      return {
-        ...state,
-        authorizationOpen: true,
-      };
-    case 'openSelectPaymentMethod':
-      return {
-        ...state,
-        paymentOpen: true,
-      };
-    case 'startedJourney':
-      return {
-        ...state,
-        upcoming: false,
-        current: true,
-      };
-    case 'closeAuthorizationBottomSheet':
-      return {
-        ...state,
-        authorizationOpen: false,
-      };
-    case 'closePaymentBottomSheet':
-      return {
-        ...state,
-        paymentOpen: false,
-      };
-    case 'openBottomSheet':
-      return {
-        ...state,
-        open: true,
-      };
-    case 'closeBottomSheet':
-      return {
-        ...state,
-        open: false,
-      };
-    case 'modifyBooking':
-      return {
-        ...state,
-        modifyBooking: true,
-      };
-    case 'cancelBooking':
-      return {
-        ...state,
-        cancelBooking: true,
-      };
-    case 'closeModifyBooking':
-      return {
-        ...state,
-        modifyBooking: false,
-      };
-    case 'closeCancelBooking':
-      return {
-        ...state,
-        cancelBooking: false,
-      };
-
-    default:
-      return state;
-  }
-};
-
 const MapScreenBottomSheet = (props: Props) => {
-  const [state, dispatchAction] = useReducer(reducer, {
-    ...initialState,
-    open: props.inReservation ? true : false,
-  });
+  const state = useAppSelector(selectBottomSheetState)
+  const dispatch = useAppDispatch()
   const snapPoints = ['90%'];
   const bottomSheetRef = useRef<BottomSheet>(null);
   const styles = useStyles(props);
@@ -147,56 +72,63 @@ const MapScreenBottomSheet = (props: Props) => {
     clearBookingState
   } = useBookingActions();
 
+  useEffect(()=>{
+    if(props.inReservation){
+      dispatch(openBottomSheetAction())
+    }
+  }, [props.inReservation])
+
   const openAuthorizationCode = () => {
-    dispatchAction({ type: 'openAuthorizationCode' });
+    dispatch(openAuthorizationCodeAction())
   };
 
   const openSelectPaymentMethod = () => {
-    dispatchAction({ type: 'openSelectPaymentMethod' });
+    dispatch(openSelectPaymentMethodAction())
   };
 
   const startedJourney = () => {
-    dispatchAction({ type: 'startedReservation' });
+    dispatch(startedJourneyAction())
   };
 
   const closeAuthorizationBottomSheet = () => {
-    dispatchAction({ type: 'closeAuthorizationBottomSheet' });
+    dispatch(closeAuthorizationBottomSheetAction())
   };
 
   const closePaymentBottomSheet = () => {
-    dispatchAction({ type: 'closePaymentBottomSheet' });
+    dispatch(closePaymentBottomSheetAction())
   };
 
   const openBottomSheet = (vehicle: IVehicle | null) => {
     setVehicle(vehicle);
     props.onOpen();
-    dispatchAction({ type: 'openBottomSheet' });
+    dispatch(openBottomSheetAction())
   };
 
   const closeBottomSheet = () => {
     props.onClose();
-    dispatchAction({ type: 'closeBottomSheet' });
+    dispatch(closeBottomSheetAction())
     clearBookingState();
   };
 
   const openModifyBooking = () => {
-    dispatchAction({ type: 'modifyBooking' });
+    dispatch(modifyBookingAction())
   };
 
   const openCancelBooking = () => {
-    dispatchAction({ type: 'cancelBooking' });
+    dispatch(cancelBookingAction())
   };
 
   const closeModifyBooking = () => {
-    dispatchAction({ type: 'closeModifyBooking' });
+    dispatch(closeModifyBookingAction())
   };
 
   const closeCancelBooking = () => {
-    dispatchAction({ type: 'closeCancelBooking' });
+    dispatch(closeCancelBookingAction())
   };
   return (
     <View style={[styles.mapContainer, state.open ? { height: '100%' } : { bottom: 0 }]}>
-      {state.open && (
+      {(state.chooseTime) && <ChooseTimeBottomSheet/>}
+      {(state.open && !state.chooseTime) && (
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints}

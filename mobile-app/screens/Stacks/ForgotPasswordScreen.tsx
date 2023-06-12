@@ -1,16 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React, {useState} from 'react'
-import { makeStyles, useTheme } from '@rneui/themed'
+import { makeStyles } from '@rneui/themed'
 import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
-import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
-import Divider from '../../components/atoms/Divider/Divider'
-import IconButton from '../../components/atoms/Buttons/Icon/IconButton'
-import { Button, Icon, Image, Theme } from '@rneui/base'
+import { Image } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
+import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth'
+import { auth } from '../../firebase/firebaseApp'
+import useToast from '../../hooks/useToast'
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ForgotPassword'> ;
@@ -98,20 +96,28 @@ const useStyles = makeStyles((theme)=>{
 })
 
 const ForgotPasswordScreen = (props: Props) => {
+    const toast = useToast()
     const styles = useStyles(props)
-    const [viewPassword, setViewPassword] = useState(false)
-    const { theme } = useTheme()
-    const toggleViewPassword = () => {
-        setViewPassword(!viewPassword)
-    }
+    const [email, setEmail] = useState("")
+    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(
+        auth
+      );
 
     const navigateToLogin = () => {
         props.navigation.navigate("Login")
     }
 
-    const navigateToSupport = () => {
-        props.navigation.navigate("SupportScreen", {
-            context: "forgotPassword"
+    const handleSendResetLink = () =>{
+        sendPasswordResetEmail(email).then(()=>{
+            toast({
+                message: "Reset link sent successfully",
+                type: "success"
+            })
+        }).catch(()=>{
+            toast({
+                message: "An error occured. Please try again later",
+                type: "error"
+            })
         })
     }
 
@@ -132,33 +138,19 @@ const ForgotPasswordScreen = (props: Props) => {
                     <Text style={styles.title} >
                         Forgot Password
                     </Text>
-                    <BaseInput containerStyle={{marginBottom: 20}} fullWidth placeholder='email@email.com' label="Email"  />
-                    <Rounded  fullWidth>
-                        Continue
+                    <BaseInput value={email} onChangeText={setEmail} containerStyle={{marginBottom: 20}} fullWidth placeholder='email@email.com' label="Email"  />
+                    <Rounded 
+                        onPress={handleSendResetLink}  
+                        fullWidth
+                        loading={sending}
+                    >
+                        Send Reset Link
                     </Rounded>
-                    <View style={styles.bottomTextContainer} >
-                        <Text style={styles.leftText} >
-                            Don't have access to email?
-                        </Text>
-                        {
-                            /**
-                             * @todo: Add onPress to this button, to navigate to Support Screen
-                             */
-                        }
-                        <Text  onPress={navigateToSupport} style={styles.rightText} >
-                            Support
-                        </Text>
-                    </View>
                 </View>
                 <View style={styles.bottomTextContainer} >
                     <Text style={styles.leftText} >
                         Not You?
                     </Text>
-                    {
-                        /**
-                         * @todo: Add onPress to this button, to navigate to Support Screen
-                         */
-                    }
                     <Text onPress={navigateToLogin}  style={styles.rightText} >
                         Back to login
                     </Text>

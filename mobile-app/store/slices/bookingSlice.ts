@@ -2,8 +2,6 @@ import { IPayment, IPaymentMethod, IPaymentType, IReservation, Inspection, Inspe
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IVehicle } from "../../types";
-import { vehiclesApi } from './vehiclesSlice';
-import { reservationsApi } from './reservationSlice';
 import { first, isNull } from 'lodash';
 import apiClient from '../../utils/apiClient';
 import { RESERVATIONS_ENDPOINT } from '../../hooks/constants';
@@ -63,7 +61,7 @@ export const updateInspection = createAsyncThunk('booking/updateInspection', (da
 
 
 
-type tNotification = {
+export type tNotification = {
     vehicle_id: string,
     code: string,
     host_id: string
@@ -212,7 +210,7 @@ const bookingSlice = createSlice({
             state.notification = action.payload
         },
         setHostCode: (state, action)=>{
-            state.host_code = action.payload
+            state.host_code = action.payload?.trim() ?? ''
         },
         setLocation: (state, action)=>{
             state.location = action.payload

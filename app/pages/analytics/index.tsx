@@ -8,7 +8,7 @@ function Analytics() {
 
 export default Analytics
 
-export function getStaticProps() {
+export function getServerSideProps() {
     return {
         props: {
             adminonly: false,

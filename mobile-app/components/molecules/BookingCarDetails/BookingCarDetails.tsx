@@ -7,6 +7,7 @@ import CarTypeIcon from '../../../assets/icons/car-type.svg';
 import CarSeatIcon from '../../../assets/icons/car-seat.svg';
 import CarIcon from '../../../assets/icons/car.svg';
 import useBookingActions from '../../../hooks/useBookingActions';
+import { constructVehicleName, trimVehicleName } from '../../../utils/utils';
 
 interface IProps {}
 
@@ -95,8 +96,15 @@ const BookingCarDetails = (props: Props) => {
       {({ theme }) => (
         <View style={styles.container}>
           <Text style={styles.headerTitle}>
-            {' '}
-            {vehicle?.make} {vehicle?.model}{' '}
+            {
+              trimVehicleName(
+                constructVehicleName(
+                  vehicle?.make,
+                  vehicle?.model,
+                  vehicle?.year,
+                )
+              )
+            }
           </Text>
           <ScrollView style={styles.scrollView} horizontal>
             {vehicle?.pictures?.map((image, index) => (

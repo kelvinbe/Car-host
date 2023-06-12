@@ -80,7 +80,7 @@ const LocationMarker = (props: Props) => {
                 style={styles.marker}
                 title={props.title}
                 description={props.description}
-                anchor={{x: 0.5, y: 1}}
+                anchor={{x: 0.5, y: 0.5}}
             >
                     <Image
                         source={require("../../../../assets/images/location-pin.png")}

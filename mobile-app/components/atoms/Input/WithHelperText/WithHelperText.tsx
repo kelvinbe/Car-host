@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
 
 const WithHelperText = (props: Props) => {
     const styles = useStyles(props)
+    const { fullWidth, width, helperText, helperOnPress, container, ref, ...rest } = props
   return (
     <ThemeConsumer>
         {({theme})=>(
@@ -108,10 +109,11 @@ const WithHelperText = (props: Props) => {
                 keyboardType={props.keyboardType}
                 maxLength={props.maxLength}
                 disabled={props?.disabled}
+                {...rest}
                 />
-                { typeof props?.helperText !== "string" ? props?.helperText : <Text onPress={props?.helperOnPress} style={{
+                { typeof props?.helperText !== "string" ? props?.helperText : <Text onPress={helperOnPress} style={{
                     ...styles.helperTextStyle,
-                }} >{props.helperText}</Text>}
+                }} >{helperText}</Text>}
             </View>
         )}
     </ThemeConsumer>

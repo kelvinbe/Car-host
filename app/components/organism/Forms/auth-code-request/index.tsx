@@ -6,7 +6,7 @@ import { IAuthCode, IUserProfile, IVehicle } from '../../../../globaltypes'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useAppDispatch, useAppSelector } from '../../../../redux/store'
-import { activateAuthCode, selectUpdateAuthCodeFeedback, updateAuthCode } from '../../../../redux/authcodeSlice'
+import { activateAuthCode, selectActivateAuthCodeFeedback, selectUpdateAuthCodeFeedback, updateAuthCode } from '../../../../redux/authcodeSlice'
 import LogRocket from 'logrocket'
 
 dayjs.extend(relativeTime)
@@ -15,13 +15,14 @@ interface Props {
   data: Partial<IAuthCode> & {
     vehicle?: Partial<IVehicle>
     user?: Partial<IUserProfile>
-  }
+  },
+  onClose: () => void
 }
 
 function AuthCodeRequestForm(props: Props) {
-  const { data } = props
+  const { data, onClose } = props
   const updateFeedback = useAppSelector(selectUpdateAuthCodeFeedback)
-  const activateFeedback = useAppSelector(selectUpdateAuthCodeFeedback)
+  const activateFeedback = useAppSelector(selectActivateAuthCodeFeedback)
   const toast = useToast({
     position: 'top'
   })
@@ -36,6 +37,7 @@ function AuthCodeRequestForm(props: Props) {
           description: "Auth code activated.",
           status: "success",
         })
+        onClose()
       })
       .catch((e: unknown)=>{
         toast({

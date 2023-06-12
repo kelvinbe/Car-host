@@ -215,7 +215,7 @@ export const PayoutsTableColumns: ColumnsType<IPayout> = [
     render: (v, { amount }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          ${amount}
+          {amount}
         </Text>
       </Flex>
     ),
@@ -254,7 +254,7 @@ export const WithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
     render: (v, { amount }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          ${amount}
+          {amount}
         </Text>
       </Flex>
     ),
@@ -285,7 +285,7 @@ export const AdminWithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
         />
         <Flex align={'center'}>
           <Text fontSize="14px" fontWeight="500">
-            {`${user.fname} ${user.lname}`}
+            {`${user?.fname} ${user?.lname}`}
           </Text>
         </Flex>       
       </Flex>
@@ -302,7 +302,7 @@ export const AdminWithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
         </Text>
       </Flex>
     ),
-    sorter: (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
+    sorter: (a, b) => Number(new Date(b?.createdAt)) - Number(new Date(a?.createdAt))
   },
   {
     title: "Amount",
@@ -311,7 +311,7 @@ export const AdminWithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
     render: (v, { amount }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          ${amount}
+          {amount}
         </Text>
       </Flex>
     ),
@@ -531,43 +531,104 @@ export const AllReservationColumns: ColumnsType<any> = [
     ),
   }
 ]    
-export const ReservationColumns: ColumnsType<any> = [
+export const ReservationColumns: ColumnsType<Partial<IReservation>> = [
   {
     title: "Reservation Id",
-    dataIndex: "reservationId",
-    key: "reservationId",
+    dataIndex: "id",
+    key: "id",
+    render: (v, { id }) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {id}
+          </Text>
+        </Flex>
+      )
+    }
   },
   {
     title: "Vehicle Plate",
-    dataIndex: "vehiclePlate",
-    key: "vehiclePlate",
+    dataIndex: "vehicle",
+    key: "vehicle",
+    render: (v, {vehicle}) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {vehicle?.plate}
+          </Text>
+        </Flex>
+      )
+    }
   },
   {
     title: "Vehicle Name",
-    dataIndex: "vehicleName",
-    key: "vehicleName",
+    dataIndex: "vehicle",
+    key: "vehicle",
+    render: (v, {vehicle}) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {vehicle?.make} {vehicle?.model}
+          </Text>
+        </Flex>
+      )
+    }
   },
   {
-    title: "Start and End time",
-    dataIndex: "startEndTime",
-    key: "startEndTime",
+    title: "Start ",
+    dataIndex: "start_date_time",
+    key: "start_date_time",
+    render: (v, { start_date_time }) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {dayjs(start_date_time).format('DD MMM, YYYY')}
+          </Text>
+        </Flex>
+      )
+    }
+  },
+  {
+    title: "Start ",
+    dataIndex: "end_date_time",
+    key: "end_date_time",
+    render: (v, { end_date_time }) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {dayjs(end_date_time).format('DD MMM, YYYY')}
+          </Text>
+        </Flex>
+      )
+    }
   },
   {
     title: "Total cost",
-    dataIndex: "totalCost",
-    key: "totalCost",
-    sorter: (a: DataType, b: DataType) => a.totalCost - b.totalCost,
-    sortDirections: ["descend", "ascend"],
+    dataIndex: "payment",
+    key: "payment",
+    render: (v, { payment, vehicle }) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {payment?.amount}
+          </Text>
+        </Flex>
+      )
+    }
   },
   {
-    title: "Host",
-    dataIndex: "hostName",
-    key: "hostName",
-  },
-  {
-    title: "Location",
-    dataIndex: "location",
-    key: "location",
+    title: "Station",
+    dataIndex: "vehicle",
+    key: "station",
+    render: (v, { vehicle }) => {
+      return (
+        <Flex {...FlexColStartStart}>
+          <Text fontSize="14px" fontWeight="500">
+            {vehicle?.station?.name}
+          </Text>
+        </Flex>
+      )
+    }
   },
   {
     title: "Status",
@@ -658,7 +719,7 @@ export const VehicleManagementTableColumns: ColumnsType<Partial<IVehicle>> = [
     render: (v, { hourly_rate }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          ${hourly_rate}/hr
+          {hourly_rate}/hr
         </Text>
       </Flex>
     ),

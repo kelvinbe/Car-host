@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BottomTabParamList, RootStackParamList, SearchScreenParamList } from '../../../types';
 import { ThemeConsumer } from '@rneui/themed';
@@ -15,6 +15,8 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { fetchOnboarding } from '../../../store/slices/onBoardingSlice';
 import { fetchUserData } from '../../../store/slices/userSlice';
 import { selectChosenHostCode } from '../../../store/slices/bookingSlice';
+import useBookingActions from '../../../hooks/useBookingActions';
+import { selectCurrentScreen, selectPreviousScreen } from '../../../store/slices/navigationSlice';
 const SearchScreenStacks = createNativeStackNavigator<SearchScreenParamList>();
 
 
@@ -23,7 +25,16 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
   const [user] = useAuthState(auth);
   const dispatch = useAppDispatch();
   const host_code = useAppSelector(selectChosenHostCode)
+  const { clearBookingState } = useBookingActions()
+  const  currentScreen = useAppSelector(selectCurrentScreen)
+  const  prevScreen = useAppSelector(selectPreviousScreen)
 
+  useEffect(()=>{
+    if (currentScreen === 'SearchScreenHome' && prevScreen === 'MapScreen') {
+      clearBookingState()
+    }
+  }, [currentScreen, prevScreen])
+  
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -42,6 +53,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
             <SearchScreenStacks.Screen
               options={{
                 headerShown: false,
+                animation: 'slide_from_right'
               }}
               name="SearchScreenHome"
               component={SearchScreenHome}
@@ -58,6 +70,7 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                     {...props}
                   />
                 ),
+                animation: 'slide_from_bottom'
               }}
               component={BookingConfirmationScreen}
             />
@@ -73,11 +86,12 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
                     title={
                       (props.route.params as any)?.searchType === 'local'
                         ? 'Search Locally'
-                        : `${host_code}'s Vehicles`
+                        : host_code ?  `${host_code}'s Vehicles` : "Booking Screen"
                     }
                     {...props}
                   />
                 ),
+                animation: 'slide_from_bottom'
               }}
               component={MapScreen}
             />

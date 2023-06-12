@@ -5,6 +5,7 @@ import LocationDirection from "../../../assets/icons/direction.svg"
 import { IVehicle, SearchScreenParamList } from '../../../types'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { first } from 'lodash'
+import { constructVehicleName, trimVehicleName } from '../../../utils/utils'
 interface IProps {
     customContainerStyle?: StyleProp<ViewStyle>;
     onPress?: () => void;
@@ -146,7 +147,15 @@ const DriveCardButton = (props: Props) => {
                             </Text>
                         </View>
                         <Text style={styles.driveInfoText} >
-                            {props?.make} {props?.model}
+                            {
+                                trimVehicleName(
+                                    constructVehicleName(
+                                        props?.make,
+                                        props?.model,
+                                        props?.year
+                                    )
+                                )
+                            }
                         </Text>
                         <Text style={styles.amountStyle} >
                             {props?.hourly_rate} {props?.host?.market?.currency} /hr

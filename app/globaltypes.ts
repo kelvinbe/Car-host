@@ -247,7 +247,7 @@ export interface IUserProfile {
   stripeCustomerId?: string; // keep this for now, but this will eventually get phased out
   customer_id?: string | null;
   sub_market_id: string | null;
-  PayoutMethods: PayoutMethods[];
+  PayoutMethod: PayoutMethods[];
   user_settings: Partial<IUserSettings>;
   is_admin: boolean | null;
   sent_invites: dIInvitation[] | null;
@@ -406,4 +406,38 @@ export interface IWithdrawals {
 export interface IAnalyticsData{
   name: string;
   value: number 
+}
+
+/**
+ * @name asyncThinkFetchParams
+ * @description - the params that are used to fetch data from the async thunk
+ */
+export interface asyncThinkFetchParams { 
+  /**
+   * @description - the page number to fetch
+   */
+  page: number
+  /**
+   * @description - the number of records to fetch
+   */
+  size: number
+  /**
+   * @description - the search query to use
+   */
+  search?: string
+  /**
+   * @description - the sort order to use
+   */
+  sort?: 'asc' | 'desc'
+}
+
+/**
+ * @name slicePaginationSupportState
+ * @description - the state that is used to support pagination in the redux slice
+ */
+export interface PaginationSupportState {
+  current_page: number;
+  current_size: number;
+  current_search: string;
+  current_sort: string;
 }

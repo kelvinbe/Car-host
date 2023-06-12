@@ -62,7 +62,7 @@ const ManageResHomeScreen = (props: Props) => {
 
   useEffect(() => {
     refetch()
-    
+
   }, [currentScreen])
 
   return ( 

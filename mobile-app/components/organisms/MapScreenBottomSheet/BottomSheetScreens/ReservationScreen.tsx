@@ -95,24 +95,16 @@ const ReservationScreen = (props: Props) => {
   }
 
   const handleLocationPermissions = async () => {
-    try {
-      const hasPermissions = await requestLocationPermissions()
-      if(hasPermissions){
-        navProps.navigate("LoadingScreen", {
-          reservation_id: bookingDetails.reservation_id
-        })
-        closeBottomSheet()
-      }else{
-        toast({
-          type:'error',
-          message: "We need access to your location to proceed with the ride."
-        })
-      }
-
-    } catch (e) {
+    const hasPermissions = await requestLocationPermissions()
+    if(hasPermissions){
+      navProps.navigate("LoadingScreen", {
+        reservation_id: bookingDetails.reservation_id
+      })
+      closeBottomSheet()
+    }else{
       toast({
         type:'error',
-        message: "An error occurred while trying to enable location services. Please try again."
+        message: "Enable location permissions to proceed"
       })
     }
   }
@@ -134,8 +126,8 @@ const ReservationScreen = (props: Props) => {
 
   useEffect(()=>{
     if(props?.isCurrent){
-      Linking.openURL(Linking.createURL("/manage-reservations")).then(()=>{
-        Linking.openURL(Linking.createURL('upcoming'))
+      Linking.openURL(Linking.createURL('upcoming')).then(()=>{
+        Linking.openURL(Linking.createURL("/manage-reservations"))
       })
     }
   }, [props.isCurrent])

@@ -17,6 +17,7 @@ jobs:
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
+      NEXT_PUBLIC_TRACKING_SERVICE: ${{ secrets.NEXT_PUBLIC_TRACKING_SERVICE }}
     if: true
     runs-on: [self-hosted, production]
     steps:
@@ -51,6 +52,7 @@ jobs:
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
+      NEXT_PUBLIC_TRACKING_SERVICE: ${{ secrets.NEXT_PUBLIC_TRACKING_SERVICE }}
     steps:
       - name: Make script executable
         run: chmod +x ./scripts/cleanupProduction.sh
@@ -71,6 +73,7 @@ jobs:
           --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY \
           --build-arg NEXT_PUBLIC_API_DOMAIN=$NEXT_PUBLIC_API_DOMAIN \
           --build-arg NEXT_PUBLIC_LOGROCKET_APP_ID=$NEXT_PUBLIC_LOGROCKET_APP_ID \
+          --build-arg NEXT_PUBLIC_TRACKING_SERVICE=$NEXT_PUBLIC_TRACKING_SERVICE \
           .
       - name: Start the docker container
         run: docker run -dp 3001:3000 divvly-cp-production

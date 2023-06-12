@@ -1,22 +1,25 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { PaymentDetailsScreenParamList } from '../../../../types'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../../../components/atoms/Input/WithHelperText/WithHelperText'
 import { Icon } from '@rneui/base'
-import { removeSpaces } from "../../../../utils/utils"
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded'
 import useToast from '../../../../hooks/useToast'
-import { selectCardNum, selectIsCardNumValid, selectCardCvv, selectIsCvvValid, selectCardExp, selectIsExpDateValid, selectAttemptsToSubmit, selectCardName, selectPaymentCardAdded } from '../../../../store/slices/addCardSlice'
-import { setCardCvv, setCardName, setCardNum, setCardExp } from '../../../../store/slices/addCardSlice'
-import { useDispatch, useSelector } from 'react-redux'
 import { useAddPaymentMethodMutation } from '../../../../store/slices/billingSlice'
 import Error from '../../../../components/molecules/Feedback/Error/Error'
 import { fetchUserData, selectUserProfile } from '../../../../store/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
-import { isUndefined } from 'lodash'
+import { isEmpty } from 'lodash'
+import { z } from 'zod'
+import { Masks, useMaskedInputProps } from 'react-native-mask-input'
+
+
+// custom masks 
+const CREDIT_CARD_EXP_DATE = [/[0-1]/, /\d/, '/', /\d/, /\d/];
+
 
 type Props = NativeStackScreenProps<PaymentDetailsScreenParamList, "AddCardScreen">
 
@@ -75,84 +78,141 @@ const useStyles = makeStyles((theme, props: Props)=>{
     }
 })
 
+const card_details_schema = z.object({
+    card_number: z.string().min(16).max(16),
+    cvc: z.string().min(3).max(3),
+    exp_month: z.number().min(1).max(12),
+    exp_year: z.number().min(2021),
+})
+
 
 function AddCard(props: Props){
+    const user = useAppSelector(selectUserProfile)
     const toast = useToast()
     const dispatch = useAppDispatch()
     const { theme } = useTheme()
+    const [{ name, cardNumber, cvv, expDate, errors }, setInputState] = useState<Partial<{
+        cardNumber: string | undefined,
+        cvv: string | undefined,
+        expDate: string | undefined,
+        name: string | undefined, 
+        errors: Partial<{
+            cardNumber: boolean,
+            cvv: boolean,
+            expDate: boolean,
+            name: boolean
+        }>
+    }>>({})
 
-    const name = useSelector(selectCardName)
-    const cardNumber = useSelector(selectCardNum)
-    const isCardNumberValid = useSelector(selectIsCardNumValid)
-    const cvv = useSelector(selectCardCvv)
-    const attemptsToSubmit = useSelector(selectAttemptsToSubmit)
-    const expDate = useSelector(selectCardExp)
-    const isExpDateValid = useSelector(selectIsExpDateValid)
-    const isCvvValid = useSelector(selectIsCvvValid)
-
+    
     const [addPaymentMethod, { isLoading, isError }] = useAddPaymentMethodMutation()
-
-
+    
+    
     const handleNameChange = (text: string) => {
-        dispatch(setCardName({
-            payload: text
-        }))
+        setInputState((prev)=>{
+            return {
+                ...prev,
+                name: text,
+                errors: {
+                    ...prev.errors,
+                    name: !z.string().min(1).optional().safeParse(text)?.success
+                }
+            }
+        })
     }
-
+    
     const handleCardNumberChange = (text:string) => {
-        dispatch(setCardNum({
-            payload: removeSpaces(text)
-        }))
+        setInputState((prev)=>{
+            return {
+                ...prev,
+                cardNumber: text,
+                errors: {
+                    ...prev.errors,
+                    cardNumber: !z.string().min(16).max(16).optional().safeParse(text?.replaceAll(" ", ""))?.success
+                }
+            }
+        })
         
     }
+    const card_number_mask_input_props = useMaskedInputProps({
+        mask: Masks.CREDIT_CARD,
+        onChangeText:  handleCardNumberChange,
+        value: cardNumber,
+    })
 
     const handleExpDateChange = (text: string) => {
-        dispatch(setCardExp({
-            payload: removeSpaces(text)?.replace("/", "")
-        }))
+        setInputState((prev)=>{
+            return {
+                ...prev,
+                expDate: text,
+                errors: {
+                    ...prev.errors,
+                    expDate: !z.string().min(5).max(5).optional().safeParse(text)?.success
+                }
+            }
+        })
     }
+
+    const exp_date_mask_input_props = useMaskedInputProps({
+        mask: CREDIT_CARD_EXP_DATE,
+        onChangeText:  handleExpDateChange,
+        value: expDate,
+    })
 
     const handleCvvChange = (text: string) => {
-        dispatch(setCardCvv({
-            payload: removeSpaces(text)
-        }))
+        setInputState((prev)=>{
+            return {
+                ...prev,
+                cvv: text,
+                errors: {
+                    ...prev.errors,
+                    cvv: !z.string().min(3).max(3).optional().safeParse(text)?.success
+                }
+            }
+        })
     }
 
-    const user = useAppSelector(selectUserProfile)
 
     const handleAddCard = async () => {
-    
-        if(isUndefined(cardNumber)){
-            return 
-        }
-        const strinigfiedCardNumber = cardNumber?.toString()
-        try {
-            if (!isCardNumberValid || !isExpDateValid || !isCvvValid || name.length === 0)  return toast({
+
+        const parsed = card_details_schema.safeParse({
+            card_number: cardNumber?.replaceAll(" ", ''),
+            cvc:cvv,
+            name,
+            exp_month: Number(expDate?.slice(0,2)),
+            exp_year: Number(expDate?.slice(2,5)?.replace("/", ''))+2000,
+        })
+
+        if(!parsed.success){
+            console.log(parsed.error)
+            return toast({
                 type: "error",
                 message: "Please fill in all the fields correctly"
             })
+        }
+
+        const data = parsed.data 
+
+        try {
             await addPaymentMethod({
-                card_number: strinigfiedCardNumber?.replace(/\s/g, ''),
+                card_number: data.card_number?.replaceAll(" ", '')??undefined,
                 customer_id: user?.customer_id??undefined,
-                cvc: cvv,
-                exp_month: Number(expDate?.slice(0,2)),
-                exp_year: Number(expDate?.slice(2,5)?.replace("/", ''))+2000,
+                cvc: data.cvc,
+                exp_month: data.exp_month,
+                exp_year: data.exp_year,
                 type: "card"
-            })
+            }).unwrap()
             dispatch(fetchUserData(null))
-        props.navigation.goBack()
-            
+            props.navigation.goBack()
         } catch (error) {
-            console.log('error', error)
             toast({
                 title: 'Error',
-                message: 'Somethoing went wrong',
+                message: 'Something went wrong',
                 type: 'error'
             })
         }
-        
-        
     }
+
     const styles = useStyles(props)   
 
     return ( isError ? <Error/> :
@@ -168,41 +228,48 @@ function AddCard(props: Props){
                         marginBottom: 45
                     }} 
                     helperText={
-                        attemptsToSubmit > 0 && name.length === 0 ? <View style={styles.helperTextLeft} >
+                        errors?.name ? <View style={styles.helperTextLeft} >
                             <Text style={styles.errorText} >Name is required</Text>
                         </View> : ""
                     }
                     />
                 <WithHelperText 
                     label="Card Number"
-                    placeholder="xxxx xxxx xxxx xxxx" 
                     keyboardType="numeric"
-                    maxLength={19}
-                    onChangeText={handleCardNumberChange}
-                    value={cardNumber}
                     rightIcon={
-                        cardNumber?.length > 0 ? !isCardNumberValid ? <Icon name="exclamation-circle" size={16} type="font-awesome" color={theme.colors.success} /> : <Icon name="check-circle" size={16} type="font-awesome" color={theme.colors.success} /> : undefined
+                        errors?.cardNumber ? 
+                        (isEmpty(cardNumber) ? undefined : <Icon name="exclamation-circle" size={16} type="font-awesome" color={theme.colors.success} />) : 
+                        ( isEmpty(cardNumber) ? undefined : <Icon name="check-circle" size={16} type="font-awesome" color={theme.colors.success} />) 
                     }
-                    fullWidth container={{
+                    fullWidth 
+                    container={{
                         marginBottom: 45
                     }} 
+                    {
+                        ...card_number_mask_input_props
+                    }
+                    placeholder="xxxx xxxx xxxx xxxx" 
                     helperText={
-                        attemptsToSubmit > 0 && !isCardNumberValid ? <View style={styles.helperTextLeft} >
-                            <Text style={styles.errorText} >Card number is invalid</Text>
+                        errors?.cardNumber ? <View style={styles.helperTextLeft} >
+                            <Text style={styles.errorText} >{
+                                isEmpty(cardNumber) ? "" : "Card number is invalid"
+                            }</Text>
                         </View> : ""
                     }
                     />
                 <View style={styles.bottomInputSection} >
                     <BaseInput
-                        width={"45%"}
-                        value={expDate}
+                        {
+                            ...exp_date_mask_input_props
+                        }
                         placeholder="MM/YY"
+                        width={"45%"}
                         label="Exp. Date"
                         keyboardType='numeric'
-                        maxLength={5}
-                        onChangeText={handleExpDateChange}
                         rightIcon={
-                            expDate?.length > 0 ? !isExpDateValid ? <Icon name="exclamation-circle" size={16} type="font-awesome" color={theme.colors.error} /> : <Icon size={16} name="check-circle" type="font-awesome" color={theme.colors.success} /> : undefined
+                            errors?.expDate ? 
+                            ( isEmpty(expDate) ? undefined :<Icon name="exclamation-circle" size={16} type="font-awesome" color={theme.colors.error} />) : 
+                            ( isEmpty(expDate) ? undefined : <Icon size={16} name="check-circle" type="font-awesome" color={theme.colors.success} />) 
                         }
                     />
                     <BaseInput
@@ -215,13 +282,26 @@ function AddCard(props: Props){
                         onChangeText={handleCvvChange}
                         secureTextEntry
                         rightIcon={
-                            cvv?.length > 0 ? !isCvvValid ? <Icon size={16} name="exclamation-circle" type="font-awesome" color={theme.colors.error} /> : <Icon size={16} name="check-circle" type="font-awesome" color={theme.colors.success} /> : undefined
+                            errors?.cvv ? 
+                            (isEmpty(cvv) ? undefined : <Icon size={16} name="exclamation-circle" type="font-awesome" color={theme.colors.error} />) : 
+                            (isEmpty(cvv) ? undefined : <Icon size={16} name="check-circle" type="font-awesome" color={theme.colors.success} />)
                         }
                     />
                 </View>
             </View>
             <View style={styles.bottomSection} >
-                <Rounded loading={isLoading} fullWidth onPress = {handleAddCard} >
+                <Rounded 
+                    disabled={
+                        !card_details_schema.safeParse({
+                            name, 
+                            cvc: cvv,
+                            card_number: cardNumber?.replaceAll(" ", ''),
+                            exp_month: Number(expDate?.slice(0,2)),
+                            exp_year: Number(expDate?.slice(2,5)?.replace("/", ''))+2000,
+                        }).success
+                    }
+                    loading={isLoading} 
+                    fullWidth onPress = {handleAddCard} >
                     Add Card
                 </Rounded>
             </View>

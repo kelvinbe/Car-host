@@ -10,6 +10,22 @@ import { useTheme } from '@rneui/themed'
 import { fetchUserData } from '../../../../../store/slices/userSlice'
 import SelectDropdown from '../../../select-dropdown'
 import { DropdownData } from '../../../select-dropdown/types'
+import { useMaskedInputProps } from 'react-native-mask-input'
+
+const PHONE_NUMBER = [
+    '0',
+    '7',
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+];
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -66,6 +82,14 @@ const MobileMoneyForm = (props: IProps) => {
         key: "M-Pesa",
         value: "MPESA"
     })
+
+    const maskedInputProps = useMaskedInputProps({
+        value: mpesa_number,
+        onChangeText: (v)=>set_mpesa_number(v),
+        mask: PHONE_NUMBER,
+        placeholderFillCharacter: ' ',
+    })
+
     const handleAddPaymentMethod = async () => {
         const number = parseInt(mpesa_number?.replace("+", "") ?? "")
         if (isNaN(number)) return toast({
@@ -93,31 +117,31 @@ const MobileMoneyForm = (props: IProps) => {
 
     return (
         <View style={styles.container} >
-            <View style={{ width: "100%" }} >
+            <View style={{width: "100%"}} >
                 <SelectDropdown
-                    data={[
-                        {
-                            key: "M-Pesa",
-                            value: "MPESA"
-                        },
-                        {
-                            key: "MTN Mobile Money",
-                            value: "MTN"
-                        }
-                    ]}
-                    selected={selected}
-                    setSelected={setSelected}
-                    placeholder={"Select a Mobile Money Provider"}
-                    searchOptions={{ cursorColor: theme.colors.primary }}
-                    searchBoxStyles={styles.serachBox}
-                    dropdownStyles={styles.dropdown}
+                data={[
+                    {
+                        key: "M-Pesa",
+                        value: "MPESA"
+                    },
+                    {
+                        key: "MTN Mobile Money",
+                        value: "MTN"
+                    }
+                ]}
+                selected={selected}
+                setSelected={setSelected}
+                placeholder={"Select a Mobile Money Provider"}
+                searchOptions={{ cursorColor: theme.colors.primary }}
+                searchBoxStyles={styles.serachBox}
+                dropdownStyles={styles.dropdown}
                 />
                 <View style={styles.inputContainerStyle} >
-                    <BaseInput
-                        value={mpesa_number}
-                        onChangeText={(v) => set_mpesa_number(v)}
-                        label="Account Number"
-                        placeholder="+254xxxxxxxxx"
+                    <BaseInput 
+                        {...maskedInputProps}
+                        label="Phone Number"
+                        placeholder='07XX-XXX-XXX'
+                        keyboardType="number-pad"
                     />
                 </View>
             </View>
@@ -130,7 +154,7 @@ const MobileMoneyForm = (props: IProps) => {
                 </Rounded>
             </View>
         </View>
-    )
+      )
 }
 
 export default MobileMoneyForm

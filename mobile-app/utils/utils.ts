@@ -3,7 +3,9 @@ import { z } from "zod"
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage"
 import { app } from "../firebase/firebaseApp"
 import { isUndefined } from "lodash"
-
+import * as Location from 'expo-location'
+import store from "../store/store"
+import { searchLocally } from "../store/slices/searchSlice"
 /**
  * @name addSpacingAfterEveryFourDigits
  * @description Adds a space after every four digits
@@ -215,3 +217,76 @@ export const add_padding = (num: number = 1, data: Array<unknown>) =>{
     })
     return [...left, ...data, ...right]
 }   
+
+
+export const sleep = (ms: number ): Promise<null> => {
+    return new Promise((res,) => {
+        setTimeout(()=>{
+            res(null)
+        }, ms)
+    })
+}
+
+
+export const location_search = async () => {
+    let retries = 0
+    let coords: Location.LocationObjectCoords | null = null
+    
+
+    try {   
+        store.dispatch({
+            type: searchLocally.pending.type,
+        })
+        do {
+            coords = (await Promise.race([sleep(3000), Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.Balanced,
+                mayShowUserSettingsDialog: true,
+            })]))?.coords ?? null 
+
+            if (coords === null) {
+                retries += 1
+                continue
+            }
+
+            store.dispatch({
+                type: searchLocally.fulfilled.type,
+                payload: coords
+            })
+        } while (retries < 3 && !coords)
+
+        const last_known = (await Promise.race([sleep(3000), Location.getLastKnownPositionAsync({})]))
+        if (last_known) {
+            store.dispatch({
+                type: searchLocally.fulfilled.type,
+                payload: last_known.coords
+            })
+        }
+    } catch(e) {
+        store.dispatch({
+            type: searchLocally.rejected.type,
+            payload: e
+        })
+    }
+}
+
+/**
+ * @name trimVehicleName
+ * @description Trims the vehicle name to 15 characters
+ * @param name 
+ * @returns 
+ */
+export const trimVehicleName = (name?: string) => {
+    if (!name) return ""
+    const length = name.length
+
+    if (length > 15) {
+        return name.slice(0, 20) + "..."
+    }
+
+    return name
+}
+
+export const constructVehicleName = (make?: string | null, model?: string | null, year?: string | null | number) => {
+    if (!make || !model || !year) return ""
+    return `${make} ${model} ${year}`
+}

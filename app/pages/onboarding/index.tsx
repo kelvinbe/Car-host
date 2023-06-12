@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Grid, GridItem, useToast } from '@chakra-ui/react'
+import { Flex, Grid, GridItem, useToast } from '@chakra-ui/react'
 import { Steps } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/store'
@@ -14,6 +14,9 @@ import { ErrorBoundary } from 'react-error-boundary'
 import ErrorFallback from '../../components/organism/ErrorFallback'
 import { logError } from '../../utils/utils'
 import LogRocket from 'logrocket'
+import { fetchUser } from '../../redux/userSlice'
+import LoadingComponent from '../../components/molecules/feedback/LoadingComponent'
+import { FlexRowCenterCenter } from '../../utils/theme/FlexConfigs'
 
 
 function Onboarding() {
@@ -22,6 +25,7 @@ function Onboarding() {
     const onBoardingError = useAppSelector(selectOnBoardingError)
     const dispatch = useAppDispatch()
     const { push } = useRouter()
+    const [loading, setLoading] = useState<boolean>(false)
 
     const [currentStep, setCurrentStep] = useState<{
         current: number,
@@ -36,17 +40,21 @@ function Onboarding() {
     useEffect(()=>{
         (async()=>{
             try {
-                await dispatch(fetchOnboardingDetails()).unwrap()
+                setLoading(true)
+                await dispatch(fetchUser())
+                await dispatch(fetchOnboardingDetails())
             } catch (e) {
-                LogRocket.error(e)
                 toast({
                     title: "An error occured", 
                     description: "Something went wrong try again later",
                     position: 'top',
                     id: 'onboarding-error'
                 })
+                LogRocket.error(e)
             }
-
+            finally{
+                setLoading(false)
+            }
         })()
     }, [])
 
@@ -108,6 +116,15 @@ function Onboarding() {
         })
     }
 
+
+    if(loading){
+        return (
+            <Flex w="100vw" h='100vh'  {...FlexRowCenterCenter}  >
+                <LoadingComponent/>
+            </Flex>
+        )
+    }
+
     return (
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
         <Grid w="100vw" h='100vh' templateColumns={"1fr 1fr 1fr 1fr"} padding="20px" >
@@ -151,7 +168,7 @@ function Onboarding() {
 export default Onboarding
 
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     return {
         props: {
             adminonly: false,

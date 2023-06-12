@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import FilterableTable from '../FilterableTable/FilterableTable'
 import { AuthCodeTableColumnTypes } from './authcode-table.columntypes'
 import { useAppDispatch, useAppSelector } from '../../../../redux/store'
-import { fetchAuthCodes, selectAuthCodeFeedback } from '../../../../redux/authcodeSlice'
+import { fetchAuthCodes, selectAuthCodeFeedback, selectPaginationState } from '../../../../redux/authcodeSlice'
 import LogRocket from 'logrocket'
 import LoadingComponent from '../../../molecules/feedback/LoadingComponent'
 import ErrorComponent from '../../../molecules/feedback/ErrorComponent'
@@ -23,6 +23,7 @@ function AuthCodeTable(props: Props) {
   const { onEdit } = props
   const feedback = useAppSelector(selectAuthCodeFeedback) 
   const dispatch = useAppDispatch()
+  const { current_page, current_size } = useAppSelector(selectPaginationState)
 
   useEffect(()=>{
     (async ()=>{
@@ -37,9 +38,7 @@ function AuthCodeTable(props: Props) {
   return (
     <>
       {
-        feedback.loading ? ( 
-          <LoadingComponent/>
-        ) : feedback.error ? <ErrorComponent
+        feedback.error ? <ErrorComponent
           error="Something went wrong while fetching auth codes. Please try again later."
         /> : (
           <FilterableTable 
@@ -63,6 +62,21 @@ function AuthCodeTable(props: Props) {
               viewAddFieldButton={false}
               viewSearchField={false}
               openCreateModal={()=>{}}
+              pagination={{
+                defaultPageSize: 10,
+                position: ["bottomCenter"],
+                onChange: async (page, pageSize)=>{
+                  dispatch(fetchAuthCodes({page, size: pageSize}))
+                },
+                total: ((current_page ?? 0) * (current_size ?? 0)) + (
+                  feedback?.data?.length < (current_size ?? 0) ? 0 : 1
+                ),
+                showSizeChanger: true
+              }}
+              primitiveTableProps={{
+                loading: feedback.loading,
+              }}
+              
           />
         )
       }

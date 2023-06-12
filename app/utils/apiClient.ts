@@ -1,8 +1,33 @@
 import axios from 'axios'
-import { getAuth } from 'firebase/auth'
+import { User, getAuth } from 'firebase/auth'
 import { app } from '../firebase/firebaseApp'
 import { isEmpty } from 'lodash'
 import LogRocket from 'logrocket'
+import store from '../redux/store'
+import { fetchUser } from '../redux/userSlice'
+
+class DebounceUser {
+    retries = 0
+    constructor() {
+
+    }
+
+    async getUser(): Promise<User> {
+        const currentUser = getAuth(app).currentUser
+        if(isEmpty(currentUser)) {
+            if(this.retries > 20) return Promise.reject("User not logged in")
+            this.retries += 1
+            await new Promise((resolve)=>setTimeout(resolve, 1000))
+            return this.getUser()
+        }
+
+        if(this.retries > 5) {
+            store.dispatch(fetchUser())
+        }
+        return currentUser
+    }
+}
+
 
 const apiClient = axios.create({
     headers: {
@@ -11,11 +36,15 @@ const apiClient = axios.create({
     }
 })
 
-apiClient.interceptors.request.use((config)=> {
-    const currentUser = getAuth(app).currentUser
-    if(isEmpty(currentUser)) return Promise.reject("User not logged in")
-    return getAuth(app).currentUser?.getIdToken().then((token)=>{
+apiClient.interceptors.request.use(async (config)=> {
+    const db = new DebounceUser()
+    try {
+        const user = await db.getUser() 
+
+        const token = await user.getIdToken()
+
         localStorage.setItem("token", token)
+
         return {
             ...config,
             headers: {
@@ -23,10 +52,11 @@ apiClient.interceptors.request.use((config)=> {
                 "Authorization": `Bearer ${token}`
             }
         }
-    }).catch((e)=>{
-        LogRocket.error(e)
+    } catch (e) {
         localStorage.removeItem("token")
-    })
+        LogRocket.error(e)
+        return Promise.reject("User not logged in")
+    }
 })
 
 
@@ -52,3 +82,7 @@ apiClient.interceptors.response.use((response)=>{
 
 
 export default apiClient
+
+const db_user = new DebounceUser()
+
+export { db_user }

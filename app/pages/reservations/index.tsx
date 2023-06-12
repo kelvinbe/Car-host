@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Flex, IconButton } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { TablePaginationConfig } from "antd/es/table";
-import { useAppSelector } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import ReservationModal from "../../components/organism/Modals/ReservationModal";
 import { useDisclosure } from "@chakra-ui/react";
-import { selectReservations } from "../../redux/reservationSlice";
+import { fetchReservations, selectReservations, selectReservationsFeedback, selectReservationsPaginationState } from "../../redux/reservationSlice";
 import useReservation from "../../hooks/useReservation";
-import dayjs from "dayjs";
 import { insertTableActions } from "../../utils/tables/utils";
 import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
-import { lowerCase } from "lodash";
+import { isEmpty, lowerCase } from "lodash";
 import { ReservationColumns } from "../../utils/tables/TableTypes";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
@@ -30,59 +28,25 @@ export interface DataType {
 }
 
 function Reservations() {
+  const feedback = useAppSelector(selectReservationsFeedback)
+  const { current_page, current_size} = useAppSelector(selectReservationsPaginationState)
+  const dispatch = useAppDispatch()
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [currentPage, setCurrentPage] = useState(1);
   const [toggleViewReservationModal, setToggleViewReservationModal] =
     useState(false);
   const [toggleEditReservationModal, setToggleEditReservationModal] =
     useState(false);
-  const [reservationData, setReservationData] = useState<DataType[]>([]);
-  const [reservationId, setReservationId] = useState<string>();
   const [search, setSearch] = useState<string>("");
+  const { deleteReservation } = useReservation();
+  const [currentReservation, setCurrentReservation] = useState<string>()
+  const [currentVehicle, setCurrentVehicle] = useState<string>()
 
-  const reservations = useAppSelector(selectReservations);
-  const { fetchReservations, deleteReservation } = useReservation(
-    undefined,
-    undefined,
-    currentPage
-  );
 
   useEffect(() => {
-    fetchReservations();
-  }, [currentPage]);
-
-  useEffect(() => {
-    setReservationData(() =>
-      reservations.map((reservation) => ({
-        reservationId: reservation?.id,
-        vehiclePlate: reservation?.vehicle?.plate,
-        vehicleName: `${reservation?.vehicle?.make} ${reservation?.vehicle?.model}`,
-        startEndTime: `${dayjs(reservation?.start_date_time).format(
-          "DD/MM/YYYY h:mm A"
-        )} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
-        totalCost: reservation?.payment?.amount,
-        hostName: `${reservation?.vehicle?.host?.fname} ${reservation?.vehicle?.host?.lname}`,
-        location: reservation?.vehicle?.station?.name,
-        status: lowerCase(reservation?.status),
-      }))
-    );
-  }, [reservations]);
-
-  const filteredReservationData = reservationData.filter(
-    (reservation) =>
-      reservation?.vehiclePlate
-        ?.toLocaleLowerCase()
-        .includes(search.toLocaleLowerCase()) ||
-      reservation?.hostName
-        ?.toLocaleLowerCase()
-        .includes(search.toLocaleLowerCase()) ||
-      reservation?.location
-        ?.toLocaleLowerCase()
-        .includes(search.toLocaleLowerCase()) ||
-      reservation?.vehicleName
-        ?.toLocaleLowerCase()
-        .includes(search.toLocaleLowerCase())
-  );
+    dispatch(fetchReservations({
+      search: isEmpty(search) ? undefined : search,
+    }))
+  }, [,search?.trim()?.length])
 
   const changeStateViewModal = () => {
     setToggleViewReservationModal(!toggleViewReservationModal);
@@ -90,19 +54,20 @@ function Reservations() {
   const changeStateEditModal = () => {
     setToggleEditReservationModal(!toggleEditReservationModal);
   };
-  const showViewReservationModal = (reservation_id: string) => {
+  const showViewReservationModal = (id: string) => {
+    setCurrentReservation(id)
+    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
+    setCurrentVehicle(reservation?.vehicle_id?.toString())
     onOpen();
     changeStateViewModal();
-    setReservationId(reservation_id);
   };
   const showEditReservationModal = (id: string) => {
+    setCurrentReservation(id)
+    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
+    setCurrentVehicle(reservation?.vehicle_id?.toString())
     onOpen();
     changeStateEditModal();
-    setReservationId(id);
-  };
 
-  const handlePageChange = (pagination: TablePaginationConfig) => {
-    pagination.current && setCurrentPage(pagination.current);
   };
 
   return (
@@ -115,7 +80,8 @@ function Reservations() {
           changeStateViewModal={changeStateViewModal}
           toggleEditReservationModal={toggleEditReservationModal}
           changeStateEditModal={changeStateEditModal}
-          reservationId={reservationId}
+          reservationId={currentReservation}
+          vehicleId={currentVehicle}
         />
         <FilterableTable
           viewSearchField={true}
@@ -156,16 +122,26 @@ function Reservations() {
           })}
           pagination={{
             position: ["bottomCenter"],
+            onChange: (page, pageSize) => {
+              dispatch(fetchReservations({ page, size: pageSize }))
+            },
+            total: ((current_page ?? 0) * (current_size ?? 0)) + (
+              feedback?.data?.length < (current_size ?? 0) ? 0 : 1
+            ),
+            showSizeChanger: true, 
           }}
-          handlePageChange={handlePageChange}
-          data={filteredReservationData}
+          data={feedback?.data ?? [] } 
           setSearch={setSearch}
           sortables={[
             {
-              columnKey: "totalCost",
-              columnName: "Total Cost",
+              columnKey: "payment",
+              columnName: "Total cost",
             },
           ]}
+          primitiveTableProps={{
+            loading: feedback?.loading,
+          }}
+          
         />
       </Flex>
     </ErrorBoundary>
@@ -174,7 +150,7 @@ function Reservations() {
 
 export default Reservations;
 
-export function getStaticProps() {
+export function getServerSideProps() {
   return {
     props: {
       adminonly: false,

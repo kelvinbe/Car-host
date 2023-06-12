@@ -13,7 +13,8 @@ import useToast from '../../../hooks/useToast';
 import { useAppSelector } from '../../../store/store';
 import { selectUserProfile } from '../../../store/slices/userSlice';
 import useNotifications from '../../../hooks/useNotifications';
-import {Dimensions, Linking} from 'react-native';
+import {Dimensions} from 'react-native';
+import * as Linking from 'expo-linking'
 
 
 
@@ -235,6 +236,10 @@ const ProfileScreenHome = (props: Props) => {
     props.navigation.navigate('DriverLicenseScreen');
   };
 
+  const goToSearch = () => {
+    Linking.openURL(Linking.createURL("/searchh"))
+  }
+
   const logOut = () => {
     _logOut();
   };
@@ -247,7 +252,7 @@ const ProfileScreenHome = (props: Props) => {
         <View style={styles.container}>
           <View style={styles.topBarContainerStyle}>
             <View style={styles.topNavSection}>
-              <Button style={styles.homeButtonContainer} buttonStyle={styles.homeButtonContainer}>
+              <Button onPress={goToSearch} style={styles.homeButtonContainer} buttonStyle={styles.homeButtonContainer}>
                 <HomeIcon
                   stroke={theme.colors.black}
                   fill={theme.colors.black}
@@ -325,6 +330,7 @@ const ProfileScreenHome = (props: Props) => {
                   <Text style={styles.notificationText}>Notifications</Text>
                 </View>
                 <Switch
+                  disabled={updateSettingsFeedback.loading}
                   thumbColor={theme.colors.primary}
                   value={profile?.user_settings?.notifications_enabled}
                   onValueChange={togglePushNotifications}

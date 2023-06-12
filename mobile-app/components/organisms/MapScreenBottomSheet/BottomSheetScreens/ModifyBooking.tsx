@@ -79,7 +79,7 @@ const ModifyBookingBottomSheet = (props: Props) => {
   const snapPoints = ['50%'];
   const styles = useStyles(props);
 
-  const { setStartDateTime, setEndDateTime, bookingDetails, paymentOption, booking_payment_authorization, payForReservation, payForReservationLoading } = useBookingActions();
+  const { setStartDateTime, setEndDateTime, bookingDetails, paymentOption, booking_payment_authorization, payForReservation, payForReservationLoading, clearBookingOption } = useBookingActions();
   const dispatch = useAppDispatch()
   const fetchState = useAppSelector(selectModifyReservationFeedback)
   const navigate = useNavigation()
@@ -129,24 +129,52 @@ const ModifyBookingBottomSheet = (props: Props) => {
 useEffect(() => {
     if (!isEmpty(paymentOption)) {
       if(confirmationData){
-      dispatch(modifyCurrentReservation({
-          vehicle_id: vehicle?.id,
-          start_date_time: new Date(bookingDetails.start_date_time).getTime(),
-          end_date_time:  new Date(bookingDetails.end_date_time).getTime()
-        })).then(() => {
-          toast({
-            type: 'success',
-            message: 'Booking modification confirmed successfully',
-            duration: 3000,
-          })
-      close()
-        }).catch(() => {
+        switch(confirmationData){
+          case 'SUCCEEDED': {
+            clearBookingOption()
+            dispatch(modifyCurrentReservation({
+              vehicle_id: vehicle?.id,
+              start_date_time: new Date(bookingDetails.start_date_time).getTime(),
+              end_date_time:  new Date(bookingDetails.end_date_time).getTime()
+            })).then(() => {
+              toast({
+                type: 'success',
+                message: 'Booking modification confirmed successfully',
+                duration: 3000,
+              })
+              close()
+            }).catch(() => {
+                toast({
+                  type: 'error',
+                  message: 'Please Contact Support',
+                  duration: 3000,
+                })
+            })
+            break;
+          }
+          case 'FAILED':{
+            clearBookingOption()
             toast({
               type: 'error',
-              message: 'Please Contact Support',
-              duration: 3000,
+              message: 'Booking modification failed, try again',
             })
-        })
+            break;
+          }
+          case 'CANCELLED': {
+            clearBookingOption()
+            toast({
+              type: 'error',
+              message: 'Booking modification cancelled',
+            })
+            break;
+          }
+          default: {
+            toast({
+              message: "Re-trying to confirm payment",
+              type: 'primary'
+            })
+          }
+        }
       }
     }else{
       if (isError) {
@@ -188,9 +216,14 @@ useEffect(() => {
                   Cancel
                 </RoundedOutline>
                 <Rounded  
+                disabled={
+                  !isEmpty(paymentOption)
+                }
                 loading={ isEmpty(paymentOption) ? payForReservationLoading : confirmationLoading}
                 onPress={handleSave} width="45%">
-                  Save
+                  {
+                    isEmpty(paymentOption) ? "Save" : "Verifying"
+                  }
                 </Rounded>
               </View>
               <TimeFilter

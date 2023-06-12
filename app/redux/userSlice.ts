@@ -6,8 +6,9 @@ import { app } from "../firebase/firebaseApp";
 import { IUserProfile, IUserSettings } from "../globaltypes";
 import { USERSETTINGS_API, USERS_DOMAIN } from '../hooks/constants';
 import apiClient from '../utils/apiClient';
-import { isNull } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 import LogRocket from 'logrocket';
+
 
 const users:IUserProfile[] = []
 
@@ -32,7 +33,7 @@ const initialState: IReducer = {
 /**
  * @name createUser 
  * @description creates a new user in the database
- */
+*/
 export const createUser = createAsyncThunk('user/create', async (undefined, {rejectWithValue})=>{
     try {
         const user = getAuth(app).currentUser
@@ -50,32 +51,19 @@ export const createUser = createAsyncThunk('user/create', async (undefined, {rej
     }
 })
 
-
 /**
  * @name fetchUser
  * @description loads the user profile from the server
  */
-export const fetchUser = createAsyncThunk('user/fetchProfile', (undefined, {rejectWithValue, dispatch})=>{
-    return getAuth(app).currentUser?.getIdToken().then(async (token)=>{
-        const user = getAuth(app).currentUser
-        try {
-            if (isNull(user)) return rejectWithValue("Not logged in")
-
-            const result = await axios.get(USERS_DOMAIN, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "x-user": "HOST",
-                    "ngrok-skip-browser-warning": "true"
-                }
-            })
-
-            return result.data.data
-
-        } catch (e) {
-            LogRocket.error(e)
-            return rejectWithValue(e)
-        }
-    }).catch(rejectWithValue)
+export const fetchUser = createAsyncThunk('user/fetchProfile', async (undefined, {rejectWithValue, dispatch})=>{
+    try {
+        const data = (await apiClient.get(USERS_DOMAIN)).data
+        return data
+    } catch (e)
+    {
+        LogRocket.error(e)
+        return rejectWithValue(e)
+    }
 })
 
 /**
@@ -166,6 +154,13 @@ export const selectUpdateUserSettingsFeedback = (state: RootState)=>({
 })
 
 export const selectUpdateUserProfile=(state: RootState)=>{
+    const user = localStorage.getItem('user')
+    if(isEmpty(state.users.user)) return {
+        user: JSON.parse(user ?? "{}"),
+        loading: state.users.profileLoading,
+        error: state.users.profileError
+    }
+    
     return{
         user: state.users.user,
         loading: state.users.profileLoading,

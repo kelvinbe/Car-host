@@ -16,6 +16,14 @@ import useVehicles from "../../../hooks/useVehicles";
 import useReservation from "../../../hooks/useReservation";
 import dayjs from "dayjs";
 import useFilter from "../../../hooks/useFilter";
+import { fetchVehicle, selectFetchVehicleFeedback, selectVehicles } from "../../../redux/vehiclesSlice";
+
+// import { selectVehicles } from "../../../redux/vehiclesSlice";
+import { useAppSelector, useAppDispatch } from "../../../redux/store";
+import { isEmpty } from "lodash";
+
+
+
 
 export default function ReservationModal({
   isOpen,
@@ -25,6 +33,7 @@ export default function ReservationModal({
   toggleEditReservationModal,
   changeStateEditModal,
   reservationId,
+  vehicleId
 }: Partial<{
   isOpen: boolean;
   onClose: () => void;
@@ -33,6 +42,7 @@ export default function ReservationModal({
   toggleEditReservationModal: boolean;
   changeStateEditModal: () => void;
   reservationId: string;
+  vehicleId: string;
 }>) {
   const [editStartTimeString, setEditStartTimeString] = useState("");
   const [editEndTimeString, setEditEndTimeString] = useState("");
@@ -40,10 +50,19 @@ export default function ReservationModal({
   const { fetchVehicles, allVehicles } = useVehicles();
   const { updateReservation } = useReservation(reservationId);
   const { viewReservation, editReservation } = useFilter(reservationId);
+  const vehicles = useAppSelector(selectVehicles)
+  const [vehicle, setVehicle] = useState<any>()
+  const reduxDispatch = useAppDispatch()
+  const vehicle_id = vehicleId
 
+  
   useEffect(() => {
-    fetchVehicles();
-  }, []);
+    !isEmpty(vehicle_id) && reduxDispatch(fetchVehicle({
+      vehicle_id
+    })).unwrap().then((data) => {
+      setVehicle(data)
+    })
+  }, [])
 
   useEffect(() => {
     const startTime = new Date(
@@ -79,7 +98,7 @@ export default function ReservationModal({
         editedDurationHours * 60 + editedDurationMinutes;
     }
     const getVehicle = allVehicles.filter(
-      (vehicle) => vehicle?.plate === editReservation?.vehicle.plate
+      (vehicle) => vehicle?.plate === editReservation?.vehicle?.plate
     );
     return (totalEditedDurationInMinutes / 60) * (getVehicle?.[0]?.hourly_rate ?? 0);
   };
@@ -128,11 +147,11 @@ export default function ReservationModal({
                 </Text>
                 <Text marginBottom={15}>
                   <b>Pickup time: </b>
-                  {`${new Date(viewReservation.start_date_time)}`}
+                  {`${new Date(viewReservation?.start_date_time ?? Date.now())}`}
                 </Text>
                 <Text marginBottom={15}>
                   <b>Drop-off time: </b>
-                  {`${new Date(viewReservation?.end_date_time)}`}
+                  {`${new Date(viewReservation?.end_date_time ?? Date.now() )}`}
                 </Text>
                 <Text marginBottom={15}>
                   <b>Vehicle details: </b>
@@ -143,14 +162,12 @@ export default function ReservationModal({
                 </Text>
                 <Text marginBottom={15}>
                   <b>Pickup location: </b>
-                  {`${viewReservation?.vehicle?.station?.name}, ${viewReservation?.vehicle?.station?.sub_market.name}, ${viewReservation?.vehicle?.station?.market.name}`}
+                  {`${viewReservation?.vehicle?.station?.name}, ${vehicle?.host?.sub_market.name}, ${vehicle?.host?.market.name}`}
                 </Text>
                 <Text marginBottom={15}>
                   <b>Total cost: </b>
-                  {viewReservation.vehicle.station.market.currency} {viewReservation?.payment?.tax &&
-                    viewReservation?.payment?.amount -
-                      viewReservation?.payment?.tax}
-                </Text>
+                {viewReservation?.payment?.amount}
+          </Text>
               </div>
             )}
             {toggleEditReservationModal && (
@@ -193,3 +210,5 @@ export default function ReservationModal({
     </>
   );
 }
+
+

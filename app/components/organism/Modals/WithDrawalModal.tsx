@@ -50,7 +50,7 @@ const setPayOutMethod = (e: ChangeEvent<HTMLSelectElement>) => {
 const handleWithDrawal = () => {
     dispatch(createWithDrawal({
             payout_method_id: payoutMethodId,
-            amount: inputState
+            amount: Number(inputState)
     })).then(() => {
         toast({
             title: 'Success',
@@ -87,7 +87,7 @@ const handleWithDrawal = () => {
   
               <FormControl mt={4}>
               <Select placeholder='Payout Methods' onChange={(e) => setPayOutMethod(e)}>
-              {user?.PayoutMethods?.map((method) => {
+              {user?.PayoutMethod?.map((method) => {
                   return <>
                   <option  value={method.id} key={method.id}>
                   {

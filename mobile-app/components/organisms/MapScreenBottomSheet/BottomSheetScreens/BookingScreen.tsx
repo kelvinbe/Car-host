@@ -62,7 +62,8 @@ const BookingScreen = (props: Props) => {
     payForReservation,
     payForReservationLoading,
     paymentOption,
-    booking_payment_authorization
+    booking_payment_authorization,
+    clearBookingOption
   } = useBookingActions();
   const [addReservation, { isLoading }] = useAddReservationMutation();
   const { navigate } = useNavigation<NavigationProp<SearchScreenParamList>>();
@@ -80,29 +81,60 @@ const BookingScreen = (props: Props) => {
   useEffect(() => {
     if (!isEmpty(paymentOption)) {
       if (confirmationData) {
-        reduxDispatch(clearBookingState());
-        addReservation({
-          body: {
-          station_id: vehicle?.station_id,
-          vehicle_id: vehicle?.id,
-          start_date_time: new Date(start_date_time).getTime(),
-          end_date_time: new Date(end_date_time).getTime(),
-        },
-        headers:booking_payment_authorization ?? ""
-      }).unwrap().then((reservation)=>{
-        console.log("Here is the ere", reservation)
-        const res = reservation as Partial<IReservation>
-          navigate('BookingConfirmationScreen', {
-            reservationId: res?.id ?? ""
-          });
-        }).catch((e)=>{
-          toast({
-            message: 'Please contact support',
-            type: 'error',
-            duration: 3000,
-            title: 'An Error Occured',
-          })
-        })
+        switch(confirmationData){
+          case "SUCCEEDED": {
+            clearBookingOption()
+            toast({
+              message: 'Payment Successful',
+              type: 'success',
+            })
+            addReservation({
+                body: {
+                station_id: vehicle?.station_id,
+                vehicle_id: vehicle?.id,
+                start_date_time: new Date(start_date_time).getTime(),
+                end_date_time: new Date(end_date_time).getTime(),
+              },
+              headers:booking_payment_authorization ?? ""
+            }).unwrap().then((reservation)=>{
+            const res = reservation as Partial<IReservation>
+              reduxDispatch(clearBookingState());
+              navigate('BookingConfirmationScreen', {
+                reservationId: res?.id ?? ""
+              })
+            }).catch((e)=>{
+              toast({
+                message: 'Please contact support',
+                type: 'error',
+                duration: 3000,
+                title: 'An Error Occured',
+              })
+            })
+            break
+          }
+          case "FAILED": {
+            clearBookingOption()
+            toast({
+              message: "Payment Failed",
+              type: 'error',
+            })
+            break;
+          }
+          case "CANCELLED": {
+            clearBookingOption()
+            toast({
+              message: "Payment Cancelled",
+              type: 'error',
+            })
+            break;
+          }
+          default: {
+            toast({
+              message: "Re-trying to confirm payment",
+              type: 'primary'
+            })
+          }
+        }
       }else{
         if (isError) {
           toast({
@@ -171,8 +203,10 @@ const BookingScreen = (props: Props) => {
             fullWidth
             loading={ isEmpty(paymentOption) ? payForReservationLoading : confirmationLoading}
             onPress={makeBooking}
-            disabled={isEmpty(paymentType) || isEmpty(code)}>
-            Book Now
+            disabled={isEmpty(paymentType) || isEmpty(code) || !isEmpty(paymentOption)}>
+              {
+                isEmpty(paymentOption) ? "Book Now" : "Confirming Payment..."
+              }
           </Rounded>
         </View>
       )}

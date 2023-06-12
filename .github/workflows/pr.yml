@@ -20,6 +20,7 @@ jobs:
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{ secrets.NEXT_PUBLIC_LOGROCKET_APP_ID }}
+      NEXT_PUBLIC_TRACKING_SERVICE: ${{ secrets.NEXT_PUBLIC_TRACKING_SERVICE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SearchScreenParamList } from '../../../types';
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
-import { auth } from '../../../firebase/firebaseApp';
 import { ImageBackground, useWindowDimensions, View } from 'react-native';
 import { Icon, Image } from '@rneui/base';
 import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
 import { LinearGradient } from 'expo-linear-gradient';
 import useToast from '../../../hooks/useToast';
-import { isEmpty, isUndefined } from 'lodash';
+import { isEmpty } from 'lodash';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setHostCode } from '../../../store/slices/bookingSlice';
-import { searchLocally, selectCoords } from '../../../store/slices/searchSlice';
+import { selectCoords } from '../../../store/slices/searchSlice';
+import { location_search } from '../../../utils/utils';
+import { closeBottomSheet } from '../../../store/slices/mapBottomSheet';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -122,17 +123,17 @@ const SearchScreenHome = (
   const dispatch = useAppDispatch()
   const toast = useToast();
   const { loading } = useAppSelector(selectCoords)
-  const { route } = props
 
   
   const hostCodeSearch = async (value: any) => {
+    dispatch(closeBottomSheet())
     if (isEmpty(value)) return toast({
       message: 'Please enter a host code',
       type: "primary",
       duration: 3000,
     })
     
-    await dispatch(searchLocally())
+    await location_search()
     dispatch(setHostCode(value))
     props.navigation.navigate('MapScreen', {
       searchType: 'host',
@@ -141,8 +142,9 @@ const SearchScreenHome = (
   };
 
   const search_locally = async () => {
+    dispatch(closeBottomSheet())
     try {
-      await dispatch(searchLocally())
+      await location_search()
       props.navigation.push('MapScreen', {
         searchType: 'local',
       });

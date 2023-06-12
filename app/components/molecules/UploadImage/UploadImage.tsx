@@ -69,7 +69,7 @@ const UploadImage = ({isError, images, onChange, multiple}:Props) => {
     <FormControl isRequired isInvalid={isError} paddingLeft={'22px'} paddingBottom={'10px'}>
         <FormLabel>Upload Image</FormLabel>
         <FormErrorMessage>Upload at least one image</FormErrorMessage>
-        <Flex w={'100%'} flexWrap='wrap' flexDirection={"row"} maxH={'300px'} overflowY={'scroll'} justifyContent="flex-start" >
+        <Flex w={'100%'} maxW={'500px'} flexWrap='wrap' flexDirection={"row"} maxH={'300px'} overflowY={'scroll'} justifyContent="flex-start" >
             <Input
                 type="file"
                 id='vehicle_pictures'

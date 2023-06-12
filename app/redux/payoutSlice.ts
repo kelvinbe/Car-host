@@ -2,9 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from ".";
 import { IPayout, PayoutMethods } from "../globaltypes";
 import apiClient from "../utils/apiClient";
-import { PAYOUTMETHODS_API } from "../hooks/constants";
+import { PAYOUTMETHODS_API, WITHDRAWALS_API } from "../hooks/constants";
 import { fetchUser } from "./userSlice";
 import LogRocket from "logrocket";
+import { fetchWithdrawals } from "./withdrawalSlice";
 
 
 /**
@@ -48,6 +49,8 @@ export const updatePayoutMethod = createAsyncThunk("payout/update", async (payou
     try {
         await apiClient.put(`${PAYOUTMETHODS_API}/`,  payoutMethod, {params: {payout_method_id: payoutMethod.id}})
         dispatch(fetchUser())
+        dispatch(fetchWithdrawals({}))
+
         return null
     }catch (e) {
         LogRocket.error(e)
@@ -64,8 +67,9 @@ export const updatePayoutMethod = createAsyncThunk("payout/update", async (payou
 
 export const createWithDrawal = createAsyncThunk("payout/createWithDrawal", async (data: {amount: number | string, payout_method_id: string }, {rejectWithValue, dispatch}, ) => {
     try{
-        await apiClient.post(`${PAYOUTMETHODS_API}/`, data)
+        await apiClient.post(`${WITHDRAWALS_API}/`, data)
         dispatch(fetchUser())
+        dispatch(fetchWithdrawals({}))
         return null
     }catch(e){
         LogRocket.error(e)

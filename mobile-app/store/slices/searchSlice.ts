@@ -8,7 +8,7 @@ export const searchLocally = createAsyncThunk('search/searchLocally', async (dat
     try {
         const { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== 'granted') {
-            rejectWithValue('Permission to access location was denied')
+            return rejectWithValue('Permission to access location was denied')
         }
         const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.High
@@ -16,7 +16,7 @@ export const searchLocally = createAsyncThunk('search/searchLocally', async (dat
 
         return location.coords
     } catch (e) {
-        rejectWithValue(e)
+        return rejectWithValue(e)
     }   
 })
 

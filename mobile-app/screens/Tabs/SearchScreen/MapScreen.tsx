@@ -1,9 +1,7 @@
-import { Text, View } from 'react-native';
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import MapView, { Circle } from 'react-native-maps';
-import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded';
-import * as Location from 'expo-location';
 import LocationMarker from '../../../components/atoms/GeoMarkers/LocationMarker/LocationMarker';
 import TimeFilter from '../../../components/molecules/TimeFilter/TimeFilter';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,12 +12,10 @@ import useBookingActions from '../../../hooks/useBookingActions';
 import { first, isEmpty, isUndefined } from 'lodash';
 import { timeTilEndOfDay } from '../../../utils/utils';
 import dayjs from 'dayjs';
-import { useNavigation } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { selectChosenHostCode, setLocation } from '../../../store/slices/bookingSlice';
+import { useAppSelector } from '../../../store/store';
 import { selectCoords, selectVehiclePositions } from '../../../store/slices/searchSlice';
-import { useGetVehiclesQuery } from '../../../store/slices/vehiclesSlice';
 import VehicleMarker from '../../../components/atoms/GeoMarkers/vehicle-marker';
+import { selectBottomSheetState } from '../../../store/slices/mapBottomSheet';
 
 interface IProps {
   inReservation?: boolean;
@@ -71,53 +67,12 @@ const useStyles = makeStyles((theme, props) => ({
   },
 }));
 
-interface IState {
-  location: Location.LocationObject | null;
-  errorMessage: null | string;
-  loading?: boolean;
-  hostCode?: string;
-}
-// change initialState when location bug is dealt with
-const initialState: IState = {
-  location: {
-    coords: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-    } as any,
-  } as any,
-  errorMessage: null,
-  loading: false,
-  hostCode: '',
-};
-
-const reducer = (state: IState, action: any) => {
-  switch (action.type) {
-    case 'setLocation':
-      return {
-        ...state,
-        location: action.payload,
-        loading: false,
-      };
-    case 'setErrorMessage':
-      return {
-        ...state,
-        errorMessage: action.payload,
-        loading: false,
-      };
-    default:
-      return state;
-  }
-};
-
 const MapScreen = (props: Props) => {
-  const [state, dispatchAction] = useReducer(reducer, initialState);
+  const state = useAppSelector(selectBottomSheetState)
   const styles = useStyles();
-  const { clearBookingState } = useBookingActions();
   const { setStartDateTime, setEndDateTime } = useBookingActions();
-  const [open, setOpen] = useState(false);
-  const dispatch = useAppDispatch()
-  const {data: coords, loading} = useAppSelector(selectCoords)
-  const chosenHostCode = useAppSelector(selectChosenHostCode)
+  const [, setOpen] = useState(false);
+  const { data: coords } = useAppSelector(selectCoords)
   const { bookingDetails: {start_date_time, end_date_time} } = useBookingActions()
 
   const vehicle_positions = useAppSelector(selectVehiclePositions)
@@ -145,29 +100,15 @@ const MapScreen = (props: Props) => {
     }
   }, [props.inReservation]);
 
-  useEffect(() => {
-    return () => {
-      clearBookingState();
-    };
-  }, []);
-
   return (
     <ThemeConsumer>
       {({ theme }) =>
-        state.loading ? (
-          <View style={[styles.statusContainer]}>
-            <Text style={[styles.loadingText]}>Loading...</Text>
-            {/* <Rounded onPress={getCoords}>Refetch</Rounded> */}
-          </View>
-        ) : state.errorMessage ? (
-          <View style={styles.statusContainer}>
-            <Text style={styles.errorText}>{state.errorMessage}</Text>
-          </View>
-        ) : (
+       (
           <View style={styles.container}>
             <View style={styles.mapContainer}>
              
                 <MapView
+                  key={vehicle_positions?.data?.length}
                   provider={PROVIDER_GOOGLE}
                   style={{
                     width: '100%',
@@ -186,7 +127,7 @@ const MapScreen = (props: Props) => {
                       latitude: coords?.latitude || 0,
                       longitude: coords?.longitude || 0,
                     }}
-                    radius={500}
+                    radius={2500}
                     strokeColor={theme.colors.primary}
                     fillColor={theme.colors.fadedPrimary}
                   />
@@ -212,7 +153,7 @@ const MapScreen = (props: Props) => {
               </MapView>
               
             </View>
-            {(props?.inReservation ? false : !open) && (
+            {(props?.inReservation ? false : !state.open) && (
               <TimeFilter
                 displayDay={true}
                 displayExtendText={false}

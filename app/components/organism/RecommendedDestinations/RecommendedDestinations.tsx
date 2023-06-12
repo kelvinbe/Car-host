@@ -45,9 +45,9 @@ const RecommendedDestinations = () => {
   };
 
   return (
-    <Flex direction={'column'} justify={'center'} marginX={["10", "20", "20"]} pb={'10'}>
+    <Flex direction={'column'} justify={'center'} pb={'10'}>
         <Heading size={'lg'} pb={'10'}>Recommended Destinations</Heading>
-        <Flex gap={{sm: '2', md:'6', lg:'10'}} direction={'row'}>
+        <Flex gap={{sm: '2', md:'6', lg:'10'}} direction={'row'} align={'center'} justify={'center'}>
             <Flex direction={'column'} justify={'center'}>
               <IconButton variant={'outline'} icon={<HiChevronLeft/>} aria-label='Previous' borderRadius={'full'} borderColor={'#BC2B3D'} onClick={handlePrevClick} />
             </Flex>

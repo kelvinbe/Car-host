@@ -1,7 +1,8 @@
 import React from 'react'
-import LogoIcon from "../../../public/images/logo.png" 
 import {  Flex } from "@chakra-ui/react"
 import { FlexRowCenterCenter } from '../../../utils/theme/FlexConfigs'
+import LogoIcon from "../../../public/images/divvlyLogo.png" 
+
 import Image from 'next/image'
 
 function Logo() {

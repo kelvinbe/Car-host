@@ -10,23 +10,30 @@ import { useAppDispatch } from '../../../redux/store'
 import { fetchUser } from '../../../redux/userSlice'
 import apiClient from '../../../utils/apiClient'
 import LogRocket from 'logrocket'
-
+import { GetServerSideProps } from 'next'
+import axios from 'axios'
 
 /**
  * @name requestForLoginToken
  */
 
 const requestForLoginToken = async (data: {code: string, email: string}) => {
-    return apiClient.get(`${USERS_DOMAIN}/admin/accept`, {
+    return axios.get(`${USERS_DOMAIN}/admin/accept`, {
     params: {
         code: data.code,
         email: data.email
     }
-}).then((res)=>res.data)}
+}).then((res)=>res.data.data)}
 
-function Admin() {
-
-    const { query, push  } = useRouter()
+function Admin(props: {
+    query: {
+        inviteCode: string,
+        email: string
+    },
+    token: string
+}) {
+    const {token} = props
+    const { push  } = useRouter()
     const dispatch = useAppDispatch()
     const toast = useToast({
         position: 'top',
@@ -34,77 +41,69 @@ function Admin() {
     })
 
     useEffect(()=>{
-        if(!isEmpty(query.inviteCode) && !isEmpty(query.email)){
-            requestForLoginToken({
-                code: query.inviteCode as string,
-                email: query.email as string
-            }).then((res)=>{
-                signInWithCustomToken(getAuth(app), res).then((cred)=>{
-                    if(cred){
-                        cred.user.getIdTokenResult().then((token)=>{
-                            if(token.claims.admin){
-                                dispatch(fetchUser()).then(()=>{
-                                    push("/dashboard")
-                                }).catch((error)=>{
-                                    toast({
-                                        title: "Unable to sign you in",
-                                        description: "Try again later",
-                                        status: "error",
-                                        isClosable: true,
-                                    })
-                                    LogRocket.error(error)
-                                    push("/")
-                                })
-                                push("/dashboard")
-                            }else{
+        if(!isEmpty(token)){
+            signInWithCustomToken(getAuth(app), token).then((cred)=>{
+                if(cred){
+                    cred.user.getIdTokenResult().then((token)=>{
+                        if(token.claims.admin){
+                            dispatch(fetchUser()).then(()=>{
+                                push("/onboarding")
+                            }).catch((error)=>{
                                 toast({
                                     title: "Unable to sign you in",
-                                    description: "Please check the link and try again",
+                                    description: "Try again later",
                                     status: "error",
                                     isClosable: true,
                                 })
-                            }
-                        }).catch((error)=>{
+                                LogRocket.error(error)
+                                push("/")
+                            })
+                            push("/onboarding")
+                        }else{
                             toast({
-                                title: "Unable to sign you in",
-                                description: "Please check the link and try again",
+                                title: "You are not an admin",
+                                description: "You are not authorized to access this page",
                                 status: "error",
                                 isClosable: true,
+                                id: "trigger"
                             })
-                            LogRocket.error(error)
-                        })
-                    }else{
+                        }
+                    }).catch((error)=>{
                         toast({
-                            title: "Unable to sign you in",
-                            description: "Please check the link and try again",
+                            title: "Unable to get token",
+                            description: "Try again later",
                             status: "error",
                             isClosable: true,
+                            id: "trigger"
                         })
-                    }
-                }).catch((error)=>{
+                        LogRocket.error(error)
+                    })
+                }else{
                     toast({
-                        title: "Unable to sign you in",
-                        description: "Please check the link and try again",
+                        title: "No Credentials found",
+                        description: "Unable to sign you in",
                         status: "error",
                         isClosable: true,
+                        id: "trigger"
                     })
-                    LogRocket.error(error)
-                })
+                }
             }).catch((error)=>{
                 toast({
-                    title: "Unable to validate invite link",
-                    description: "Please check the link and try again",
+                    title: "Error validating token",
+                    description: "Unable to sign you in",
                     status: "error",
                     isClosable: true,
+                    id: "trigger"
                 })
                 LogRocket.error(error)
             })
         }else{
             toast({
-                title: "Unable to validate invite link",
-                description: "Please check the link and try again",
+                title: "No token found",
+                description: "Token already used or invalid",
                 status: "error",
                 isClosable: true,
+                id: "trigger"
             })
             push("/")
         }
@@ -133,3 +132,30 @@ function Admin() {
 }
 
 export default Admin
+
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const query = ctx.query
+    let token: string = ''
+    try {
+        token = await requestForLoginToken({
+            code: query.inviteCode as string,
+            email: query.email as string
+        })
+        return {
+            props: {
+                query,
+                token
+            }
+        }
+
+    } catch (e) {
+        return {
+            props: {
+                query,
+                token
+            }
+        }
+    }
+
+}

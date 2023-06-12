@@ -20,6 +20,41 @@ const station: IStation = {
 
 }
 
+jest.mock('../../../utils/apiClient', () => ({
+    create: jest.fn().mockReturnValue({
+        headers: {
+            "x-user": "HOST", 
+            "ngrok-skip-browser-warning": true
+        },
+        interceptors: {
+            request: {
+                use: jest.fn().mockImplementation((config) => {
+                    return {
+                        ...config,
+                        headers: {
+                            ...config.headers,
+                            "Authorization": `Bearer ${'mocked_token'}`
+                        }
+                    }
+                })
+            },
+            response: {
+                use: jest.fn().mockImplementation(() => ({
+                    data: 'mocked data',
+                    message: 'mocked message',
+                    status: 'mocked status'
+                }))
+            }
+        },
+    }),
+    db_user: {
+        getUser: jest.fn().mockResolvedValue({
+            getIdToken: jest.fn().mockResolvedValue('mocked_token')
+        })
+    },
+}));
+
+
 describe('Tests the StationactionModal component', ()=>{
     it('Tests if the component mounts', ()=>{
         const{baseElement}=render(<Provider store={store}><StationActionModal isOpen onClose={testFunc} station={station}/></Provider>)

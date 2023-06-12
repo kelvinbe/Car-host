@@ -12,7 +12,7 @@ interface IProps {
     customStyle?: StyleProp<ViewStyle>,
     raised?: boolean,
     id?: string | number,
-    data?:[{}]
+    data?:{question_id: number, question: string, answer: string}[]
 }
 
 type Props = IProps
@@ -66,7 +66,7 @@ const ActionButton = (props: Props) => {
     const [viewAnswer, setViewAnswer] = useState<boolean>(false)
 
     const _onPress = () =>{
-        data && setSelectedAnswer(data?.[0]?.questions.filter((question:{question_id:number}) => id === question.question_id))
+        data && setSelectedAnswer(data?.filter((question:{question_id:number}) => id === question.question_id))
         setViewAnswer(!viewAnswer)
         id && onPress && onPress(id)
         onPress && onPress()
@@ -104,7 +104,7 @@ const ActionButton = (props: Props) => {
         )}
     </ThemeConsumer>
     
-  )
+)
 }
 
 export default ActionButton

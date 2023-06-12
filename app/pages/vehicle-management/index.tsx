@@ -3,18 +3,16 @@ import { useState, useEffect } from "react";
 import { Flex, IconButton } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import React from "react";
-import { IVehicle } from "../../globaltypes";
 import { VehicleManagementTableColumns } from "../../utils/tables/TableTypes";
 import { FlexColCenterStart } from "../../utils/theme/FlexConfigs";
-import { useAppSelector } from "../../redux/store";
-import { selectVehicles } from "../../redux/vehiclesSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { fetchVehicles, selectFetchVehiclesFeedback, selectUpdateVehicleFeedback, selectVehicles, selectVehiclesPaginationState, updateVehicle } from "../../redux/vehiclesSlice";
 import { insertTableActions } from "../../utils/tables/utils";
 import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
 import ViewVehicleModal from "../../components/organism/Modals/ViewVehicleModal";
 import { useDisclosure } from "@chakra-ui/react";
 import CreateVehicleModal from "../../components/organism/Modals/CreateVehicleModal";
-import useVehicles from "../../hooks/useVehicles";
 import EditVehicleModal from "../../components/organism/Modals/EditVehicleModal";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
@@ -26,11 +24,14 @@ function VehicleManagement() {
   const [isViewModalOpen ,setIsViewModalOpen] = useState<boolean>(false)
   const [isEditModalOpen ,setIsEditModalOpen] = useState<boolean>(false)
   const {isOpen, onClose, onOpen} = useDisclosure()
-  const {fetchVehicles,deleteVehicle, loading} = useVehicles()
-  const vehicles = useAppSelector(selectVehicles)
+  const { data: vehicles, loading } = useAppSelector(selectFetchVehiclesFeedback)
+  const { current_page, current_size } = useAppSelector(selectVehiclesPaginationState)
+  const updateFeedback = useAppSelector(selectUpdateVehicleFeedback)
+
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    fetchVehicles()
+    dispatch(fetchVehicles())
   },[])
 
 
@@ -106,12 +107,15 @@ function VehicleManagement() {
                   data-cy={'edit-button'}
                 />
                 <IconButton
-                  isLoading={loading}
+                  isLoading={updateFeedback?.loading && updateFeedback?.id === data.id}
                   aria-label="Delete"
                   icon={<DeleteIcon />}
                   size="sm"
                   onClick={() => {
-                    deleteVehicle(data.id)
+                    dispatch(updateVehicle({
+                      id: data.id,
+                      status: "INACTIVE"
+                    }))
                   }}
                   color="cancelled.1000"
                   data-cy={'delete-button'}
@@ -121,8 +125,18 @@ function VehicleManagement() {
           })}
           pagination={{
             position: ["bottomCenter"],
+            onChange: (page, pageSize) => {
+              dispatch(fetchVehicles({ page, size: pageSize }))
+            },
+            total: ((current_page ?? 0) * (current_size ?? 0)) + (
+              vehicles?.length < (current_size ?? 0) ? 0 : 1
+            ),
+            showSizeChanger: true, 
           }}
           data={vehicles ?? []}
+          primitiveTableProps={{
+            loading
+          }}
         />     
     </Flex>
   </ErrorBoundary>
@@ -131,7 +145,7 @@ function VehicleManagement() {
 
 export default VehicleManagement;
 
-export function getStaticProps() {
+export function getServerSideProps() {
   return {
     props: {
       authonly: true,

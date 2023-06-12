@@ -8,6 +8,8 @@ import useToast from '../../../../hooks/useToast';
 import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { modifyCurrentReservation, selectModifyReservationFeedback } from '../../../../store/slices/bookingSlice'
 import useBookingActions from '../../../../hooks/useBookingActions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { IReservation } from '../../../../types'
 
 interface IProps {
     closeBottomSheet?: () => void;
@@ -61,7 +63,7 @@ const useStyles = makeStyles((theme, props: Props)=> {
 
 const CancelBookingBottomSheet = (props: Props) => {
     const toast = useToast();
-    const { bookingDetails: { status } } = useBookingActions()
+    const { bookingDetails: { status, vehicle } } = useBookingActions()
     const bottomSheetRef = useRef<BottomSheet>(null)
     const snapPoints = ["30%"]
     const styles = useStyles(props)
@@ -75,14 +77,18 @@ const CancelBookingBottomSheet = (props: Props) => {
 
     const feedback = useAppSelector(selectModifyReservationFeedback)
 
-    const handleCancel = () =>{
+    const handleCancel =  () =>{
         dispatch(modifyCurrentReservation({
             status: status === "UPCOMING" ? "CANCELLED" : "COMPLETE"
-        })).then(()=>{
+        })).then(async ()=>{
             toast({
                 message: status === "UPCOMING" ? "Booking cancelled" : "Booking completed",
                 type: "success"
             })
+            const currently_being_tracked_string = await AsyncStorage.getItem("activated_reservation_details")
+            const parsed = JSON.parse(currently_being_tracked_string ?? "{}") 
+            const filtered = parsed.filter((item: Partial<IReservation>)=> item?.vehicle_id !== vehicle?.id)
+            await AsyncStorage.setItem("activated_reservation_details", JSON.stringify(filtered))
             close()
         }).catch((e)=>{
             toast({

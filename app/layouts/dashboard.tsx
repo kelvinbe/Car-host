@@ -10,6 +10,8 @@ import DashboardSidebar from "../components/organism/Bars/Sidebar/DashboardSideb
 import DashboardTopBar from "../components/organism/Bars/TopBar/DashboardTopBar";
 import LoadingComponent from "../components/molecules/feedback/LoadingComponent";
 import { FlexColCenterCenter } from "../utils/theme/FlexConfigs";
+import { useAppDispatch } from "../redux/store";
+import { fetchUser } from "../redux/userSlice";
 
 interface IProps {
   children: React.ReactNode;

@@ -12,7 +12,8 @@ import {
     Select, 
     FormControl,
     FormErrorMessage,
-    FormLabel
+    FormLabel,
+    Box
   } from "@chakra-ui/react";
   import { IVehicle } from "../../../globaltypes";
   import useVehicles from "../../../hooks/useVehicles";
@@ -23,6 +24,8 @@ import { fetchVehicle, selectFetchVehicleFeedback } from "../../../redux/vehicle
 import { isArraySame } from "../../../utils/utils";
 import { isEmpty, isNull } from "lodash";
 import LoadingComponent from "../../molecules/feedback/LoadingComponent";
+import UploadImage from "../../molecules/UploadImage/UploadImage";
+
 
   interface Props{
     isOpen:boolean,
@@ -54,7 +57,9 @@ const reducer = (state:Partial<IVehicle> | null, action:{type:string, key?:strin
       const [state, dispatch] = useReducer(reducer, selectedVehicle)
       const { isOpen, onClose, vehicle_id } = props
       const {updateVehicle} = useVehicles(vehicle_id)
+      const [vehicleImages, setVehicleImages] = useState<string[]>([])
 
+    
 
 
       useEffect(() => {
@@ -97,7 +102,7 @@ const reducer = (state:Partial<IVehicle> | null, action:{type:string, key?:strin
                 transmission: selectedVehicle?.transmission === state.transmission ? undefined : state.transmission,
                 hourly_rate: selectedVehicle?.hourly_rate === state.hourly_rate ? undefined : Number(state.hourly_rate ?? 0),
                 status: selectedVehicle?.status === state.status ? undefined : state.status,
-                pictures: isArraySame(selectedVehicle?.pictures, state.pictures) ? undefined : state.pictures,
+                pictures: isArraySame(selectedVehicle?.pictures, vehicleImages) ? undefined : vehicleImages,
             })
             onClose()
         }
@@ -105,16 +110,22 @@ const reducer = (state:Partial<IVehicle> | null, action:{type:string, key?:strin
 
     return (
       <>
-        <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='xl' isCentered motionPreset="slideInBottom">
-          <ModalOverlay />
-          <ModalContent data-cy={'edit-vehicle-modal'} data-testid="edit-vehicle-modal">
-            <ModalHeader textAlign={'center'}>Edit vehicle details</ModalHeader>
-            <ModalCloseButton data-cy={'close-modal-button'} data-testid="close-modal-button"/>
-            <ModalBody>
-                {
+        <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false} size='6xl' isCentered motionPreset="slideInBottom">
+                <ModalOverlay />
+                <ModalContent data-cy={'edit-vehicle-modal'} data-testid="edit-vehicle-modal">
+                    <ModalHeader textAlign={'center'}>Edit Vehicle</ModalHeader>
+                    <ModalCloseButton data-cy={'close-modal-button'} data-testid="close-modal-button"/>
+                    <ModalBody>
+                        {
                     loading ? <LoadingComponent/> : (
                         <Flex >
-                            <Flex w={'100%'} flexWrap='wrap' flexDirection={"row"} justifyContent={'space-between'} h='100%'>
+                            <Box w={1 / 3}>
+                                    <UploadImage
+                                        multiple
+                                        onChange={(images) => setVehicleImages(images as string[])}
+                                    />
+                                </Box>
+                            <Flex w={2 / 3} flexWrap='wrap' flexDirection={"row"} justifyContent={'space-between'} h='100%'>
                                 <FormControl w={350} isRequired marginBottom={5} isInvalid={isPlateError}>
                                     <FormLabel htmlFor="plate">Plate</FormLabel>
                                     <Input type='text' id='plate' placeholder='ABC-123' w={240} value={state?.plate} onChange={e =>
@@ -202,11 +213,10 @@ const reducer = (state:Partial<IVehicle> | null, action:{type:string, key?:strin
                         </Flex>
                     )
                 }
-                
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      </>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </>
     );
     
   }

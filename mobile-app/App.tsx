@@ -46,7 +46,6 @@ import ErrorBoundary from './components/ErrorHandler/ErrorBoundary';
     const { registerForPushNotificationsAsync, updatePushToken, goToBooking } = useNotifications()
   const { logOut: _logOut, userProfile } = useUserAuth();
 
-    const colorScheme = useColorScheme();
     // the return type of either of these functions doesnt seem to be explicitly exported so will use this instead
     const notificationListener = useRef<ReturnType<typeof Notifications.addNotificationReceivedListener>>();
     const responseListener = useRef<ReturnType<typeof Notifications.addNotificationResponseReceivedListener>>();
@@ -59,10 +58,6 @@ import ErrorBoundary from './components/ErrorHandler/ErrorBoundary';
       dispatch(fetchOnboarding())
     }, [,user?.uid])
 
-
-    // useEffect(() => {
-    //   _logOut()
-    // }, [,user?.uid])
 
     /**
      * @explanation to prevent stale push tokens, we will update the user's push token on every login
@@ -113,7 +108,7 @@ import ErrorBoundary from './components/ErrorHandler/ErrorBoundary';
     }, []);
   
     return (
-      <Navigation colorScheme={colorScheme} />
+      <Navigation colorScheme={"light"} />
     )
   }
 

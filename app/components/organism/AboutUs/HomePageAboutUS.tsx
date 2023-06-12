@@ -9,7 +9,7 @@ const HomePageAboutUS = () => {
     <Flex
       direction={"column"}
       marginY={"10"}
-      marginX={"20"}
+      // marginX={"20"}
       alignItems={"center"}
       gap={'10'}
     > 
@@ -31,16 +31,16 @@ const HomePageAboutUS = () => {
           </Flex>
         </Flex>
         <Flex width={["full", "full", "full", "70%"]}>
-          <Box paddingX={["0", "0", "0", "6"]} borderRadius={"25px"} w={"full"}>
+          <Flex paddingX={["0", "0", "0", "6"]} borderRadius={"25px"} w={"full"} align={'center'} justify={'right'}>
             <Image src={indoor.src} alt="home" />
-          </Box>
+          </Flex>
         </Flex>
       </Flex>
       <Flex width={"full"} direction={["column", "column", "column", "row"]}>
         <Flex width={["full", "full", "full", "70%"]}>
-          <Box paddingX={["0", "0", "0", "6"]} borderRadius={"25px"} w={"full"}>
+          <Flex paddingX={["0", "0", "0", "6"]} borderRadius={"25px"} w={"full"} align={'center'} justify={'left'}>
             <Image src={family.src} alt="home" />
-          </Box>
+          </Flex>
         </Flex>
         <Flex width={["full", "full", "full", "30%"]} justify={"center"} direction={"column"}>
           <Flex direction={"column"} gap={'6'} pt={'6'}>

@@ -1,5 +1,5 @@
 import { Button, Divider, Flex, Grid, Progress, Stack, Switch, Text, useToast, List, ListItem, Box, useDisclosure } from "@chakra-ui/react";
-import { GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { FlexColCenterStart, FlexColStartStart, FlexRowCenterBetween, FlexColCenterBetween, FlexColStartBetween, FlexRowStartBetween } from "../../utils/theme/FlexConfigs";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectUpdateUserSettingsFeedback, selectUser, updateUserSettings } from "../../redux/userSlice";
@@ -152,7 +152,7 @@ const SettingsPage: NextPage = () => {
                 <List p="10px" height='290px' w="full" rounded="md"  >
                     <Stack spacing={4} direction={"column"} >
                         {
-                            user?.PayoutMethods?.map((method) => {
+                            user?.PayoutMethod?.map((method) => {
                                 return (
                                     <>
                                         <ListItem ring='1px' padding='8px' rounded='2xl' key={method.id} value={method.id} >
@@ -187,7 +187,7 @@ const SettingsPage: NextPage = () => {
 export default SettingsPage;
 
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
     return {
         props: {
             adminonly: false,

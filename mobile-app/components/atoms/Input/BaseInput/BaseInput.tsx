@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme, props: Props) => {
     inputContainerStyle: {
       borderBottomWidth: 0,
       margin: 0,
-      padding: 0,
+      padding: 5,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -68,34 +68,19 @@ const useStyles = makeStyles((theme, props: Props) => {
 
 const BaseInput = (props: Props) => {
   const styles = useStyles(props);
+  const { width, fullWidth, containerStyle, labelStyle, ref, ...rest } = props
   return (
     <ThemeConsumer>
       {({ theme }) => (
         <Input
-          secureTextEntry={props.secureTextEntry}
           inputContainerStyle={styles.inputContainerStyle}
           style={styles.style}
           errorStyle={styles.errorStyle}
-          containerStyle={[props.containerStyle, styles.containerStyle]}
-          placeholder={props.placeholder}
-          value={props.value}
-          defaultValue={props.defaultValue}
-          inputStyle={styles.inputStyle}
+          containerStyle={[containerStyle, styles.containerStyle]}
           placeholderTextColor={theme.colors.grey0}
-          onChangeText={props.onChangeText}
-          onBlur={props.onBlur}
-          onFocus={props.onFocus}
-          clearTextOnFocus={props.clearTextOnFocus}
           underlineColorAndroid="transparent"
-          rightIcon={props.rightIcon}
-          leftIcon={props.leftIcon}
-          rightIconContainerStyle={props.rightIconContainerStyle}
-          leftIconContainerStyle={props.leftIconContainerStyle}
-          label={props.label}
-          labelStyle={[props.labelStyle, styles.labelStyle]}
-          keyboardType={props.keyboardType}
-          maxLength={props.maxLength}
-          disabled={props.disabled}
+          labelStyle={[labelStyle, styles.labelStyle]}
+          {...rest}
         />
       )}
     </ThemeConsumer>

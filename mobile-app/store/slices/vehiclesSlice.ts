@@ -39,7 +39,7 @@ export const vehiclesApi = createApi({
                 return response
             }
         }),
-        getVehicle: builder.query<IVehicle, any>({
+        getVehicle: builder.query<Partial<IVehicle>, string|undefined>({
             query: (id) => ({
                 method: "GET",
                 url: VEHICLES_ENDPOINT,
@@ -48,7 +48,7 @@ export const vehiclesApi = createApi({
                 }
             }),
             transformResponse: (response: any) => {
-                return response?.data?.[0] as IVehicle ?? null
+                return response?.data?.[0] as Partial<IVehicle> ?? null
             }
         })
     }),

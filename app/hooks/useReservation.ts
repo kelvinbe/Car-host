@@ -2,8 +2,8 @@ import { useAppSelector } from "../redux/store";
 import { useToast } from "@chakra-ui/react";
 import {
   getReservations,
-  selectActiveReservations,
   selectReservations,
+  selectReservationsFeedback,
 } from "../redux/reservationSlice";
 import axios from "axios";
 import { RESERVATION_DOMAIN } from "./constants";
@@ -16,8 +16,7 @@ import apiClient from "../utils/apiClient";
 import LogRocket from "logrocket";
 
 export default function useReservation(reservationId?: string | number, size?:number, page?:number, status?: string) {
-  const reservations = useAppSelector(selectReservations);
-  const activeReservations = useAppSelector(selectActiveReservations);
+  const { data: reservations} = useAppSelector(selectReservationsFeedback)
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -174,11 +173,10 @@ export default function useReservation(reservationId?: string | number, size?:nu
     fetchReservations,
     loading,
     errors,
-    activeReservations,
     updateReservation,
     loadingUpdate,
     updateErrors,
-    selectedReservation: reservations.find(
+    selectedReservation: reservations?.find(
       ({ id: reservation_id }) => reservation_id?.toString() === reservationId
     ),
     removeErrors,

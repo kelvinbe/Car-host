@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from ".";
 
 
 const initialState: {
@@ -54,7 +55,7 @@ export const selectCurrentScreen = (state: any) => state.navigation.screens.curr
 
 export const selectScreenHistory = (state: any) => state.navigation.screens.history;
 
-export const selectNavState = (state: any) => [
+export const selectNavState = (state: RootState) => [
     state.navigation.screens.current,
     state.navigation.screens.previous,
     state.navigation.screens.history

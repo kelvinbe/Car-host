@@ -7,7 +7,7 @@ import ClockIcon from '../../../assets/icons/clock.svg';
 import { Divider, Image } from '@rneui/base';
 import { IReservation } from '../../../types';
 import dayjs from 'dayjs';
-import { calcDuration } from '../../../utils/utils';
+import { calcDuration, constructVehicleName, trimVehicleName } from '../../../utils/utils';
 import { useAppSelector } from '../../../store/store';
 import { selectLoadReservationDetailsFeedback } from '../../../store/slices/bookingSlice';
 import { isEmpty } from 'lodash';
@@ -239,7 +239,13 @@ const HistoryCard = (props: Props) => {
               </View>
               <View style={styles.vehicleInfo}>
                 <Text style={styles.vehicleName}>
-                  {vehicle?.make} {vehicle?.model} {vehicle?.year}
+                  {
+                    trimVehicleName(constructVehicleName(
+                      vehicle?.make,
+                      vehicle?.model,
+                      vehicle?.year,
+                    ))
+                  }
                 </Text>
                 <View style={styles.driverInfo}>
                   <Image

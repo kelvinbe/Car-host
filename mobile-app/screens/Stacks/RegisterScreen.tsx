@@ -1,25 +1,22 @@
-import { Text, View, KeyboardAvoidingView } from 'react-native'
+import { Text, View } from 'react-native'
 import React, { useReducer, useEffect} from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
-import BaseInput from '../../components/atoms/Input/BaseInput/BaseInput'
 import WithHelperText from '../../components/atoms/Input/WithHelperText/WithHelperText'
 import Rounded from '../../components/atoms/Buttons/Rounded/Rounded'
 import Divider from '../../components/atoms/Divider/Divider'
 import IconButton from '../../components/atoms/Buttons/Icon/IconButton'
-import { Button, Icon, Image, Theme } from '@rneui/base'
+import { Icon, Image, } from '@rneui/base'
 import { RootStackParamList } from '../../types'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import useUserAuth from '../../hooks/useUserAuth'
 import useToast from '../../hooks/useToast'
-import Loading from '../../components/molecules/Feedback/Loading/Loading'
-import { StatusBar } from 'expo-status-bar'
 import FacebookIcon from "../../assets/icons/facebook.svg"
 import AppleIcon from "../../assets/icons/apple.svg"
 import GoogleIcon from "../../assets/icons/google.svg"
 import useSocialAuth from '../../hooks/useSocialAuth'
 import { isEmpty } from 'lodash'
 import { isValidEmail, isValidPassword } from '../../utils/utils'
+import { Platform } from 'react-native'
 
 
 const hasLowercase = (str: string) => /[a-z]/.test(str);
@@ -35,13 +32,11 @@ const useStyles = makeStyles((theme)=>{
             backgroundColor: theme.colors.white,
             alignItems: 'center',
             justifyContent: 'space-between',
-            width: '100%',
-            height: '100%',
             paddingHorizontal: 20,
+            flex: 1
         },
         contentContainer: {
-            width: '100%',
-            height: '80%',
+            flex: 1,
             justifyContent: "space-between",
             alignItems: "center",
         },
@@ -77,14 +72,13 @@ const useStyles = makeStyles((theme)=>{
             color: theme.colors.title,
             fontSize: 24,
             fontWeight: "700", 
- fontFamily: "Lato_700Bold",
+            fontFamily: "Lato_700Bold",
             marginBottom: 42
         },
         logoContainer: {
             width: "100%",
             alignItems: "center",
-            justifyContent: "center",
-            marginVertical: 20
+            justifyContent: "center", 
         },
         verifyButtonStyles : {
             borderRadius: 15,
@@ -235,7 +229,7 @@ const reducer = (state: IReducerState, action: any) => {
 
 
 const RegisterScreen = (props: Props) => {
-    const { googleLogin, facebookLogin, socialAuthError, socialAuthLoading } = useSocialAuth()
+    const { googleLogin, facebookLogin, socialAuthError } = useSocialAuth()
 
     const [{
         email,
@@ -306,24 +300,24 @@ const RegisterScreen = (props: Props) => {
         props.navigation.navigate("Login")
     }
 
-  return ( (signUpLoading || socialAuthLoading) ? <Loading/> :
-        <KeyboardAvoidingView style={styles.container} >
-            <View style={styles.logoContainer}>
-                <Image 
-                    source={require('../../assets/images/logo.png')}
-                    style={{
-                        height: 100,
-                        width: 100,
-                    }}
-                    resizeMode="contain"
-                />
-            </View>
-            <View style={styles.contentContainer} >
-                <KeyboardAvoidingView style={styles.topContent} >
-                    <Text style={styles.title} >
-                        Register
-                    </Text>
-            
+  return (
+        <View 
+            style={styles.container} >
+                <View style={styles.logoContainer}>
+                    <Image 
+                        source={require('../../assets/images/logo.png')}
+                        style={{
+                            height: 100,
+                            width: 100,
+                        }}
+                    />
+                </View>
+                <Text style={styles.title} >
+                    Register
+                </Text>
+                <View 
+                    style={styles.topContent}
+                >
                         <WithHelperText inputStyle={{paddingVertical: 10}} value={email} onChangeText={setEmail} label="Email" container={{marginBottom: 45}}
                             fullWidth
                             placeholder="email"
@@ -452,20 +446,20 @@ const RegisterScreen = (props: Props) => {
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
                         <IconButton name="google" containerStyle={{
-                            // marginRight: 20
+                            marginRight: Platform.OS === 'ios' ? 0 : 20
                         }} onPress={()=>{googleLogin(navigateToLogin)}} iconType='font-awesome' >
                             <GoogleIcon width={24} height={24} />
                         </IconButton>
-                        <IconButton shadow containerStyle={{
+                        {Platform.OS === 'ios' ? <IconButton shadow containerStyle={{
                             marginHorizontal: 10
                         }} name="apple" iconType='font-awesome' >
                             <AppleIcon fill="black" width={24} height={24} />
-                        </IconButton>
+                        </IconButton> : undefined}
                         <IconButton name="facebook" onPress={()=>{facebookLogin(navigateToLogin)}} iconType='font-awesome' >
                             <FacebookIcon width={24} height={24} />
                         </IconButton>
                     </View>
-                </KeyboardAvoidingView>
+                </View>
                 <View style={styles.bottomTextContainer} >
                     <Text style={styles.leftText} >
                         Have an account?
@@ -474,8 +468,7 @@ const RegisterScreen = (props: Props) => {
                         Login
                     </Text>
                 </View>
-            </View>
-        </KeyboardAvoidingView>
+        </View>
   )
 }
 

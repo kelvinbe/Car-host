@@ -62,13 +62,6 @@ export const dashboardRoutes: {
       link: "/reports"
     },
     {
-      name: "payouts",
-      onClick: "toPayouts",
-      admin: false,
-      icon: CiWallet,
-      link: "/payouts"
-    },
-    {
       name: "withdrawals",
       onClick: "toWithdrawals",
       admin: false,

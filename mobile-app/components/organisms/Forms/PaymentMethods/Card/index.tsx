@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { Icon, makeStyles, Text, ThemeConsumer, useTheme } from "@rneui/themed"
 import { isEmpty } from "lodash"
-import { useEffect, useReducer } from "react"
+import React, { useEffect, useReducer } from "react"
 import { StyleProp, View, ViewProps, ViewStyle} from "react-native"
 import { addSlashAfter2Digits, addSpacingAfterEveryFourDigits, removeSpaces } from "../../../../../utils/utils"
 import Rounded from "../../../../atoms/Buttons/Rounded/Rounded"

@@ -1,87 +1,156 @@
-import React, { ReactNode, useEffect, useState } from "react";
-import Analytics from "../../components/organism/Analytics/Analytics";
-import { Flex, Heading } from "@chakra-ui/react";
-import { Grid } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Flex, IconButton } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { AnalyticsTableColums } from "../../utils/tables/TableTypes";
-import useVehicles from "../../hooks/useVehicles";
-import { TablePaginationConfig } from "antd";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import ReservationModal from "../../components/organism/Modals/ReservationModal";
+import { useDisclosure } from "@chakra-ui/react";
+import { fetchReservations, selectReservations, selectReservationsFeedback, selectReservationsPaginationState } from "../../redux/reservationSlice";
 import useReservation from "../../hooks/useReservation";
-import { DataType } from "../reservations";
-import dayjs from "dayjs";
+import { insertTableActions } from "../../utils/tables/utils";
+import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
+import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
+import { isEmpty, lowerCase } from "lodash";
+import { ReservationColumns } from "../../utils/tables/TableTypes";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+export interface DataType {
+  reservationId: string;
+  vehiclePlate: string;
+  vehicleName: string;
+  startEndTime: string;
+  startDateTime?: string;
+  endDateTime?: string;
+  totalCost: number;
+  hostName: string;
+  location: string;
+  status: string;
+}
 
 function Reports() {
-  const { reservations, fetchReservations } = useReservation();
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [reservationData, setReservationData] = useState<DataType[]>([]);
+  const feedback = useAppSelector(selectReservationsFeedback)
+  const { current_page, current_size} = useAppSelector(selectReservationsPaginationState)
+  const dispatch = useAppDispatch()
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [toggleViewReservationModal, setToggleViewReservationModal] =
+    useState(false);
+  const [toggleEditReservationModal, setToggleEditReservationModal] =
+    useState(false);
   const [search, setSearch] = useState<string>("");
+  const { deleteReservation } = useReservation();
+  const [currentReservation, setCurrentReservation] = useState<string>()
+  const [currentVehicle, setCurrentVehicle] = useState<string>()
+
 
   useEffect(() => {
-    fetchReservations();
-  }, [pageNumber]);
+    dispatch(fetchReservations({
+      search: isEmpty(search) ? undefined : search,
+    }))
+  }, [,search?.trim()?.length])
 
-  useEffect(() => {
-    setReservationData(() =>
-      reservations.map((reservation) => ({
-        reservationId: reservation?.id,
-        vehiclePlate: reservation?.vehicle?.plate,
-        vehicleName: `${reservation?.vehicle?.make} ${reservation?.vehicle?.model}`,
-        startEndTime: `${dayjs(reservation?.start_date_time).format(
-          "DD/MM/YYYY h:mm A"
-        )} ${dayjs(reservation?.end_date_time).format("DD/MM/YYYY h:mm A")}`,
-        totalCost: reservation?.payment?.amount,
-        hostName: `${reservation?.vehicle?.host?.fname} ${reservation?.vehicle?.host?.lname}`,
-        location: reservation?.vehicle?.station?.name,
-        status: reservation?.status.toLowerCase(),
-      }))
-    );
-  }, [reservations]);
+  const changeStateViewModal = () => {
+    setToggleViewReservationModal(!toggleViewReservationModal);
+  };
+  const changeStateEditModal = () => {
+    setToggleEditReservationModal(!toggleEditReservationModal);
+  };
+  const showViewReservationModal = (id: string) => {
+    setCurrentReservation(id)
+    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
+    setCurrentVehicle(reservation?.vehicle_id?.toString())
+    onOpen();
+    changeStateViewModal();
+  };
+  const showEditReservationModal = (id: string) => {
+    setCurrentReservation(id)
+    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
+    setCurrentVehicle(reservation?.vehicle_id?.toString())
+    onOpen();
+    changeStateEditModal();
 
-  const filteredReservationData = reservationData.filter(
-    (reservation) =>
-      dayjs(reservation.startDateTime)
-        .format("DD MMM, YYYY")
-        .toLocaleLowerCase()
-        .includes(search.toLocaleLowerCase()) ||
-      reservation.status.toLowerCase().includes(search.toLocaleLowerCase())
-  );
-  const handlePageChange = (pagination: TablePaginationConfig) => {
-    pagination.current && setPageNumber(pagination.current);
   };
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-      <Grid width={"full"} gap={8}>
-        <Analytics />
-        <Heading size={"md"}>Tracking History</Heading>
-        <Flex width={"full"}>
-          <FilterableTable
-            viewSearchField={true}
-            viewSortablesField={true}
-            columns={AnalyticsTableColums}
-            sortables={[
-              {
-                columnKey: "start_date_time",
-                columnName: "Date",
-              },
-            ]}
-            data={filteredReservationData}
-            pagination={{ position: ["bottomCenter"] }}
-            handlePageChange={handlePageChange}
-            setSearch={setSearch}
-          ></FilterableTable>
-        </Flex>
-      </Grid>
+      <Flex w="full" h="full" data-testid="reservations-table">
+        <ReservationModal
+          isOpen={isOpen}
+          onClose={onClose}
+          toggleViewReservationModal={toggleViewReservationModal}
+          changeStateViewModal={changeStateViewModal}
+          toggleEditReservationModal={toggleEditReservationModal}
+          changeStateEditModal={changeStateEditModal}
+          reservationId={currentReservation}
+          vehicleId={currentVehicle}
+        />
+        <FilterableTable
+          viewSearchField={true}
+          viewSortablesField={true}
+          columns={insertTableActions(ReservationColumns, (i, data) => {
+            return (
+              <Flex {...FlexRowCenterBetween}>
+                <IconButton
+                  aria-label="View"
+                  icon={<ViewIcon />}
+                  size="sm"
+                  onClick={() => showViewReservationModal(data.reservationId)}
+                  marginRight="4"
+                  data-cy={"view-button"}
+                />
+                <IconButton
+                  aria-label="Edit"
+                  icon={<EditIcon />}
+                  size="sm"
+                  onClick={() => {
+                    showEditReservationModal(data.reservationId);
+                  }}
+                  marginRight="4"
+                  data-cy={"edit-button"}
+                />
+                <IconButton
+                  aria-label="Delete"
+                  icon={<DeleteIcon />}
+                  size="sm"
+                  onClick={() => {
+                    deleteReservation(data.reservationId);
+                  }}
+                  color="cancelled.1000"
+                  data-cy={"delete-button"}
+                />
+              </Flex>
+            );
+          })}
+          pagination={{
+            position: ["bottomCenter"],
+            onChange: (page, pageSize) => {
+              dispatch(fetchReservations({ page, size: pageSize }))
+            },
+            total: ((current_page ?? 0) * (current_size ?? 0)) + (
+              feedback?.data?.length < (current_size ?? 0) ? 0 : 1
+            ),
+            showSizeChanger: true, 
+          }}
+          data={feedback?.data ?? [] } 
+          setSearch={setSearch}
+          sortables={[
+            {
+              columnKey: "payment",
+              columnName: "Total cost",
+            },
+          ]}
+          primitiveTableProps={{
+            loading: feedback?.loading,
+          }}
+          
+        />
+      </Flex>
     </ErrorBoundary>
   );
 }
 
 export default Reports;
 
-export function getStaticProps() {
+export function getServerSideProps() {
   return {
     props: {
       adminonly: false,

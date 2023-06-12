@@ -22,7 +22,7 @@ function AuthCodeManagement() {
   }, [chosenCode, isOpen ])
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}  onError={logError} >
-      <div className="flex flex-col w-full h-full items-center justify-start">
+      <div className="flex flex-col w-full items-center justify-start">
         <Modal size="5xl" isOpen={open} onClose={onClose} >
           <ModalOverlay/>
           <ModalContent>
@@ -32,18 +32,20 @@ function AuthCodeManagement() {
               </Flex>
             </ModalHeader>
             <ModalBody>
-              {chosenCode && <AuthCodeRequestForm
+              {chosenCode && <AuthCodeRequestForm onClose={onClose}
                 data={chosenCode}
               />}
             </ModalBody>
           </ModalContent>
         </Modal>
-        <AuthCodeTable
-          onEdit={(data)=>{
-            onOpen()
-            setChosenCode(data)
-          }}
-        />
+        <div className="w-full h-full flex flex-col items-center justify-start">
+          <AuthCodeTable
+            onEdit={(data)=>{
+              onOpen()
+              setChosenCode(data)
+            }}
+          />
+        </div>
       </div>
 
     </ErrorBoundary>

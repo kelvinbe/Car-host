@@ -1,15 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
-import { makeStyles, ThemeConsumer } from '@rneui/themed'
-import LocationMarkerIcon from '../../../../assets/icons/location-marker.svg'
+import { makeStyles } from '@rneui/themed'
 import { LocationObjectCoords } from 'expo-location'
 import { Marker } from 'react-native-maps'
-import ChevronDown from "../../../../assets/icons/chevron-down.svg"
-import { useAppSelector } from '../../../../store/store'
-import { selectCoords } from '../../../../store/slices/searchSlice'
 import { Image } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { IStation, IVehicle } from '../../../../types'
+import { IVehicle } from '../../../../types'
 
 interface IProps extends Partial<LocationObjectCoords> {
     data?: Partial<IVehicle>
@@ -70,23 +65,27 @@ const VehicleMarker = (props: Props) => {
     const styles = useStyles(props)
 
   return (
-    <ThemeConsumer>
-        {({theme})=>(
-            <Marker
-                coordinate={{
-                    latitude: latitude || 0,
-                    longitude: longitude || 0,
-                }}
-                style={styles.marker}
-                // title={data?.station?.name ?? "Vehicle"}
-                // description={data?.station?.description ?? "Vehicle"}
-                anchor={{x: 0.5, y: 1}}
-            >
-                <MaterialCommunityIcons name="bus-marker" size={24} color={theme?.colors?.primary} />
-            </Marker>
-        )}
-    </ThemeConsumer>
-    
+    <Marker
+        coordinate={{
+            latitude: latitude || 0,
+            longitude: longitude || 0,
+        }}
+        // tracksViewChanges={false}
+        style={styles.marker}
+        // title={data?.station?.name ?? "Vehicle"}
+        // description={data?.station?.description ?? "Vehicle"}
+        anchor={{x: 0.5, y: 0.5}}
+    >
+        <Image 
+            style={{
+                width: 90,
+                height: 35,
+                aspectRatio: 2,
+            }}
+            resizeMode="contain"
+            source={require("../../../../assets/images/vehicle-marker.png")}
+        />
+    </Marker>
   )
 }
 

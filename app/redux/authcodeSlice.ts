@@ -1,10 +1,13 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IAuthCode, IUserProfile, IVehicle } from "../globaltypes";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { IAuthCode, IUserProfile, IVehicle, asyncThinkFetchParams } from "../globaltypes";
 import apiClient from "../utils/apiClient";
 import { AUTHCODE_DOMAIN } from "../hooks/constants";
 import {AxiosError} from "axios";
 import { RootState } from ".";
 import LogRocket from "logrocket";
+
+
+
 
 
 interface ReducerState {
@@ -18,6 +21,10 @@ interface ReducerState {
     activationError: string | null;
     loadingUpdate: boolean;
     updateError: string | null;
+    current_page?: number;
+    current_size?: number;
+    current_search?: string;
+    current_sort?: string;
 }
 
 const initialState: ReducerState = {
@@ -27,16 +34,28 @@ const initialState: ReducerState = {
     loadingActivation: false,
     activationError: null,
     loadingUpdate: false,
-    updateError: null
+    updateError: null,
+    current_page: 1,
+    current_size: 10,
+    current_search: "",
+    current_sort: ""
 }
 
-export const fetchAuthCodes = createAsyncThunk('authcodes/fetchAuthCodes', async (arg,{rejectWithValue})=>{
+export const fetchAuthCodes = createAsyncThunk('authcodes/fetchAuthCodes', async (args: Partial<asyncThinkFetchParams> | null | undefined = null,{rejectWithValue, getState, dispatch})=>{
     try {
+
+        const currentParams = (getState() as RootState).authcode
+
+        const params = {
+            page: args?.page ?? currentParams.current_page,
+            size: args?.size ?? currentParams.current_size,
+            search: args?.search ?? currentParams.current_search,
+            sort: args?.sort ?? currentParams.current_sort
+        }
+
+        dispatch(updateParams(params))
         const authcodes = (await apiClient.get(AUTHCODE_DOMAIN, {
-            params: {
-                page: 1,
-                size: 20
-            }
+            params
         })).data 
         return authcodes
     } catch (e) {
@@ -85,6 +104,12 @@ const authCodeSlice = createSlice({
     initialState,
     name: "authcodes",
     reducers: {
+        updateParams: (state, action)=>{
+            state.current_page = action.payload.page ?? state.current_page
+            state.current_size = action.payload.size ?? state.current_size
+            state.current_search = action.payload.search ?? state.current_search
+            state.current_sort = action.payload.sort ?? state.current_sort
+        }
     },
     extraReducers: (builder)=>{
         builder.addCase(fetchAuthCodes.pending, (state)=>{
@@ -129,6 +154,10 @@ const authCodeSlice = createSlice({
 
 export default authCodeSlice.reducer;
 
+export const {
+    updateParams
+} = authCodeSlice.actions
+
 
 export const selectAuthCodeFeedback = (state: RootState) => {
     return {
@@ -149,5 +178,14 @@ export const selectActivateAuthCodeFeedback = (state: RootState) => {
     return {
         loading: state.authcode.loadingActivation,
         error: state.authcode.activationError,
+    }
+}
+
+export const selectPaginationState = (state: RootState) => {
+    return {
+        current_page: state.authcode.current_page,
+        current_size: state.authcode.current_size,
+        current_search: state.authcode.current_search,
+        current_sort: state.authcode.current_sort
     }
 }

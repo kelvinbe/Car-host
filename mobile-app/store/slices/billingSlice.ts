@@ -1,8 +1,8 @@
 import { IRawPaymentMethodDetails } from './../../types';
-import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { auth } from "../../firebase/firebaseApp";
 import { PAYMENT_ENDPOINT, PAYMENT_METHOD_ENDPOINT } from "../../hooks/constants";
+import { AxiosResponse } from 'axios';
 
 
 export const billingApi = createApi({
@@ -49,7 +49,7 @@ export const billingApi = createApi({
                 method: "DELETE",
             })
         }),
-        confirmPayment: builder.query<boolean, {
+        confirmPayment: builder.query<"REQUIRES_PAYMENT_METHOD" | "REQUIRES_CONFIRMATION" | "REQUIRES_ACTION" | "PROCESSING" | "REQUIRES_CAPTURE" | "CANCELLED" | "SUCCEEDED" | "FAILED", {
             authorization: string
         }>({
             query: (data) => ({
@@ -59,7 +59,7 @@ export const billingApi = createApi({
                     "x-payment-authorization": data.authorization,
                 }
             }), // a cookie for the payment session gets set when the user triggers a payment so, we can use that cookie to confirm the payment
-            transformResponse: (response: any) => response.data as boolean
+            transformResponse: (response: AxiosResponse) => response.data
         })  
     })
 })

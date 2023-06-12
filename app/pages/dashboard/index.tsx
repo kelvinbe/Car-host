@@ -73,7 +73,7 @@ export default function Dashboard() {
           >
             <BaseTable
               columns={ReservationTableColumns}
-              data={reservations}
+              data={reservations?.slice(0, 5) ?? []}
               dataFetchFunction={(fetchStatus) => {
                 fetchStatus;
               }}
@@ -95,13 +95,13 @@ export default function Dashboard() {
               borderColor="gray.300"
             >
               {allVehicles.length < 1 && <Flex marginY={'8'}><Image src={noData} alt="no data" width={100} height={100} /></Flex>}
-              {allVehicles.map((vehicleInfo) => (
+              {allVehicles.slice(0,4).map((vehicleInfo) => (
                 <Flex
                   w="40%"
-                  padding="18px 0px"
                   align="center"
                   justify={"center"}
-                  rounded={"5px"}
+                  rounded={"sm"}
+                  overflow="hidden"
                   m="22px 0px"
                   border="1px solid"
                   borderColor="gray.300"
@@ -124,13 +124,21 @@ export default function Dashboard() {
                 >
                   <Flex
                     w="full"
-                    h="full"
+                    h="150px"
                     align="center"
                     justify="center"
                     key={vehicleInfo.id}
                     data-testid={"vehicle-image-container"}
+                    pos="relative"
                   >
-                    <VehiclePic image={first(vehicleInfo?.pictures) ?? ""} size="mid" />
+                    <Image
+                      src={first(vehicleInfo?.pictures) ?? ""}
+                      alt="vehicle image"
+                      fill 
+                      style={{
+                        objectFit: 'cover',
+                      }}
+                    />
                     {viewButton === vehicleInfo.id && (
                       <Box
                         position="absolute"
@@ -163,7 +171,7 @@ export default function Dashboard() {
           <PreviewTableContainer title="Last 10 Payouts" link="/payouts">
             <BaseTable
               columns={PayoutsTableColumns}
-              data={sortedPayouts}
+              data={sortedPayouts?.slice(0,5) ?? []}
               dataFetchFunction={(fetchStatus) => {
                 fetchStatus;
               }}

@@ -113,7 +113,7 @@ function AllMapView() {
 
 export default AllMapView;
 
-export function getStaticProps() {
+export function getServerSideProps() {
   return {
     props: {
       adminonly: true,
