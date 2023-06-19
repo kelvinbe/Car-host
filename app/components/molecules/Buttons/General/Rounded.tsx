@@ -18,6 +18,7 @@ function Rounded(props: IProps) {
   return (
     <Button
     data-cy={'rounded-btn'}
+    data-testid={'rounded-btn'}
     w={fullWidth ? "full" : setWidth}
     _hover={{
         backgroundColor: variant === "solid" ? "primary.900" : "transparent",

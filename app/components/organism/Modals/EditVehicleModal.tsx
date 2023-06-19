@@ -13,7 +13,8 @@ import {
     FormControl,
     FormErrorMessage,
     FormLabel,
-    Box
+    Box,
+    useToast
   } from "@chakra-ui/react";
   import { IVehicle } from "../../../globaltypes";
   import useVehicles from "../../../hooks/useVehicles";
@@ -58,6 +59,9 @@ const reducer = (state:Partial<IVehicle> | null, action:{type:string, key?:strin
       const { isOpen, onClose, vehicle_id } = props
       const {updateVehicle} = useVehicles(vehicle_id)
       const [vehicleImages, setVehicleImages] = useState<string[]>([])
+      const toast = useToast({
+        position: 'top'
+      })
 
     
 
@@ -73,6 +77,12 @@ const reducer = (state:Partial<IVehicle> | null, action:{type:string, key?:strin
             dispatch({
                 type: 'init',
                 value: data
+            })
+        }).catch((e)=>{
+            toast({
+                title: 'Error',
+                description: "Something went wrong",
+                colorScheme: 'red'
             })
         })
       }, [vehicle_id])

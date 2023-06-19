@@ -71,13 +71,13 @@ export default function EventModal({
               {dayjs(selectedReservation.end_date_time).format("DD/MM/YYY")}
             </Text>
             <Text data-testid={'station'}>
-              Station: {selectedReservation.vehicle.station.name}
+              Station: {selectedReservation?.vehicle?.station?.name}
             </Text>
             <Text data-testid={'market'}>
-              Reservation Market: {selectedReservation.vehicle.station.market.name}
+              Reservation Market: {selectedReservation?.vehicle?.station?.market?.name}
             </Text>
             <Text data-testid={'sub-market'}>
-              Reservation Sub Market: {selectedReservation.vehicle.station.sub_market.name}
+              Reservation Sub Market: {selectedReservation?.vehicle?.station?.sub_market?.name}
             </Text>
             <Text>Status: {capitalize(selectedReservation.status)}</Text>
             <Text>Total: {selectedReservation?.payment?.amount} </Text>

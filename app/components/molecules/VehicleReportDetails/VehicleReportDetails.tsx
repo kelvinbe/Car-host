@@ -13,10 +13,12 @@ import {
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { IAnalyticsData, IVehicle } from "../../../globaltypes";
-import { sumBy } from "lodash";
 import useReservation from "../../../hooks/useReservation";
 import useUsers from "../../../hooks/useUsers";
 import noData from "../../../public/images/no_available_data.png";
+import { useAppSelector } from "../../../redux/store";
+import { selectChosenVehicleFeedback, selectEarningsFeedback } from "../../../redux/analyticsSlice";
+import LoadingComponent from "../feedback/LoadingComponent";
 
 interface IProps {
   vehicle?: Partial<IVehicle>;
@@ -27,18 +29,20 @@ const thStyles = {
   fontSize: '15px',
 };
 const VehicleReportDetails = (props: IProps) => {
-  const { vehicle, earnings } = props;
   const { reservations, fetchReservations } = useReservation();
   const { user } = useUsers();
 
-  useEffect(() => {
-    fetchReservations();
-  }, []);
-  const totalVehcileReservations = reservations.filter(
-    (reservation) => reservation.vehicle_id === vehicle?.id
-  ).length;
+  const { data: vehicle, loading, id } = useAppSelector(selectChosenVehicleFeedback) 
+  const { data: earnings } = useAppSelector(selectEarningsFeedback)
 
-  const totalVehicleEarnings = earnings && sumBy(earnings, (item) => item.value);
+
+  if(loading) {
+    return (
+      <LoadingComponent/>
+    )
+  }
+ 
+
   return (
     <Flex
       direction={"column"}
@@ -49,17 +53,20 @@ const VehicleReportDetails = (props: IProps) => {
       padding={"3"}
     >
       <Box marginLeft={"4"} borderRadius={"lg"} paddingTop={"4"}>
-            {vehicle?.pictures && (
-              <Image
-                src={vehicle?.pictures[0]}
-                alt=""
-                width={400}
-                height={200}
-                style={{ borderRadius: "20px" }}
-              />
-            )}
-          </Box>
-      {!vehicle && !earnings ? (
+        {vehicle?.pictures && (
+          <div className="flex relative w-full overflow-hidden rounded-xl h-[200px]">
+            <Image
+              alt="vehicle"
+              src={vehicle?.pictures[0]}
+              fill 
+              style={{
+                objectFit: "cover",
+              }}
+            /> 
+          </div>
+        )}
+      </Box>
+      {!vehicle ? (
         <Flex
           width={"full"}
           marginTop={"3"}
@@ -67,9 +74,9 @@ const VehicleReportDetails = (props: IProps) => {
           wrap="wrap"
           align={"center"}
         > 
-        <Heading size={"md"} width={"full"} textAlign={"center"} textTransform={'uppercase'}>
-        Vehicle Report
-      </Heading>
+          <Heading size={"md"} width={"full"} textAlign={"center"} textTransform={'uppercase'}>
+            Vehicle Report
+          </Heading>
           <Image src={noData} alt="no data" width={100} height={100} />
         </Flex>
       ) : (
@@ -98,8 +105,13 @@ const VehicleReportDetails = (props: IProps) => {
                   <Td as={'b'}>{vehicle?.plate}</Td>
                 </Tr>
                 <Tr>
-                  <Th color={'black'} css={thStyles}>Total Reservations</Th>
-                  <Td as={'b'}>{totalVehcileReservations}</Td>
+                  <Th color={'black'} css={thStyles}>Complete Reservations</Th>
+                  <Td as={'b'}>{
+                      earnings?.reduce((acc, cur)=>{
+                        return acc + (cur.reservations ?? 0)
+                      }, 0)
+                    }
+                  </Td>
                 </Tr>
                 <Tr>
                   <Th color={'black'} css={thStyles}>Hourly rate</Th>
@@ -108,7 +120,11 @@ const VehicleReportDetails = (props: IProps) => {
                 <Tr>
                   <Th color={'black'} css={thStyles}>Total Earnings</Th>
                   <Td as={'b'}>
-                    {user?.market?.currency} {totalVehicleEarnings}
+                    {user?.market?.currency} {
+                      earnings?.reduce((acc, cur)=>{
+                        return acc + (cur.value ?? 0)
+                      },0)
+                    }
                   </Td>
                 </Tr>
               </Tbody>

@@ -122,7 +122,7 @@ function AuthCodeRequestForm(props: Props) {
             </div>
           </div>
         </Flex> 
-        <Flex  w={"66%"} className='gap-y-2 h-full flex-col' >
+        <Flex  w={"66%"} className='gap-y-2 h-full flex flex-col' >
             <Flex {...FlexRowStartBetween}  w="full"  rounded="md" bg="gray.50" px="5px" py="3px" >
               <Avatar
                 size="md" 

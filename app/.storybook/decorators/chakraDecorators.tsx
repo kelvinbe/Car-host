@@ -10,4 +10,4 @@ function chakraDecorators(Story: any) {
   )
 }
 
-export default chakraDecorators
+export default chakraDecorators 

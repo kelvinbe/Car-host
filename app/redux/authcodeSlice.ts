@@ -5,6 +5,7 @@ import { AUTHCODE_DOMAIN } from "../hooks/constants";
 import {AxiosError} from "axios";
 import { RootState } from ".";
 import LogRocket from "logrocket";
+import { isEmpty } from "lodash";
 
 
 
@@ -36,21 +37,24 @@ const initialState: ReducerState = {
     loadingUpdate: false,
     updateError: null,
     current_page: 1,
-    current_size: 10,
-    current_search: "",
-    current_sort: ""
+    current_size: 10
 }
 
-export const fetchAuthCodes = createAsyncThunk('authcodes/fetchAuthCodes', async (args: Partial<asyncThinkFetchParams> | null | undefined = null,{rejectWithValue, getState, dispatch})=>{
+export const fetchAuthCodes = createAsyncThunk('authcodes/fetchAuthCodes', async (args: Partial<asyncThinkFetchParams<IAuthCode>> | null | undefined = null,{rejectWithValue, getState, dispatch})=>{
     try {
 
         const currentParams = (getState() as RootState).authcode
 
+        const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
+        const current_search = isEmpty(args?.search) ? prev_search : args?.search
+        const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
+
         const params = {
             page: args?.page ?? currentParams.current_page,
             size: args?.size ?? currentParams.current_size,
-            search: args?.search ?? currentParams.current_search,
-            sort: args?.sort ?? currentParams.current_sort
+            search: search,
+            sort: args?.sort ?? currentParams.current_sort,
+            sort_by: args?.sort_by ?? currentParams.current_sort ?? undefined
         }
 
         dispatch(updateParams(params))

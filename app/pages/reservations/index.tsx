@@ -9,11 +9,12 @@ import useReservation from "../../hooks/useReservation";
 import { insertTableActions } from "../../utils/tables/utils";
 import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
-import { isEmpty, lowerCase } from "lodash";
+import { isEmpty, isNull, lowerCase } from "lodash";
 import { ReservationColumns } from "../../utils/tables/TableTypes";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+import { IReservation } from "../../globaltypes";
 export interface DataType {
   reservationId: string;
   vehiclePlate: string;
@@ -44,9 +45,9 @@ function Reservations() {
 
   useEffect(() => {
     dispatch(fetchReservations({
-      search: isEmpty(search) ? undefined : search,
+      search: search
     }))
-  }, [,search?.trim()?.length])
+  }, [search])
 
   const changeStateViewModal = () => {
     setToggleViewReservationModal(!toggleViewReservationModal);
@@ -69,6 +70,8 @@ function Reservations() {
     changeStateEditModal();
 
   };
+
+
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
@@ -93,16 +96,16 @@ function Reservations() {
                   aria-label="View"
                   icon={<ViewIcon />}
                   size="sm"
-                  onClick={() => showViewReservationModal(data.reservationId)}
+                  onClick={() => showViewReservationModal(data.id)}
                   marginRight="4"
                   data-cy={"view-button"}
                 />
-                <IconButton
+                {/* <IconButton
                   aria-label="Edit"
                   icon={<EditIcon />}
                   size="sm"
                   onClick={() => {
-                    showEditReservationModal(data.reservationId);
+                    showEditReservationModal(data.id);
                   }}
                   marginRight="4"
                   data-cy={"edit-button"}
@@ -112,11 +115,11 @@ function Reservations() {
                   icon={<DeleteIcon />}
                   size="sm"
                   onClick={() => {
-                    deleteReservation(data.reservationId);
+                    deleteReservation(data.id);
                   }}
                   color="cancelled.1000"
                   data-cy={"delete-button"}
-                />
+                /> */}
               </Flex>
             );
           })}
@@ -135,13 +138,21 @@ function Reservations() {
           sortables={[
             {
               columnKey: "payment",
-              columnName: "Total cost",
+              columnName: "Cost",
             },
           ]}
           primitiveTableProps={{
             loading: feedback?.loading,
+            showSorterTooltip: false
           }}
-          
+          onSort={(sort)=>{
+            const order = (!isNull(sort?.order) && ['desc', 'descending', 'descend'].includes(sort?.order)) ? 'desc' : 'asc'
+            const sort_by = lowerCase(sort.columnKey) as keyof IReservation
+            dispatch(fetchReservations({
+              sort: order,
+              sort_by,
+            }))
+          }}
         />
       </Flex>
     </ErrorBoundary>

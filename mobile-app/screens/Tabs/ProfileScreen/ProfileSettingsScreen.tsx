@@ -72,8 +72,12 @@ const ProfileSettingsScreen = (props: Props) => {
 
     const toast = useToast()
     const { userAuthProviders, loadingPasswordUpdate, passwordUpdateError, updateUserPassword, hasPasswordChanged } = useUserAuth()
+
+
+
+
     const toggleCurrentPasswordVisibility = () => {
-        dispatch(_toggle_current_password)
+        dispatch(_toggle_current_password())
     }
     const setCurrentPassword = (text: string) => {
         dispatch(_set_current_password(text))
@@ -97,7 +101,6 @@ const ProfileSettingsScreen = (props: Props) => {
     const confirmChange = () =>{
         updateUserPassword(newPassword, currentPassword)
     }
-
 
   return (
     loadingPasswordUpdate ? ( 

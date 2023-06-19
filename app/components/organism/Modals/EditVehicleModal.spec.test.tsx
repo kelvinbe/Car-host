@@ -2,7 +2,6 @@ import { Middleware, configureStore, getDefaultMiddleware } from "@reduxjs/toolk
 import vehicleReducer, { fetchVehicle } from "../../../redux/vehiclesSlice";
 import { IVehicle } from "../../../globaltypes";
 import { Provider } from "react-redux";
-import EditVehicleModal from "./EditVehicleModal";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 jest.mock('../../../utils/apiClient', () => ({
@@ -24,18 +23,18 @@ jest.mock('../../../utils/apiClient', () => ({
               })
           },
           response: {
-              use: jest.fn().mockImplementation(() => ({
+            use: jest.fn().mockImplementation(() => ({
                   data: 'mocked data',
                   message: 'mocked message',
                   status: 'mocked status'
               }))
-          }
-      },
+            }
+          },
   }),
   db_user: {
       getUser: jest.fn().mockResolvedValue({
           getIdToken: jest.fn().mockResolvedValue('mocked_token')
-      })
+        })
   },
 }));
 
@@ -58,30 +57,31 @@ const createMockStore = () => {
             "status": "ACTIVE",
             "tracking_device_id": "51dee53b-1316-4d6f-872f-4f2c04a4ecc5",
             "pictures": [
-                "https://loremflickr.com/640/480/transport",
-                "https://loremflickr.com/640/480/transport",
-                "https://loremflickr.com/640/480/transport",
-                "https://loremflickr.com/640/480/transport"
+              "https://loremflickr.com/640/480/transport",
+              "https://loremflickr.com/640/480/transport",
+              "https://loremflickr.com/640/480/transport",
+              "https://loremflickr.com/640/480/transport"
             ],
             "transmission": "AUTOMATIC",
-        } as Partial<IVehicle>,
-      });
-    }
-    return next(action);
+          } as Partial<IVehicle>,
+        });
+      }
+      return next(action);
+    };
+    
+    const middleware = getDefaultMiddleware().concat(mockAsyncActions);
+    
+    return configureStore({
+      reducer: {
+        vehicles: vehicleReducer,
+      },
+      middleware,
+    });
   };
-
-  const middleware = getDefaultMiddleware().concat(mockAsyncActions);
-
-  return configureStore({
-    reducer: {
-      vehicles: vehicleReducer,
-    },
-    middleware,
-  });
-};
-
-const store = createMockStore();
-
+  
+  const store = createMockStore();
+  
+  import EditVehicleModal from "./EditVehicleModal";
 describe('EditVehicleModal', () => {
     const onCloseMock = jest.fn()
     const vehicle_id = '1'

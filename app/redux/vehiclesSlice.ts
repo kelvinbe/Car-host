@@ -4,15 +4,23 @@ import { IVehicle, PaginationSupportState, asyncThinkFetchParams } from "../glob
 import apiClient from "../utils/apiClient";
 import { VEHICLES_DOMAIN } from "../hooks/constants";
 import LogRocket from "logrocket";
+import { AxiosError } from "axios";
+import { isEmpty } from "lodash";
 
-export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (args: Partial<asyncThinkFetchParams> | undefined | null = null, { rejectWithValue, dispatch, getState }) =>{
+export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (args: Partial<asyncThinkFetchParams<IVehicle>> | undefined | null = null, { rejectWithValue, dispatch, getState }) =>{
     const currentParams = (getState() as RootState).vehicles
-
-    const params = {
+    const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
+    const current_search = isEmpty(args?.search) ? prev_search : args?.search
+    const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
+    const params = args?.reset ? {
+        page: 1,
+        size: 10,
+    } : {
         page: args?.page ?? currentParams.current_page,
         size: args?.size ?? currentParams.current_size,
-        search: args?.search ?? currentParams.current_search,
-        sort: args?.sort ?? currentParams.current_sort
+        search: search,
+        sort: args?.sort ?? currentParams.current_sort,
+        sort_by: args?.sort_by ?? currentParams.current_sort_by ?? undefined
     }
     dispatch(updateParams(params))
 
@@ -23,7 +31,7 @@ export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (a
         return res.data
     } catch (e) {
         LogRocket.error(e)
-        rejectWithValue(e as string)
+        return rejectWithValue((e as AxiosError)?.message)
     }
 })
 
@@ -40,7 +48,7 @@ export const fetchVehicle = createAsyncThunk('vehicles/fetchVehicle', async (dat
         return res?.data?.[0] ?? null
     } catch (e) {
         LogRocket.error(e)
-        rejectWithValue(e as string)
+        return rejectWithValue((e as AxiosError)?.message)
     }
 })
 
@@ -63,11 +71,29 @@ export const updateVehicle = createAsyncThunk('vehicles/updateVehicle', async (d
         return res.data
     } catch (e) {
         LogRocket.error(e)
-        return rejectWithValue(e)
+        return rejectWithValue((e as AxiosError)?.message)
     }
 })
 
-interface VehiclesReducerState extends PaginationSupportState {
+export const addVehicle = createAsyncThunk('vehicles/addVehicle', async (data: Partial<IVehicle>, {rejectWithValue, dispatch}) =>{
+    try {
+        const res = (await apiClient.post(VEHICLES_DOMAIN, {
+            vehicle: {
+                ...data
+            },
+            pictures: data?.pictures ?? []
+        }))
+
+        dispatch(fetchVehicles())
+
+        return res.data
+    } catch (e) {
+        LogRocket.error(e)
+        return rejectWithValue((e as AxiosError)?.message)
+    }
+})
+
+interface VehiclesReducerState extends Partial<PaginationSupportState> {
     vehicles: Partial<IVehicle>[],
     fetchVehiclesLoading: boolean,
     fetchVehiclesError: null | string,
@@ -76,7 +102,9 @@ interface VehiclesReducerState extends PaginationSupportState {
     vehicle: Partial<IVehicle> | null,
     updateVehicleLoading: boolean,
     updateVehicleError: null | string,
-    active_updating_vehicle_id?: string
+    active_updating_vehicle_id?: string,
+    addVehicleLoading: boolean,
+    addVehicleError: null | string,
 }
 
 
@@ -89,8 +117,6 @@ const vehiclesSlice = createSlice({
         fetchVehiclesError: null,
         current_page: 1,
         current_size: 10,
-        current_search: "",
-        current_sort: "",
     } as VehiclesReducerState,
     reducers: {
         getVehicles(state, action){
@@ -144,6 +170,18 @@ const vehiclesSlice = createSlice({
             state.updateVehicleLoading = false 
             state.updateVehicleError = action.payload  as string
         })
+        builder.addCase(addVehicle.pending, state=>{
+            state.addVehicleLoading = true
+            state.addVehicleError = null
+        })
+        builder.addCase(addVehicle.fulfilled, (state, action)=>{
+            state.addVehicleLoading = false
+            state.addVehicleError = null
+        })
+        builder.addCase(addVehicle.rejected, (state, action)=>{
+            state.addVehicleLoading = false 
+            state.addVehicleError = action.payload  as string
+        })
     }
 })
 export default vehiclesSlice.reducer;
@@ -182,5 +220,12 @@ export const selectUpdateVehicleFeedback = (state: RootState) => {
         error: state.vehicles.updateVehicleError,
         data: state.vehicles.vehicle,
         id : state.vehicles.active_updating_vehicle_id
+    }
+}
+
+export const selectAddVehicleFeedback = (state: RootState) => {
+    return {
+        loading: state.vehicles.addVehicleLoading,
+        error: state.vehicles.addVehicleError,
     }
 }

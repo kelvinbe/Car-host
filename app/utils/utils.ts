@@ -3,6 +3,8 @@ import { storage } from "../firebase/firebaseApp";
 
 import { GenerateDataTransferObject } from './../globaltypes';
 import LogRocket from "logrocket";
+import store from "../redux/store";
+import { RootState } from "../redux";
 /**
  * @name loadEnv 
  * @params {string} envVariableName
@@ -192,4 +194,27 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
  export const logError = (error: Error | null, info: { componentStack: string } | null)=>{
     LogRocket.error(error)
     LogRocket.info(info)
+ }
+
+
+ export const getYearsSinceJoined = () => {
+    const created_at = (store.getState() as RootState).users?.user?.created_at
+
+    if(!created_at){
+        return [
+            new Date().getFullYear()
+        ]
+    }
+
+    const currentYear = new Date().getFullYear()
+    const yearJoined = new Date(created_at).getFullYear()
+
+    if (yearJoined === currentYear) {
+        return [currentYear]
+    }
+    const years = []
+    for(let i = yearJoined; i <= currentYear; i++){
+        years.push(i)
+    }
+    return years
  }

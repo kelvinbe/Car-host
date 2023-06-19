@@ -1,12 +1,13 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import StationActionModal from "./StationActionModal";
 import { IStation } from "../../../globaltypes";
 import { Provider } from "react-redux";
 import store from "../../../redux/store";
+import StationActionModal from "./StationActionModal";
+import { act } from "react-dom/test-utils";
 
 const testFunc = jest.fn()
-const station: IStation = {
+const station: Partial<IStation> = {
     id: '2',
     name: 'Test station',
     description: 'Tests description',
@@ -69,8 +70,9 @@ describe('Tests the StationactionModal component', ()=>{
         render(<Provider store={store}><StationActionModal isOpen onClose={testFunc} station={station}/></Provider>);
         const inputs=screen.getAllByRole('textbox')
         const button = screen.getAllByRole('button')[2]
-
-        fireEvent.change(inputs[0], {target: {value: 'Test station'}})
+        act(()=>{
+            fireEvent.change(inputs[0], {target: {value: 'Test station'}})
+        })
         expect(inputs[0].value).toBe('Test station');
     })
 })

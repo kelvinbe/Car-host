@@ -1,66 +1,124 @@
-import { Flex, Heading, Select, Text } from "@chakra-ui/react";
-import React, { ChangeEvent } from "react";
-import { IVehicle } from "../../../globaltypes";
-import useUsers from "../../../hooks/useUsers";
+import { FormControl, FormLabel, Select, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import { selectUser } from "../../../redux/userSlice";
+import { fetchEarningsData, fetchVehicleList, selectVehicleListFeedback } from "../../../redux/analyticsSlice";
+import { getYearsSinceJoined } from "../../../utils/utils";
 
-interface IProps{
-    handleVehicleSelect: (vehicle: string)=>void;
-    handleCalendarTypeSelect: (calendarType: string)=>void;
-    vehicles: Partial<IVehicle>[];
-}
-const AnalyticsHeader = (props: IProps) => {
-  const {handleCalendarTypeSelect, handleVehicleSelect, vehicles}=props 
-  const {user} = useUsers()
-  const onVehicleSelect= (e: ChangeEvent)=>{
-    handleVehicleSelect((e.target as HTMLSelectElement).value)
-  }
+const AnalyticsHeader = () => {
+  const [vehicle_id, set_vehicle_id] = useState<string>("all")
+  const [interval, set_interval] = useState<"monthly" | "yearly">("monthly")
+  const [year, set_year] = useState(new Date().getFullYear())
+  const dispatch = useAppDispatch()
+  const user = useAppSelector(selectUser)
+  const {data: vehicle_list, loading} = useAppSelector(selectVehicleListFeedback)
+  const [years, set_years] = useState<number[]>([])
 
-  const onCalendarTypeSelect=(e: ChangeEvent)=>{
-    handleCalendarTypeSelect((e.target as HTMLSelectElement).value)
-  }
-  if(!vehicles && !user) return null;
+  useEffect(()=>{
+    dispatch(fetchEarningsData({
+      vehicle_id,
+      interval,
+      year
+    }))
+  }, [vehicle_id, interval, year])
+
+  useEffect(()=>{
+    const y = getYearsSinceJoined()
+    set_years(y)
+  },[user])
+
+  useEffect(()=>{
+    dispatch(fetchVehicleList())
+  }, [])
+ 
   return (
-    <Flex width={"full"} paddingLeft={"4"}>
-      <Flex width={"25%"} direction={['column']}>
-        <Heading as={"h3"} size={"md"}>
-          Analytics
-        </Heading>
-        <Text paddingTop={'2'}>Total Balance: <b>$ {user?.earnings.available}</b></Text>
-      </Flex>
-      <Flex width={"75%"}>
-        <Flex>
-            <Text as={'b'}>Earnings</Text>
-            <div
-            style={{
-                marginLeft: "20px",
-                color:  'red'
-              }}>
+    <div className="grid grid-cols-5 w-full items-end justify-start gap-x-4">
+      <div className="col-span-1 flex flex-row items-end justify-start gap-x-3 w-full">
+        <Text variant={"label"} >General earnings: </Text>
+        <Text>
+          {user?.market?.currency} {user?.earnings?.all_time}
+        </Text>
+      </div>
+      <div className="col-span-2 flex flex-row items-center justify-start gap-x-3 w-full">
+          <div className="flex flex-row items-center justify-start gap-x-1">
+              <Text className="text-black font-semibold text-sm" > Earnings </Text>
+              <span className="text-red-500" >
                 &bull;
-            </div>
-            <Text marginLeft={'20px'} as={'b'}>Reservations</Text>
-            <div
-            style={{
-                marginLeft: "20px",
-                color: 'black'
-              }}>
+              </span>
+          </div>
+          <div className="flex flex-row items-center justify-start gap-x-1">
+              <Text className="text-black font-semibold text-sm" > Reservations </Text>
+              <span className="text-black" >
                 &bull;
-            </div>
-        </Flex>
-        <Flex marginLeft={'20px'}>
-            <Text as={'b'}>Select Vehicle:</Text>
-            <Flex gap={'4'} marginLeft={'10px'}>
-            <Select border={'1px'} style={{color: 'gray'}} marginTop={'-1'} onChange={onVehicleSelect} placeholder="Select Vehicle">
-              {vehicles.map((vehicle)=><option value={vehicle?.id} key={vehicle?.id}>{`${vehicle?.make} ${vehicle?.model}`}</option>)}
-            </Select>
-            <Select border={'1px'} borderRadius={'lg'} style={{color: 'gray'}} marginTop={'-1'} onChange={onCalendarTypeSelect}>
-                <option value={'monthly'}>Monthly</option>
-                <option value={'yearly'}>Yearly</option>
-            </Select>
-            </Flex>
-            
-        </Flex>
-      </Flex>
-    </Flex>
+              </span>
+          </div>
+      </div>
+      <div className="col-span-2 flex flex-row items-center justify-end gap-x-5">
+        <FormControl>
+          <FormLabel sx={{m: 0, p:0}} >
+            <Text className="text-black font-semibold text-sm" >
+              Select a vehicle
+            </Text>
+          </FormLabel>
+          <Select
+            disabled={loading}
+            value={vehicle_id}
+            onChange={(e)=>{
+              set_vehicle_id(e?.target?.value as string)
+            }}
+            size={"sm"}
+          >
+            <option value="all">All</option>
+            {
+              vehicle_list?.map((vehicle)=>{
+                return <option key={vehicle.id} value={vehicle.id} >
+                  {
+                    vehicle?.name
+                  }
+                </option>
+              }) 
+            }
+          </Select>
+        </FormControl>
+        <FormControl>
+          <FormLabel sx={{m: 0, p:0}} >
+            <Text className="text-black font-semibold text-sm" >
+              Select an interval
+            </Text>
+          </FormLabel>
+          <Select
+            value={interval}
+            onChange={(e)=>{
+              set_interval(e?.target?.value as "monthly" | "yearly")
+            }}
+            size={"sm"}
+          >
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </Select>
+        </FormControl>
+        {(interval === "monthly") && <FormControl>
+          <FormLabel sx={{m: 0, p:0}} >
+            <Text className="text-black font-semibold text-sm" >
+              Select a year
+            </Text>
+          </FormLabel>
+          <Select
+            onChange={(e)=>{
+              set_year(Number(e?.target?.value))  
+            }}
+            value={year}
+            size={"sm"}
+          >
+            {
+              years?.map((year)=>{
+                return <option key={year} value={year} >{year}</option>
+              })
+            }
+          </Select>
+        </FormControl>}
+      </div>
+    </div>
   );
 };
 

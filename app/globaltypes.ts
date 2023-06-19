@@ -12,8 +12,24 @@ import {
 export interface IStaticProps {
   dashboard?: boolean;
   authonly?: boolean;
-  adminonly?: boolean;
+  adminonly?: boolean; 
+  /**
+   * v1: car rentals
+   * v2: properties
+   */
+  tag: 'v1' | 'v1.5' | 'v2'       
 }
+export interface InitialProps {
+  dashboard?: boolean;
+  authonly?: boolean;
+  adminonly?: boolean; 
+  /**
+   * v1: car rentals
+   * v2: properties
+   */
+  tag: 'v1' | 'v1.5' | 'v2'       
+}
+
 
 /**
  * @section Request Objects
@@ -51,15 +67,10 @@ export interface IVehicle {
   transmission: string;
   year: number | string;
   plate?: string;
-  // Not sure about these, need further clarification
   status?: string;
   hourly_rate: number;
   pictures: string[];
-  location: string;
-  coords: {
-    latitude: number;
-    longitude: number;
-  } | null;
+  created_at?: string;
 }
 export interface IVehicleDetails {
   id?: string;
@@ -154,6 +165,7 @@ export interface IReservation {
     status: string;
     amount: number;
   };
+  created_at: string;
 }
 
 export interface IPayout {
@@ -214,9 +226,7 @@ export interface PayoutMethods {
   type: "BANK_ACCOUNT" | "MPESA" | "PAYPAL" | "MTN";
   verified: boolean;
   status: "ACTIVE" | "INACTIVE" | "BLOCKED";
-  details:
-    | Partial<tBankAccountPayoutSchema>
-    | Partial<tMobileMoneyPayoutSchema>; // The db will just use a json object for this
+  details: Partial<tBankAccountPayoutSchema> & Partial<tMobileMoneyPayoutSchema>; // The db will just use a json object for this
 }
 
 export interface IUserSettings {
@@ -271,6 +281,7 @@ export interface IUserProfile {
    * the user's market
    */
   market?: Partial<eIMarket> | null;
+  created_at?: string
 }
 export interface IAuthCode {
   id: string;
@@ -405,14 +416,15 @@ export interface IWithdrawals {
 
 export interface IAnalyticsData{
   name: string;
-  value: number 
+  value: number;
+  reservations?: number
 }
 
 /**
  * @name asyncThinkFetchParams
  * @description - the params that are used to fetch data from the async thunk
  */
-export interface asyncThinkFetchParams { 
+export interface asyncThinkFetchParams<T=any> { 
   /**
    * @description - the page number to fetch
    */
@@ -429,15 +441,34 @@ export interface asyncThinkFetchParams {
    * @description - the sort order to use
    */
   sort?: 'asc' | 'desc'
+  /**
+   * @description - the field to sort by
+   */
+  sort_by?: keyof T
+  /**
+   * @description - whether to reset all the params to their default values
+   */
+  reset?: boolean
 }
 
 /**
  * @name slicePaginationSupportState
  * @description - the state that is used to support pagination in the redux slice
  */
-export interface PaginationSupportState {
+export interface PaginationSupportState<T=any> {
   current_page: number;
   current_size: number;
   current_search: string;
   current_sort: string;
+  current_sort_by?: keyof T;
+}
+
+
+export interface IProperties {
+  propertiesName: string;
+  bedrooms: string;
+  beds: string;
+  baths: string;
+  location: string;
+  status: string;
 }

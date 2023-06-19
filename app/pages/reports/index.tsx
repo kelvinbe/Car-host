@@ -1,125 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { Flex, IconButton } from "@chakra-ui/react";
+import React, { ReactNode, useEffect, useState } from "react";
+import Analytics from "../../components/organism/Analytics/Analytics";
+import { Flex, Heading } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
-import ReservationModal from "../../components/organism/Modals/ReservationModal";
-import { useDisclosure } from "@chakra-ui/react";
-import { fetchReservations, selectReservations, selectReservationsFeedback, selectReservationsPaginationState } from "../../redux/reservationSlice";
+import { AnalyticsTableColums } from "../../utils/tables/TableTypes";
+import { HiLink } from "react-icons/hi";
+import useVehicles from "../../hooks/useVehicles";
+import Link from "next/link";
+import { TablePaginationConfig } from "antd";
 import useReservation from "../../hooks/useReservation";
-import { insertTableActions } from "../../utils/tables/utils";
-import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
-import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
-import { isEmpty, lowerCase } from "lodash";
-import { ReservationColumns } from "../../utils/tables/TableTypes";
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../../components/organism/ErrorFallback";
-import { logError } from "../../utils/utils";
-export interface DataType {
-  reservationId: string;
-  vehiclePlate: string;
-  vehicleName: string;
-  startEndTime: string;
-  startDateTime?: string;
-  endDateTime?: string;
-  totalCost: number;
-  hostName: string;
-  location: string;
-  status: string;
-}
+import { DataType } from "../reservations";
+import dayjs from "dayjs";
+import { IVehicleDetails } from "../../globaltypes";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { fetchReservations, selectReservationsFeedback, selectReservationsPaginationState } from "../../redux/reservationSlice";
 
-function Reports() {
+function Reports() { 
   const feedback = useAppSelector(selectReservationsFeedback)
-  const { current_page, current_size} = useAppSelector(selectReservationsPaginationState)
+  const { current_page, current_size } = useAppSelector(selectReservationsPaginationState)
   const dispatch = useAppDispatch()
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const [toggleViewReservationModal, setToggleViewReservationModal] =
-    useState(false);
-  const [toggleEditReservationModal, setToggleEditReservationModal] =
-    useState(false);
-  const [search, setSearch] = useState<string>("");
-  const { deleteReservation } = useReservation();
-  const [currentReservation, setCurrentReservation] = useState<string>()
-  const [currentVehicle, setCurrentVehicle] = useState<string>()
-
-
-  useEffect(() => {
+  
+  useEffect(()=>{
     dispatch(fetchReservations({
-      search: isEmpty(search) ? undefined : search,
+      reset: true
     }))
-  }, [,search?.trim()?.length])
+  }, [])
 
-  const changeStateViewModal = () => {
-    setToggleViewReservationModal(!toggleViewReservationModal);
-  };
-  const changeStateEditModal = () => {
-    setToggleEditReservationModal(!toggleEditReservationModal);
-  };
-  const showViewReservationModal = (id: string) => {
-    setCurrentReservation(id)
-    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
-    setCurrentVehicle(reservation?.vehicle_id?.toString())
-    onOpen();
-    changeStateViewModal();
-  };
-  const showEditReservationModal = (id: string) => {
-    setCurrentReservation(id)
-    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
-    setCurrentVehicle(reservation?.vehicle_id?.toString())
-    onOpen();
-    changeStateEditModal();
 
-  };
+  
+
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-      <Flex w="full" h="full" data-testid="reservations-table">
-        <ReservationModal
-          isOpen={isOpen}
-          onClose={onClose}
-          toggleViewReservationModal={toggleViewReservationModal}
-          changeStateViewModal={changeStateViewModal}
-          toggleEditReservationModal={toggleEditReservationModal}
-          changeStateEditModal={changeStateEditModal}
-          reservationId={currentReservation}
-          vehicleId={currentVehicle}
-        />
+    <Grid width={"full"}  gap={8}>
+      <Analytics/>
+      <Heading size={'md'}>Reservation History</Heading>
+      <Flex width={"full"}>
         <FilterableTable
-          viewSearchField={true}
-          viewSortablesField={true}
-          columns={insertTableActions(ReservationColumns, (i, data) => {
-            return (
-              <Flex {...FlexRowCenterBetween}>
-                <IconButton
-                  aria-label="View"
-                  icon={<ViewIcon />}
-                  size="sm"
-                  onClick={() => showViewReservationModal(data.reservationId)}
-                  marginRight="4"
-                  data-cy={"view-button"}
-                />
-                <IconButton
-                  aria-label="Edit"
-                  icon={<EditIcon />}
-                  size="sm"
-                  onClick={() => {
-                    showEditReservationModal(data.reservationId);
-                  }}
-                  marginRight="4"
-                  data-cy={"edit-button"}
-                />
-                <IconButton
-                  aria-label="Delete"
-                  icon={<DeleteIcon />}
-                  size="sm"
-                  onClick={() => {
-                    deleteReservation(data.reservationId);
-                  }}
-                  color="cancelled.1000"
-                  data-cy={"delete-button"}
-                />
-              </Flex>
-            );
-          })}
+          viewSearchField={false}
+          columns={AnalyticsTableColums}
+          data={feedback?.data ?? []}
+          primitiveTableProps={{
+            loading: feedback.loading
+          }}
           pagination={{
             position: ["bottomCenter"],
             onChange: (page, pageSize) => {
@@ -130,27 +52,15 @@ function Reports() {
             ),
             showSizeChanger: true, 
           }}
-          data={feedback?.data ?? [] } 
-          setSearch={setSearch}
-          sortables={[
-            {
-              columnKey: "payment",
-              columnName: "Total cost",
-            },
-          ]}
-          primitiveTableProps={{
-            loading: feedback?.loading,
-          }}
-          
         />
       </Flex>
-    </ErrorBoundary>
+    </Grid>
   );
 }
 
 export default Reports;
 
-export function getServerSideProps() {
+export function getStaticProps() {
   return {
     props: {
       adminonly: false,

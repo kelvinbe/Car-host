@@ -10,7 +10,7 @@ interface IProps {
 const Navbar = (props: IProps) => {
   const { navItems } = props;
   return ( 
-      <Flex direction={[ "column", "column","column","row"]} width={["full", "full", "full", "50%"]} gap={[2, 4, 4, 12]}>
+      <Flex direction={[ "column", "column","column","row"]} width={["full", "full", "full", "50%"]} gap={[2, 4, 4, 12]} marginX={["0", "0", "0", "20"]}>
         <Flex width={'1150px'} direction={[ "column","row"]} gap={[3,12]} justify={['center', 'center', 'center', 'start']}>
           {navItems.map((item, index) => (
             <Link  href={item.link} key={index} fontWeight={'bold'} textAlign={['center', 'center', 'center', 'left']}>

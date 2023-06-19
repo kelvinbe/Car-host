@@ -78,7 +78,8 @@ const useStyles = makeStyles((theme)=>{
       margin: 0
     },
     imagesContainer: {
-      padding: 5
+      padding: 5,
+      marginRight: 100
     },
     imageContainer: {
       width: 100,
@@ -102,6 +103,7 @@ const VehicleInspectionQuery = (props: IProps) => {
     takenPictureUploading: false,
     chosenPictureUploading: false
   })
+
 
   const toast = useToast()
 

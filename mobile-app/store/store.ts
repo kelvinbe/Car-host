@@ -27,7 +27,3 @@ export default store;
 export const useAppDispatch = () => useDispatch<typeof store.dispatch>();
 
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-
-// store.subscribe(()=>{
-//   console.log("Changes in store state ::",store.getState())
-// })

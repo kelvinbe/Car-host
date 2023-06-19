@@ -11,10 +11,11 @@ interface IProps {
     station?: Partial<IStation>
   }>[];
   marketId?: string;
+  loading?: boolean;
 }
 
 const LiveMapComponent = (props: IProps) => {
-  const { vehicles } = props;
+  const { vehicles, loading } = props;
 
   const initialCenter = useMemo(()=>{
     const firstStation = vehicles?.[0]?.station
@@ -39,23 +40,29 @@ const LiveMapComponent = (props: IProps) => {
       borderColor="gray.200"
       data-testid="map-component"
     >
-      <Wrapper apiKey={getConfig().publicRuntimeConfig.GOOGLE_MAPS_API_KEY}>
-        <Map
-          latitude={
-            initialCenter?.lat ?? 0
-          }
-          longitude={initialCenter?.lng ?? 0}
-          zoom={
-            // for now, the zoom will be fixed
-            5
-          }
-          mapTypeId="roadmap"
-        >
-          {vehicles?.map((vehicle, i) => (
-            <CarMarkerComponent key={i} {...vehicle} />
-          ))}
-        </Map>
-      </Wrapper>
+      {
+        loading ? (
+          <div className="grid w-full bg-slate-200 h-[400px] animate-pulse "></div>
+        ) : (
+          <Wrapper apiKey={getConfig().publicRuntimeConfig.GOOGLE_MAPS_API_KEY}>
+            <Map
+              latitude={
+                initialCenter?.lat ?? 0
+              }
+              longitude={initialCenter?.lng ?? 0}
+              zoom={
+                // for now, the zoom will be fixed
+                5
+              }
+              mapTypeId="roadmap"
+            >
+              {vehicles?.map((vehicle, i) => (
+                <CarMarkerComponent key={i} {...vehicle} />
+              ))}
+            </Map>
+          </Wrapper>
+        )
+      }
     </Flex>
   );
 };

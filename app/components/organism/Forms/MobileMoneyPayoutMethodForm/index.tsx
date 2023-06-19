@@ -17,7 +17,7 @@ const tMobileMoneySchema = z.object({
     id_number: z.string().min(5).max(30).optional().refine((val)=>{
         return !isNaN(Number(val))
     }).optional(),
-    id_type: z.enum(["national_id", "passport", "drivers_license"]).optional(),
+    id_type: z.enum(["national_id", "passport", "drivers_licence"]).optional(),
     type: z.enum(["MTN", "MPESA"]).optional()
 })
 

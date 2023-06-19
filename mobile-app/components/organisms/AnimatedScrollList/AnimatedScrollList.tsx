@@ -47,7 +47,7 @@ const AnimatedScrollList = (props: Props) => {
         start_date_time: !isEmpty(start_date_time) ? start_date_time : undefined,
         end_date_time: !isEmpty(end_date_time) ? end_date_time : undefined,
     }, {
-        refetchOnFocus: true
+        refetchOnMountOrArgChange: true,
     })
     const toast = useToast()
     const styles = useStyles(props)

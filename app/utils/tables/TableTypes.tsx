@@ -11,7 +11,8 @@ import {
   IStation,
   IRequestedAuthCode,
   PayoutMethods,
-  IWithdrawals
+  IWithdrawals,
+  IProperties
 } from "../../globaltypes";
 import dayjs from "dayjs";
 import { FlexColCenterCenter, FlexColStartStart, FlexRowStartStart } from "../theme/FlexConfigs";
@@ -152,20 +153,20 @@ export const ReservationTableColumns: ColumnsType<DataType> = [
   }
 ];
 
-export const AnalyticsTableColums: ColumnsType<DataType>=[
+export const AnalyticsTableColums: ColumnsType<Partial<IReservation>>=[
   {
     title: "Reservation ID",
-    dataIndex: "reservationId",
-    key: "reservationId",
+    dataIndex: "id",
+    key: "id",
   },
   {
     title: "Date",
     dataIndex: "start_date_time",
     key: "start_date_time",
-    render: (v, { startDateTime }) => (
+    render: (v, { start_date_time }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {dayjs(startDateTime).format('DD MMM, YYYY')}
+          {dayjs(start_date_time).format('DD MMM, YYYY')}
         </Text>
       </Flex>
     ),
@@ -175,10 +176,10 @@ export const AnalyticsTableColums: ColumnsType<DataType>=[
     dataIndex: "total",
     key: "total",
     align:'center',
-    render: (v, { totalCost }) => (
+    render: (v, { payment }) => (
       <Flex {...FlexColCenterCenter}>
         <Text fontSize="14px" fontWeight="500">
-          {totalCost}
+          {payment?.amount}
         </Text>
       </Flex>
     ),
@@ -195,6 +196,7 @@ export const AnalyticsTableColums: ColumnsType<DataType>=[
     ),
   }
 ]
+
 export const PayoutsTableColumns: ColumnsType<IPayout> = [
   {
     title: "Payout Date",
@@ -430,8 +432,8 @@ export const StationTableColumns: ColumnsType<Partial<IStation>> = [
   },
   {
     title: "Station Name",
-    dataIndex: "station_name",
-    key: "station_name",
+    dataIndex: "name",
+    key: "name",
     render: (v, { name: station_name }) => (
       <Flex{...FlexRowStartStart}>
         <Text fontSize="14px" fontWeight="500">
@@ -582,21 +584,37 @@ export const ReservationColumns: ColumnsType<Partial<IReservation>> = [
       return (
         <Flex {...FlexColStartStart}>
           <Text fontSize="14px" fontWeight="500">
-            {dayjs(start_date_time).format('DD MMM, YYYY')}
+            {
+              dayjs().isSame(dayjs(start_date_time), 'day') ? 'Today at '+dayjs(start_date_time).format('hh:mm A') : 
+              dayjs().isSame(dayjs(start_date_time).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(start_date_time).format('hh:mm A') :
+              dayjs().isSame(dayjs(start_date_time).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(start_date_time).format('hh:mm A') :
+              dayjs().isSame(dayjs(start_date_time), 'week') ? dayjs(start_date_time).format('dddd hh:mm A') :
+              dayjs().isSame(dayjs(start_date_time), 'month') ? dayjs(start_date_time).format('DD hh:mm A') :
+              dayjs().isSame(dayjs(start_date_time), 'year') ? dayjs(start_date_time).format('DD MMM hh:mm A') :
+              dayjs(start_date_time).format('DD MMM, YYYY')
+            }
           </Text>
         </Flex>
       )
     }
   },
   {
-    title: "Start ",
+    title: "End ",
     dataIndex: "end_date_time",
     key: "end_date_time",
     render: (v, { end_date_time }) => {
       return (
         <Flex {...FlexColStartStart}>
           <Text fontSize="14px" fontWeight="500">
-            {dayjs(end_date_time).format('DD MMM, YYYY')}
+            {
+              dayjs().isSame(dayjs(end_date_time), 'day') ? 'Today at '+dayjs(end_date_time).format('hh:mm A') : 
+              dayjs().isSame(dayjs(end_date_time).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(end_date_time).format('hh:mm A') :
+              dayjs().isSame(dayjs(end_date_time).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(end_date_time).format('hh:mm A') :
+              dayjs().isSame(dayjs(end_date_time), 'week') ? dayjs(end_date_time).format('dddd hh:mm A') :
+              dayjs().isSame(dayjs(end_date_time), 'month') ? dayjs(end_date_time).format('DD hh:mm A') :
+              dayjs().isSame(dayjs(end_date_time), 'year') ? dayjs(end_date_time).format('DD MMM hh:mm A') :
+              dayjs(end_date_time).format('DD MMM, YYYY')
+            }
           </Text>
         </Flex>
       )
@@ -714,8 +732,8 @@ export const VehicleManagementTableColumns: ColumnsType<Partial<IVehicle>> = [
   },
   {
     title: "Rate",
-    dataIndex: "rate",
-    key: "rate",
+    dataIndex: "hourly_rate",
+    key: "hourly_rate",
     render: (v, { hourly_rate }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
@@ -847,3 +865,83 @@ export const CardTableColumns: ColumnsType<PayoutMethods> = [
     ),
   }
 ];
+
+export const PropertiesTableColumns: ColumnsType<IProperties> = [
+  {
+    title: "Properties Name",
+    dataIndex: "propertiesName",
+    key: "propertiesName",
+    render: (v, { propertiesName }) => (
+      <Flex {...FlexColStartStart} >
+        <Text fontSize="14px" fontWeight="500" >
+          {
+            propertiesName
+          }
+        </Text>
+      </Flex>
+    )
+  },
+
+  {
+    title: "Bedrooms",
+    dataIndex: "bedrooms",
+    key: "bedrooms",
+    render: (v, { bedrooms }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {bedrooms}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Beds",
+    dataIndex: "beds",
+    key: "beds",
+    render: (v, { beds }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {beds}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Baths",
+    dataIndex: "baths",
+    key: "baths",
+    render: (v, { baths }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500">
+          {baths}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+    render: (v, { location }) => (
+      <Flex {...FlexColStartStart}>
+        <Text fontSize="14px" fontWeight="500" textTransform={'capitalize'}>
+          {location}
+        </Text>
+      </Flex>
+    ),
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (v, { status }) => (
+      <Flex {...FlexColStartStart} >
+        <StatusTag status={status as any}>
+          {
+            status
+          }
+        </StatusTag>
+      </Flex>
+    ),
+  },
+]

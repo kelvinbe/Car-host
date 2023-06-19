@@ -24,47 +24,51 @@ const WithDrawalModal = (props: IProps) => {
     const [error, setError] = useState('')
     const [payoutMethodId, setPayoutMethodId] = useState('')
     const dispatch = useAppDispatch()
-    const toast = useToast()
+    const toast = useToast({
+      position: 'top'
+    })
     
 
 
 
-const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  const availableEarnings = user?.earnings?.available
-  setInputState(e.target.value)
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const availableEarnings = user?.earnings?.available
+      setInputState(e.target.value)
 
-    if(!isUndefined(availableEarnings)){
-      if(Number(e.target.value) > availableEarnings){
-        setError('Please add a lower value')
-    }else {
-        setError('')
+        if(!isUndefined(availableEarnings)){
+          if(Number(e.target.value) > availableEarnings){
+            setError('Please add a lower value')
+        }else {
+            setError('')
+        }
+        }
     }
+
+    const setPayOutMethod = (e: ChangeEvent<HTMLSelectElement>) => {
+
+        setPayoutMethodId(e.target.value)
     }
-}
 
-const setPayOutMethod = (e: ChangeEvent<HTMLSelectElement>) => {
-
-    setPayoutMethodId(e.target.value)
-}
-
-const handleWithDrawal = () => {
-    dispatch(createWithDrawal({
-            payout_method_id: payoutMethodId,
-            amount: Number(inputState)
-    })).then(() => {
-        toast({
-            title: 'Success',
-            description: 'WithDrawal Created Successfully'
+    const handleWithDrawal = () => {
+        dispatch(createWithDrawal({
+                payout_method_id: payoutMethodId,
+                amount: Number(inputState)
+        })).then(() => {
+            toast({
+                title: 'Success',
+                description: 'Withdrawal Created Successfully',
+                colorScheme: 'green'
+            })
+            onClose()
+        }).catch((e) => {
+            toast({
+              title: 'Error',
+              description: 'An Error occured while creating withdrawal',
+              colorScheme: 'red'
+            })
         })
-        onClose()
-    }).catch((e) => {
-        toast({
-        title: 'Error',
-        description: 'An Error occured while creating withdrawal'
-        })
-    })
 
-}
+    }
   
     return (
       <>

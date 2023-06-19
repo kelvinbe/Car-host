@@ -13,6 +13,11 @@ import onboardingSlice from './onboardingSlice';
 import paySlice from './paySlice';
 import withdrawalSlice from './withdrawalSlice';
 import earningSlice from './earningSlice';
+import analyticsSlice from './analyticsSlice';
+import calendarSlice from './calendarSlice';
+import propertySlice from './propertySlice';
+import propertyAmenitiesSlice from './propertyAmenitiesSlice';
+import propertyServicesSlice from './propertyServicesSlice';
 
 export const reducers = combineReducers({
     [locationsApi.reducerPath]: locationsApi.reducer,
@@ -30,7 +35,12 @@ export const reducers = combineReducers({
     onBoarding: onboardingSlice,
     pays: paySlice, 
     withdrawals: withdrawalSlice,
-    earnings: earningSlice
+    earnings: earningSlice,
+    analytics: analyticsSlice,
+    calendar: calendarSlice,
+    property: propertySlice,
+    propertyAmenities: propertyAmenitiesSlice,
+    propertyServices: propertyServicesSlice
 })
 
 export type RootState = ReturnType<typeof reducers>

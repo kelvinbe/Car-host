@@ -8,21 +8,30 @@ import { isEmpty } from "lodash";
 
 
 
-export const fetchReservations = createAsyncThunk('reservations/fetchReservations', async (args: Partial<asyncThinkFetchParams> | null | undefined = null, { rejectWithValue, dispatch, getState })=> {
+export const fetchReservations = createAsyncThunk('reservations/fetchReservations', async (args: Partial<asyncThinkFetchParams<IReservation>> & Partial<IReservation> | null | undefined = null, { rejectWithValue, dispatch, getState })=> {
     const currentParams = (getState() as RootState).reservations
+    const { page, search: _search, size, sort, sort_by, reset, ...reservation_filters } = args ?? {}
     const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
-    const current_search = isEmpty(args?.search) ? prev_search : args?.search
-    const search = isEmpty(current_search) ? undefined : current_search
-    const params = {
-        page: args?.page ?? currentParams.current_page,
-        size: args?.size ?? currentParams.current_size,
+    const current_search = isEmpty(_search) ? prev_search : _search
+    const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
+
+    const params = reset ? {
+        page: 1,
+        size: 10,
+    } : {
+        page: page ?? currentParams.current_page,
+        size: size ?? currentParams.current_size,
         search: search,
-        sort: args?.sort ?? currentParams.current_sort
+        sort: sort ?? currentParams.current_sort,
+        sort_by: sort_by ?? currentParams.current_sort_by
     }
     dispatch(updateParams(params))
     try {
         const res = (await apiClient.get(RESERVATION_DOMAIN, {
-            params
+            params: {
+                ...params,
+                ...reservation_filters
+            }
         }))
         return res.data
     } catch(e) {
@@ -74,7 +83,7 @@ const reservationsSlice = createSlice({
         updateReservationLoading: boolean,
         updateReservationError: null | string,
         active_reservation_id?: string
-    } & Partial<PaginationSupportState>,
+    } & Partial<PaginationSupportState<IReservation>>,
     reducers: {
         getReservations(state, action){
             state.reservations= action.payload;

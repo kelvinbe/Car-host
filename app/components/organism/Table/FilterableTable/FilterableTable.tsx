@@ -1,5 +1,5 @@
-import { Flex, Text } from "@chakra-ui/react";
-import React, { ChangeEvent, useEffect, useReducer } from "react";
+import { Flex, IconButton, Text, Tooltip } from "@chakra-ui/react";
+import React, { ChangeEvent, useEffect, useReducer, useState } from "react";
 import {
   FlexColCenterStart,
   FlexRowCenterBetween,
@@ -14,6 +14,8 @@ import { SearchIcon } from "@chakra-ui/icons";
 import Rounded from "../../../molecules/Buttons/General/Rounded";
 import { Input } from "@chakra-ui/react";
 import { SortOrder } from "antd/es/table/interface";
+import { isEmpty } from "lodash";
+import { WiRefresh } from "react-icons/wi";
 interface IProps {
   /**
    * @sortables 👉 an array with the column keys of the sortable columns
@@ -35,7 +37,12 @@ interface IProps {
   pagination?: TablePaginationConfig | false;
   setSearch?: (search: string)=>void
   handlePageChange?: (pagination: TablePaginationConfig)=>void,
-  primitiveTableProps?: PrimitiveTableProps
+  primitiveTableProps?: PrimitiveTableProps,
+  onSort?: (sort: {
+    columnKey: string,
+    order: SortOrder,
+  }) => void,
+  refetch?: () => void
 }
 
 interface IReducer {
@@ -82,25 +89,30 @@ function FilterableTable(props: IProps) {
     viewAddFieldButton,
     viewSortablesField,
     openCreateModal,
-    setSearch,
+    setSearch: propsSetSearch,
     handlePageChange,
-    primitiveTableProps
+    primitiveTableProps,
+    onSort: propSort,
+    refetch
   } = props;
   const [{ tableColumnDefinitions }, dispatchActions] = useReducer(
     FilterableTableSlice.reducer,
     initialState
   );
+  const [search, setSearch] = useState("")
 
   const onSort = (sort: {
     columnKey: string,
     order: SortOrder,
-}) => {
+  }) => {
+    if(propSort) return propSort(sort)
     dispatchActions(setTableColumnDefinitions(sort));
   };
 
-  const handleSearch= (e: ChangeEvent)=>{
-    setSearch && setSearch((e.target as HTMLInputElement).value)
+  const onSearch = () =>{
+    propsSetSearch?.(isEmpty(search) ? "__empty__" : search)
   }
+
   useEffect(() => {
     columns && dispatchActions(initColumnDefinitions(columns));
   }, [columns]);
@@ -113,14 +125,13 @@ function FilterableTable(props: IProps) {
             <Flex
               {...FlexRowCenterBetween}
               w="350px"
-              bgColor={"white"}
               marginRight={"10px"}
               data-cy={'search-field'}
             >
-              <Flex {...FlexRowCenterCenter} w="50px" bgColor={"white"}>
+              <Input type="text" placeholder="Search" size="md" onChange={(e)=>setSearch(e?.target?.value?.trim())}/>
+              <IconButton aria-label="search" onClick={onSearch} >
                 <SearchIcon />
-              </Flex>
-              <Input type="text" placeholder="Search" size="md" onChange={handleSearch}/>
+              </IconButton>
             </Flex>
           )}
           {viewAddFieldButton && (
@@ -129,29 +140,32 @@ function FilterableTable(props: IProps) {
             </Rounded>
           )}
         </Flex>
-        {viewSortablesField && (
-          <Flex {...FlexRowCenterCenter} data-cy={'sort-by'}>
-            <Text marginRight="20px" fontWeight={"semibold"}>
-              Sort By:
-            </Text>
-            <Flex {...FlexRowCenterEnd}>
-              {sortables?.map((sortable, index) => (
-                <SortableDropdown
-                  key={index}
-                  columnName={sortable.columnName}
-                  columnKey={sortable.columnKey}
-                  onSort={onSort}
-                  sortOrder={
-                    tableColumnDefinitions?.find(
-                      (columnDefinition) =>
-                        columnDefinition.key === sortable.columnKey
-                    )?.sortOrder
-                  }
-                />
-              ))}
+        <Flex {...FlexRowCenterBetween} className="gap-x-5" >
+          {viewSortablesField && (
+            <Flex {...FlexRowCenterCenter} data-cy={'sort-by'}>
+              <Text marginRight="20px" fontWeight={"semibold"}>
+                Sort By:
+              </Text>
+              <Flex {...FlexRowCenterEnd}>
+                {sortables?.map((sortable, index) => (
+                  <SortableDropdown
+                    key={index}
+                    columnName={sortable.columnName}
+                    columnKey={sortable.columnKey}
+                    onSort={onSort}
+                    sortOrder={
+                      tableColumnDefinitions?.find(
+                        (columnDefinition) =>
+                          columnDefinition.key === sortable.columnKey
+                      )?.sortOrder
+                    }
+                  />
+                ))}
+              </Flex>
             </Flex>
-          </Flex>
-        )}
+          )}
+          {refetch && <IconButton cursor="pointer" onClick={refetch} disabled={primitiveTableProps?.loading as boolean ?? false} aria-label="refetch" as={WiRefresh} />  }
+        </Flex>
       </Flex>
       <Flex w="full" h="full" {...FlexColCenterStart}>
         <BaseTable

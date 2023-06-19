@@ -2,7 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import { IAuthCode, IUserProfile, IVehicle } from "../../../../globaltypes";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { Flex } from "@chakra-ui/react";
+import { Avatar, Flex } from "@chakra-ui/react";
 import { FlexRowCenterCenter } from "../../../../utils/theme/FlexConfigs";
 import StatusTag from "../../../atoms/status/StatusTag";
 dayjs.extend(relativeTime)
@@ -19,7 +19,15 @@ export const AuthCodeTableColumnTypes: ColumnsType<Partial<IAuthCode> & {
             return (
                 <div className="flex flex-row items-center justify-start" >
                     <span className="font-semibold">
-                        {dayjs(created_at).fromNow()}
+                    {
+                        dayjs().isSame(dayjs(created_at), 'day') ? 'Today at '+dayjs(created_at).format('hh:mm A') : 
+                        dayjs().isSame(dayjs(created_at).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(created_at).format('hh:mm A') :
+                        dayjs().isSame(dayjs(created_at).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(created_at).format('hh:mm A') :
+                        dayjs().isSame(dayjs(created_at), 'week') ? dayjs(created_at).format('dddd hh:mm A') :
+                        dayjs().isSame(dayjs(created_at), 'month') ? dayjs(created_at).format('DD hh:mm A') :
+                        dayjs().isSame(dayjs(created_at), 'year') ? dayjs(created_at).format('DD MMM hh:mm A') :
+                        dayjs(created_at).format('DD MMM, YYYY')
+                        }
                     </span>
                 </div>
             )
@@ -31,9 +39,12 @@ export const AuthCodeTableColumnTypes: ColumnsType<Partial<IAuthCode> & {
         key: "user", 
         render: (v, { user }) => {
             return (
-                <div className="flex flex-row items-center justify-start">
+                <div className="flex flex-row items-center justify-start gap-x-5">
+                    <Avatar src={user?.profile_pic_url} name={
+                        (user?.fname || user?.lname)  ? `${user?.fname ?? ''} ${user?.lname ?? ''}` : user?.email
+                    } />
                     <span className="font-semibold">
-                        {user?.handle}
+                        {(user?.fname || user?.lname)  ? `${user?.fname ?? ''} ${user?.lname ?? ''}` : user?.email}
                     </span>
                 </div>
             )

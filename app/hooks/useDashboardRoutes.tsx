@@ -41,6 +41,10 @@ function useDashboardRoutes() {
       const toAllMapView = () =>{
         push("/allMapView")
       }
+
+      const toProperties = () =>{
+        push("/properties/management")
+      }
   return (
     {
         toHome: toHome,
@@ -55,6 +59,7 @@ function useDashboardRoutes() {
         toIntegrations: toIntegrations,
         toAuthCodeManagement: toAuthCodeManagement,
         toAllMapView: toAllMapView,
+        toProperties: toProperties
     } as {
         [key: string]: ()=> void
     }

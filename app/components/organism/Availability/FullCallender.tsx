@@ -1,131 +1,148 @@
-import React, { useReducer, useState } from 'react';
-import { createSlice } from '@reduxjs/toolkit';
+import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
-import { useDisclosure } from '@chakra-ui/react';
-import EventMainModal from '../Modals/EventMainModal';
-import { eIReservation } from '../../../entities';
-import useEventData from '../../../hooks/useEventData';
-import useResourceData from '../../../hooks/useResourceData';
-import { useToast } from '@chakra-ui/react';
-import { IReservation } from '../../../globaltypes';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { blockCalendarSlot, fetchCalendarData, selectCalendarFeedback } from '../../../redux/calendarSlice';
+import dayjs from 'dayjs';
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
+import CalendarBlock from './modals/block';
+import CalendarUnBlock from './modals/unblock';
+import CalendarDetails from './modals/details';
+import { IUserProfile, IVehicle } from '../../../globaltypes';
+import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
 
-function handleEventContent(eventInfo: any){
-  return (
-    <>
-      <p>{eventInfo.timeText}</p>
-      <p>{eventInfo.event.title}</p>
-    </>
-  )
-}
 
-const initialState: Partial<IReservation> = {
-  type: "",
-  start_date_time: '',
-  end_date_time: '',
-  status: "Upcoming",
-  vehicle_id: 0,
-  total_cost: 0,
-  hourly_rate: 20,
-  duration: 0,
-  location_id: 0,
-}
 
-const eventSlice = createSlice({
-  name: "events",
-  initialState: {
-    data: initialState
-  } , 
-  reducers: {
-    blockEventSlot(state, action){
-      state.data = action.payload
-    }
-  }
-})
 
-const eventReducer = eventSlice.reducer
-const {blockEventSlot}=eventSlice.actions
 
 function FullCallender() {
-  const [eventId, setEventId] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('')
-  const [isEvent, setIsEvent]= useState(false)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [{
-    data: state
-  }, dispatchAction] = useReducer(eventReducer, {data: initialState})
-  const {events}=useEventData()
-  const {resources}=useResourceData()
-  const toast = useToast()
+  const dispatch = useAppDispatch()
+  const calendar = useAppSelector(selectCalendarFeedback)
+  const [interaction, setInteraction] = useState<"block"|"unblock"|"view"|"none">("none")
+  const { isOpen, onClose, onOpen } = useDisclosure()
+  const [chosenEvent, setChosenEvent] = useState<Partial<IVehicle & {
+    start_date_time: string,
+    end_date_time: string,
+    id: string,
+    user: Partial<IUserProfile>,
+    reservation_id: string,
+  }>| null>(null)
 
-  function handleDateSelect(eventInfo: any){
-    setIsEvent(true)
-    setStartTime(eventInfo.startStr)
-    setEndTime(eventInfo.endStr)
-    let duration = 0
-    const durationInHours: number = ((new Date(eventInfo.endStr).getHours() - (new Date(eventInfo.startStr)).getHours()))
-    const durationInMinutes: number = ((new Date(eventInfo.endStr).getMinutes() - (new Date(eventInfo.startStr)).getMinutes()))
-    if(durationInMinutes < 0){
-      duration = durationInHours - Number(durationInMinutes/60)
-    }else{
-      duration = durationInHours + Number(durationInMinutes/60)
-    }
+  const handleClose = () =>{
+    onClose()
+    setInteraction("none")
+    setChosenEvent(null)
+  }
 
-    if(new Date(eventInfo.startStr) <= new Date() ){
-      toast({
-        position: "top",
-        title: "Date Error",
-        description: "The selected start time or date is behind the current time",
-        duration: 3000,
-        isClosable: true,
-        status: "error",
+  const handleSelect = (data: DateSelectArg) =>{
+    const starting = data?.start
+    const ending = data?.end
+    const resourceId = data?.resource?.id
+
+    if(starting && ending && resourceId){
+      setChosenEvent({
+        start_date_time: dayjs(starting).format(),
+        end_date_time: dayjs(ending).format(),
+        id: resourceId,
+        ...data?.resource?._resource?.extendedProps
       })
-    }else{
-      dispatchAction(blockEventSlot({
-        type: "Blocked",
-        start_date_time: eventInfo.startStr,
-        end_date_time: eventInfo.endStr,
-        status: "Blocked",
-        vehicle_id: eventInfo.resource.id,
-        total_cost: 0,
-        hourly_rate: 20,
-        duration: duration,
-      }))
+      setInteraction("block")
       onOpen()
     }
   }
 
-  function handleClick(info: { event: { id: React.SetStateAction<string>; }; }){
-    setIsEvent(false)
-    onOpen()
-    setEventId(info.event.id)
+  const handleEventClick = (e: EventClickArg) =>{
+    const data = e?.event?.extendedProps 
+
+    if(data?.type === "BLOCK"){
+      setChosenEvent({
+        start_date_time: e?.event?.startStr,
+        end_date_time: e?.event?.endStr,
+        reservation_id: e?.event?.id,
+        ...data?.vehicle
+      })
+      setInteraction("unblock")
+      onOpen()
+    }else{
+      setChosenEvent({
+        start_date_time: e?.event?.startStr,
+        end_date_time: e?.event?.endStr,
+        user: data?.user,
+        ...data?.vehicle
+      })
+      setInteraction("view")
+      onOpen()
+    }
   }
+
+  useEffect(()=>{
+    dispatch(fetchCalendarData())
+  }, [])
   return (
     <>
     <FullCalendar 
       schedulerLicenseKey= '<YOUR-LICENSE-KEY-GOES-HERE>'
       plugins={[resourceTimeGridPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin]}
-      resources={resources}
       headerToolbar={{
         right: "prev,next,today",
+        center: "title",
+        left: "resourceTimeGridDay",
       }}
       initialView="resourceTimeGridDay"
-      events={events}
       editable={true}
       selectable={true}
       selectOverlap={false}
       dayMaxEvents={true}
       weekends={true}
-      eventClick={handleClick}
-      eventContent={handleEventContent}
-      select={handleDateSelect}
+      resources={calendar?.data?.resources}
+      events={calendar?.data?.events}
+      eventContent={(event)=>{
+        return (
+          <div className="grid grid-cols-3">
+            <p>
+              {
+                event?.timeText
+              }
+            </p>
+            <p className="col-span-2">
+              {
+                event?.event?.title
+              }
+              <br></br>
+              {
+                (event?.event?.extendedProps?.description)
+              }
+            </p>
+          </div>
+        )
+      }}
+      selectLongPressDelay={3}
+      select={handleSelect}
 
+      eventClick={handleEventClick}
     />
-    <EventMainModal isOpen={isOpen} onClose={onClose} isEvent={isEvent} eventId={eventId} startTime={startTime} endTime={endTime} event={state}/> 
+    {chosenEvent && <Modal isOpen={isOpen} onClose={handleClose} size="5xl" >
+      <ModalOverlay/>
+      <ModalContent>
+      <ModalHeader>
+        <ModalCloseButton />
+      </ModalHeader>
+        <ModalBody>
+          {
+            interaction === "block" ?
+            <CalendarBlock  onClose={handleClose} {...chosenEvent} /> :
+            interaction === "unblock" ?
+            <CalendarUnBlock  onClose={handleClose} {...chosenEvent} /> :
+            interaction === "view" ?
+            <CalendarDetails onClose={handleClose} {...chosenEvent} /> :
+            null
+          }
+        </ModalBody>
+      </ModalContent>
+    </Modal>}
     </>
   )
 }

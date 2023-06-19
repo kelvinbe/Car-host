@@ -9,13 +9,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import AnalyticsHeader from "../../atoms/Headers/AnalyticsHeader";
-import { Flex } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { selectEarnings, fetchEarnings } from "../../../redux/earningSlice";
-import useVehicles from "../../../hooks/useVehicles";
+import { Flex, Progress } from "@chakra-ui/react";
+import { useAppSelector } from "../../../redux/store";
 import { IAnalyticsData } from "../../../globaltypes";
 import Image from "next/image";
 import noData from "../../../public/images/no_available_data.png";
+import { selectEarningsFeedback } from "../../../redux/analyticsSlice";
+import { isEmpty } from "lodash";
 
 interface IProps {
   vehicleId?: string;
@@ -27,39 +27,24 @@ interface IProps {
   earnings: IAnalyticsData[];
 }
 const AnalyticsChart = (props: IProps) => {
-  const {
-    vehicleId,
-    setVehicleId,
-    handleCalendarTypeSelect,
-    handleVehicleSelect,
-    timeRange,
-    setTimeRange,
-    earnings,
-  } = props;
-  const { allVehicles } = useVehicles();
-  const dispatch = useAppDispatch();
+  const {data, loading} = useAppSelector(selectEarningsFeedback)
 
-  useEffect(() => {
-    vehicleId &&
-      dispatch(fetchEarnings({ vehicle_id: vehicleId, time_range: timeRange }));
-  }, [vehicleId, timeRange]);
-
-  useEffect(() => {
-    allVehicles.length > 0 && setVehicleId(allVehicles[0].id);
-  }, [allVehicles]);
   return (
     <div style={{ width: "100%", height: "450px" }}>
       <Flex paddingBottom={"60px"}>
-        <AnalyticsHeader
-          handleCalendarTypeSelect={handleCalendarTypeSelect}
-          handleVehicleSelect={handleVehicleSelect}
-          vehicles={allVehicles}
-        />
+        <AnalyticsHeader />
       </Flex>
-      {earnings && earnings.length !== 0 ? (
-        <ResponsiveContainer>
-          <AreaChart
-            data={earnings}
+      {loading && <Progress
+         w="full"
+         size="xs"
+         colorScheme="red"
+         isIndeterminate
+      />}
+      {!isEmpty(data) ? (
+        <ResponsiveContainer
+        >
+          <AreaChart 
+            data={data}
             margin={{
               top: 10,
               right: 0,

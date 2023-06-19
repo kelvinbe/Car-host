@@ -58,9 +58,24 @@ function AuthCodeTable(props: Props) {
                   </Flex>
                 )
               })}
+              sortables={[
+                {
+                  columnKey: 'created_at',
+                  columnName: 'Request Made'
+                }
+              ]}
+              viewSortablesField 
+              viewSearchField
+              setSearch={(search)=>{
+                dispatch(fetchAuthCodes({search}))
+              }}
+              onSort={(sort)=>{
+                const order = sort.order === 'ascend' ? 'asc' : 'desc'
+                const sort_by = sort.columnKey as keyof IAuthCode 
+                dispatch(fetchAuthCodes({sort_by, sort: order}))
+              }}
               data={feedback.data ?? []}
               viewAddFieldButton={false}
-              viewSearchField={false}
               openCreateModal={()=>{}}
               pagination={{
                 defaultPageSize: 10,
@@ -76,7 +91,9 @@ function AuthCodeTable(props: Props) {
               primitiveTableProps={{
                 loading: feedback.loading,
               }}
-              
+              refetch={()=>{
+                dispatch(fetchAuthCodes())
+              }}
           />
         )
       }

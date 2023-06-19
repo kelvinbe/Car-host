@@ -92,8 +92,8 @@ const BookingScreen = (props: Props) => {
                 body: {
                 station_id: vehicle?.station_id,
                 vehicle_id: vehicle?.id,
-                start_date_time: new Date(start_date_time).getTime(),
-                end_date_time: new Date(end_date_time).getTime(),
+                start_date_time: start_date_time,
+                end_date_time:end_date_time,
               },
               headers:booking_payment_authorization ?? ""
             }).unwrap().then((reservation)=>{

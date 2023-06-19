@@ -52,7 +52,7 @@ export const USERSETTINGS_API = `${DOMAIN}/settings`
  * @name EARNINGS_API
  * @description - all user earnings related endpoints are accessible through this api route
  */
-export const EARNINGS_API = `${DOMAIN}/earnings`
+export const EARNINGS_API = `${DOMAIN}/payments/report`
 
 /**
  * The tracking service's endpoint

@@ -130,6 +130,17 @@ export const theme = extendTheme({
                     }
                 }
             };
+        },
+    },
+    components: {
+        Text: {
+            variants: {
+                label: {
+                    fontSize: "20px",
+                    color: "gray.700",
+                    fontWeight: "semibold",
+                }
+            }
         }
     }
 })  

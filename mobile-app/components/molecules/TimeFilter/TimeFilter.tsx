@@ -60,11 +60,11 @@ const TimeFilter = (props: Props) => {
 
 
   const handlePickupTime = (v: any) => {
-    props.setStartDateTime && props.setStartDateTime(dayjs(first(v)).toISOString());
+    props.setStartDateTime && props.setStartDateTime(dayjs(first(v)).format());
   };
 
   const handleDropOffTime = (v: any) => {
-    props.setEndDateTime && props.setEndDateTime(dayjs(first(v)).toISOString());
+    props.setEndDateTime && props.setEndDateTime(dayjs(first(v)).format());
   };
 
 

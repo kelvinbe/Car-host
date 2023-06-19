@@ -8,12 +8,12 @@ import { SiSimpleanalytics } from "react-icons/si"
 import { CiWallet, CiTimer } from "react-icons/ci"
 import { CgArrowsMergeAltH } from "react-icons/cg"
 import { FiSend, FiUsers } from "react-icons/fi"
-
+import {BsHouse} from 'react-icons/bs'
 
 // dashboard routes
 export const dashboardRoutes: {
     name: string;
-    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites" | "toWithdrawals",
+    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites" | "toWithdrawals" | "toProperties",
     admin: boolean,
     icon?: IconType,
     link?: string,
@@ -25,6 +25,13 @@ export const dashboardRoutes: {
       admin: false,
       icon: RxDashboard,
       link: "/dashboard",
+    },
+    {
+      name: "properties",
+      onClick: "toProperties",
+      admin: false,
+      link: "/properties/management",
+      icon: BsHouse
     },
     {
       name: "reservations",
@@ -117,4 +124,5 @@ export const dashboardRoutes: {
       link: "/dashboard/admin/invites",
       icon: FiSend
     }
+   
   ]

@@ -6,16 +6,23 @@ import { http_methods, STATIONS_API, STATION_API } from "../hooks/constants";
 import LogRocket from 'logrocket';
 import apiClient, { db_user } from "../utils/apiClient";
 import { isEmpty } from "lodash";
+import store from "./store";
 
 
-export const fetchStations = createAsyncThunk('stations/fetchStations', async (args: Partial<asyncThinkFetchParams> | undefined | null = null, { rejectWithValue, dispatch, getState })=>{
+export const fetchStations = createAsyncThunk('stations/fetchStations', async (args: Partial<asyncThinkFetchParams<IStation>> | undefined | null = null, { rejectWithValue, dispatch, getState })=>{
     const currentParams = (getState() as RootState).stations
-
-    const params = {
+    const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
+    const current_search = isEmpty(args?.search) ? prev_search : args?.search
+    const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
+    const params = args?.reset ? {
+        page: 1,
+        size: 10,
+    } : {
         page: args?.page ?? currentParams.current_page,
         size: args?.size ?? currentParams.current_size,
-        search: args?.search ?? isEmpty(currentParams.current_search) ? undefined : currentParams.current_search,
-        sort: args?.sort ?? currentParams.current_sort
+        search: search === "__empty__" ? undefined : search,
+        sort: args?.sort ?? currentParams.current_sort,
+        sort_by: args?.sort_by ?? currentParams.current_sort_by ?? undefined
     }
     dispatch(updateParams(params))
     try {
@@ -75,7 +82,11 @@ export const stationsApi = createApi({
                 method: http_methods.post,
                 body: data,
 
-            })
+            }),
+            transformResponse: (response: any)=>{
+                store.dispatch(fetchStations())
+                return response.data
+            }
         }),
         updateStation: builder.mutation<any, any>({
             query: (data) => ({
@@ -121,7 +132,6 @@ const stationSlice = createSlice({
         current_page: 1,
         current_size: 10,
         current_search: "",
-        current_sort: "",
         fetchStationsError: null,
         fetchStationsLoading: false,
         updateStationError: null,
@@ -133,7 +143,7 @@ const stationSlice = createSlice({
         updateStationError: null | string,
         updateStationLoading: boolean,
         active_station_id?: string
-    } & PaginationSupportState,
+    } & Partial<PaginationSupportState<IStation>>,
     reducers: {
         getStations(state, action){
             state.stations= action.payload;

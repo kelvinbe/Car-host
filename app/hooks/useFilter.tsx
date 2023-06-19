@@ -9,8 +9,8 @@ function useFilter(reservationId?:string|number) {
   const [editReservation, setEditReservation] = useState<Partial<IReservation>>()
 
   useEffect(() => {
-    const reservationToView = reservations.find(reservation => reservation.id === reservationId)
-    const reservationToEdit = reservations.find(reservation => reservation.id === reservationId)
+    const reservationToView = reservations?.find(reservation => reservation.id === reservationId)
+    const reservationToEdit = reservations?.find(reservation => reservation.id === reservationId)
     reservationToView && setViewReservation(reservationToView)
     reservationToEdit && setEditReservation(reservationToEdit)
   },[reservations, reservationId])

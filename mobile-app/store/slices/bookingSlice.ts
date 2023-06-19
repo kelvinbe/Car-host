@@ -205,6 +205,7 @@ const bookingSlice = createSlice({
             state.host_code = ''
             state.location = null
             state.inspection = null
+            state.reservation_id = undefined
         },
         setNotification: (state, action)=>{
             state.notification = action.payload

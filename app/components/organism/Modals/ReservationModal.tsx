@@ -62,7 +62,7 @@ export default function ReservationModal({
     })).unwrap().then((data) => {
       setVehicle(data)
     })
-  }, [])
+  }, [viewReservation])
 
   useEffect(() => {
     const startTime = new Date(
@@ -122,6 +122,8 @@ export default function ReservationModal({
     toggleEditReservationModal && changeStateEditModal?.();
     onClose?.();
   };
+
+  
   return (
     <>
       <Modal
@@ -162,7 +164,7 @@ export default function ReservationModal({
                 </Text>
                 <Text marginBottom={15}>
                   <b>Pickup location: </b>
-                  {`${viewReservation?.vehicle?.station?.name}, ${vehicle?.host?.sub_market.name}, ${vehicle?.host?.market.name}`}
+                  {`${viewReservation?.vehicle?.station?.name}, ${vehicle?.host?.sub_market?.name}, ${vehicle?.host?.market?.name}`}
                 </Text>
                 <Text marginBottom={15}>
                   <b>Total cost: </b>

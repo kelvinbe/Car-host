@@ -39,50 +39,69 @@ const Withdrawals = () => {
     onOpen()
   }
 
-  const filteredWithdrawals = useMemo(()=>{
-    return withdrawals?.filter((withdrawal)=>dayjs(withdrawal.createdAt).format('DD MMM, YYYY').toLocaleLowerCase().includes(search.toLocaleLowerCase()) || `${withdrawal?.user?.fname} ${withdrawal?.user?.lname}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
-  }, [,search])
-
   
   
   if(user?.is_admin)
-  return(
-    <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-      <Flex w="full" h="full" direction={'column'}>
-        <EditWithdrawalModal isOpen={isOpen} onClose={onClose} withdrawalData={withdrawalData}/>
-        <Heading size={'md'} color={'#E63B2E'}>Transactions</Heading>
-        <FilterableTable 
-        viewSearchField={true}
-        viewSortablesField={true}
-        sortables={[{
-            columnName: 'Date',
-            columnKey:'createdAt'
-        }]}
-        pagination={{
-            position: ["bottomCenter"],
+    return(
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+        <Flex w="full" h="full" direction={'column'}>
+          <EditWithdrawalModal isOpen={isOpen} onClose={onClose} withdrawalData={withdrawalData}/>
+          <Heading size={'md'} color={'#E63B2E'}>Transactions</Heading>
+          <FilterableTable 
+            viewSearchField={true}
+            viewSortablesField={true}
+            sortables={[
+              {
+                columnName: 'Date',
+                columnKey:'created_at'
+              },
+              {
+                columnName: 'Amount',
+                columnKey:'amount'
+              }
+            ]}
+            pagination={{
+                position: ["bottomCenter"],
+            }}
+            data={withdrawals ?? []}
+            setSearch={(search)=>{
+              dispatch(fetchWithdrawals({
+                search
+              }))
+            }}
+            onSort={(sort)=>{
+              const order = sort?.order === 'ascend'? 'asc': 'desc'
+              const columnKey = sort?.columnKey as keyof IWithdrawals 
 
-        }}
-        data={filteredWithdrawals}
-        setSearch={setSearch}
-        columns={insertTableActions(AdminWithdrawalsTableColumns, (i, data) => {
-          
-            return (
-              <Flex {...FlexRowStartStart}>
-                <IconButton
-                  aria-label="Edit"
-                  icon={<MdEdit/>}
-                  size="sm"
-                  disabled={data.status === 'PENDING'? false: true}
-                  onClick={()=>openEditWithdrawalModal(data.id)}
-                  data-cy="edit-button"
-                />
-              </Flex>
-            );
-          })}
-        />
-        </Flex>
-    </ErrorBoundary>
-  );
+              dispatch(fetchWithdrawals({
+                sort_by: columnKey,
+                sort: order
+              }))
+            }}
+            columns={insertTableActions(AdminWithdrawalsTableColumns, (i, data) => {
+                return (
+                  <Flex {...FlexRowStartStart}>
+                    <IconButton
+                      aria-label="Edit"
+                      icon={<MdEdit/>}
+                      size="sm"
+                      disabled={data.status === 'PENDING'? false: true}
+                      onClick={()=>openEditWithdrawalModal(data.id)}
+                      data-cy="edit-button"
+                    />
+                  </Flex>
+                );
+              })}
+              refetch={()=>{
+                dispatch(fetchWithdrawals())
+              }}
+              primitiveTableProps={{
+                loading
+              }}
+          />
+          </Flex>
+      </ErrorBoundary>
+    );
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
@@ -99,7 +118,7 @@ const Withdrawals = () => {
             columnKey: "createdAt",
           },
         ]}
-        data={filteredWithdrawals}
+        data={withdrawals ?? []}
         pagination={{
           position: ["bottomCenter"],
           onChange: (page, pageSize) => {
@@ -127,6 +146,9 @@ const Withdrawals = () => {
         })}
         primitiveTableProps={{
           loading
+        }}
+        refetch={()=>{
+          dispatch(fetchWithdrawals())
         }}
       />
 </Flex>

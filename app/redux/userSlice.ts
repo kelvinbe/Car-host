@@ -3,12 +3,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAuth } from "firebase/auth";
 import { RootState } from ".";
 import { app } from "../firebase/firebaseApp";
-import { IUserProfile, IUserSettings } from "../globaltypes";
+import { IReservation, IStation, IUserProfile, IUserSettings, IVehicle, IWithdrawals } from "../globaltypes";
 import { USERSETTINGS_API, USERS_DOMAIN } from '../hooks/constants';
 import apiClient from '../utils/apiClient';
 import { isEmpty, isNull } from 'lodash';
 import LogRocket from 'logrocket';
-
 
 const users:IUserProfile[] = []
 
@@ -19,6 +18,16 @@ interface IReducer {
     profileError: any
     updateSettingsLoading: boolean,
     updateSettingsError: string | null | AxiosError,
+    dashboardLoading: boolean,
+    dashboardError: string | null | AxiosError,
+    dashboardData: Partial<{
+        reservations: Array<Partial<IReservation>>
+        vehicles: Array<Partial<IVehicle>>
+        withdrawal_requests: Array<Partial<IWithdrawals>>
+        map_vehicles: Array<Partial<IVehicle & {
+            station: Partial<IStation>
+        }>>
+    }> | null
 }
 
 const initialState: IReducer = {
@@ -28,7 +37,21 @@ const initialState: IReducer = {
     profileError: null,
     updateSettingsLoading: false,
     updateSettingsError: null,
+    dashboardLoading: false,
+    dashboardError: null,
+    dashboardData: null
 }
+
+
+export const fetchUserDashboard = createAsyncThunk('user/fetchDashboard', async (undefined, {rejectWithValue, dispatch})=>{
+    try {
+        const result = await apiClient.get(`${USERS_DOMAIN}/dashboard`)
+        return result.data
+    } catch (e) {
+        LogRocket.error(e)
+        return rejectWithValue((e as AxiosError)?.message ?? "Error fetching dashboard data")
+    }
+})
 
 /**
  * @name createUser 
@@ -139,6 +162,21 @@ const userSlice = createSlice({
             state.profileLoading=false 
             state.profileError=action.payload
         })
+        builder.addCase(fetchUserDashboard.pending, (state)=>{
+            state.dashboardLoading = true
+            state.dashboardError = null
+        })
+
+        builder.addCase(fetchUserDashboard.fulfilled, (state, action)=>{
+            state.dashboardLoading = false
+            state.dashboardError = null
+            state.dashboardData = action.payload
+        })
+
+        builder.addCase(fetchUserDashboard.rejected, (state, action)=>{
+            state.dashboardLoading = false
+            state.dashboardError = action.payload as string
+        })
     }
 })
 
@@ -167,3 +205,9 @@ export const selectUpdateUserProfile=(state: RootState)=>{
         error: state.users.profileError
     }
 }
+
+export const selectDashboardFeedback = (state: RootState)=>({
+    loading: state.users.dashboardLoading,
+    error: state.users.dashboardError,
+    data: state.users.dashboardData
+})

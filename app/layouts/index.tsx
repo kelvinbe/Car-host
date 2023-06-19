@@ -13,6 +13,9 @@ import Dashboardlayout from './dashboard'
 import MainLayout from './main'
 import { useAppDispatch } from '../redux/store'
 import { fetchUser } from '../redux/userSlice'
+import { Flex, useMediaQuery, Text, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react'
+import { FlexColCenterCenter } from '../utils/theme/FlexConfigs'
+
 
 
 
@@ -64,8 +67,7 @@ function Layouts(props: IProps) {
 
 
 
-
-  return (
+    return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full ">
         {
             proceed ? (
@@ -86,7 +88,7 @@ function Layouts(props: IProps) {
             ) 
         }
     </div>
-  )
+    )
 }
 
 export default Layouts

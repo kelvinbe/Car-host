@@ -49,7 +49,7 @@ export const updatePayoutMethod = createAsyncThunk("payout/update", async (payou
     try {
         await apiClient.put(`${PAYOUTMETHODS_API}/`,  payoutMethod, {params: {payout_method_id: payoutMethod.id}})
         dispatch(fetchUser())
-        dispatch(fetchWithdrawals({}))
+        dispatch(fetchWithdrawals())
 
         return null
     }catch (e) {
@@ -67,9 +67,9 @@ export const updatePayoutMethod = createAsyncThunk("payout/update", async (payou
 
 export const createWithDrawal = createAsyncThunk("payout/createWithDrawal", async (data: {amount: number | string, payout_method_id: string }, {rejectWithValue, dispatch}, ) => {
     try{
-        await apiClient.post(`${WITHDRAWALS_API}/`, data)
+        await apiClient.post(`${WITHDRAWALS_API}`, data)
         dispatch(fetchUser())
-        dispatch(fetchWithdrawals({}))
+        dispatch(fetchWithdrawals())
         return null
     }catch(e){
         LogRocket.error(e)

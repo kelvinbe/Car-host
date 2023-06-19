@@ -29,7 +29,7 @@ describe("Tests the FilterTableComponent", () => {
     );
     expect(baseElement).toBeTruthy();
     expect(screen.getByRole("textbox")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByTestId("rounded-btn")).toBeInTheDocument();
     expect(screen.getByText('Sort By:')).toBeInTheDocument();
     expect(screen.getByTestId('base-table')).toBeInTheDocument();
   });
@@ -44,7 +44,7 @@ describe("Tests the FilterTableComponent", () => {
           openCreateModal={testFunc}
         />
       );
-      const button = screen.getByRole("button");
+      const button = screen.getByTestId("rounded-btn");
       fireEvent.click(button);
       expect(testFunc).toBeCalled();
   })

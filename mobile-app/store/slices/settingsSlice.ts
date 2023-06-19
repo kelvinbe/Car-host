@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from './index';
 
 
 interface IReducerState {
@@ -41,6 +42,7 @@ export default settingsSlice.reducer
 export const { _set_current_password, _set_new_password, _toggle_current_password } = settingsSlice.actions
 
 // selectors
-export const selectCurrentPasswordIsVisible = (state: any) => state.currentPasswordIsVisible;
-export const selectCurrentPassword = (state: any) => state.currentPassword;
-export const selectNewPassword = (state: any) => state.newPassword;
+
+export const selectCurrentPasswordIsVisible = (state: RootState) => state.settings.currentPasswordIsVisible;
+export const selectCurrentPassword = (state: RootState) => state.settings.currentPassword
+export const selectNewPassword = (state: RootState) => state.settings.newPassword;

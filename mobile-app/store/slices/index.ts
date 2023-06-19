@@ -21,6 +21,7 @@ import onBoardingSlice, { onBoardingApi } from './onBoardingSlice';
 import paymentMethodSlice from './paymentMethodSlice';
 import searchSlice from './searchSlice';
 import mapBottomSheet from './mapBottomSheet';
+import settingsSlice from './settingsSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -47,7 +48,8 @@ const rootReducer = combineReducers({
   [onBoardingApi.reducerPath]: onBoardingApi.reducer,
   paymentMethodSlice: paymentMethodSlice,
   search: searchSlice,
-  mapBottomSheet: mapBottomSheet
+  mapBottomSheet: mapBottomSheet,
+  settings: settingsSlice
 });
 
 export default rootReducer;

@@ -13,16 +13,22 @@ import FilterableTable from "../../components/organism/Table/FilterableTable/Fil
 import ViewVehicleModal from "../../components/organism/Modals/ViewVehicleModal";
 import { useDisclosure } from "@chakra-ui/react";
 import CreateVehicleModal from "../../components/organism/Modals/CreateVehicleModal";
-import EditVehicleModal from "../../components/organism/Modals/EditVehicleModal";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+import VehicleCreateModal from "../../components/organism/Modals/vehicle/create.modal";
+import VehicleEditModal from "../../components/organism/Modals/vehicle/edit.modal";
+import { IStation, IVehicle } from "../../globaltypes";
+import VehicleViewModal from "../../components/organism/Modals/vehicle/view.modal";
 
 function VehicleManagement() {
   const [vehicleId, setVehicleId] = useState<string>()
   const [isCreateModalOpen ,setIsCreateModalOpen] = useState<boolean>(false)
   const [isViewModalOpen ,setIsViewModalOpen] = useState<boolean>(false)
   const [isEditModalOpen ,setIsEditModalOpen] = useState<boolean>(false)
+  const [chosenVehicle, setChosenVehicle] = useState<Partial<IVehicle> & Partial<{
+    station: Partial<IStation>
+  }>>({})
   const {isOpen, onClose, onOpen} = useDisclosure()
   const { data: vehicles, loading } = useAppSelector(selectFetchVehiclesFeedback)
   const { current_page, current_size } = useAppSelector(selectVehiclesPaginationState)
@@ -36,7 +42,10 @@ function VehicleManagement() {
 
 
   const viewVehicle = (id: string) => {
-    setVehicleId(id)
+    const theVehicle = vehicles?.find((vehicle) => vehicle.id === id)
+    setChosenVehicle(theVehicle as Partial<IVehicle> & {
+      station: Partial<IStation>
+    })
     setIsViewModalOpen(true)
     onOpen()
   }
@@ -54,7 +63,8 @@ function VehicleManagement() {
     onClose()
   }
   const openEditModal = (id: string) => {
-    setVehicleId(id)
+    const theVehicle = vehicles?.find((vehicle) => vehicle.id === id) 
+    setChosenVehicle(theVehicle as Partial<IVehicle>)
     setIsEditModalOpen(true)
     onOpen()
   }
@@ -70,9 +80,9 @@ function VehicleManagement() {
       w="full"
       data-testid="vehicle-management-table"
     >
-        {isViewModalOpen && <ViewVehicleModal isOpen={isViewModalOpen} onClose={closeViewModal} vehicleId={vehicleId} vehicles={vehicles} />}
-        {isCreateModalOpen && <CreateVehicleModal isOpen ={isCreateModalOpen} onClose={closeCreateModal}/>}
-        {isEditModalOpen && <EditVehicleModal isOpen={isEditModalOpen} onClose={closeEditModal} vehicle_id={vehicleId} vehicles={vehicles} />}
+        <VehicleViewModal isOpen={isViewModalOpen} onClose={closeViewModal} chosenVehicle={chosenVehicle}  />
+        <VehicleCreateModal isOpen={isCreateModalOpen} onClose={closeCreateModal} />
+        <VehicleEditModal isOpen={isEditModalOpen} onClose={closeEditModal} chosenVehicle={chosenVehicle}  />
         <FilterableTable
           viewAddFieldButton={true}
           viewSearchField={true}
@@ -81,10 +91,28 @@ function VehicleManagement() {
           buttonName="Add new vehicle"
           sortables={[
             {
-              columnKey: "rate",
+              columnKey: "hourly_rate",
               columnName: "Rate",
             },
+            {
+              columnKey: "year",
+              columnName: "Year",
+            },
           ]}
+          onSort={(sort)=>{
+            const order = sort?.order == "descend" ? "desc" : "asc"
+            const sort_by = sort?.columnKey as keyof IVehicle
+
+            dispatch(fetchVehicles({
+              sort: order,
+              sort_by
+            }))
+          }}
+          setSearch={(search)=>{
+            dispatch(fetchVehicles({
+              search
+            }))
+          }}
           columns={insertTableActions(VehicleManagementTableColumns, (i, data) => {
             return (
               <Flex {...FlexRowCenterBetween}>

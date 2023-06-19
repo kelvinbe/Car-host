@@ -4,19 +4,26 @@ import { WITHDRAWALS_API } from "../hooks/constants";
 import { RootState } from ".";
 import { IPayout, IUserProfile, IWithdrawals, PaginationSupportState, PayoutMethods, asyncThinkFetchParams } from "../globaltypes";
 import LogRocket from "logrocket";
+import { isEmpty } from "lodash";
 
 export const fetchWithdrawals = createAsyncThunk(
   "withdrawals/fetchWithdrawals",
   async (
-    data: Partial<asyncThinkFetchParams> | null | undefined = null,
+    data: Partial<asyncThinkFetchParams<IWithdrawals>> | null | undefined = null,
     { rejectWithValue, getState, dispatch }
   ) => {
     try {
       const currentParams = (getState() as RootState).withdrawals;
+      const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
+      const current_search = isEmpty(data?.search) ? prev_search : data?.search
+      const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
+
       const params = {
         page: data?.page ?? currentParams.current_page,
         size: data?.size ?? currentParams.current_size,
         sort: data?.sort ?? currentParams.current_sort,
+        sort_by: data?.sort_by ?? currentParams.current_sort_by ?? undefined,
+        search: search
       };
       dispatch(updateParams(params));
       const res = await apiClient.get(WITHDRAWALS_API, {
@@ -34,8 +41,12 @@ export const updateWithdrawal = createAsyncThunk(
   "withdrawals/updateWithdrawals",
   async (updateData: Partial<IWithdrawals>, { rejectWithValue, dispatch }) => {
     try {
-      await apiClient.patch(`${WITHDRAWALS_API}/${updateData.id}`, updateData)
-      await dispatch(fetchWithdrawals({}));
+      await apiClient.patch(`${WITHDRAWALS_API}`, updateData, {
+        params: {
+          withdrawal_id: updateData.id,
+        }
+      })
+      await dispatch(fetchWithdrawals());
     } catch (error) {
       LogRocket.error(error);
       rejectWithValue(error);
@@ -43,7 +54,7 @@ export const updateWithdrawal = createAsyncThunk(
   }
 );
 
-interface InitialState extends Partial<PaginationSupportState> {
+interface InitialState extends Partial<PaginationSupportState<IWithdrawals>> {
   data: Partial<IWithdrawals & Partial<{
     user: Partial<IUserProfile>
     payout: Partial<IPayout>
@@ -113,10 +124,10 @@ export default withdrawalSlice.reducer;
 export const { resetState, updateParams } = withdrawalSlice.actions;
 export const selectWithdrawals = (state: RootState) => {
   return {
-    withdrawals: state.withdrawals.data,
-    loading: state.withdrawals.loading,
-    error: state.withdrawals.error,
-    status: state.withdrawals.status,
+    withdrawals: state?.withdrawals?.data ?? [],
+    loading: state?.withdrawals?.loading ?? false,
+    error: state?.withdrawals?.error ?? null,
+    status: state?.withdrawals?.status,
   };
 };
 
@@ -131,10 +142,10 @@ export const selectUpdateWithdrawalFeedback = (state: RootState) => {
 
 export const selectWithdrawalsPagination = (state: RootState) => {
   return {
-    current_page: state.withdrawals.current_page,
-    current_size: state.withdrawals.current_size,
-    current_sort: state.withdrawals.current_sort,
-    current_search: state.withdrawals.current_search,
+    current_page: state?.withdrawals?.current_page ?? 1,
+    current_size: state?.withdrawals?.current_size ?? 10,
+    current_sort: state?.withdrawals?.current_sort ?? "desc",
+    current_search: state?.withdrawals?.current_search ?? "__empty__",
   };
 }
 

@@ -5,13 +5,15 @@ import React, { useEffect, useState } from "react";
 import { app } from "../firebase/firebaseApp";
 import useDashboardRoutes from "../hooks/useDashboardRoutes";
 import { dashboardRoutes } from "../utils/routes";
-import { Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, useMediaQuery} from "@chakra-ui/react";
 import DashboardSidebar from "../components/organism/Bars/Sidebar/DashboardSidebar";
 import DashboardTopBar from "../components/organism/Bars/TopBar/DashboardTopBar";
 import LoadingComponent from "../components/molecules/feedback/LoadingComponent";
 import { FlexColCenterCenter } from "../utils/theme/FlexConfigs";
 import { useAppDispatch } from "../redux/store";
 import { fetchUser } from "../redux/userSlice";
+import DevicesSupported from "../components/molecules/DevicesSupported/DevicesSupported";
+
 
 interface IProps {
   children: React.ReactNode;
@@ -30,8 +32,14 @@ function Dashboardlayout(props: IProps) {
   const { children } = props;
   const { push, events } = useRouter();
   const [changePageLoad, setChangePageLoad] = useState(false);
+  const [isLargerThan900] = useMediaQuery('(min-width: 913px)', {
+    ssr: true,
+    fallback: true
+  }) 
+
 
   useEffect(() => {
+
     events.on("routeChangeStart", () => {
       setChangePageLoad(true);
     });
@@ -39,10 +47,9 @@ function Dashboardlayout(props: IProps) {
   }, []);
 
   const dashboardNavigation = useDashboardRoutes();
-
-
   return (
-    <Grid w="100vw" minH="100vh" bg="background" templateColumns={"300px auto"}>
+    <>
+    {isLargerThan900 ?  (<Grid w="100vw" minH="100vh" bg="background" templateColumns={"300px auto"}>
       <GridItem h="full" w="full" data-testid="sidebar-on-dashboard">
         <DashboardSidebar />
       </GridItem>
@@ -62,7 +69,8 @@ function Dashboardlayout(props: IProps) {
           </GridItem>
         </Grid>
       </GridItem>
-    </Grid>
+    </Grid>): (<DevicesSupported />)}
+    </>
   );
 }
 

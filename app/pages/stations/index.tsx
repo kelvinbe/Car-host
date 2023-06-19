@@ -129,15 +129,9 @@ function Stations() {
         <FilterableTable
           viewAddFieldButton={true}
           viewSearchField={true}
-          viewSortablesField={true}
+          viewSortablesField={false}
           buttonName="Create Station"
           openCreateModal={showCreateStationModal}
-          sortables={[
-            {
-              columnKey: "station_name",
-              columnName: "Station Name",
-            },
-          ]}
           columns={insertTableActions(StationTableColumns, (i, data) => {
             return (
               <Flex {...FlexRowCenterAround}>
@@ -196,6 +190,11 @@ function Stations() {
           data={feedback?.data ?? []}
           primitiveTableProps={{
             loading: feedback?.loading,
+          }}
+          setSearch={(search)=>{
+            reduxDispatch(fetchStations({
+              search
+            }))
           }}
         />
     </Flex>

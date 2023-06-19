@@ -23,39 +23,24 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
 import { GetServerSideProps } from "next";
+import apiClient from "../../utils/apiClient";
+import { VEHICLES_DOMAIN } from "../../hooks/constants";
+import { getAuth } from "firebase/auth";
+import { app } from "../../firebase/firebaseApp";
+import { fetchUserDashboard, selectDashboardFeedback } from "../../redux/userSlice";
+import { DashboardReservations, DashboardWithdrawals } from "../../utils/tables/dashboard.table.schema";
+import VehiclePreview from "../../components/molecules/vehicle-preview";
 
 export default function Dashboard() {
-  const [viewButton, setViewButton] = useState<string | number>("");
-  const [currentPage, setCurrentPage] = useState<number>(1)
-
-  const { allVehicles, fetchVehicles } = useVehicles();
-  const { reservations, fetchReservations } = useReservation(undefined, 10, currentPage, 'UPCOMING');
-
   const dispatch = useAppDispatch();
-  const {
-    payouts,
-  } = useAppSelector(selectFetchedPayouts);
+  const feedback = useAppSelector(selectDashboardFeedback)
+  const [viewButton, setViewButton] = useState<string | number>("");
 
-  useEffect(() => {
-    dispatch(
-      fetchPayouts({
-        pagination: {
-          page: 1,
-          size: 10,
-        },
-        sort: 'desc'
-      })
-    );
+  useEffect(()=>{
+    dispatch(fetchUserDashboard())
+  },[])
 
-    fetchVehicles()
-    fetchReservations()
-  }, [currentPage]);
-
-  const sortedPayouts = orderBy(payouts, (payout) => new Date(payout.date), 'desc').slice(0, 10)
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+  
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
       <Grid
@@ -72,17 +57,16 @@ export default function Dashboard() {
             link="/reservations"
           >
             <BaseTable
-              columns={ReservationTableColumns}
-              data={reservations?.slice(0, 5) ?? []}
-              dataFetchFunction={(fetchStatus) => {
-                fetchStatus;
+              columns={DashboardReservations}
+              data={feedback?.data?.reservations ?? []}
+              primitiveProps={{
+                loading: feedback?.loading
               }}
-              pagination={{ position: ["bottomCenter"], onChange: handlePageChange }}
             />
           </PreviewTableContainer>
         </GridItem>
         <GridItem>
-          <PreviewTableContainer title="Your Vehicles" link="/vehicle-management">
+          <PreviewTableContainer title="New Vehicles" link="/vehicle-management">
             <Flex
               w="full"
               h="full"
@@ -94,86 +78,23 @@ export default function Dashboard() {
               bg="white"
               borderColor="gray.300"
             >
-              {allVehicles.length < 1 && <Flex marginY={'8'}><Image src={noData} alt="no data" width={100} height={100} /></Flex>}
-              {allVehicles.slice(0,4).map((vehicleInfo) => (
-                <Flex
-                  w="40%"
-                  align="center"
-                  justify={"center"}
-                  rounded={"sm"}
-                  overflow="hidden"
-                  m="22px 0px"
-                  border="1px solid"
-                  borderColor="gray.300"
-                  _hover={{
-                    position: "relative",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    cursor: "pointer",
-                  }}
-                  key={vehicleInfo.id}
-                  onMouseEnter={() => {
-                    vehicleInfo.id && setViewButton(vehicleInfo.id);
-                  }}
-                  onMouseLeave={() => {
-                    setViewButton("");
-                  }}
-                >
-                  <Flex
-                    w="full"
-                    h="150px"
-                    align="center"
-                    justify="center"
-                    key={vehicleInfo.id}
-                    data-testid={"vehicle-image-container"}
-                    pos="relative"
-                  >
-                    <Image
-                      src={first(vehicleInfo?.pictures) ?? ""}
-                      alt="vehicle image"
-                      fill 
-                      style={{
-                        objectFit: 'cover',
-                      }}
-                    />
-                    {viewButton === vehicleInfo.id && (
-                      <Box
-                        position="absolute"
-                        top="50%"
-                        left="50%"
-                        transform="translate(-50%, -50%)"
-                      >
-                        <Rounded variant="solid" rounded="full">
-                          <Link href={"/vehicle-management"}>
-                            <Text
-                              cursor="pointer"
-                              data-cy={"redirect-vehicle-mgmt"}
-                            >
-                              Manage
-                            </Text>
-                          </Link>
-                        </Rounded>
-                      </Box>
-                    )}
-                  </Flex>
-                </Flex>
-              ))}
+              <VehiclePreview
+                vehicles={feedback?.data?.vehicles} 
+                loading={feedback?.loading}
+              />
             </Flex>
           </PreviewTableContainer>
         </GridItem>
         <GridItem>
-          <LiveMapComponent marketId="someId" vehicles={allVehicles} />
+          <LiveMapComponent loading={feedback?.loading} marketId="someId" vehicles={feedback?.data?.map_vehicles} />
         </GridItem>
         <GridItem>
-          <PreviewTableContainer title="Last 10 Payouts" link="/payouts">
+          <PreviewTableContainer title="Recent Withdrawals" link="/payouts">
             <BaseTable
-              columns={PayoutsTableColumns}
-              data={sortedPayouts?.slice(0,5) ?? []}
-              dataFetchFunction={(fetchStatus) => {
-                fetchStatus;
+              columns={DashboardWithdrawals}
+              data={feedback?.data?.withdrawal_requests ?? []}
+              primitiveProps={{
+                loading: feedback?.loading
               }}
             />
           </PreviewTableContainer>

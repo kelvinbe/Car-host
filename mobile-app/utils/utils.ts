@@ -78,7 +78,7 @@ export const timeTilEndOfDay = () =>{
     const timeToAddToEvenOut = duration % 30
     const startTime = now.add(timeToAddToEvenOut, 'minutes').add(1, "minute")
     const all30minIntervals = Array.from({length: duration / 30}, (_, i) => i)
-    const times = all30minIntervals.map((_, i) => startTime.add(i * 30, 'minutes').toISOString())
+    const times = all30minIntervals.map((_, i) => startTime.add(i * 30, 'minutes').format())
     const labelAndValue = times.map(time => ({label: dayjs(time).format("h:mm"), value: time}))
     return labelAndValue
 }
@@ -95,7 +95,7 @@ export const timeTilEndOfNewDay = ( fromToday: number ) =>{
     const endOfDay = then.endOf('day')
     const duration = endOfDay.diff(startOfDay, 'minutes')
     const all30minIntervals = Array.from({length: duration / 30}, (_, i) => i)
-    const times = all30minIntervals.map((_, i) => startOfDay.add(i * 30, 'minutes').toISOString())
+    const times = all30minIntervals.map((_, i) => startOfDay.add(i * 30, 'minutes').format())
     const labelAndValue = times.map(time => ({label: dayjs(time).format("h:mm"), value: time}))
     return labelAndValue
 }
@@ -234,6 +234,15 @@ export const location_search = async () => {
     
 
     try {   
+        const permission = await Location.requestForegroundPermissionsAsync()
+
+        if (permission.status !== 'granted') {
+            store.dispatch({
+                type: searchLocally.rejected.type,
+                payload: "Permissions not granted"
+            })
+            return 
+        }
         store.dispatch({
             type: searchLocally.pending.type,
         })

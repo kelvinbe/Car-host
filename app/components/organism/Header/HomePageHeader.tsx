@@ -29,12 +29,12 @@ const HomePageHeader = () => {
       borderBottom={"1px"}
       borderColor={"gray.300"}
       paddingBottom={"0"}
-      paddingTop={"12"}
+      paddingTop={"36px"}
     >
       <Flex
         width={["full", "full", "full", "50%"]}
         justify={["center", "center", "center", "start"]}
-        marginBottom={[4, 4, 4, 0]}
+        marginBottom={'20px'}
         marginX={["0", "0", "0", "20"]}
         marginTop={'-18px'}
       >
