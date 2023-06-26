@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { app } from '../firebase/firebaseApp'
-import { IStaticProps } from '../globaltypes'
+import { InitialPageProps } from '../globaltypes'
 import { adminRoutesRegex, dashboardRoutesRegex, protectedRegex } from '../utils/regex'
 import CheckAuthorization from './CheckAuthorization'
 import Dashboardlayout from './dashboard'
@@ -15,12 +15,14 @@ import { useAppDispatch } from '../redux/store'
 import { fetchUser } from '../redux/userSlice'
 import { Flex, useMediaQuery, Text, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react'
 import { FlexColCenterCenter } from '../utils/theme/FlexConfigs'
+import PhaseReleaseHandler from './PhaseReleaseHandler'
+import { PagePhaseProps } from '../types'
 
 
 
 
 interface IProps {
-    pageProps: IStaticProps,
+    pageProps: InitialPageProps & PagePhaseProps,
     children: React.ReactNode
 }
 
@@ -61,32 +63,30 @@ function Layouts(props: IProps) {
 
     const { pathname, events } = useRouter()
 
-
-
-
-
-
-
     return (
     <div className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full ">
-        {
-            proceed ? (
-                dashboard ? (
-                    <Dashboardlayout>
-                        {children}
-                    </Dashboardlayout>
-                ) : (
-                    <MainLayout>
-                        {children}
-                    </MainLayout>
-                )
-            ) : (
-                <CheckAuthorization 
-                    checked={check}
-                    pageProps={pageProps}
-                />
-            ) 
-        }
+            <PhaseReleaseHandler
+                {...pageProps}
+            >
+                {
+                    proceed ? (
+                        dashboard ? (
+                            <Dashboardlayout>
+                                {children}
+                            </Dashboardlayout>
+                        ) : (
+                            <MainLayout>
+                                {children}
+                            </MainLayout>
+                        )
+                    ) : (
+                        <CheckAuthorization
+                            checked={check}
+                            pageProps={pageProps}
+                        />
+                    )
+                }
+            </PhaseReleaseHandler>
     </div>
     )
 }

@@ -18,6 +18,8 @@ import calendarSlice from './calendarSlice';
 import propertySlice from './propertySlice';
 import propertyAmenitiesSlice from './propertyAmenitiesSlice';
 import propertyServicesSlice from './propertyServicesSlice';
+import allUserReducer from './admin.users';
+import emulationSlice from './emulationSlice';
 
 export const reducers = combineReducers({
     [locationsApi.reducerPath]: locationsApi.reducer,
@@ -40,7 +42,9 @@ export const reducers = combineReducers({
     calendar: calendarSlice,
     property: propertySlice,
     propertyAmenities: propertyAmenitiesSlice,
-    propertyServices: propertyServicesSlice
+    propertyServices: propertyServicesSlice,
+    allUsers: allUserReducer,
+    emulation: emulationSlice
 })
 
 export type RootState = ReturnType<typeof reducers>

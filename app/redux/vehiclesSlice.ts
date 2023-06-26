@@ -6,9 +6,22 @@ import { VEHICLES_DOMAIN } from "../hooks/constants";
 import LogRocket from "logrocket";
 import { AxiosError } from "axios";
 import { isEmpty } from "lodash";
+import { clearEmulation, selectEmulationFeedback } from "./emulationSlice";
 
 export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (args: Partial<asyncThinkFetchParams<IVehicle>> | undefined | null = null, { rejectWithValue, dispatch, getState }) =>{
+    if(args?.reset){
+        dispatch(updateParams({
+            page: 1,
+            size: 10,
+            search: undefined,
+            sort: undefined,
+            sort_by: undefined
+        }))
+
+        dispatch(clearEmulation())
+    }
     const currentParams = (getState() as RootState).vehicles
+    const emulationState = selectEmulationFeedback(getState() as RootState)
     const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
     const current_search = isEmpty(args?.search) ? prev_search : args?.search
     const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
@@ -26,7 +39,10 @@ export const fetchVehicles = createAsyncThunk('vehicles/fetchVehicles', async (a
 
     try {
         const res = (await apiClient.get(VEHICLES_DOMAIN, {
-            params
+            params: {
+                ...params,
+                user_id: emulationState.data?.id ?? undefined
+            }
         }))
         return res.data
     } catch (e) {

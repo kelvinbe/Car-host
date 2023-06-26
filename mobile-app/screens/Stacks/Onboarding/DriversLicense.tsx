@@ -156,7 +156,7 @@ const DriversLicense = (props: IProps) => {
                         </Text>
                         <Text style={styles.stepLabelText} >
                           {
-                            currentPosition === 0 ? "Take a picture of the front of your drivers license" : "Take a picture of the back of your drivers license"
+                            label === "Front" ? "Take a picture of the front of your drivers license" : "Take a picture of the back of your drivers license"
                           }
                         </Text>
                       </View>

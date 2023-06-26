@@ -18,6 +18,8 @@ import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectPaginationState } from "../../redux/authcodeSlice";
+import EmulationDeck from "../../components/organism/emulation-deck";
+import { selectUser } from "../../redux/userSlice";
 
 
 type IReducerState = {
@@ -56,6 +58,7 @@ function Stations() {
   const [state,dispatch] = useReducer(reducer, initialState)
   const reduxDispatch = useAppDispatch()
   const {current_page, current_size} = useAppSelector(selectPaginationState)
+  const user = useAppSelector(selectUser)
 
   useEffect(()=>{
     reduxDispatch(fetchStations())
@@ -123,16 +126,21 @@ function Stations() {
       h="full"
       data-testid="stations-table"
     >
+        <EmulationDeck
+          refetch={()=>{
+            reduxDispatch(fetchStations())
+          }}
+        />
         {state.isCreateModalOpen && <StationActionModal isOpen={isOpen} onClose={closeCreateStationModal} />}
         {state.isViewModalOpen && <ViewStationModal isOpen={isOpen} onClose={closeViewStationModal} station={selectedStation}/>}
         {state.isEditModalOpen && <StationActionModal isOpen={isOpen} onClose={closeEditStationModal} station={selectedStation}/>}
         <FilterableTable
-          viewAddFieldButton={true}
+          viewAddFieldButton={!user?.is_admin}
           viewSearchField={true}
           viewSortablesField={false}
           buttonName="Create Station"
           openCreateModal={showCreateStationModal}
-          columns={insertTableActions(StationTableColumns, (i, data) => {
+          columns={user?.is_admin ? StationTableColumns: insertTableActions(StationTableColumns, (i, data) => {
             return (
               <Flex {...FlexRowCenterAround}>
                 <IconButton

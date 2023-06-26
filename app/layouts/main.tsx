@@ -13,18 +13,36 @@ interface IProps {
 
 function MainLayout(props: IProps) {
   const { children } = props
-
+  const [loading, setLoading] = useState<boolean>(false)
   const [isLargerThan900] = useMediaQuery('(min-width: 913px)')
 
+  const { events } = useRouter()
+
+  useEffect(()=>{
+    events.on("routeChangeStart", ()=>{
+      setLoading(true)
+    })
+    events.on("routeChangeComplete", ()=>{
+      setLoading(false)
+    })
+
+    events.on("routeChangeError", ()=>{
+      setLoading(false)
+    })
+
+  }, [])
 
 
   return (
     <>
-   {isLargerThan900 ? <div className="flex flex-row items-center justify-start w-screen flex-1 h-full">
-        {
-          children
-        }
-    </div>: <DevicesSupported />}
+   {(
+    loading ? <LoadingComponent/> :
+      <div className="flex flex-row items-center justify-start w-screen flex-1 h-full">
+          {
+            children
+          }
+      </div>
+    )}
     </>
   )
 }

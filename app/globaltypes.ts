@@ -9,25 +9,15 @@ import {
 } from "./entities";
 // Static props
 
-export interface IStaticProps {
+export interface InitialPageProps {
   dashboard?: boolean;
   authonly?: boolean;
-  adminonly?: boolean; 
-  /**
-   * v1: car rentals
-   * v2: properties
-   */
-  tag: 'v1' | 'v1.5' | 'v2'       
+  adminonly?: boolean;   
 }
 export interface InitialProps {
   dashboard?: boolean;
   authonly?: boolean;
-  adminonly?: boolean; 
-  /**
-   * v1: car rentals
-   * v2: properties
-   */
-  tag: 'v1' | 'v1.5' | 'v2'       
+  adminonly?: boolean;   
 }
 
 
@@ -188,6 +178,7 @@ export interface ILocation {
   vehicle: {
     vehicle_name: string;
     VehiclePictures: string[];
+    pictures: string[]
   };
   address: string;
   market_name: string;
@@ -471,4 +462,87 @@ export interface IProperties {
   baths: string;
   location: string;
   status: string;
+}
+
+export interface IProperty {
+  id: string;
+  name: string;
+  type: string;
+  units: number;
+  rate: number;
+  rate_type: string;
+  is_managed: boolean;
+  movein_lead_time: number;
+  pictures: string[];
+  description: string;
+  size: number;
+  rating: number;
+  status: "BOOKED" | "PENDING" | "AVAILABLE";
+  location: {
+    id: string;
+    country: string;
+    address: string;
+    longitude: number;
+    latitude: number;
+  }
+  amenities: {
+    id: string;
+    name: string;
+    category: string;
+    quantity: number;
+    size: string | number;
+  }
+  meals_offered: string[];
+  services: string[];
+  languages: string[];
+
+} 
+
+export interface IBooking {
+  id: string;
+  user_id: string;
+  host_id: string;
+  property_id: string;
+  checkin_date: Date;
+  checkout_date: Date;
+  amount: number;
+  tax: number;
+  fees: number;
+  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+  guests: {
+    adults: number;
+    kids: number;
+    pets: number;
+  }
+  property: Partial<IProperty>
+}
+
+export interface IAmenity {
+  id: string;
+  name: string;
+  category: string;
+  quantity: number;
+  size: string | number;
+}
+
+export interface IMeal {
+  id: string;
+  name: string;
+  type: string;
+  price: number;
+}
+
+export interface IService {
+  id: string;
+  name: string;
+  fees: number
+}
+
+export interface IPLocation{
+  id: string;
+  property_id: string;
+  country: string;
+  address: string;
+  longitude: number;
+  latitude: number;
 }

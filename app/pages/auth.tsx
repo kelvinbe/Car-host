@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Flex, useToast } from '@chakra-ui/react';
+import { Flex, VStack, useToast } from '@chakra-ui/react';
 import { FlexColCenterBetween, FlexColCenterStart, FlexRowCenterBetween, FlexRowCenterCenter } from '../utils/theme/FlexConfigs';
 import Logo from '../components/atoms/Brand/Logo';
 import AuthForm from '../components/organism/Forms/AuthForm/AuthForm';
@@ -52,9 +52,13 @@ export default function Home() {
       {...FlexRowCenterBetween} 
     >
       <Flex w="50%" h="full" {...FlexColCenterBetween} padding="40px 20px" >
-        <Flex {...FlexRowCenterCenter} w="full" >
+        {/* <Flex {...FlexRowCenterCenter} w="full" > */}
+          <VStack>
+          <div style={{marginTop:'150px'}}>
           <Logo/>
-        </Flex>
+          </div>
+          </VStack>
+        {/* </Flex> */}
         <Flex w="80%" {...FlexColCenterStart} >
           <AuthForm
             type={authState}

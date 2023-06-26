@@ -5,6 +5,7 @@ import { EVENT_DATA_DOMAIN, RESERVATION_DOMAIN } from "../hooks/constants";
 import { RootState } from ".";
 import { IReservation } from "../globaltypes";
 import LogRocket from "logrocket";
+import { selectEmulationFeedback } from "./emulationSlice";
 
 
 interface IResource {
@@ -32,6 +33,10 @@ interface IState {
     error: string | null,
     calendarUpdate: boolean
     calendarError: string | null
+    date: Partial<{
+        start_time: string,
+        end_time: string
+    }> | null
 }
 
 const initialState: IState = {
@@ -40,13 +45,32 @@ const initialState: IState = {
     loading: false,
     error: null,
     calendarUpdate: false,
-    calendarError: null
+    calendarError: null,
+    date: null
 }
 
 
-export const fetchCalendarData = createAsyncThunk('calendar/fetchCalendarData', async (args, {rejectWithValue}) => {
+export const fetchCalendarData = createAsyncThunk('calendar/fetchCalendarData', async (args: Partial<{
+    start_time: string,
+    end_time: string,
+    reset: boolean
+}>|undefined | null = null, {rejectWithValue, getState, dispatch}) => {
+    const date = selectDate(getState() as RootState)
+    const emulationFeedback = selectEmulationFeedback(getState() as RootState)
+    const new_date = args?.reset ? null : {
+        start_time: args?.start_time ?? date?.start_time,
+        end_time: args?.end_time ?? date?.end_time
+    }
+
+    dispatch(updateDate(new_date))
+
     try {
-        const data = (await apiClient.get(EVENT_DATA_DOMAIN)).data
+        const data = (await apiClient.get(EVENT_DATA_DOMAIN, {
+            params: {
+                user_id: emulationFeedback.data?.id ?? undefined,
+                ...new_date
+            }
+        })).data
 
         return data as {
             resources: Array<Partial<IResource>>
@@ -95,7 +119,9 @@ const calendarSlice = createSlice({
     name: 'calendar',
     initialState,
     reducers: {
-
+        updateDate: (state, action) => {
+            state.date = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCalendarData.pending, (state) => {
@@ -139,6 +165,8 @@ const calendarSlice = createSlice({
     }
 })
 
+export const { updateDate } = calendarSlice.actions
+
 export default calendarSlice.reducer
 
 export const selectCalendarFeedback = (state: RootState) => {
@@ -157,3 +185,5 @@ export const selectCalendarFeedback = (state: RootState) => {
     }
 
 }
+
+const selectDate = (state: RootState) => state.calendar.date

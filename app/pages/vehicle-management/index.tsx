@@ -20,8 +20,11 @@ import VehicleCreateModal from "../../components/organism/Modals/vehicle/create.
 import VehicleEditModal from "../../components/organism/Modals/vehicle/edit.modal";
 import { IStation, IVehicle } from "../../globaltypes";
 import VehicleViewModal from "../../components/organism/Modals/vehicle/view.modal";
+import EmulationDeck from "../../components/organism/emulation-deck";
+import { selectUser } from "../../redux/userSlice";
 
 function VehicleManagement() {
+  const user = useAppSelector(selectUser)
   const [vehicleId, setVehicleId] = useState<string>()
   const [isCreateModalOpen ,setIsCreateModalOpen] = useState<boolean>(false)
   const [isViewModalOpen ,setIsViewModalOpen] = useState<boolean>(false)
@@ -80,11 +83,16 @@ function VehicleManagement() {
       w="full"
       data-testid="vehicle-management-table"
     >
+        <EmulationDeck 
+          refetch={()=>{
+            dispatch(fetchVehicles())
+          }}
+        />
         <VehicleViewModal isOpen={isViewModalOpen} onClose={closeViewModal} chosenVehicle={chosenVehicle}  />
         <VehicleCreateModal isOpen={isCreateModalOpen} onClose={closeCreateModal} />
         <VehicleEditModal isOpen={isEditModalOpen} onClose={closeEditModal} chosenVehicle={chosenVehicle}  />
         <FilterableTable
-          viewAddFieldButton={true}
+          viewAddFieldButton={user?.is_admin ? false :true}
           viewSearchField={true}
           viewSortablesField={true}
           openCreateModal= {openCreateModal}
@@ -113,7 +121,7 @@ function VehicleManagement() {
               search
             }))
           }}
-          columns={insertTableActions(VehicleManagementTableColumns, (i, data) => {
+          columns={user?.is_admin ? VehicleManagementTableColumns : insertTableActions(VehicleManagementTableColumns, (i, data) => {
             return (
               <Flex {...FlexRowCenterBetween}>
                 <IconButton

@@ -15,6 +15,7 @@ import { selectChosenHostCode, selectUsersLocation, setHostCode } from '../../..
 import { isEmpty } from 'lodash';
 import { selectCoords, setVehiclePositions } from '../../../store/slices/searchSlice';
 import { LocationObjectCoords } from 'expo-location';
+import dayjs from 'dayjs';
 
 
 interface IProps {
@@ -37,17 +38,15 @@ const AnimatedScrollList = (props: Props) => {
     const {data: coords} = useAppSelector(selectCoords)
     const chosenHostCode = useAppSelector(selectChosenHostCode)
     const { bookingDetails: { start_date_time, end_date_time} } = useBookingActions()
-    const { data, isLoading, isError, refetch } = useGetVehiclesQuery({
+    const { data, isLoading, isError, refetch, isFetching } = useGetVehiclesQuery({
         ...(isEmpty(chosenHostCode) ? {
             longitude: coords?.longitude.toString() ?? undefined,
             latitude: coords?.latitude.toString() ?? undefined,
         } : {
             host_code: !isEmpty(chosenHostCode) ? chosenHostCode : undefined,
         }),
-        start_date_time: !isEmpty(start_date_time) ? start_date_time : undefined,
-        end_date_time: !isEmpty(end_date_time) ? end_date_time : undefined,
-    }, {
-        refetchOnMountOrArgChange: true,
+        start_date_time: !isEmpty(start_date_time) ? dayjs(start_date_time).format() : undefined,
+        end_date_time: !isEmpty(end_date_time) ? dayjs(end_date_time).format() : undefined,
     })
     const toast = useToast()
     const styles = useStyles(props)
@@ -69,7 +68,6 @@ const AnimatedScrollList = (props: Props) => {
     useEffect(()=>{
         return ()=>{
             scrollY.removeAllListeners()
-            dispatch(setHostCode(null))
         }
     },[])
 
@@ -112,7 +110,7 @@ return (
     }}
     >
     {
-        isLoading ? <Loading/> : isError ? <Error /> : isEmpty(data) ? <Empty
+        (isLoading || isFetching) ? <Loading/> : isError ? <Error /> : isEmpty(data) ? <Empty
             emptyText={
                 new Date(end_date_time).getTime() === new Date(start_date_time).getTime() ? 'Adjust your time range to see available vehicles' :
                 'No vehicles available'

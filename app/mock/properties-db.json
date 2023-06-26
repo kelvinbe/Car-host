@@ -1,0 +1,982 @@
+{
+  "properties": [
+    {
+      "id": "1",
+      "user_id": "1",
+      "name": "The Zlatan Hotel and Residence",
+      "type": "Hotel",
+      "units": 36,
+      "rate": 300,
+      "rate_type": "Nightly",
+      "is_managed": false,
+      "movein_lead_time": 0,
+      "description": "A property that suits your holiday stays, night stays, conferences and many more",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 234,
+      "rating": 8.9,
+      "location": {
+        "id": "1",
+        "country": "Kenya",
+        "address": "Nairobi West, Kenya",
+        "latitude": 83,
+        "longitude": 23
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Meals", "Message", "security"],
+      "languages": ["English", "Swahili", "French"],
+      "meals_offered": ["Fried Chicken", "Burger", "Ugali"],
+      "status": "Booked"
+    },
+    {
+      "id": "2",
+      "user_id": "2",
+      "name": "The Luxe Resort",
+      "type": "Resort",
+      "units": 50,
+      "rate": 500,
+      "rate_type": "Nightly",
+      "is_managed": true,
+      "movein_lead_time": 0,
+      "description": "Experience luxury and relaxation at our stunning resort.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 500,
+      "rating": 9.2,
+      "location": {
+        "id": "2",
+        "country": "Rwanda",
+        "address": "Kigali, Rwanda",
+        "latitude": -8.652,
+        "longitude": 115.137
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Room Service", "Concierge", "Laundry"],
+      "languages": ["English", "Indonesian"],
+      "meals_offered": ["International Cuisine", "Seafood Specialties"],
+      "status": "Available"
+    },
+    {
+      "id": "3",
+      "user_id": "3",
+      "name": "Mountain View Cabin",
+      "type": "Cabin",
+      "units": 5,
+      "rate": 200,
+      "rate_type": "Nightly",
+      "is_managed": true,
+      "movein_lead_time": 0,
+      "description": "Escape to a cozy cabin with breathtaking mountain views.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 100,
+      "rating": 8.5,
+      "location": {
+        "id": "3",
+        "country": "Egypt",
+        "address": "Cairo",
+        "latitude": 39.191,
+        "longitude": -106.817
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Free WiFi", "Housekeeping"],
+      "languages": ["English"],
+      "meals_offered": ["Breakfast", "BBQ Dinner"],
+      "status": "Available"
+    },
+    {
+      "id": "4",
+      "user_id": "4",
+      "name": "Seaside Villas",
+      "type": "Villa",
+      "units": 12,
+      "rate": 800,
+      "rate_type": "Nightly",
+      "is_managed": false,
+      "movein_lead_time": 0,
+      "description": "Indulge in luxury and tranquility at our seaside villas.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 350,
+      "rating": 9.8,
+      "location": {
+        "id": "4",
+        "country": "Kenya",
+        "address": "Eastleigh",
+        "latitude": 34.025,
+        "longitude": -118.808
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Private Chef", "Butler", "Spa Treatments"],
+      "languages": ["English", "Spanish"],
+      "meals_offered": ["Gourmet Cuisine", "Fresh Seafood"],
+      "status": "Booked"
+    },
+    {
+      "id": "5",
+      "user_id": "5",
+      "name": "Cosmopolitan Loft",
+      "type": "Apartment",
+      "units": 20,
+      "rate": 150,
+      "rate_type": "Nightly",
+      "is_managed": true,
+      "movein_lead_time": 0,
+      "description": "Experience the vibrant city life in our modern loft apartments.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 80,
+      "rating": 7.6,
+      "location": {
+        "id": "5",
+        "country": "USA",
+        "address": "New York",
+        "latitude": 40.748,
+        "longitude": -73.986
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["24/7 Security", "Laundry"],
+      "languages": ["English"],
+      "meals_offered": ["Fried Chicken", "Spaghetti", "Kachumbari"],
+      "status": "Available"
+    },
+    {
+      "id": "6",
+      "user_id": "6",
+      "name": "Historic Manor House",
+      "type": "Bed and Breakfast",
+      "units": 8,
+      "rate": 250,
+      "rate_type": "Nightly",
+      "is_managed": false,
+      "movein_lead_time": 0,
+      "description": "Step back in time and experience the charm of our historic manor house.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 400,
+      "rating": 9.0,
+      "location": {
+        "id": "6",
+        "country": "England",
+        "address": "Manchester",
+        "latitude": 51.503,
+        "longitude": -0.127
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Daily Breakfast", "Housekeeping"],
+      "languages": ["English"],
+      "meals_offered": ["Continental Breakfast"],
+      "status": "Available"
+    },
+    {
+      "id": "7",
+      "user_id": "7",
+      "name": "Serenity Retreat",
+      "type": "Cottage",
+      "units": 3,
+      "rate": 400,
+      "rate_type": "Nightly",
+      "is_managed": true,
+      "movein_lead_time": 0,
+      "description": "Find peace and serenity in our secluded cottage surrounded by nature.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 150,
+      "rating": 8.7,
+      "location": {
+        "id": "7",
+        "country":"Alberta",
+        "address": "Alberata, Alberta",
+        "latitude": 51.178,
+        "longitude": -115.57
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Free WiFi", "Housekeeping"],
+      "languages": ["English"],
+      "meals_offered": ["Fried Chicken", "Spaghetti", "Kachumbari"],
+      "status": "Available"
+    },
+    {
+      "id": "8",
+      "user_id": "8",
+      "name": "Charming Countryside Retreat",
+      "type": "Farmhouse",
+      "units": 4,
+      "rate": 180,
+      "rate_type": "Nightly",
+      "is_managed": false,
+      "movein_lead_time": 0,
+      "description": "Experience the tranquility of the countryside in our charming farmhouse.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 200,
+      "rating": 8.4,
+      "location": {
+        "id": "8",
+        "country": "Russia",
+        "address": "Moscow",
+        "latitude": 43.836,
+        "longitude": 5.429
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Breakfast", "Farm Tours"],
+      "languages": ["English", "French"],
+      "meals_offered": ["Farm-to-Table Cuisine"],
+      "status": "Available"
+    },
+    {
+      "id": "9",
+      "user_id": "9",
+      "name": "Lakeview Retreat",
+      "type": "Chalet",
+      "units": 6,
+      "rate": 280,
+      "rate_type": "Nightly",
+      "is_managed": true,
+      "movein_lead_time": 0,
+      "description": "Escape to our beautiful lakefront chalet and enjoy stunning views.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 180,
+      "rating": 9.1,
+      "location": {
+        "id": "9",
+        "country":"Alberta",
+        "address": "Ortago",
+        "latitude": -45.031,
+        "longitude": 168.662
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["Free WiFi", "Housekeeping"],
+      "languages": ["English"],
+      "meals_offered": ["Continental Breakfast"],
+      "status": "Available"
+    },
+    {
+      "id": "10",
+      "user_id": "10",
+      "name": "Urban Retreat",
+      "type": "Studio",
+      "units": 1,
+      "rate": 120,
+      "rate_type": "Nightly",
+      "is_managed": true,
+      "movein_lead_time": 0,
+      "description": "Experience city living in our modern and stylish urban studio.",
+      "pictures": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+      ],
+      "size": 50,
+      "rating": 7.2,
+      "location": {
+        "id": "10",
+        "country": "Japan",
+        "address": "Tokyo",
+        "latitude": 35.689,
+        "longitude": 139.692
+      },
+      "amenities": [
+        {
+          "id": "1",
+          "name": "Bathing Tab",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": "34sqft"
+        },
+        {
+          "id": "2",
+          "name": "Showers",
+          "category": "Bathing",
+          "quantity": 3,
+          "size": ""
+        },
+        {
+          "id": "3",
+          "name": "Gym",
+          "category": "Sports and Pysical Excercise",
+          "quantity": 1,
+          "size": ""
+        },
+        {
+          "id": "4",
+          "name": "Swimming Pool",
+          "category": "Leisure",
+          "quantity": 3,
+          "size": "100sqft"
+        },
+        {
+          "id": "5",
+          "name": "Library",
+          "category": "Educational",
+          "quantity": 1,
+          "size": "50sqft"
+        },
+        {
+          "id": "6",
+          "name": "Parking Lot",
+          "category": "Vehicles",
+          "quantity": 2,
+          "size": "24sqft"
+        }
+      ],
+      "services": ["24/7 Security", "Laundry"],
+      "languages": ["English", "Japanese"],
+      "meals_offered": ["Fried Chicken", "Spaghetti", "Kachumbari"],
+      "status": "Available"
+    }
+  ],
+  "bookings": 
+    [
+      {
+        "id": "1",
+        "user_id": "1",
+        "host_id": "1",
+        "property_id": "10",
+        "property": {
+          "id": "10",
+          "user_id": "10",
+          "name": "Urban Retreat",
+          "type": "Studio",
+          "units": 1,
+          "rate": 120,
+          "rate_type": "Nightly",
+          "is_managed": true,
+          "movein_lead_time": 0,
+          "description": "Experience city living in our modern and stylish urban studio.",
+          "pictures": [
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+          ],
+          "size": 50,
+          "rating": 7.2,
+          "location": {
+            "id": "10",
+            "country": "Japan",
+            "address":"Tokyo",
+            "latitude": 35.689,
+            "longitude": 139.692
+          },
+          "status": "BOOKED"
+        },
+        "checkin_date": "2023-06-20",
+        "checkout_date": "2023-06-25",
+        "guests": {
+          "adults": 3,
+          "kids": 2,
+          "pets": 3
+        },
+        "amount": 3000,
+        "tax": 37,
+        "fees": 0,
+        "status": "Confirmed"
+      },
+      {
+        "id": "2",
+        "user_id": "2",
+        "host_id": "2",
+        "property_id": "7",
+        "property": {
+          "id": "7",
+          "user_id": "7",
+          "name": "Serenity Retreat",
+          "type": "Cottage",
+          "units": 3,
+          "rate": 400,
+          "rate_type": "Nightly",
+          "is_managed": true,
+          "movein_lead_time": 0,
+          "description": "Find peace and serenity in our secluded cottage surrounded by nature.",
+          "pictures": [
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+          ],
+          "size": 150,
+          "rating": 8.7,
+          "location": {
+            "id": "7",
+            "country":"Alberta",
+            "address":"Alberata, Alberta",
+            "latitude": 51.178,
+            "longitude": -115.57
+          },
+          "status": "BOOKED"
+        },
+        "checkin_date": "2023-07-10",
+        "checkout_date": "2023-07-15",
+        "guests": {
+          "adults": 2,
+          "kids": 1,
+          "pets": 0
+        },
+        "amount": 2000,
+        "tax": 25,
+        "fees": 50,
+        "status": "Confirmed"
+      },
+      {
+        "id": "3",
+        "user_id": "3",
+        "host_id": "3",
+        "property_id": "5",
+        "property": {
+          "id": "5",
+          "user_id": "5",
+          "name": "Cozy Cabin",
+          "type": "Cabin",
+          "units": 2,
+          "rate": 250,
+          "rate_type": "Nightly",
+          "is_managed": true,
+          "movein_lead_time": 0,
+          "description": "Escape to our cozy cabin in the woods and enjoy a peaceful retreat.",
+          "pictures": [
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+          ],
+          "size": 100,
+          "rating": 8.5,
+          "location": {
+            "id": "5",
+            "country": "USA",
+            "address":"New York",
+            "latitude": 39.191,
+            "longitude": -106.817
+          },
+          "status": "BOOKED"
+        },
+        "checkin_date": "2023-08-01",
+        "checkout_date": "2023-08-08",
+        "guests": {
+          "adults": 4,
+          "kids": 0,
+          "pets": 1
+        },
+        "amount": 3000,
+        "tax": 37,
+        "fees": 0,
+        "status": "Pending"
+      },
+      {
+        "id": "4",
+        "user_id": "4",
+        "host_id": "4",
+        "property_id": "3",
+        "property": {
+          "id": "3",
+          "user_id": "3",
+          "name": "Beachfront Villa",
+          "type": "Villa",
+          "units": 1,
+          "rate": 500,
+          "rate_type": "Nightly",
+          "is_managed": false,
+          "movein_lead_time": 0,
+          "description": "Experience luxury and relaxation in our stunning beachfront villa.",
+          "pictures": [
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+          ],
+          "size": 300,
+          "rating": 9.2,
+          "location": {
+            "id": "3",
+            "country": "Hawaii",
+            "address":"Maui",
+            "latitude": 20.798,
+            "longitude": -156.331
+          },
+          "status": "BOOKED"
+        },
+        "checkin_date": "2023-09-15",
+        "checkout_date": "2023-09-22",
+        "guests": {
+          "adults": 2,
+          "kids": 2,
+          "pets": 0
+        },
+        "amount": 3500,
+        "tax": 43.75,
+        "fees": 0,
+        "status": "Confirmed"
+      },
+      {
+        "id": "5",
+        "user_id": "5",
+        "host_id": "5",
+        "property_id": "1",
+        "property": {
+          "id": "1",
+          "user_id": "1",
+          "name": "Luxury Penthouse",
+          "type": "Penthouse",
+          "units": 1,
+          "rate": 800,
+          "rate_type": "Nightly",
+          "is_managed": true,
+          "movein_lead_time": 0,
+          "description": "Indulge in the ultimate luxury experience in our spacious penthouse suite.",
+          "pictures": [
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST8RwlSF8z9gsj7ZNpXZcAy2tZCD5IHAMK3N7UTIgXhDH6UKsY6qSFTSfQw3xead71zSA&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-65couyX4TDedddwZCVYHXvJzWZfjEiQNXnkgsTogcw5sTETxElOkfllrrE6hYZS4WNo&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKYfWWK6ykhXFgzIkcuu0RUUpGh8z5GKu1UXbGBPuwPIPkZrThHBA1gjxvlsU5Fk9hVc&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhZH6PaSVUNV1dpRlR1-5yfNgc-LfONnI2Wy_WQhl15vhrOA4_U2F4BmbSUT9tgxRzcKs&usqp=CAU"
+          ],
+          "size": 500,
+          "rating": 9.8,
+          "location": {
+            "id": "1",
+            "country": "USA",
+            "address":"New York",
+            "latitude": 40.753,
+            "longitude": -73.996
+          },
+          "status": "BOOKED"
+        },
+        "checkin_date": "2023-10-10",
+        "checkout_date": "2023-10-17",
+        "guests": {
+          "adults": 2,
+          "kids": 0,
+          "pets": 0
+        },
+        "amount": 5600,
+        "tax": 70,
+        "fees": 100,
+        "status": "Confirmed"
+      }
+  ]
+}

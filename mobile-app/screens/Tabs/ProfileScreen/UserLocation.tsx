@@ -98,7 +98,19 @@ const UserLocation = (props: IProps) => {
   }: null)
 
   // get markets and submarkets
-  const { markets, subMarkets } = useLocation(country?.key)
+  const { markets, subMarkets, fetchMarkets, fetchSubMarkets } = useLocation(country?.key)
+
+  useEffect(() => {
+    if (!isEmpty(country)) {
+      fetchSubMarkets(country.key)
+    }
+  }, [country?.key])
+
+  useEffect(() => {
+    fetchMarkets()
+  }, [])
+
+
 
   const countries = useMemo(() => {
     if (!isEmpty(markets.error) || markets.loading || isNull(markets.data)) return []

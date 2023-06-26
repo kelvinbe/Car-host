@@ -7,6 +7,7 @@ import {
   Flex,
   VStack,
   HStack,
+  useMediaQuery
 } from "@chakra-ui/react";
 import laptopMobile from "../../../public/images/laptopMobile.png";
 import availableOnAppStore from "../../../public/images/availableOnAppStore.png";
@@ -14,12 +15,15 @@ import availableOnPlayStore from "../../../public/images/availableOnPlayStore.pn
 import Link from "next/link";
 
 const BookRide = () => {
+
+
+  const [isLargerThan900] = useMediaQuery('(min-width: 913px)')
   return (
-    <Box py="20">
+    <Box py="22px">
       <Box>
         <Flex justifyContent="center" alignItems="center">
-          <HStack spacing={10}>
-            <Box w="500px">
+          <Flex width={'100%'} flexDirection={!isLargerThan900 ? 'column' : 'row'}>
+            <Box w={!isLargerThan900 ? 'full' : "50%"} margin='20px'>
               <VStack
                 spacing={4}
                 justifyContent="flex-start"
@@ -34,7 +38,7 @@ const BookRide = () => {
                   height="10px"
                   borderRadius="10px"
                 ></Box>
-                <Text color="#33415C" fontSize="15px">
+                <Text color="#33415C" p={'15px'}  fontSize="15px" width={!isLargerThan900 ? 'full' : '500px'}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
                   eu turpis molestie, dictum est a, mattis tellus. Sed
                   dignissim, metus nec fringilla accumsan, risus sem
@@ -43,22 +47,25 @@ const BookRide = () => {
                   Class aptent taciti.
                 </Text>
 
-                <Box>
-                  <HStack spacing={8}>
+                <Box display={'flex'} width={'full'} >
+                  <Flex flexDirection={!isLargerThan900 ? 'column' : 'row'} justifyContent={!isLargerThan900 ? 'center' : 'space-between'}>
+                    <Box marginBottom={'10px'}>
                     <Link href='https://www.apple.com/app-store/' target="blank">
                       <Image h="64px" src={availableOnAppStore.src}  alt='Available on AppStore'/>
                     </Link>
+                    </Box>
                     <Link href='https://www.apple.com/app-store/' target="blank">
-                      <Image h="64px" src={availableOnPlayStore.src}  alt='Available on PlayStore'/>
+                      <Image h="64px" marginBottom={'10px'} marginLeft={!isLargerThan900 ? '' : '20px'}  src={availableOnPlayStore.src}  alt='Available on PlayStore'/>
                     </Link>
-                  </HStack>
+                  </Flex>
                 </Box>
 
                 <Box>
-                  <VStack
-                    spacing={4}
+                  <Flex
                     justifyContent="flex-start"
                     alignItems="flex-start"
+                    flexDirection={'column'}
+                    width={!isLargerThan900 ? 'full' : '500px'}
                   >
                     <Text fontSize="30px" fontWeight="bold" lineHeight="150%">
                       List Your Vehicle
@@ -70,7 +77,7 @@ const BookRide = () => {
                       borderRadius="10px"
                     ></Box>
 
-                    <Text color="#33415C" fontSize="15px">
+                    <Text p={'15px'} color="#33415C" fontSize="15px">
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Etiam eu turpis molestie, dictum est a, mattis tellus. Sed
                       dignissim, metus nec fringilla accumsan, risus sem
@@ -92,15 +99,15 @@ const BookRide = () => {
                         Get Started
                       </Button>
                     </Link>
-                  </VStack>
+                  </Flex>
                 </Box>
               </VStack>
             </Box>
 
-            <Box>
+            <Box w={!isLargerThan900 ? 'full' : "50%"} display={'flex'} justifyContent={'center'} alignItems='center'>
               <Image src={laptopMobile.src} alt='App on mobile and laptop'/>
             </Box>
-          </HStack>
+          </Flex>
         </Flex>
       </Box>
     </Box>

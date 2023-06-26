@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Avatar, Flex } from "@chakra-ui/react";
 import { FlexRowCenterCenter } from "../../../../utils/theme/FlexConfigs";
 import StatusTag from "../../../atoms/status/StatusTag";
+import { get_formatted_date } from "../../../../utils/utils";
 dayjs.extend(relativeTime)
 
 export const AuthCodeTableColumnTypes: ColumnsType<Partial<IAuthCode> & {
@@ -20,13 +21,7 @@ export const AuthCodeTableColumnTypes: ColumnsType<Partial<IAuthCode> & {
                 <div className="flex flex-row items-center justify-start" >
                     <span className="font-semibold">
                     {
-                        dayjs().isSame(dayjs(created_at), 'day') ? 'Today at '+dayjs(created_at).format('hh:mm A') : 
-                        dayjs().isSame(dayjs(created_at).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(created_at).format('hh:mm A') :
-                        dayjs().isSame(dayjs(created_at).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(created_at).format('hh:mm A') :
-                        dayjs().isSame(dayjs(created_at), 'week') ? dayjs(created_at).format('dddd hh:mm A') :
-                        dayjs().isSame(dayjs(created_at), 'month') ? dayjs(created_at).format('DD hh:mm A') :
-                        dayjs().isSame(dayjs(created_at), 'year') ? dayjs(created_at).format('DD MMM hh:mm A') :
-                        dayjs(created_at).format('DD MMM, YYYY')
+                        get_formatted_date(created_at)
                         }
                     </span>
                 </div>

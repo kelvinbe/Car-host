@@ -41,5 +41,7 @@
     "/withdrawals/": "/withdrawals",
     "/withdrawals?page=:page&size=:size": "/withdrawals?_page=:page&_limit=:size",
     "/withdrawals?status=:status": "/withdrawals?status=:status",
-    "/withdrawals?withdrawal_id=:withdrawal_id": "/withdrawals/:withdrawal_id"
+    "/withdrawals?withdrawal_id=:withdrawal_id": "/withdrawals/:withdrawal_id",
+    "/properties": "/properties",
+    "/bookings": "/bookings"
 }

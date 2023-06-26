@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles, useTheme } from '@rneui/themed'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput';
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded';
@@ -83,7 +83,7 @@ const MobileMoneyDetails = (props: Props) => {
 
     const maskedInputProps = useMaskedInputProps({
         value: mpesa_number,
-        onChangeText: (v)=>set_mpesa_number(v),
+        onChangeText: (v)=>set_mpesa_number(v?.replaceAll("-", "")),
         mask: PHONE_NUMBER,
         placeholderFillCharacter: ' ',
     })

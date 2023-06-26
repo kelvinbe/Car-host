@@ -26,6 +26,7 @@ import { IProperty, createProperty, selectPictures, selectProperty, setPictures 
 import { uploadToFirebase } from "../../../../utils/utils";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { isEmpty } from "lodash";
+import {LoadScript, StandaloneSearchBox} from '@react-google-maps/api';
 const ChooseLocation = dynamic(()=>import("../../Maps/ChooseLocation/ChooseLocation"),{
   ssr: false
 })
@@ -57,15 +58,13 @@ const ListYourProperty = (props: IProps) => {
   const [isManaged, setIsManaged] = useState('');
   const [rateType, setRateType] = useState('');
   const [pin, setPin] = useState({lat: 0, lng: 0});
-  const [zipCode, setZipCode] = useState<number>(0);
   const [numberOfRooms, setNumberOfRooms] = useState<number>(0);
   const [rate, setRate] = useState<number>(0);
+  const [location, setLocation] = useState<string | undefined>('');
   const [isPropertyTypeError, setIsPropertyTypeError]=useState<boolean>(false);
   const [isCountryError, setIsCountryError] = useState<boolean>(false);
   const [isPinError, setIsPinError] = useState<boolean>(false);
-  const [isCityError, setIsCityError] = useState<boolean>(false);
-  const [isStateError, setIsStateError] = useState<boolean>(false);
-  const [isZipCodeError, setIsZipCodeError] = useState<boolean>(false);
+  const [isLocationError, setIsLocationError] = useState<boolean>(false);
   const [isPropertyNameError, setIsPropertyNameError] = useState<boolean>(false);
   const [isManagedError, setIsManagedError] = useState<boolean>(false);
   const [isNumberOfRoomsError, setIsNumberOfRoomsError] = useState<boolean>(false);
@@ -86,6 +85,7 @@ const ListYourProperty = (props: IProps) => {
     setProperty({...property, [name]: value});
   }
 
+  const inputRef = useRef<google.maps.places.SearchBox | null>(null); 
   const onMapPinChange = (location: {latitude: number, longitude: number})=>{
     setPin({lat: location.latitude, lng: location.longitude})
   }
@@ -111,21 +111,12 @@ const ListYourProperty = (props: IProps) => {
       alertError('Select A country');
       return 
     }
-    if(property.city===''){
-      setIsCityError(true)
-      alertError('Fill in City name');
+    if(location===''){
+      setIsLocationError(true)
+      alertError('Fill in location');
       return 
     }
-    if(property.state===''){
-      setIsStateError(true)
-      alertError('Select a state');
-      return 
-    }
-    if(zipCode===0 ){
-      setIsZipCodeError(true)
-      alertError('Fill in Zip Code');
-      return 
-    }
+    
     if(pin.lat===0 || pin.lng===0){
       setIsPinError(true);
       alertError('Pin property location on map')
@@ -208,10 +199,13 @@ const ListYourProperty = (props: IProps) => {
     pictures && setProperty({...property, pictures: pictures})
   }, [pictures])
 
+  const onPlacesChanged = () => {
+    const places = inputRef.current?.getPlaces();
+    const place = places ? places[0]: null;
+    place && setLocation(place.formatted_address); 
+  };
   return (
     <Flex width={"full"} justify={"center"} direction={"column"} gap={"4"}>
-      <Flex w={"70%"}>
-      </Flex>
         <Flex gap={'6'} direction={'column'}>
           <FormControl isRequired isInvalid={isPropertyTypeError}>
             <FormLabel color={"black"} fontWeight={'700'}>Type Of Property</FormLabel>
@@ -230,30 +224,25 @@ const ListYourProperty = (props: IProps) => {
           </FormControl>
           <Flex width={"full"} gap={"4"}>
             <Flex direction={"column"} width={"full"}>
-              <FormControl isRequired isInvalid={isCityError}>
-                <FormLabel color={"black"} fontWeight={'700'}>City</FormLabel>
-                {isCityError && <FormErrorMessage>This field is required</FormErrorMessage>}
-                <Input type="text" borderColor={"gray.400"} name="city" onChange={handleChange}/>
-              </FormControl>
+            <LoadScript
+              googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}
+              libraries={['places']}
+              >
+                <StandaloneSearchBox 
+                onLoad={(ref)=>inputRef.current=ref}
+                onPlacesChanged={
+                  onPlacesChanged
+                }
+                >
+                  <FormControl isRequired isInvalid={isLocationError}>
+                      <FormLabel color={"black"} fontWeight={'700'}>Location</FormLabel>
+                      {isLocationError && <FormErrorMessage>This field is required</FormErrorMessage>}
+                      <Input type="text" borderColor={"gray.400"} name="location" onChange={handleChange} placeholder="Enter the location of the property"/>
+                    </FormControl>
+                </StandaloneSearchBox>
+              </LoadScript>
             </Flex>
-            <Flex direction={"column"} width={"full"}>
-              <FormControl isRequired isInvalid={isStateError}>
-                <FormLabel color={"black"} fontWeight={'700'}>State</FormLabel>
-                {isStateError && <FormErrorMessage>This field is required</FormErrorMessage>}
-                <Select borderColor={"gray.400"} name="state" onChange={handleChange} placeholder="Select A State">
-                  <option value={'Kanairo'}>Kanairo</option>
-                </Select>
-              </FormControl>
-            </Flex>
-            <Flex direction={"column"} width={"full"}>
-              <FormControl isRequired isInvalid={isZipCodeError}>
-                <FormLabel color={"black"} fontWeight={'700'} >Zip Code</FormLabel>
-                {isZipCodeError && <FormErrorMessage>This field is required</FormErrorMessage>}
-                <NumberInput borderColor={"gray.400"} onChange={(valueString)=>setZipCode(Number(valueString))}>
-                  <NumberInputField />
-                </NumberInput>
-              </FormControl>
-            </Flex>
+
           </Flex>
           <Flex direction={'column'} height={'600px'} pb={12}>
             <FormControl isRequired height={'full'} isInvalid={isPinError}>

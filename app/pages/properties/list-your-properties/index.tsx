@@ -4,6 +4,9 @@ import { Steps } from "antd";
 import { Flex } from '@chakra-ui/react';
 import ListYourPropertyAmenities from '../../../components/organism/Forms/ListYourProperty/ListYourPropertyAmenities';
 import ListYourPropertyServices from '../../../components/organism/Forms/ListYourProperty/ListYourPropertyServices';
+import { GetServerSideProps } from 'next';
+import { PagePhaseProps } from '../../../types';
+import { InitialPageProps } from '../../../globaltypes';
 
 const steps = [
   { title: "Property Details" },
@@ -38,12 +41,13 @@ const ListYourProperties = () => {
 
 export default ListYourProperties 
 
-export function getStaticProps() {
+export const getServerSideProps: GetServerSideProps<InitialPageProps & PagePhaseProps> = async () => {
     return {
       props: {
         adminonly: false,
         authonly: false,
         dashboard: true,
+        phase: "ph2"
       },
     };
   }

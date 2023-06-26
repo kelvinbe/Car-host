@@ -202,7 +202,6 @@ const bookingSlice = createSlice({
             state.paymentType = null
             state.loadReservationDetailsLoading = false
             state.loadReservationDetailsError = null
-            state.host_code = ''
             state.location = null
             state.inspection = null
             state.reservation_id = undefined

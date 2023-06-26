@@ -7,10 +7,23 @@ import LogRocket from 'logrocket';
 import apiClient, { db_user } from "../utils/apiClient";
 import { isEmpty } from "lodash";
 import store from "./store";
+import { clearEmulation, selectEmulationFeedback } from "./emulationSlice";
 
 
 export const fetchStations = createAsyncThunk('stations/fetchStations', async (args: Partial<asyncThinkFetchParams<IStation>> | undefined | null = null, { rejectWithValue, dispatch, getState })=>{
-    const currentParams = (getState() as RootState).stations
+    if(args?.reset){
+        dispatch(updateParams({
+            page: 1,
+            size: 10,
+            search: undefined,
+            sort: undefined,
+            sort_by: undefined
+        }))
+
+        dispatch(clearEmulation())
+    }
+    const currentParams = (getState() as RootState).stations 
+    const emulationState = selectEmulationFeedback(getState() as RootState)
     const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
     const current_search = isEmpty(args?.search) ? prev_search : args?.search
     const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
@@ -27,7 +40,10 @@ export const fetchStations = createAsyncThunk('stations/fetchStations', async (a
     dispatch(updateParams(params))
     try {
         const res = (await apiClient.get(STATIONS_API, {
-            params
+            params: {
+                ...params,
+                user_id: emulationState.data?.id ?? undefined
+            }
         }))
         return res.data
     } catch(e) 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Text, Image, Icon, HStack, VStack } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, Icon, HStack, VStack, useMediaQuery } from "@chakra-ui/react";
 import DivvlyDark from "../../../public/images/DivvlyDark.png";
 import { FaFacebook } from "react-icons/fa";
 import { AiFillTwitterCircle } from "react-icons/ai";
@@ -8,11 +8,16 @@ import LinkedInImage from "../../../public/images/linkedin.png";
 import Link from "next/link";
 
 const Footer = () => {
+
+  const [isLargerThan900] = useMediaQuery('(min-width: 913px)')
+
   const TextStyling = {
     fontWeight: "bold",
-    fontSize: "20px",
     lineHeight: "24px",
+    marginLeft: '10px'
   };
+
+
 
   return (
     <Box w="full">
@@ -23,7 +28,7 @@ const Footer = () => {
           alignItems="center"
         >
           <Box>
-            <VStack spacing="25px" padding="60px">
+            <VStack spacing="25px" paddingTop={!isLargerThan900 ? '30px' : '0px'} padding={isLargerThan900 ? "60px" : ''}>
               <Box>
                 <Image src={DivvlyDark.src} boxSize="118px" height="39px"  alt=''/>
               </Box>
@@ -44,17 +49,17 @@ const Footer = () => {
                 </HStack>
               </Box>
               <Box marginTop="45px">
-                <HStack spacing="26px">
-                  <Text sx={TextStyling}>About Us</Text>
-                  <Text sx={TextStyling}>|</Text>
-                  <Text sx={TextStyling}>Privacy Policy </Text>
-                  <Text sx={TextStyling}>|</Text>
-
-                  <Text sx={TextStyling}>Terms of Use</Text>
+                <Flex flexDirection={'row'} textAlign={'center'} justifyContent={'center'}>
+                  <Text fontSize={isLargerThan900 ? "20px" : "15px"} sx={TextStyling}>About Us</Text>
+                  <Text  sx={TextStyling}>|</Text>
+                  <Text fontSize={isLargerThan900 ? "20px" : "15px"}  sx={TextStyling}>Privacy Policy </Text>
                   <Text sx={TextStyling}>|</Text>
 
-                  <Text sx={TextStyling}>End User License Agreement</Text>
-                </HStack>
+                  <Text fontSize={isLargerThan900 ? "20px" : "15px"} sx={TextStyling}>Terms of Use</Text>
+                  <Text  sx={TextStyling}>|</Text>
+
+                  <Text fontSize={isLargerThan900 ? "20px" : "15px"} sx={TextStyling}>End User License Agreement</Text>
+                </Flex>
               </Box>
             </VStack>
           </Box>

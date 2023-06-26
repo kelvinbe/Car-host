@@ -4,6 +4,15 @@ import { render, screen } from "@testing-library/react";
 import { SiApple } from "react-icons/si";
 import { IconBaseProps } from "react-icons";
 
+
+window.matchMedia = window.matchMedia || function() {
+  return {
+      matches: false,
+      addListener: function() {},
+      removeListener: function() {}
+  };
+};
+
 beforeEach(() => {
   render(
     <AppFeatureCard

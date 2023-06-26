@@ -43,7 +43,7 @@ apiClient.interceptors.request.use(async (config)=> {
 
         const token = await user.getIdToken()
 
-        localStorage.setItem("token", token)
+        sessionStorage?.setItem("token", token)
 
         return {
             ...config,
@@ -53,7 +53,7 @@ apiClient.interceptors.request.use(async (config)=> {
             }
         }
     } catch (e) {
-        localStorage.removeItem("token")
+        sessionStorage.removeItem("token")
         LogRocket.error(e)
         return Promise.reject("User not logged in")
     }

@@ -32,6 +32,10 @@ ENV NEXT_PUBLIC_LOGROCKET_APP_ID=$NEXT_PUBLIC_LOGROCKET_APP_ID
 ARG NEXT_PUBLIC_TRACKING_SERVICE
 ENV NEXT_PUBLIC_TRACKING_SERVICE=$NEXT_PUBLIC_TRACKING_SERVICE
 
+# App env
+ARG NEXT_PUBLIC_APP_ENV
+ENV NEXT_PUBLIC_APP_ENV=$NEXT_PUBLIC_APP_ENV
+
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.

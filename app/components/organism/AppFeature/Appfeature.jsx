@@ -1,6 +1,6 @@
 import React from "react";
 import AppFeatureCard from "../../molecules/Card/Card";
-import { Box, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, Text, VStack, useMediaQuery } from "@chakra-ui/react";
 import user_group from "../../../public/images/users.png";
 import group_car from "../../../public/images/group_car.png";
 
@@ -32,8 +32,15 @@ const Appfeature = () => {
     },
   ];
 
+  const [isLargerThan800] = useMediaQuery('(min-width: 1680px)', {
+    ssr: true,
+    fallback: false, // return false on the server, and re-evaluate on the client side
+  })
+
+
+
   return (
-    <Box py="20" w="1500px">
+    <Box padding='50px'>
       <VStack spacing={16}>
         <Flex
           flexDirection="column"
@@ -49,8 +56,8 @@ const Appfeature = () => {
             height="10px"
             borderRadius="10px"
           ></Box>
-          <Box>
-            <Text py="9">
+          <Box  p={'50px'}>
+            <Text py="9" width={'full'}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
               turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
               nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
@@ -59,7 +66,7 @@ const Appfeature = () => {
           </Box>
         </Flex>
         <Flex>
-          <HStack spacing={"16"}>
+          <Flex flexDirection={!isLargerThan800 ? 'column' : 'row'}>
             {cardData.map((card) => {
               return (
                 <AppFeatureCard
@@ -76,7 +83,7 @@ const Appfeature = () => {
                 />
               );
             })}
-          </HStack>
+          </Flex>
         </Flex>
       </VStack>
     </Box>

@@ -10,6 +10,7 @@ import { logError } from "../../../utils/utils"
 import { ErrorBoundary } from "react-error-boundary"
 import { GetServerSideProps } from "next"
 import { InitialProps } from "../../../globaltypes"
+import { PagePhaseProps } from "../../../types"
 
 // This Static data is only being used until the api and global state is set up
 const managementData = [
@@ -110,14 +111,14 @@ const Management = () => {
 
 export default Management
 
-export const getServerSideProps: GetServerSideProps<InitialProps> =
+export const getServerSideProps: GetServerSideProps<InitialProps & PagePhaseProps> =
   async () => {
     return {
       props: {
         authonly: true,
         dashboard: true,
         adminonly: false,
-        tag: "v2",
+        phase: "ph2"
       },
     }
   }

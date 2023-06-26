@@ -5,6 +5,8 @@ import HomePageAboutUS from "../../../components/organism/AboutUs/HomePageAboutU
 import HomePagePropertyList from "../../../components/organism/PropertyList/HomePagePropertyList";
 import RecommendedDestinations from "../../../components/organism/RecommendedDestinations/RecommendedDestinations";
 import PropertiesFooter from "../../../components/organism/Footer/PropertiesFooter";
+import { GetServerSideProps } from "next";
+import { PagePhaseProps } from "../../../types";
 
 const HomePage = () => {
   return (
@@ -21,3 +23,12 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+export const getServerSideProps: GetServerSideProps<PagePhaseProps> = async () => {
+  return {
+    props: {
+      phase: "ph2"
+    }
+  }
+}

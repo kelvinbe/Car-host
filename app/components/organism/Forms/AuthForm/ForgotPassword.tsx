@@ -49,7 +49,7 @@ function ForgotPassword() {
     }
 
   return (
-    <Flex flex="1" w="full" h="full" {...FlexColCenterCenter} >
+    <Flex marginTop={'-180px'} flex="1" w="full" h="full" {...FlexColCenterCenter} >
         <Flex
             {
                 ...FlexColCenterCenter

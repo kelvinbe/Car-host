@@ -2,6 +2,15 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import BannerInfo from "./BannerInfo";
 
+
+window.matchMedia = window.matchMedia || function() {
+  return {
+      matches: false,
+      addListener: function() {},
+      removeListener: function() {}
+  };
+};
+
 describe("Tests the BannerInfo component", () => {
   it("Tests if the component mounts", () => {
     const { baseElement } = render(

@@ -1,112 +1,77 @@
-import React, { useState } from "react";
-import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
-import { selectStations } from "../../redux/stationSlice";
-import { useAppSelector } from "../../redux/store";
-import Locations from "../stations";
-import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
-import { LocationVehicleMapTableColumns } from "../../utils/tables/TableTypes";
-import VehicleManagement from "../vehicle-management";
-import Reservations from "../reservations";
+import React, { useEffect, useState } from "react";
 import { Flex } from "@chakra-ui/react";
-import LiveMapComponent from "../../components/organism/Maps/LiveMapComponent/LiveMapComponent";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+import { FlexColCenterStart } from "../../utils/theme/FlexConfigs";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { fetchVehicles, selectFetchVehiclesFeedback, selectVehiclesPaginationState } from "../../redux/vehiclesSlice";
+import FilterableTable from "../../components/organism/Table/FilterableTable/FilterableTable";
+import { AllVehiclesTable } from "../../utils/tables/admin.table.schema";
+import { IVehicle } from "../../globaltypes";
 
 function AllMapView() {
-  const [viewReservations, setViewReservations] = useState(false);
-  const [viewLocation, setViewLocation] = useState(false);
-  const [viewVehicle, setViewVehicle] = useState(false);
-  const [noneSelected, setNoneSelected] = useState(true);
-  const StationsData = useAppSelector(selectStations)
+  const dispatch = useAppDispatch()
+  const feedback = useAppSelector(selectFetchVehiclesFeedback)
+  const { current_page, current_size } = useAppSelector(selectVehiclesPaginationState)
+
+  useEffect(()=>{
+    dispatch(fetchVehicles({
+      reset: true,
+    }))
+  }, [])
+
 
   return (
   <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-    <Grid
-      w="full"
-      templateColumns="repeat(3, 1fr)"
-      gridTemplateRows={"400px 1fr"}
-      rowGap="30px"
-      columnGap="30px"
-      data-cy={'all-map-view-container'}
-    >
-      <GridItem colSpan={2}>
-          <LiveMapComponent />
-      </GridItem>
-      <GridItem>
-          <FilterableTable
-            viewAddFieldButton={false}
-            viewSearchField={false}
-            viewSortablesField={false}
-            columns={LocationVehicleMapTableColumns}
-            data={StationsData}
-          />
-      </GridItem>
-      <GridItem colSpan={3}>
-        <Flex borderBottom="2px" borderColor="gray.200" w={"30%"}>
-          <Text
-            marginX={"20px"}
-            color={"gray.400"}
-            cursor="pointer"
-            _hover={{
-              color: "primary.1000",
-              borderBottom: "2px",
-              borderColor: "primary.1000",
-            }}
-            onClick={() => {
-              setViewLocation(false);
-              setViewReservations(true);
-              setViewVehicle(false);
-              setNoneSelected(false);
-            }}
-          >
-            Reservations
-          </Text>
-          <Text
-            marginX={"20px"}
-            color={"gray.400"}
-            cursor="pointer"
-            _hover={{
-              color: "primary.1000",
-              borderBottom: "2px",
-              borderColor: "primary.1000",
-            }}
-            onClick={() => {
-              setViewLocation(true);
-              setViewReservations(false);
-              setViewVehicle(false);
-              setNoneSelected(false);
-            }}
-          >
-            Location
-          </Text>
-          <Text
-            marginX={"20px"}
-            color={"gray.400"}
-            cursor="pointer"
-            _hover={{
-              color: "primary.1000",
-              borderBottom: "2px",
-              borderColor: "primary.1000",
-            }}
-            onClick={() => {
-              setViewLocation(false);
-              setViewReservations(false);
-              setViewVehicle(true);
-              setNoneSelected(false);
-            }}
-          >
-            Vehicle Data
-          </Text>
-        </Flex>
-          <Box marginTop="20px">
-            {noneSelected && <Reservations />}
-            {viewReservations && <Reservations />}
-            {viewLocation && <Locations />}
-            {viewVehicle && <VehicleManagement />}
-          </Box>
-      </GridItem>
-    </Grid>
+    <Flex {...FlexColCenterStart} w="full" h="full" >
+      <FilterableTable
+        viewSearchField
+        data={feedback?.data ?? []}
+        columns={AllVehiclesTable}
+        primitiveTableProps={{
+          scroll: {
+            x: 'max-content'
+          },
+          loading: feedback?.loading,
+        }}
+        sortables={[
+          {
+            columnKey: 'created_at',
+            columnName: "Created"
+          },
+          {
+            columnKey: "hourly_rate",
+            columnName: "Hourly Rate"
+          }
+        ]}
+        viewSortablesField
+        pagination={{
+          position: ["bottomCenter"],
+          onChange: (page, pageSize) => {
+            dispatch(fetchVehicles({ page, size: pageSize }))
+          },
+          total: ((current_page ?? 0) * (current_size ?? 0)) + (
+            feedback?.data?.length < (current_size ?? 0) ? 0 : 1
+          ),
+          showSizeChanger: true, 
+        }}
+        onSort={(sort)=>{
+          const order = sort?.order == "descend" ? "desc" : "asc"
+          const sort_by = sort?.columnKey as keyof IVehicle
+
+          dispatch(fetchVehicles({
+            sort: order,
+            sort_by
+          }))
+        }}
+        setSearch={(search)=>{
+          dispatch(fetchVehicles({
+            search
+          }))
+        }}
+      />
+    </Flex>
   </ErrorBoundary>
   );
 }

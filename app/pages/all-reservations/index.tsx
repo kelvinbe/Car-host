@@ -14,6 +14,7 @@ import { ReservationColumns } from "../../utils/tables/TableTypes";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
+import { AllReservationsTable } from "../../utils/tables/admin.table.schema";
 export interface DataType {
   reservationId: string;
   vehiclePlate: string;
@@ -31,95 +32,22 @@ function Reservations() {
   const feedback = useAppSelector(selectReservationsFeedback)
   const { current_page, current_size} = useAppSelector(selectReservationsPaginationState)
   const dispatch = useAppDispatch()
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const [toggleViewReservationModal, setToggleViewReservationModal] =
-    useState(false);
-  const [toggleEditReservationModal, setToggleEditReservationModal] =
-    useState(false);
-  const [search, setSearch] = useState<string>("");
-  const { deleteReservation } = useReservation();
-  const [currentReservation, setCurrentReservation] = useState<string>()
-  const [currentVehicle, setCurrentVehicle] = useState<string>()
 
 
   useEffect(() => {
     dispatch(fetchReservations({
-      search: isEmpty(search) ? undefined : search,
+      reset: true,
     }))
-  }, [,search?.trim()?.length])
+  }, [])
 
-  const changeStateViewModal = () => {
-    setToggleViewReservationModal(!toggleViewReservationModal);
-  };
-  const changeStateEditModal = () => {
-    setToggleEditReservationModal(!toggleEditReservationModal);
-  };
-  const showViewReservationModal = (id: string) => {
-    setCurrentReservation(id)
-    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
-    setCurrentVehicle(reservation?.vehicle_id?.toString())
-    onOpen();
-    changeStateViewModal();
-  };
-  const showEditReservationModal = (id: string) => {
-    setCurrentReservation(id)
-    const reservation = feedback?.data?.find((reservation) => reservation.id === id)
-    setCurrentVehicle(reservation?.vehicle_id?.toString())
-    onOpen();
-    changeStateEditModal();
-
-  };
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
       <Flex w="full" h="full" data-testid="reservations-table">
-        <ReservationModal
-          isOpen={isOpen}
-          onClose={onClose}
-          toggleViewReservationModal={toggleViewReservationModal}
-          changeStateViewModal={changeStateViewModal}
-          toggleEditReservationModal={toggleEditReservationModal}
-          changeStateEditModal={changeStateEditModal}
-          reservationId={currentReservation}
-          vehicleId={currentVehicle}
-        />
         <FilterableTable
           viewSearchField={true}
           viewSortablesField={true}
-          columns={insertTableActions(ReservationColumns, (i, data) => {
-            return (
-              <Flex {...FlexRowCenterBetween}>
-                <IconButton
-                  aria-label="View"
-                  icon={<ViewIcon />}
-                  size="sm"
-                  onClick={() => showViewReservationModal(data.reservationId)}
-                  marginRight="4"
-                  data-cy={"view-button"}
-                />
-                <IconButton
-                  aria-label="Edit"
-                  icon={<EditIcon />}
-                  size="sm"
-                  onClick={() => {
-                    showEditReservationModal(data.reservationId);
-                  }}
-                  marginRight="4"
-                  data-cy={"edit-button"}
-                />
-                <IconButton
-                  aria-label="Delete"
-                  icon={<DeleteIcon />}
-                  size="sm"
-                  onClick={() => {
-                    deleteReservation(data.reservationId);
-                  }}
-                  color="cancelled.1000"
-                  data-cy={"delete-button"}
-                />
-              </Flex>
-            );
-          })}
+          columns={AllReservationsTable}
           pagination={{
             position: ["bottomCenter"],
             onChange: (page, pageSize) => {
@@ -131,7 +59,11 @@ function Reservations() {
             showSizeChanger: true, 
           }}
           data={feedback?.data ?? [] } 
-          setSearch={setSearch}
+          setSearch={(search)=>{
+            dispatch(fetchReservations({
+              search,
+            }))
+          }}
           sortables={[
             {
               columnKey: "payment",
@@ -140,8 +72,10 @@ function Reservations() {
           ]}
           primitiveTableProps={{
             loading: feedback?.loading,
+            scroll: {
+              x: "max-content",
+            }
           }}
-          
         />
       </Flex>
     </ErrorBoundary>

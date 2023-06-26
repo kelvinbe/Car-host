@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { IVehicle } from '../../../../globaltypes'
 import { useAppDispatch, useAppSelector } from '../../../../redux/store'
 import { selectCalendarFeedback, unblockCalendarSlot } from '../../../../redux/calendarSlice'
+import { selectUser } from '../../../../redux/userSlice'
 
 interface Props extends Partial<IVehicle & {
     start_date_time: string,
@@ -16,6 +17,7 @@ interface Props extends Partial<IVehicle & {
 }>{}
 
 function CalendarUnBlock(props: Props) {
+    const user = useAppSelector(selectUser)
     const toast = useToast({
         position: 'top'
     })
@@ -105,6 +107,7 @@ function CalendarUnBlock(props: Props) {
                 onClick={handleUnBlock}
                 colorScheme='green'
                 isLoading={feedback?.calendarUpdate}
+                disabled={user?.is_admin ?? undefined}
               >
                 Unblock
               </Button>

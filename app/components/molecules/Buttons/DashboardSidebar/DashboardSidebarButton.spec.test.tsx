@@ -2,6 +2,16 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import DashboardSidebarButton from "./DashboardSidebarButton";
 
+
+
+window.matchMedia = window.matchMedia || function() {
+  return {
+      matches: false,
+      addListener: function() {},
+      removeListener: function() {}
+  };
+};
+
 const testFunc = jest.fn();
 beforeEach(()=>{
     render(

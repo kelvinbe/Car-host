@@ -7,18 +7,22 @@ import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { blockCalendarSlot, fetchCalendarData, selectCalendarFeedback } from '../../../redux/calendarSlice';
 import dayjs from 'dayjs';
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Progress, useDisclosure } from '@chakra-ui/react';
 import CalendarBlock from './modals/block';
 import CalendarUnBlock from './modals/unblock';
 import CalendarDetails from './modals/details';
 import { IUserProfile, IVehicle } from '../../../globaltypes';
 import { DateSelectArg, EventClickArg } from '@fullcalendar/core';
+import EmulationDeck from '../emulation-deck';
+import { selectUser } from '../../../redux/userSlice';
+import { DatesSetArg } from '@fullcalendar/core';
 
 
 
 
 
 function FullCallender() {
+  const user = useAppSelector(selectUser)
   const dispatch = useAppDispatch()
   const calendar = useAppSelector(selectCalendarFeedback)
   const [interaction, setInteraction] = useState<"block"|"unblock"|"view"|"none">("none")
@@ -30,6 +34,7 @@ function FullCallender() {
     user: Partial<IUserProfile>,
     reservation_id: string,
   }>| null>(null)
+  const [date, setDate] = useState<DatesSetArg|null>(null)
 
   const handleClose = () =>{
     onClose()
@@ -38,6 +43,7 @@ function FullCallender() {
   }
 
   const handleSelect = (data: DateSelectArg) =>{
+    if(user?.is_admin) return null
     const starting = data?.start
     const ending = data?.end
     const resourceId = data?.resource?.id
@@ -79,10 +85,29 @@ function FullCallender() {
   }
 
   useEffect(()=>{
-    dispatch(fetchCalendarData())
+    dispatch(fetchCalendarData({
+      reset: true
+    }))
   }, [])
-  return (
+
+
+  useEffect(()=>{
+    if(date){
+      dispatch(fetchCalendarData({
+        start_time: date?.start?.toISOString(),
+        end_time: date?.end?.toISOString()
+      }))
+    }
+  }, [date?.startStr, date?.endStr])
+
+  return(
     <>
+    {calendar?.loading && <Progress isIndeterminate colorScheme='red' />}
+    <EmulationDeck 
+      refetch={()=>{
+        dispatch(fetchCalendarData())
+      }}
+    />
     <FullCalendar 
       schedulerLicenseKey= '<YOUR-LICENSE-KEY-GOES-HERE>'
       plugins={[resourceTimeGridPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin]}
@@ -90,6 +115,7 @@ function FullCallender() {
         right: "prev,next,today",
         center: "title",
         left: "resourceTimeGridDay",
+
       }}
       initialView="resourceTimeGridDay"
       editable={true}
@@ -121,6 +147,14 @@ function FullCallender() {
       }}
       selectLongPressDelay={3}
       select={handleSelect}
+      datesSet={(data)=>{
+        setDate((prev)=>{
+          if(prev?.startStr !== data?.startStr || prev?.endStr !== data?.endStr){
+            return data
+          }
+          return prev
+        })
+      }}
 
       eventClick={handleEventClick}
     />

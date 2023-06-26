@@ -3,6 +3,15 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { SlideWithBgImage, Slide, BannerSlides } from "./BannerSlides";
 import { async } from "@firebase/util";
 
+
+window.matchMedia = window.matchMedia || function() {
+  return {
+      matches: false,
+      addListener: function() {},
+      removeListener: function() {}
+  };
+};
+
 describe("SlideWithBgImage", () => {
   const banner = {
     id: 1,

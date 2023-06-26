@@ -7,14 +7,14 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import ErrorComponent from '../components/molecules/feedback/ErrorComponent'
 import LoadingComponent from '../components/molecules/feedback/LoadingComponent'
 import { app } from '../firebase/firebaseApp'
-import { IStaticProps } from '../globaltypes'
+import { InitialPageProps } from '../globaltypes'
 import { useAppDispatch, useAppSelector } from '../redux/store'
 import { fetchOnboardingDetails, selectCompleted } from '../redux/onboardingSlice'
 import { useToast } from '@chakra-ui/react'
 import { fetchUser, selectUser } from '../redux/userSlice'
 
 interface IProps {
-    pageProps: IStaticProps,
+    pageProps: InitialPageProps,
     checked: (proceed: boolean) => void
 }
 
@@ -46,7 +46,7 @@ function CheckAuthorization(props: IProps) {
 
 
     useEffect(()=>{
-        const token = localStorage.getItem('token')
+        const token = sessionStorage?.getItem('token')
         const completed = JSON.parse(localStorage.getItem('onboarding') ?? "{}")
         if(!isEmpty(token)){
             if (error) return ()=>{}

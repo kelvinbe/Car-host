@@ -12,6 +12,7 @@ import {
   Text,
   Icon,
   Link,
+  useMediaQuery
 } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { IoLogoGooglePlaystore } from "react-icons/io5";
@@ -44,10 +45,13 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
     buttonLink,
   } = props;
 
+
+  const [isLargerThan900] = useMediaQuery('(min-width: 913px)')
+
+
   return (
     <Card
-      maxW="container.md"
-      p="5px"
+      p="10px"
       top="0px"
       boxShadow="0px 6px 24px rgba(230, 59, 46, 0.06)"
       borderRadius={30}
@@ -56,6 +60,8 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
         transition: "top ease 0.5s",
         boxShadow: "0px 6px 24px rgba(230, 59, 46, 0.06);",
       }}
+      margin='10px'
+      width={'full'}      
     >
       <CardHeader>
         <Flex>
@@ -67,12 +73,13 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
           </HStack>
         </Flex>
       </CardHeader>
-      <CardBody
+      <Box
         color="#33415C"
         fontWeight="bold"
         fontSize="15px"
         lineHeight="30px"
-        w="725px"
+        width={'full'}
+        p='40px'
       >
         {description}
         <Box pt={2}>
@@ -82,7 +89,7 @@ const AppFeatureCard: FunctionComponent<IProps> = (props: IProps) => {
             </Link>
           </Text>
         </Box>
-      </CardBody>
+      </Box>
 
       <CardFooter>
         <HStack spacing={6}>

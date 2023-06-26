@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme, props: Props) => {
 
 const ChooseTimeBottomSheet = (props: Props) => {
   const { notification } = useAppSelector(selectBottomSheetState)
-  const { data, isLoading, isError, refetch } = useGetVehicleQuery(notification?.vehicle_id)
+  const { data, isLoading, isError, refetch, isFetching } = useGetVehicleQuery(notification?.vehicle_id)
   const dispatch = useAppDispatch()
   const toast = useToast()
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -92,28 +92,28 @@ const ChooseTimeBottomSheet = (props: Props) => {
         return 
     }
 
-    if(isEmpty(data)){
-        toast({
-            type: "error",
-            message: "Vehicle not found"
-        })
-        return 
-    }
+    refetch().unwrap().then((data)=>{
+      if(isEmpty(data)){
+          toast({
+              type: "error",
+              message: "Vehicle not found"
+          })
+          return 
+      }
+      setVehicle(data)
+      bottomSheetRef.current?.close()
+  
+      dispatch(closeChooseTime())
+        
+    }).catch(()=>{
+      toast({
+          type: "error",
+          message: "Something went wrong, try again later"
+      })
 
-    if(isError){
-        toast({
-            type: "error",
-            message: "Something went wrong, try again later"
-        })
-        refetch()
-        return 
-    }
+    })
 
-    setVehicle(data)
 
-    bottomSheetRef.current?.close()
-
-    dispatch(closeChooseTime())
   }
 
 
@@ -133,7 +133,7 @@ const ChooseTimeBottomSheet = (props: Props) => {
               <View style={styles.bottomButtonsContainer}>
                 <Rounded  
                  onPress={handleContinue}
-                 loading={isLoading}
+                 loading={isLoading || isFetching}
                  width="100%">
                   Continue
                 </Rounded>

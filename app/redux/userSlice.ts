@@ -81,6 +81,7 @@ export const createUser = createAsyncThunk('user/create', async (undefined, {rej
 export const fetchUser = createAsyncThunk('user/fetchProfile', async (undefined, {rejectWithValue, dispatch})=>{
     try {
         const data = (await apiClient.get(USERS_DOMAIN)).data
+        localStorage.setItem('user', JSON.stringify(data))
         return data
     } catch (e)
     {
@@ -181,7 +182,16 @@ const userSlice = createSlice({
 })
 
 export const selectUsers = (state: RootState)=>state.users.users
-export const selectUser = (state: RootState)=>state.users.user
+export const selectUser = (state: RootState)=>{
+    const data = state.users.user
+    if (isEmpty(data) && typeof window !== 'undefined') {
+        const stringified = localStorage?.getItem('user')
+        if (isEmpty(stringified)) return null
+        return JSON.parse(stringified ?? "{}") as IUserProfile | null
+    }
+
+    return data
+}
 export const { getUsers } = userSlice.actions;
 export default userSlice.reducer;
 
@@ -192,8 +202,8 @@ export const selectUpdateUserSettingsFeedback = (state: RootState)=>({
 })
 
 export const selectUpdateUserProfile=(state: RootState)=>{
-    const user = localStorage.getItem('user')
-    if(isEmpty(state.users.user)) return {
+    const user = localStorage?.getItem('user')
+    if(isEmpty(state?.users?.user)) return {
         user: JSON.parse(user ?? "{}"),
         loading: state.users.profileLoading,
         error: state.users.profileError

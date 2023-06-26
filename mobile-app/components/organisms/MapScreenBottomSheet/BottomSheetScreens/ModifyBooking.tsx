@@ -97,7 +97,7 @@ const ModifyBookingBottomSheet = (props: Props) => {
   const { data: confirmationData, isError, isLoading: confirmationLoading } = useConfirmPaymentQuery({
     authorization: booking_payment_authorization ?? "" // the empty string will not happen, because of the skip condition 
   }, {
-    pollingInterval: 60000, // 1 minute polling
+    pollingInterval: 30000, // 1/2 a minute polling
     skip: isEmpty(paymentOption) || isNull(booking_payment_authorization)
   })
   
@@ -134,8 +134,8 @@ useEffect(() => {
             clearBookingOption()
             dispatch(modifyCurrentReservation({
               vehicle_id: vehicle?.id,
-              start_date_time: new Date(bookingDetails.start_date_time).getTime(),
-              end_date_time:  new Date(bookingDetails.end_date_time).getTime()
+              start_date_time: dayjs(bookingDetails.start_date_time).format(),
+              end_date_time:  dayjs(bookingDetails.end_date_time).format()
             })).then(() => {
               toast({
                 type: 'success',

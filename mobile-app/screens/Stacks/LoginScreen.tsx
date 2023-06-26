@@ -191,18 +191,18 @@ const LoginScreen = (props: Props) => {
                     </Divider>
                     <View style={styles.iconButtonsContainer} >
                         <IconButton name="google" containerStyle={{
-                            marginRight: Platform.OS === 'ios' ? 0 : 20
+                            // marginRight: Platform.OS === 'ios' ? 0 : 20
                         }} onPress={()=>googleLogin()} iconType='font-awesome' >
                             <GoogleIcon width={24} height={24} />
                         </IconButton>
-                        {Platform.OS === 'ios' ? <IconButton shadow containerStyle={{
+                        {/* {Platform.OS === 'ios' ? <IconButton shadow containerStyle={{
                             marginHorizontal: 10
                         }} name="apple" iconType='font-awesome' >
                             <AppleIcon fill="black" width={24} height={24} />
                         </IconButton> : null}
                         <IconButton onPress={()=>facebookLogin()} name="facebook" iconType='font-awesome' >
                             <FacebookIcon width={24} height={24} />
-                        </IconButton>
+                        </IconButton> */}
                     </View>
                 </View>
                 <View style={styles.bottomTextContainer} >

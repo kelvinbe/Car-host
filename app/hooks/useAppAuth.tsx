@@ -131,9 +131,11 @@ function useAppAuth() {
         signOut(getAuth(app)).then(()=>{
             dispatchAction(setSignOutLoading(false))
             localStorage.clear()
+            sessionStorage.clear()
             push("/auth")
         }).catch((e)=>{
             localStorage.clear()
+            sessionStorage.clear()
             LogRocket.error(e)
             dispatchAction(setSignOutError(e.message))
         })

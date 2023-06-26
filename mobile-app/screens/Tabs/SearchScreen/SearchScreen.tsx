@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setHostCode } from '../../../store/slices/bookingSlice';
 import { selectCoords } from '../../../store/slices/searchSlice';
 import { location_search } from '../../../utils/utils';
-import { closeBottomSheet } from '../../../store/slices/mapBottomSheet';
+import { closeAuthorizationBottomSheet, closeBottomSheet, closeChooseTime } from '../../../store/slices/mapBottomSheet';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -126,7 +126,9 @@ const SearchScreenHome = (
 
   
   const hostCodeSearch = async (value: any) => {
+    dispatch(closeAuthorizationBottomSheet())
     dispatch(closeBottomSheet())
+    dispatch(closeChooseTime())
     if (isEmpty(value)) return toast({
       message: 'Please enter a host code',
       type: "primary",
@@ -142,6 +144,9 @@ const SearchScreenHome = (
   };
 
   const search_locally = async () => {
+    dispatch(closeAuthorizationBottomSheet())
+    dispatch(setHostCode(null))
+    dispatch(closeChooseTime())
     dispatch(closeBottomSheet())
     try {
       await location_search()

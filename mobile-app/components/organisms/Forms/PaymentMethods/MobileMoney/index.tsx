@@ -85,7 +85,7 @@ const MobileMoneyForm = (props: IProps) => {
 
     const maskedInputProps = useMaskedInputProps({
         value: mpesa_number,
-        onChangeText: (v)=>set_mpesa_number(v),
+        onChangeText: (v)=>set_mpesa_number(v?.replaceAll("-", "")),
         mask: PHONE_NUMBER,
         placeholderFillCharacter: ' ',
     })

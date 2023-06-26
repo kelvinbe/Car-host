@@ -32,12 +32,13 @@ function BaseTable(props: IProps<any>) {
     return (
         <AntdProvider>
             <Flex
-                borderRadius="20px"
                 border="1px solid"
                 borderColor="gray.300"
                 w="full"
                 h="full"
-                overflow="hidden"
+                maxW="82vw"
+                rounded="sm"
+                overflowX="scroll"
                 // maxHeight='700px'
                 data-cy={'base-table-container'}
                 data-testid='base-table'

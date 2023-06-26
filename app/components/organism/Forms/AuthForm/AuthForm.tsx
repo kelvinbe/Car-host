@@ -258,7 +258,7 @@ function AuthForm(props: IProps) {
           bg="transparent"
           onClick={googleSignInHandler}
         />
-        <IconButton
+        {/* <IconButton
           aria-label='Apple'
           icon={<Icon as={BsApple} />}
           rounded="full"
@@ -271,7 +271,7 @@ function AuthForm(props: IProps) {
           rounded="full"
           bg="transparent"
           onClick={facebookSignInHandler}
-        />
+        /> */}
       </Flex>}
     </Flex>)
   )

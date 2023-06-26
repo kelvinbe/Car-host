@@ -14,6 +14,7 @@ import BookingCarComponent from './BookingCarComponent';
 import { IReservation, SearchScreenParamList } from '../../../../types';
 import { useConfirmPaymentQuery } from '../../../../store/slices/billingSlice';
 import * as Linking from 'expo-linking'
+import dayjs from 'dayjs';
 
 interface IProps {
   openAuthorization?: () => void;
@@ -73,7 +74,7 @@ const BookingScreen = (props: Props) => {
   const { data: confirmationData, isError, isLoading: confirmationLoading } = useConfirmPaymentQuery({
     authorization: booking_payment_authorization ?? "" // the empty string will not happen, because of the skip condition 
   }, {
-    pollingInterval: 60000, // 1 minute polling
+    pollingInterval: 30000, // 1/2 a minute polling
     skip: isEmpty(paymentOption) || isNull(booking_payment_authorization)
   })
   const toast = useToast();
@@ -92,8 +93,8 @@ const BookingScreen = (props: Props) => {
                 body: {
                 station_id: vehicle?.station_id,
                 vehicle_id: vehicle?.id,
-                start_date_time: start_date_time,
-                end_date_time:end_date_time,
+                start_date_time: dayjs(start_date_time).format(),
+                end_date_time:dayjs(end_date_time).format(),
               },
               headers:booking_payment_authorization ?? ""
             }).unwrap().then((reservation)=>{

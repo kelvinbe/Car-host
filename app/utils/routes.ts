@@ -17,7 +17,25 @@ export const dashboardRoutes: {
     admin: boolean,
     icon?: IconType,
     link?: string,
-    match?: any
+    match?: any,
+    /**
+     * !!! IMPORTANT !!! - this is an opt in feature, add it to pages that are in development and should not be released yet, note once a page is ready for release you will need to remove this prop
+     * 
+     * The current phase of the page
+     * 
+     * @note this will determine if the page will get rendered or a placeholder will be shown
+     * 
+     * @default "ph1"
+     * 
+     * ph1: the page is in phase 1 and should always be rendered
+     * 
+     * ph1.5: the page is in phase 1.5 and will only be rendered in development mode until the page is ready for release
+     * 
+     * ph2: the page is in phase 2 and will only be rendered in development mode until the page is ready for release
+     * 
+     */
+    phase?: "ph1" | "ph1.5" | "ph2",
+    host_only?: boolean
 }[] = [
     {
       name: "dashboard",
@@ -31,7 +49,8 @@ export const dashboardRoutes: {
       onClick: "toProperties",
       admin: false,
       link: "/properties/management",
-      icon: BsHouse
+      icon: BsHouse,
+      phase: "ph2" // TODO: remove this once the page is ready for release
     },
     {
       name: "reservations",
@@ -59,14 +78,16 @@ export const dashboardRoutes: {
       onClick: "toAuthCodeManagement",
       admin: false,
       icon: MdPowerInput,
-      link: "auth-code-management"
+      link: "auth-code-management",
+      host_only: true
     },
     {
       name: "analytics & reports",
       onClick: "toResports",
       admin: false,
       icon: SiSimpleanalytics,
-      link: "/reports"
+      link: "/reports",
+      host_only: true
     },
     {
       name: "withdrawals",
@@ -80,7 +101,9 @@ export const dashboardRoutes: {
       onClick: "toIntegrations",
       admin: false,
       icon: CgArrowsMergeAltH,
-      link: "/integrations"
+      link: "/integrations",
+      host_only: true,
+      phase: "ph1.5" // TODO: remove this once the page is ready for release
     },
     {
       name: "availability",
@@ -104,7 +127,7 @@ export const dashboardRoutes: {
     //   link: "/analytics"
     // },
     {
-      name: "all map view",
+      name: "all vehicles",
       onClick: "toAllMapView",
       admin: true,
       icon: TfiCar,

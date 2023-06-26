@@ -118,7 +118,9 @@ function FilterableTable(props: IProps) {
   }, [columns]);
 
   return (
-    <Flex w="full" h="full" {...FlexColCenterStart}>
+    <Flex w="full" h="full" {...FlexColCenterStart} sx={{
+      overflowX: "scroll"
+    }}>
       <Flex {...FlexRowCenterBetween} w="full" marginBottom="10px">
         <Flex {...FlexRowCenterBetween}>
           {viewSearchField && (

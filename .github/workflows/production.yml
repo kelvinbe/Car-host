@@ -2,11 +2,12 @@ name: divvly-production
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   Test:
-    environment: Production
+    environment: Staging
     env:
       NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
       NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
@@ -18,8 +19,9 @@ jobs:
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
       NEXT_PUBLIC_TRACKING_SERVICE: ${{ secrets.NEXT_PUBLIC_TRACKING_SERVICE }}
+      NEXT_PUBLIC_APP_ENV: staging
     if: true
-    runs-on: [self-hosted, production]
+    runs-on: [self-hosted, staging]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -41,7 +43,7 @@ jobs:
   Deploy:
     needs: Test
     runs-on: [self-hosted, production]
-    environment: Production
+    environment: Staging
     env:
       NEXT_PUBLIC_apiKey: ${{ secrets.NEXT_PUBLIC_apiKey }}
       NEXT_PUBLIC_appId: ${{ secrets.NEXT_PUBLIC_appId }}
@@ -53,27 +55,19 @@ jobs:
       NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
       NEXT_PUBLIC_LOGROCKET_APP_ID: ${{secrets.NEXT_PUBLIC_LOGROCKET_APP_ID}}
       NEXT_PUBLIC_TRACKING_SERVICE: ${{ secrets.NEXT_PUBLIC_TRACKING_SERVICE }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
-      - name: Make script executable
-        run: chmod +x ./scripts/cleanupProduction.sh
-
-      - name: CleanupProduction
-        run: sudo ./scripts/cleanupProduction.sh
-
-      - name: Build the docker image
-        working-directory: ./app
-        run: |
-          docker build -t divvly-cp-production \
-          --build-arg NEXT_PUBLIC_apiKey=$NEXT_PUBLIC_apiKey \
-          --build-arg NEXT_PUBLIC_appId=$NEXT_PUBLIC_appId \
-          --build-arg NEXT_PUBLIC_messagingSenderId=$NEXT_PUBLIC_messagingSenderId \
-          --build-arg NEXT_PUBLIC_storageBucket=$NEXT_PUBLIC_storageBucket \
-          --build-arg NEXT_PUBLIC_projectId=$NEXT_PUBLIC_projectId \
-          --build-arg NEXT_PUBLIC_authDomain=$NEXT_PUBLIC_authDomain \
-          --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY \
-          --build-arg NEXT_PUBLIC_API_DOMAIN=$NEXT_PUBLIC_API_DOMAIN \
-          --build-arg NEXT_PUBLIC_LOGROCKET_APP_ID=$NEXT_PUBLIC_LOGROCKET_APP_ID \
-          --build-arg NEXT_PUBLIC_TRACKING_SERVICE=$NEXT_PUBLIC_TRACKING_SERVICE \
-          .
-      - name: Start the docker container
-        run: docker run -dp 3001:3000 divvly-cp-production
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: sudo npm install --global vercel@latest
+      - name: Install Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "19.x"
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}

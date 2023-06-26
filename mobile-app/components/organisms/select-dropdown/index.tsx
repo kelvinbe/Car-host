@@ -8,7 +8,7 @@ import {
     StyleSheet,
     Animated, FlatList
 } from "react-native";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {MaterialIcons} from "@expo/vector-icons";
 import { DropdownData, TagData } from "./types";
 import TagFilter from "./tag-filter";
@@ -25,10 +25,12 @@ export interface SelectDropdownProps {
     tags?: TagData[]
     searchOptions?: TextInputProps
     searchBoxStyles?: ViewStyle
-    dropdownStyles?: ViewStyle
+    dropdownStyles?: ViewStyle,
+    disabled?: boolean
 }
 
-export default function SelectDropdown({testID, testIDDropdown, data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles, usePressable}: SelectDropdownProps) {
+export default function SelectDropdown(props: SelectDropdownProps) {
+    const {testID, testIDDropdown, data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles, usePressable, disabled} = props
     const [value, setValue] = useState<string>("");
     const [filteredData, setFilteredData] = useState<DropdownData<string, string>[]>(data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -77,6 +79,7 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
                     <MaterialIcons style={style.searchIcon} name="search" size={24} color="black" />
                     <View style={style.searchDivider} />
                     <TextInput
+                        editable={!disabled}
                         placeholder={placeholder}
                         style={style.dropdownSearchInput}
                         value={value}

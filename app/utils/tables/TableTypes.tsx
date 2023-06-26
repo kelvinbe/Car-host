@@ -31,6 +31,7 @@ import { useFetchData } from "../../hooks";
 import { getUsers, selectUsers } from "../../redux/userSlice";
 import { USERS_DOMAIN } from "../../hooks/constants";
 import ViewUserModal from "../../components/organism/Modals/ViewUserModal";
+import { get_formatted_date } from "../utils";
 
 interface IProps{
   vehicle_id:string,
@@ -387,9 +388,9 @@ export const LocationVehicleMapTableColumns: ColumnsType<ILocation> = [
     title: "Vehicle",
     dataIndex: "vehicle",
     key: "vehicle",
-    render: (v, { vehicle: { VehiclePictures } }) => (
+    render: (v, { vehicle: { pictures } }) => (
       <Flex alignItems={"center"} justifyContent="center" w="full">
-        <VehiclePic image={VehiclePictures[0]} size="small" />
+        <VehiclePic image={pictures?.[0]} size="small" />
       </Flex>
     ),
   },
@@ -585,13 +586,7 @@ export const ReservationColumns: ColumnsType<Partial<IReservation>> = [
         <Flex {...FlexColStartStart}>
           <Text fontSize="14px" fontWeight="500">
             {
-              dayjs().isSame(dayjs(start_date_time), 'day') ? 'Today at '+dayjs(start_date_time).format('hh:mm A') : 
-              dayjs().isSame(dayjs(start_date_time).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(start_date_time).format('hh:mm A') :
-              dayjs().isSame(dayjs(start_date_time).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(start_date_time).format('hh:mm A') :
-              dayjs().isSame(dayjs(start_date_time), 'week') ? dayjs(start_date_time).format('dddd hh:mm A') :
-              dayjs().isSame(dayjs(start_date_time), 'month') ? dayjs(start_date_time).format('DD hh:mm A') :
-              dayjs().isSame(dayjs(start_date_time), 'year') ? dayjs(start_date_time).format('DD MMM hh:mm A') :
-              dayjs(start_date_time).format('DD MMM, YYYY')
+              get_formatted_date(start_date_time)
             }
           </Text>
         </Flex>
@@ -607,13 +602,7 @@ export const ReservationColumns: ColumnsType<Partial<IReservation>> = [
         <Flex {...FlexColStartStart}>
           <Text fontSize="14px" fontWeight="500">
             {
-              dayjs().isSame(dayjs(end_date_time), 'day') ? 'Today at '+dayjs(end_date_time).format('hh:mm A') : 
-              dayjs().isSame(dayjs(end_date_time).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(end_date_time).format('hh:mm A') :
-              dayjs().isSame(dayjs(end_date_time).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(end_date_time).format('hh:mm A') :
-              dayjs().isSame(dayjs(end_date_time), 'week') ? dayjs(end_date_time).format('dddd hh:mm A') :
-              dayjs().isSame(dayjs(end_date_time), 'month') ? dayjs(end_date_time).format('DD hh:mm A') :
-              dayjs().isSame(dayjs(end_date_time), 'year') ? dayjs(end_date_time).format('DD MMM hh:mm A') :
-              dayjs(end_date_time).format('DD MMM, YYYY')
+              get_formatted_date(end_date_time)
             }
           </Text>
         </Flex>

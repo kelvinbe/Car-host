@@ -2,6 +2,14 @@ import React from "react";
 import AboutUs from "./AboutUs";
 import { render, screen } from "@testing-library/react";
 
+window.matchMedia = window.matchMedia || function() {
+    return {
+        matches: false,
+        addListener: function() {},
+        removeListener: function() {}
+    };
+};
+
 describe('It Tests the AboutUs component', ()=>{
     it('Tests if the component mounts', ()=>{
         const{baseElement}=render(<AboutUs/>)

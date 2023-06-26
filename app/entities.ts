@@ -146,3 +146,37 @@ export interface eIAuthCode {
     vehicle_id?: number;
     status?: "Active" | "Expired" | "Revoked" | "Nonactive";
 }
+
+export interface eIProperty {
+    id: string;
+    name: string;
+    type: string;
+    units: number;
+    rate: number;
+    rate_type: string;
+    conutry: string;
+    address: string;
+    is_managed: boolean;
+    movein_lead_time: number;
+    pictures: string[];
+    description: string;
+    size: number;
+    rating: number;
+    status: "BOOKED" | "PENDING" | "AVAILABLE";
+}
+
+export interface eIBooking {
+    id: string;
+    user_id: string;
+    host_id: string;
+    property_id: string;
+    checkin_date: Date;
+    checkout_date: Date;
+    amount: number;
+    tax: number;
+    fees: number;
+    adults: number;
+    kids: number;
+    pets: number;
+    status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+}

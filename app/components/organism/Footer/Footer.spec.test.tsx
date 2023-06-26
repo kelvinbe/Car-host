@@ -2,6 +2,14 @@ import React from "react";
 import Footer from "./Footer";
 import { render, screen } from "@testing-library/react";
 
+window.matchMedia = window.matchMedia || function() {
+    return {
+        matches: false,
+        addListener: function() {},
+        removeListener: function() {}
+    };
+};
+
 describe('Tests the footer component', ()=>{
     it('Tests if the component mounts', ()=>{
         render(<Footer/>) 

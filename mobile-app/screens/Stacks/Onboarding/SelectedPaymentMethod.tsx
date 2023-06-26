@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme)=>{
 const SelectedPaymentMethod = (props: Props) => {
   const toast = useToast()
   const styles = useStyles()
-  const [details, setDetails] = useState<Partial<PaymentDetails> & {cvv: string, exp: string}|null>(null)
+  const [details, setDetails] = useState<Partial<PaymentDetails & {cvv: string, exp: string}|null>>(null)
   const { setPaymentMethod } = useOnBoarding()
   const [addPaymentMethod, { isLoading, isError }] = useAddPaymentMethodMutation()
   const user = useAppSelector(selectUserProfile)

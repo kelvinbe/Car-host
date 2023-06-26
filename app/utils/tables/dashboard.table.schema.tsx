@@ -4,6 +4,7 @@ import { Avatar, Flex, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import StatusTag from "../../components/atoms/status/StatusTag";
 import { FlexColStartStart } from "../theme/FlexConfigs";
+import { get_formatted_date } from "../utils";
 
 
 
@@ -49,13 +50,7 @@ export const DashboardReservations: ColumnsType<IReservation & {
             return (
                 <Text fontSize="14px" fontWeight="500">
                     {
-                        dayjs().isSame(dayjs(start_date_time), 'day') ? 'Today at '+dayjs(start_date_time).format('hh:mm A') : 
-                        dayjs().isSame(dayjs(start_date_time).add(1, 'day'), 'day') ? 'Tomorrow at '+dayjs(start_date_time).format('hh:mm A') :
-                        dayjs().isSame(dayjs(start_date_time).subtract(1, 'day'), 'day') ? 'Yesterday at'+dayjs(start_date_time).format('hh:mm A') :
-                        dayjs().isSame(dayjs(start_date_time), 'week') ? dayjs(start_date_time).format('dddd hh:mm A') :
-                        dayjs().isSame(dayjs(start_date_time), 'month') ? dayjs(start_date_time).format('DD hh:mm A') :
-                        dayjs().isSame(dayjs(start_date_time), 'year') ? dayjs(start_date_time).format('DD MMM hh:mm A') :
-                        dayjs(start_date_time).format('DD MMM, YYYY')
+                        get_formatted_date(start_date_time)
                     }
             </Text>
             )

@@ -81,7 +81,7 @@ const Location = (props: IProps) => {
   const { navigation } = props
   const [country, setCountry] = useState<DropdownData<string, string> | null>(null)
   const [city, setCity] = useState<DropdownData<string, string> | null>(null)
-  const { markets, subMarkets } = useLocation(country?.key)
+  const { markets, subMarkets,  fetchMarkets, fetchSubMarkets} = useLocation(country?.key)
   const { setLocation, setCompleted } = useOnBoarding()
   const countries = useMemo(() => {
     if (!isEmpty(markets.error) || markets.loading || isNull(markets.data)) return []
@@ -92,6 +92,16 @@ const Location = (props: IProps) => {
       }
     })
   }, [,markets.loading, markets.error])
+
+  useEffect(()=>{
+    fetchMarkets()
+  }, [])
+
+  useEffect(()=>{
+    if (!isEmpty(country)) {
+      fetchSubMarkets(country.key)
+    }
+  }, [country?.key])
 
 
 
@@ -153,7 +163,8 @@ const Location = (props: IProps) => {
               />
             </View>
             <View style={styles.selectContainer} >
-              {country ? <SelectDropdown
+              <SelectDropdown
+                disabled={isEmpty(country)}
                 data={cities}
                 placeholder={"Select a city"}
                 selected={city}
@@ -161,11 +172,7 @@ const Location = (props: IProps) => {
                 searchOptions={{ cursorColor: theme.colors.primary }}
                 searchBoxStyles={styles.serachBox}
                 dropdownStyles={styles.dropdown}
-                />: <Text
-                style={styles.infoText}
-               >
-                Select a country first
-                </Text>}
+                />
             </View>
             </View>
                 

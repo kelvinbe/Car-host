@@ -7,7 +7,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { fetchReservations, selectReservations, selectReservationsFeedback, selectReservationsPaginationState } from "../../redux/reservationSlice";
 import useReservation from "../../hooks/useReservation";
 import { insertTableActions } from "../../utils/tables/utils";
-import { FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
+import { FlexColCenterStart, FlexRowCenterBetween } from "../../utils/theme/FlexConfigs";
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import { isEmpty, isNull, lowerCase } from "lodash";
 import { ReservationColumns } from "../../utils/tables/TableTypes";
@@ -15,6 +15,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
 import { IReservation } from "../../globaltypes";
+import EmulationDeck from "../../components/organism/emulation-deck";
 export interface DataType {
   reservationId: string;
   vehiclePlate: string;
@@ -75,7 +76,12 @@ function Reservations() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-      <Flex w="full" h="full" data-testid="reservations-table">
+      <Flex w="full" h="full" data-testid="reservations-table" {...FlexColCenterStart}>
+        <EmulationDeck
+          refetch={()=>{
+            dispatch(fetchReservations())
+          }}
+        />
         <ReservationModal
           isOpen={isOpen}
           onClose={onClose}

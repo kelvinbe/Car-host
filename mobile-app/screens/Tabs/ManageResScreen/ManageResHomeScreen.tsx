@@ -12,7 +12,7 @@ import Loading from '../../../components/molecules/Feedback/Loading/Loading'
 import Error from '../../../components/molecules/Feedback/Error/Error'
 import Empty from '../../../components/molecules/Feedback/Empty/Empty'
 import { useAppDispatch } from '../../../store/store'
-import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice'
+import { loadBookingDetailsFromReservation, setHostCode } from '../../../store/slices/bookingSlice'
 import { selectCurrentScreen } from '../../../store/slices/navigationSlice'
 
 type Props = NativeStackScreenProps<ManageResParamList, "ManageResHome">
@@ -51,6 +51,7 @@ const ManageResHomeScreen = (props: Props) => {
   const onCardDetailsPress = (reservationId: string) => {
     setLoading(true)
     setFetchError(false)
+    reduxDispatch(setHostCode(null))
     reduxDispatch(loadBookingDetailsFromReservation(reservationId)).unwrap().then((result)=>{
       setLoading(false)
       props.navigation.navigate("BookingDetails")

@@ -5,16 +5,27 @@ import apiClient from "../utils/apiClient";
 import { RESERVATION_DOMAIN } from "../hooks/constants";
 import LogRocket from "logrocket";
 import { isEmpty } from "lodash";
+import { clearEmulation, selectEmulationFeedback } from "./emulationSlice";
 
 
 
 export const fetchReservations = createAsyncThunk('reservations/fetchReservations', async (args: Partial<asyncThinkFetchParams<IReservation>> & Partial<IReservation> | null | undefined = null, { rejectWithValue, dispatch, getState })=> {
+    if(args?.reset){
+        dispatch(updateParams({
+            page: 1,
+            size: 10,
+            search: undefined,
+            sort: undefined,
+            sort_by: undefined
+        }))
+        dispatch(clearEmulation())
+    }
     const currentParams = (getState() as RootState).reservations
+    const emulationState = selectEmulationFeedback(getState() as RootState)
     const { page, search: _search, size, sort, sort_by, reset, ...reservation_filters } = args ?? {}
     const prev_search = isEmpty(currentParams.current_search) ? undefined : currentParams.current_search
     const current_search = isEmpty(_search) ? prev_search : _search
     const search = isEmpty(current_search) ? undefined : current_search === "__empty__" ? undefined : current_search
-
     const params = reset ? {
         page: 1,
         size: 10,
@@ -30,7 +41,8 @@ export const fetchReservations = createAsyncThunk('reservations/fetchReservation
         const res = (await apiClient.get(RESERVATION_DOMAIN, {
             params: {
                 ...params,
-                ...reservation_filters
+                ...reservation_filters,
+                user_id: emulationState.data?.id ?? undefined
             }
         }))
         return res.data

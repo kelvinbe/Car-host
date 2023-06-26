@@ -19,7 +19,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       [
         'expo-image-picker',
         {
-          photosPermission: 'Divvly uses yor photos for profile verification.',
+          photosPermission: 'Allow Divvly to access your photos',
         },
       ],
       [
@@ -33,7 +33,8 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       [
         'expo-location',
         {
-          locationPermission: 'Divvly uses your location, to track host vehicles.',
+          locationAlwaysAndWhenInUsePermission: "Allow Divvly to use your location.",
+          isAndroidBackgroundLocationEnabled: true,
         },
       ],
       [
@@ -55,6 +56,11 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       config: {
         googleMapsApiKey: process.env.IOS_GOOGLE_MAPS_API_KEY
       },
+      infoPlist: {
+        NSLocationWhenInUseUsageDescription: "This app needs access to location when open.",
+        NSLocationAlwaysAndWhenInUseUsageDescription: "This app needs access to location both when open and in the background.",
+        NSLocationAlwaysUsageDescription: "This app needs access to location both when open and in the background."
+      }
     },
     android: {
       adaptiveIcon: {
@@ -68,7 +74,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       },
       package: 'com.niebex.divvly',
       googleServicesFile: './google-services.json',
-      versionCode: 22,
+      versionCode: 27,
     },
     web: {
       favicon: './assets/images/favicon.png',

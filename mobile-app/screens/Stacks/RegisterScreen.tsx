@@ -297,7 +297,9 @@ const RegisterScreen = (props: Props) => {
     }
 
     const navigateToLogin = () => {
-        props.navigation.navigate("Login")
+        setTimeout(()=>{
+            props.navigation.navigate("Login")
+        }, 2000) 
     }
 
   return (
@@ -450,14 +452,14 @@ const RegisterScreen = (props: Props) => {
                         }} onPress={()=>{googleLogin(navigateToLogin)}} iconType='font-awesome' >
                             <GoogleIcon width={24} height={24} />
                         </IconButton>
-                        {Platform.OS === 'ios' ? <IconButton shadow containerStyle={{
+                        {/* {Platform.OS === 'ios' ? <IconButton shadow containerStyle={{
                             marginHorizontal: 10
                         }} name="apple" iconType='font-awesome' >
                             <AppleIcon fill="black" width={24} height={24} />
                         </IconButton> : undefined}
                         <IconButton name="facebook" onPress={()=>{facebookLogin(navigateToLogin)}} iconType='font-awesome' >
                             <FacebookIcon width={24} height={24} />
-                        </IconButton>
+                        </IconButton> */}
                     </View>
                 </View>
                 <View style={styles.bottomTextContainer} >

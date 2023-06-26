@@ -36,6 +36,11 @@ function Dashboardlayout(props: IProps) {
     ssr: true,
     fallback: true
   }) 
+  const [isLargerThan1680] = useMediaQuery('(min-width: 1680px)', {
+    ssr: true,
+    fallback: true
+  }) 
+  
 
 
   useEffect(() => {
@@ -49,7 +54,7 @@ function Dashboardlayout(props: IProps) {
   const dashboardNavigation = useDashboardRoutes();
   return (
     <>
-    {isLargerThan900 ?  (<Grid w="100vw" minH="100vh" bg="background" templateColumns={"300px auto"}>
+    {isLargerThan900 ?  (<Grid w="100vw" minH="100vh" bg="background" templateColumns={!isLargerThan1680 ? "150px auto" : "300px auto"}>
       <GridItem h="full" w="full" data-testid="sidebar-on-dashboard">
         <DashboardSidebar />
       </GridItem>

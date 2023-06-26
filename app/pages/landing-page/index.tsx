@@ -5,9 +5,16 @@ import Footer from "../../components/organism/Footer/Footer";
 import AboutUs from "../../components/organism/AboutUs/AboutUs";
 import BookRide from "../../components/organism/BookRide/BookRide";
 import AppFeature from "../../components/organism/AppFeature/Appfeature";
+import MobileBanner from "../../components/organism/Banner/MobileBanner"
 import Head from "next/head";
+import { useMediaQuery } from "@chakra-ui/react";
 
 const LandingPage = () => {
+
+  const [isLargerThan800] = useMediaQuery('(min-width: 1680px)', {
+    ssr: true,
+    fallback: true, // return false on the server, and re-evaluate on the client side
+  })
   return (
     <html lang="en">
       <Head>
@@ -19,7 +26,8 @@ const LandingPage = () => {
       </Head>
       <body className="flex flex-col items-center justify-start w-screen flex-1 min-h-screen h-full" >
         <Header />
-        <Banner />
+        
+        {!isLargerThan800 ?  <MobileBanner /> : <Banner /> }
         <section id="about">
           <AboutUs />
         </section>

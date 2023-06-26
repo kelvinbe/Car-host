@@ -5,6 +5,7 @@ import { GenerateDataTransferObject } from './../globaltypes';
 import LogRocket from "logrocket";
 import store from "../redux/store";
 import { RootState } from "../redux";
+import dayjs from "dayjs";
 /**
  * @name loadEnv 
  * @params {string} envVariableName
@@ -218,3 +219,21 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
     }
     return years
  }
+
+
+ export const get_formatted_date = (date?: string | Date | number): string => {
+    const d = new Date(date ?? Date.now());
+    const now = dayjs();
+    const day = dayjs(d);
+  
+    if (now.isSame(day, 'day')) {
+      return `Today at ${day.format('hh:mm A')}`;
+    } else if (now.isSame(day, 'month')) {
+      return day.format('DD hh:mm A');
+    } else if (now.isSame(day, 'year')) {
+      return day.format('DD MMM hh:mm A');
+    } else {
+      return day.format('DD MMM, YYYY');
+    }
+  }
+  

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useReducer, useState } from "react";
-import { Flex, Grid, Divider } from "@chakra-ui/react";
+import { Flex, Grid, Divider, useMediaQuery } from "@chakra-ui/react";
 import {
   FlexRowCenterCenter,
 } from "../../../../utils/theme/FlexConfigs";
@@ -67,6 +67,13 @@ function DashboardSidebar() {
     }
   }, [pathname]);
 
+
+  const [isLargerThan900] = useMediaQuery('(min-width: 1680px)', {
+    ssr: true,
+    fallback: true
+  }) 
+
+
   return (
     <Grid
       overflowY="scroll"
@@ -74,7 +81,7 @@ function DashboardSidebar() {
       h="full"
       rowGap="5"
       position="fixed"
-      w="300px"
+      w={isLargerThan900 ? "300px" : "150px"}
       templateColumns={"1fr"}
       paddingLeft="10px"
       paddingRight={"15px"}
@@ -87,6 +94,31 @@ function DashboardSidebar() {
       </Flex>
       {dashboardRoutes
         ?.filter(({ admin }) => !admin)
+        ?.filter(({phase})=> {
+          if(!phase){
+            return true
+          }
+          if(phase){
+            if(process.env.NEXT_PUBLIC_APP_ENV === "testing"){
+              return true
+            }
+            if(process.env.NEXT_PUBLIC_APP_ENV === "development"){
+              return true
+            }
+            if(process.env.NEXT_PUBLIC_APP_ENV === "staging"){
+              return true
+            }
+            if(process.env.NEXT_PUBLIC_APP_ENV === "production"){
+              return false
+            }
+          }
+        })
+        ?.filter(({host_only})=>{
+          if(host_only){
+            return !user?.is_admin
+          }
+          return true
+        })
         ?.map(({ name, icon: Icon, link }, index) => (
           <DashboardSidebarButton
             onClick={() => {
@@ -100,14 +132,34 @@ function DashboardSidebar() {
             }
             link={link}
             isActive={!link ? false : activeTab === link}
+            names={name}
           >
-            {name}
+          {isLargerThan900 ? name : ''}
           </DashboardSidebarButton>
         ))}
       <Divider w="full" borderColor="gray.400" />
       {isAdmin &&
         dashboardRoutes
           ?.filter(({ admin }) => admin)
+          ?.filter(({phase})=> {
+            if(!phase){
+              return true
+            }
+            if(phase){
+              if(process.env.NEXT_PUBLIC_APP_ENV === "testing"){
+                return true
+              }
+              if(process.env.NEXT_PUBLIC_APP_ENV === "development"){
+                return true
+              }
+              if(process.env.NEXT_PUBLIC_APP_ENV === "staging"){
+                return true
+              }
+              if(process.env.NEXT_PUBLIC_APP_ENV === "production"){
+                return false
+              }
+            }
+          })
           ?.map(({ name, icon: Icon, link }, index) => (
             <DashboardSidebarButton
               onClick={() => {
@@ -122,7 +174,7 @@ function DashboardSidebar() {
               link={link}
               isActive={!link ? false : activeTab === link}
             >
-              {name}
+              {isLargerThan900 ? name : ''}
             </DashboardSidebarButton>
           ))}
     </Grid>

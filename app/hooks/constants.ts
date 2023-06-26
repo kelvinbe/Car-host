@@ -59,6 +59,11 @@ export const EARNINGS_API = `${DOMAIN}/payments/report`
  */
 export const TRACKING_SERVICE = process.env.NEXT_PUBLIC_TRACKING_SERVICE 
 
+/**
+ * Admin api base endpoint
+ */
+export const ADMIN_BASE_ENDPOINT = `${DOMAIN}/admin`
+
 
 
 
@@ -75,3 +80,7 @@ export const http_methods = {
     delete: "DELETE",
     patch: "PATCH",
 }
+
+// ---------------------------------- Divvly Properties Endpoints --------------------------------- //
+export const PROPERTIES_API = `${DOMAIN}/properties`
+export const BOOKINGS_API = `${DOMAIN}/bookings`

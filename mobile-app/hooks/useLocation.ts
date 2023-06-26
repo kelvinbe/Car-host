@@ -98,17 +98,10 @@ export default function useLocation(market_id?: string) {
         })
     }
 
-    useEffect(()=>{
-        (async()=>await fetchMarkets())()
-    }, [])
-
-    useEffect(()=>{
-        if (isUndefined(market_id) || isEmpty(market_id)) return ()=>{}
-        (async()=>await fetchSubMarkets(market_id))()
-    }, [market_id])
-
     return {
         markets: marketsData,
         subMarkets: subMarkets,
+        fetchMarkets,
+        fetchSubMarkets
     }
 }

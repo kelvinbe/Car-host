@@ -8,7 +8,7 @@ import Loading from '../../../components/molecules/Feedback/Loading/Loading';
 import Error from '../../../components/molecules/Feedback/Error/Error';
 import Empty from '../../../components/molecules/Feedback/Empty/Empty';
 import { useAppDispatch} from '../../../store/store';
-import { loadBookingDetailsFromReservation } from '../../../store/slices/bookingSlice';
+import { loadBookingDetailsFromReservation, setHostCode } from '../../../store/slices/bookingSlice';
 import { useFetchUpcoming } from '../../../hooks';
 import { selectCurrentScreen } from '../../../store/slices/navigationSlice'
 import { useSelector } from 'react-redux';
@@ -48,6 +48,7 @@ const UpcomingHomeScreen = (props: Props) => {
   const onCardDetailsPress = (reservationId: string) => {
     setLoading(true);
     setFetchError(false);
+    reduxDispatch(setHostCode(null))
     reduxDispatch(loadBookingDetailsFromReservation(reservationId))
       .unwrap()
       .then(result => {

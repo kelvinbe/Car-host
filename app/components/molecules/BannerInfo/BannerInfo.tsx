@@ -6,6 +6,7 @@ import {
   Flex,
   VStack,
   Stack,
+  useMediaQuery
 } from "@chakra-ui/react";
 import playstore from "../../../public/images/play.png";
 import appstore from "../../../public/images/appstore.png";
@@ -61,6 +62,12 @@ const BannerInfo = (props: iProps) => {
     left,
   } = props;
 
+
+  const [isLargerThan800] = useMediaQuery('(min-width: 1680px)', {
+    ssr: true,
+    fallback: true, // return false on the server, and re-evaluate on the client side
+  })
+
   return (
     <Box>
       <Box>
@@ -70,7 +77,7 @@ const BannerInfo = (props: iProps) => {
           justifyContent={justifyContent}
           marginTop={marginTop}
         >
-          <VStack paddingTop="100px" align={align} spacing={spacing} position={vStackPosition} left={left} data-testid = 'banner-info'>
+          <VStack paddingTop={isLargerThan800 ? "100px" : '125px'} align={align} spacing={spacing} position={vStackPosition} left={left} data-testid = 'banner-info'>
             <Text
               textTransform="uppercase"
               letterSpacing={letterSpacing}
@@ -81,14 +88,14 @@ const BannerInfo = (props: iProps) => {
             </Text>
             {showText && !noStyleText ? (
               <>
-                <Text fontSize="96px">HOST CAR</Text>
-                <Text fontSize="96px">
+                <Text fontSize={isLargerThan800 ? "96px" : '63px'}>HOST CAR</Text>
+                <Text fontSize={isLargerThan800 ? "96px" : '63px'}>
                   <span style={{ color: "#FC346A" }}>SHARING</span> APP
                 </Text>
               </>
             ) : (
               !noStyleText && (
-                <Text letterSpacing="0.1955em" fontSize="96px">
+                <Text letterSpacing="0.1955em" fontSize={isLargerThan800 ? "96px" : '63px'}>
                   HOST CAR <span style={{ color: "#FC346A" }}>SHARING</span>{" "}
                   APP
                 </Text>
@@ -114,7 +121,7 @@ const BannerInfo = (props: iProps) => {
             </Stack>
           </VStack>
           <Box display={display} width={boxWidth}>
-            <Image src={image ? `/images/${image}` : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly' data-testid='banner-info-img'/>
+            <Image paddingTop={isLargerThan800 ? '' : '177px'} src={image ? `/images/${image}` : undefined} w={imageWidth} position={boxPosition} right={right} alt='Display divvly' data-testid='banner-info-img'/>
           </Box>
         </Flex>
       </Box>
