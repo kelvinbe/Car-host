@@ -22,6 +22,7 @@ import paymentMethodSlice from './paymentMethodSlice';
 import searchSlice from './searchSlice';
 import mapBottomSheet from './mapBottomSheet';
 import settingsSlice from './settingsSlice';
+import flowstack from './flowstack';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -49,7 +50,8 @@ const rootReducer = combineReducers({
   paymentMethodSlice: paymentMethodSlice,
   search: searchSlice,
   mapBottomSheet: mapBottomSheet,
-  settings: settingsSlice
+  settings: settingsSlice,
+  flowstack: flowstack,
 });
 
 export default rootReducer;

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import BottomSheet from "@gorhom/bottom-sheet"
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"
 import { makeStyles, ThemeConsumer } from '@rneui/themed'
 import Rounded from '../../../atoms/Buttons/Rounded/Rounded'
 import useBookingActions from '../../../../hooks/useBookingActions'
@@ -130,51 +130,57 @@ const AuthorizationBottomSheet = (props: Props) => {
                     enablePanDownToClose
                     onClose={props.closeBottomSheet}
                 >
-                    {
-                        <KeyboardAvoidingView
-                            behavior={
-                                Platform.OS === "ios" ? "padding" : "height"
-                            }
-                            style={styles.contentContainer} >
-                            <Text style={styles.contentTitleStyle} >
-                                Authorization Code
-                            </Text>
-                            <View style={styles.cardsContainer} >
-                                <WithHelperText
-                                    placeholder='Enter Authorization code'
-                                    value={verificationInput}
-                                    onChangeText={setVerificationInput}
-                                    maxLength={6}
-                                    helperText={
-                                    verifyAuthCodeResponse.error &&
-                                        <Text style={styles.errorText} >
-                                            Code not valid
-                                        </Text>
-                                    }
-                                />
-                                <Rounded
-                                    loading={verifyAuthCodeResponse.loading}
-                                    onPress={handleVerify} >
-                                    {(!isEmpty(verifyAuthCodeResponse.data) && verificationInput.length === 6) ? "Done" : "Verify"}
-                                </Rounded>
-                            </View>
-                            <View style={styles.bottomTextContainer} >
-                                {
-                                    requestAuthCodeResponse.loading &&
-                                    <ActivityIndicator
-                                        size="small"
-                                        color={theme.colors.primary}
-                                    />
+                    <BottomSheetView
+                        style={{
+                            flex: 1
+                        }}
+                    >
+                        {
+                            <KeyboardAvoidingView
+                                behavior={
+                                    Platform.OS === "ios" ? "padding" : "height"
                                 }
-                                <Text style={styles.leftText} >
-                                    Don't have a code?
+                                style={styles.contentContainer} >
+                                <Text style={styles.contentTitleStyle} >
+                                    Authorization Code
                                 </Text>
-                                <Text style={styles.rightText} onPress={handleRequestAuthCode} >
-                                    Ask for One
-                                </Text>
-                            </View>
-                        </KeyboardAvoidingView>
-                    }
+                                <View style={styles.cardsContainer} >
+                                    <WithHelperText
+                                        placeholder='Enter Authorization code'
+                                        value={verificationInput}
+                                        onChangeText={setVerificationInput}
+                                        maxLength={6}
+                                        helperText={
+                                        verifyAuthCodeResponse.error &&
+                                            <Text style={styles.errorText} >
+                                                Code not valid
+                                            </Text>
+                                        }
+                                    />
+                                    <Rounded
+                                        loading={verifyAuthCodeResponse.loading}
+                                        onPress={handleVerify} >
+                                        {(!isEmpty(verifyAuthCodeResponse.data) && verificationInput.length === 6) ? "Done" : "Verify"}
+                                    </Rounded>
+                                </View>
+                                <View style={styles.bottomTextContainer} >
+                                    {
+                                        requestAuthCodeResponse.loading &&
+                                        <ActivityIndicator
+                                            size="small"
+                                            color={theme.colors.primary}
+                                        />
+                                    }
+                                    <Text style={styles.leftText} >
+                                        Don't have a code?
+                                    </Text>
+                                    <Text style={styles.rightText} onPress={handleRequestAuthCode} >
+                                        Ask for One
+                                    </Text>
+                                </View>
+                            </KeyboardAvoidingView>
+                        }
+                    </BottomSheetView>
                 </BottomSheet>
             )}
         </ThemeConsumer>

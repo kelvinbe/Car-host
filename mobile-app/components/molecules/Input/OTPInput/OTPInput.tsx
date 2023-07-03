@@ -156,7 +156,7 @@ const styles = useStyles()
                         borderWidth: 0
                     }}
                     maxLength={1}
-                    keyboardType="numeric"
+                    keyboardType="numbers-and-punctuation"
                 />)
             )
         }

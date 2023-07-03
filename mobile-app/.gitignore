@@ -19,3 +19,6 @@ mock/db.json
 # env files
 .env
 mock/.env
+
+# vscode
+.vscode

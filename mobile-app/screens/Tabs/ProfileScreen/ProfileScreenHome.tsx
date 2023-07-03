@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { makeStyles, ThemeConsumer, useTheme } from '@rneui/themed';
 import { ProfileScreenParamList } from '../../../types';
 import { Button, Divider, Icon, Image, ListItem, Switch } from '@rneui/base';
@@ -15,6 +15,9 @@ import { selectUserProfile } from '../../../store/slices/userSlice';
 import useNotifications from '../../../hooks/useNotifications';
 import {Dimensions} from 'react-native';
 import * as Linking from 'expo-linking'
+import { selectCurrentFlow } from '../../../store/slices/flowstack';
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 
@@ -38,7 +41,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
   },
   topBarCardStyle: {
     width: '90%',
-    height: 92,
+    height: 96,
     backgroundColor: theme.colors.background,
     elevation: 5,
     borderRadius: 20,
@@ -68,11 +71,16 @@ const useStyles = makeStyles((theme, props: Props) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ADB5BD20',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderWidth: 0,
   },
   editButtonTextStyle: {
     color: theme.colors.primary,
-    fontSize: 10,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '700',
     fontFamily: 'Lato_400Regular',
     marginRight: 5,
   },
@@ -81,6 +89,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
     alignItems: 'flex-end',
     justifyContent: 'center',
     padding: 10,
+    paddingBottom: 0
   },
   profileInfoContainer: {
     width: '100%',
@@ -182,24 +191,50 @@ const useStyles = makeStyles((theme, props: Props) => ({
     paddingBottom: 25,
   },
   homeButtonContainer: {
-    borderRadius: 4,
+    borderRadius: 10,
     backgroundColor: theme.colors.white,
-    padding: 2,
-    height: 24,
-    width: 24,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
+  homeButtonTextStyle: {
+    color: theme.colors.black,
+    fontSize: 16,
+    fontWeight: '700',
+    marginLeft:  10
+  }
 }));
 
 const ProfileScreenHome = (props: Props) => {
+  const colorAnim = useSharedValue(0)
+  const {theme} = useTheme()
   const styles = useStyles(props);
   const { logOut: _logOut, userProfile } = useUserAuth();
 
   const profile = useAppSelector(selectUserProfile)
   const { togglePushNotifications, updateSettingsFeedback } = useNotifications()
-  const allowNotifications = useSelector(selectAllowNotifications)
-  const notification = useSelector(selectNotification)
-  const dispatch = useDispatch()
-  const toast = useToast()
+  const current_flow = useAppSelector(selectCurrentFlow)
+
+
+  useLayoutEffect(()=>{
+    if(current_flow === "notification_enable" && !profile?.user_settings?.notifications_enabled){
+      colorAnim.value = withRepeat(withTiming(1, { duration: 1000 }), 4, true);
+    }
+  }, [,current_flow])
+
+
+  
+  const notificationStyles = useAnimatedStyle(()=>{
+    const backgroundColor = interpolateColor(colorAnim.value, [0, 1], [theme.colors.white, theme.colors.primary])
+    return {
+      backgroundColor
+    }
+  })
+
+
 
   const goToEdit = () => {
     props.navigation.navigate('ProfileScreenEdit');
@@ -237,7 +272,7 @@ const ProfileScreenHome = (props: Props) => {
   };
 
   const goToSearch = () => {
-    Linking.openURL(Linking.createURL("/searchh"))
+    Linking.openURL(Linking.createURL("/search"))
   }
 
   const logOut = () => {
@@ -252,14 +287,18 @@ const ProfileScreenHome = (props: Props) => {
         <View style={styles.container}>
           <View style={styles.topBarContainerStyle}>
             <View style={styles.topNavSection}>
-              <Button onPress={goToSearch} style={styles.homeButtonContainer} buttonStyle={styles.homeButtonContainer}>
+              <TouchableOpacity onPress={goToSearch} style={styles.homeButtonContainer} >
+                <MaterialIcons name="arrow-back-ios" size={16} color="black" />
                 <HomeIcon
                   stroke={theme.colors.black}
                   fill={theme.colors.black}
                   width={12}
                   height={12}
                 />
-              </Button>
+                <Text style={styles.homeButtonTextStyle} >
+                  Home
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.topBarCardStyle}>
               <View style={styles.avatarStyle}>
@@ -273,7 +312,7 @@ const ProfileScreenHome = (props: Props) => {
               <View style={styles.topEditSectionContainer}>
                 <TouchableOpacity onPress={goToEdit} style={styles.editButtonContainer}>
                   <Text style={styles.editButtonTextStyle}>Edit</Text>
-                  <Icon name="edit" type="font-awesome" size={10} color={theme.colors.primary} />
+                  <Icon name="edit" type="font-awesome" size={16} color={theme.colors.primary} />
                 </TouchableOpacity>
               </View>
               <View style={styles.profileInfoContainer}>
@@ -295,7 +334,7 @@ const ProfileScreenHome = (props: Props) => {
                 containerStyle={styles.listItemContainerStyle}
                 onPress={goToPayments}>
                 <ListItem.Content style={styles.listItemContent}>
-                  <ListItem.Title style={styles.listItemTitleStyle}>Payments</ListItem.Title>
+                  <ListItem.Title style={styles.listItemTitleStyle}>Payment</ListItem.Title>
                 </ListItem.Content>
               </ListItem>
               <ListItem
@@ -322,7 +361,7 @@ const ProfileScreenHome = (props: Props) => {
                   <ListItem.Title style={styles.listItemTitleStyle}>Settings</ListItem.Title>
                 </ListItem.Content>
               </ListItem>
-              <View style={styles.notificationActionContainer}>
+              <Animated.View style={[styles.notificationActionContainer, notificationStyles]}>
                 <View style={styles.notificationsLeft}>
                   { updateSettingsFeedback.loading && <ActivityIndicator
                     color={theme.colors.primary}
@@ -335,7 +374,7 @@ const ProfileScreenHome = (props: Props) => {
                   value={profile?.user_settings?.notifications_enabled}
                   onValueChange={togglePushNotifications}
                 />
-              </View>
+              </Animated.View>
               <Divider style={styles.dividerStyle} />
               <ListItem
                 Component={TouchableOpacity}

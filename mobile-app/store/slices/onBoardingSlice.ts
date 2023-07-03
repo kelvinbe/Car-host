@@ -12,6 +12,7 @@ import { RootState } from '.';
 import { z } from 'zod';
 import { isNull } from 'lodash';
 import apiClient from '../../utils/apiClient';
+import { AxiosError } from 'axios';
 
 interface ICard {
   cvv: string;
@@ -43,6 +44,7 @@ interface IReducerState {
     drivers_license: boolean;
     payment_method: boolean;
     location: boolean;
+    profile: boolean
   } | null;
   onBoardingLoading: boolean;
   onBoardingError: boolean;
@@ -71,6 +73,7 @@ interface IResponse {
     drivers_licensce: boolean;
     payment_method: boolean;
     location: boolean;
+    profile: boolean;
   };
 
   message: string;
@@ -89,9 +92,7 @@ interface IUpdateUser {
 export const fetchOnboarding = createAsyncThunk('onBoarding/fetchOnboarding',  (undefined, {dispatch, rejectWithValue})=>{
   return apiClient.get(FETCH_ONBOARDING).then(({data})=>{
     return data.completed 
-  }).catch((e)=>{
-    rejectWithValue(e)
-  })
+  }).catch((e: AxiosError)=>rejectWithValue(e?.response?.data ?? 'An error occured'))
 })
 
 export const onBoardingApi = createApi({

@@ -6,9 +6,10 @@ import { app } from '../firebase/firebaseApp';
 import useToast from './useToast';
 import { isEmpty } from 'lodash';
 import apiClient from '../utils/apiClient';
-import { useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import { selectUserProfile } from '../store/slices/userSlice';
 import * as Linking from 'expo-linking';
+import { setFlow } from '../store/slices/flowstack';
 
 type tResponse = {
     data: Record<string, string> | null;
@@ -25,6 +26,7 @@ type RequestAuthCodeFn = ( data: {
 type VerifyAuthCodeFn = (code?: string | null) => Promise<string | null | undefined>
 
 export default function useAuthCode(){
+    const dispatch = useAppDispatch()
     const user = useAppSelector(selectUserProfile)
     const [requestAuthCodeResponse, setRequestAuthCodeResponse] = useState<tResponse>({
         data: null,
@@ -46,6 +48,7 @@ export default function useAuthCode(){
     const requestAuthCode: RequestAuthCodeFn = async (data) => {
 
         if(!user?.user_settings?.notifications_enabled) {
+            dispatch(setFlow('notification_enable'))
             Linking.openURL(Linking.createURL('/profile'))
             .then(()=>{
                 toast({

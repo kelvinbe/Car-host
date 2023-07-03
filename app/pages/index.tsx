@@ -11,10 +11,7 @@ import { useMediaQuery } from "@chakra-ui/react";
 
 const LandingPage = () => {
 
-  const [isLargerThan800] = useMediaQuery('(min-width: 1680px)', {
-    ssr: true,
-    fallback: true, // return false on the server, and re-evaluate on the client side
-  })
+  const [isLargerThan800] = useMediaQuery('(min-width: 1280px)')
   return (
     <html lang="en">
       <Head>

@@ -214,7 +214,7 @@ function AppCardForm(props: Props){
                     <WithHelperText 
                         label="Card Number"
                         placeholder="xxxx xxxx xxxx xxxx" 
-                        keyboardType="numeric"
+                        keyboardType="numbers-and-punctuation"
                         maxLength={19}
                         onChangeText={handleCardNumberChange}
                         value={cardNum}
@@ -236,7 +236,7 @@ function AppCardForm(props: Props){
                             value={exp}
                             placeholder="MM/YY"
                             label="Exp. Date"
-                            keyboardType='numeric'
+                            keyboardType='numbers-and-punctuation'
                             maxLength={5}
                             onChangeText={handleExpDateChange}
                             rightIcon={
@@ -247,7 +247,7 @@ function AppCardForm(props: Props){
                             width={"45%"}
                             placeholder="CVV"
                             label="CVV"
-                            keyboardType='numeric'
+                            keyboardType='numbers-and-punctuation'
                             maxLength={3}
                             value={cvv}
                             onChangeText={handleCvvChange}

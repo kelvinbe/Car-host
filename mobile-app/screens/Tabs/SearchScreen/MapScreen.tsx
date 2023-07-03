@@ -25,14 +25,12 @@ type Props = IProps & NativeStackScreenProps<SearchScreenParamList, 'MapScreen'>
 
 const useStyles = makeStyles((theme, props) => ({
   container: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     position: 'relative',
     backgroundColor: theme.colors.white,
   },
   mapContainer: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
@@ -122,6 +120,8 @@ const MapScreen = (props: Props) => {
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005,
                   }}
+                  showsBuildings
+                  showsCompass={false}
                   >
                   <Circle
                     center={{

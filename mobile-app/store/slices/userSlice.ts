@@ -2,7 +2,7 @@ import { IPaymentType, IUserProfile, dIUserProfile, dIUserSettings } from './../
 import { RootState } from './index';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { app, auth } from '../../firebase/firebaseApp';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { getAuth } from 'firebase/auth';
 import { PAYMENT_METHOD_ENDPOINT, SETTINGS_ENDPOINT, USER_ENDPOINT } from '../../hooks/constants';
 import apiClient from '../../utils/apiClient';
@@ -45,7 +45,7 @@ export const fetchUserData = createAsyncThunk<any, any>(
         providers: getAuth(app).currentUser?.providerData.map(provider => provider.providerId),
       }
     } catch(e) {
-      rejectWithValue(e)
+      rejectWithValue((e as AxiosError)?.response?.data ?? "An error occured")
     }
 });
 
@@ -53,7 +53,7 @@ export const updateUserData = createAsyncThunk('user/update', (data: Partial<IUs
   return apiClient.put(USER_ENDPOINT, data).then(()=>{
     dispatch(fetchUserData({}));
     return null
-  }).catch(rejectWithValue)
+  }).catch((e: AxiosError)=>rejectWithValue(e?.response?.data ?? 'An error occured'))
 })
 
 export const updateSettings = createAsyncThunk(
@@ -78,7 +78,7 @@ export const updateSettings = createAsyncThunk(
             dispatch(fetchUserData({}));
             return null;
           })
-          .catch(rejectWithValue);
+          .catch((e: AxiosError)=>rejectWithValue(e?.response?.data ?? 'An error occured'));
       })
       .catch(rejectWithValue);
   }
@@ -94,7 +94,7 @@ export const updatePaymentType = createAsyncThunk("user/payment_type", async (da
     dispatch(fetchUserData({}));
     return null
   } catch (e) {
-    rejectWithValue(e)
+    rejectWithValue((e as AxiosError)?.response?.data ?? "An error occured")
   }
 })
 
@@ -118,7 +118,6 @@ const userSlice = createSlice({
         state.getProfileError = action.error;
       }),
       builder.addCase(fetchUserData.fulfilled, (state, action) => {
-        console.log(action.payload.data.data)
         state.data = action.payload.data;
         state.providers = action.payload.providers;
         state.getProfileLoading = false;
@@ -187,5 +186,14 @@ export const selectUpdatePaymentTypeFeedback = (state: RootState) => {
   return {
     loading: user.updatePaymentTypeLoading,
     error: user.updatePaymentTypeError,
+  }
+}
+
+
+export const selectUserFeedback = (state: RootState) => {
+  const data = state.user
+  return {
+    loading: data.getProfileLoading,
+    error: data.getProfileError,
   }
 }

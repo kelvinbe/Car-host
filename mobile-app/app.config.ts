@@ -52,6 +52,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
     },
     assetBundlePatterns: ['**/*'],
     ios: {
+      bundleIdentifier: 'com.niebex.divvly',
       supportsTablet: true,
       config: {
         googleMapsApiKey: process.env.IOS_GOOGLE_MAPS_API_KEY
@@ -59,7 +60,8 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       infoPlist: {
         NSLocationWhenInUseUsageDescription: "This app needs access to location when open.",
         NSLocationAlwaysAndWhenInUseUsageDescription: "This app needs access to location both when open and in the background.",
-        NSLocationAlwaysUsageDescription: "This app needs access to location both when open and in the background."
+        NSLocationAlwaysUsageDescription: "This app needs access to location both when open and in the background.",
+        UIBackgroundModes: ["location", "fetch"],
       }
     },
     android: {
@@ -74,7 +76,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       },
       package: 'com.niebex.divvly',
       googleServicesFile: './google-services.json',
-      versionCode: 27,
+      versionCode: 30,
     },
     web: {
       favicon: './assets/images/favicon.png',

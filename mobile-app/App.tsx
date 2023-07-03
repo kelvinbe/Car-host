@@ -36,6 +36,7 @@ import * as Linking from 'expo-linking'
 import { fetchOnboarding } from './store/slices/onBoardingSlice';
 import useUserAuth from './hooks/useUserAuth';
 import ErrorBoundary from './components/ErrorHandler/ErrorBoundary';
+import { useAuthState } from 'react-firebase-hooks/auth';
   
 
   
@@ -51,33 +52,24 @@ import ErrorBoundary from './components/ErrorHandler/ErrorBoundary';
     const responseListener = useRef<ReturnType<typeof Notifications.addNotificationResponseReceivedListener>>();
     const token = useAppSelector(selectExpoToken)
     const dispatch = useAppDispatch()
-    const [user, setUser] = useState<User|null>(null)
+    const [ user, , ] = useAuthState(auth)
+
 
     useEffect(()=>{
       if(isEmpty(user?.uid)) return undefined
       dispatch(fetchOnboarding())
-    }, [,user?.uid])
-
-
-    /**
-     * @explanation to prevent stale push tokens, we will update the user's push token on every login
-     */
-    onAuthStateChanged(auth, (user)=>{
-      if(!isNull(user)){
-        setUser(user)
-        if (isEmpty(token)){
-          registerForPushNotificationsAsync().then(async (token)=>{
-            dispatch(saveExpoToken(token))
-            await updatePushToken(token, 0)
-          }).catch((e)=>{
-            /**
-             * @todo - this error's priority is low and shouldn't prevent the user from continuing, so we can just log it for now,
-             *        - logrocket will come in handy here
-             */
-          })
-        }
+      if (isEmpty(token)){
+        registerForPushNotificationsAsync().then(async (token)=>{
+          dispatch(saveExpoToken(token))
+          await updatePushToken(token, 0)
+        }).catch((e)=>{
+          /**
+           * @todo - this error's priority is low and shouldn't prevent the user from continuing, so we can just log it for now,
+           *        - logrocket will come in handy here
+           */
+        })
       }
-    })
+    }, [,user?.uid])
 
     useEffect( () => {
       notificationListener.current = Notifications.addNotificationReceivedListener(notification => {

@@ -2,18 +2,18 @@ import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SearchScreenParamList } from '../../../types';
 import { makeStyles, Text, ThemeConsumer } from '@rneui/themed';
-import { ImageBackground, useWindowDimensions, View } from 'react-native';
+import { View } from 'react-native';
 import { Icon, Image } from '@rneui/base';
 import InputWithButton from '../../../components/atoms/Input/WithButton/WithButton';
 import RoundedOutline from '../../../components/atoms/Buttons/Rounded/RoundedOutline';
-import { LinearGradient } from 'expo-linear-gradient';
 import useToast from '../../../hooks/useToast';
 import { isEmpty } from 'lodash';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setHostCode } from '../../../store/slices/bookingSlice';
 import { selectCoords } from '../../../store/slices/searchSlice';
 import { location_search } from '../../../utils/utils';
-import { closeAuthorizationBottomSheet, closeBottomSheet, closeChooseTime } from '../../../store/slices/mapBottomSheet';
+import { closeAuthorizationBottomSheet, closeBottomSheet, closeChooseTime, closePaymentBottomSheet } from '../../../store/slices/mapBottomSheet';
+import BannerImage from './BannerImage';
 
 
 const useStyles = makeStyles((theme, props) => ({
@@ -21,44 +21,8 @@ const useStyles = makeStyles((theme, props) => ({
     backgroundColor: theme.colors.white,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: '100%',
-    height: '100%',
     padding: 0,
-  },
-  topContentContainerStyle: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingVertical: 30,
-    paddingHorizontal: 40,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    marginBottom: 30,
-    overflow: 'hidden',
-  },
-  logoImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-    marginBottom: 20,
-  },
-  heading: {
-    color: theme.colors.white,
-    fontSize: 24,
-    lineHeight: 24,
-    textAlign: 'center',
-    fontWeight: '700',
-    fontFamily: 'Lato_700Bold',
-    width: '100%',
-    marginBottom: 10,
-  },
-  subHeading: {
-    color: theme.colors.white,
-    fontSize: 20,
-    lineHeight: 20,
-    textAlign: 'center',
-    fontWeight: '500',
-    fontFamily: 'Lato_400Regular',
-    width: '100%',
+    flex: 1
   },
   bottomContentContainerStyle: {
     width: '100%',
@@ -106,20 +70,12 @@ const useStyles = makeStyles((theme, props) => ({
     width: '100%',
     height: '100%',
   },
-  gradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-  },
 }));
 
 const SearchScreenHome = (
   props: NativeStackScreenProps<SearchScreenParamList, 'SearchScreenHome'>
 ) => {
   const styles = useStyles();
-  const maxWidth = useWindowDimensions().width;
   const dispatch = useAppDispatch()
   const toast = useToast();
   const { loading } = useAppSelector(selectCoords)
@@ -127,6 +83,7 @@ const SearchScreenHome = (
   
   const hostCodeSearch = async (value: any) => {
     dispatch(closeAuthorizationBottomSheet())
+    dispatch(closePaymentBottomSheet())
     dispatch(closeBottomSheet())
     dispatch(closeChooseTime())
     if (isEmpty(value)) return toast({
@@ -145,6 +102,7 @@ const SearchScreenHome = (
 
   const search_locally = async () => {
     dispatch(closeAuthorizationBottomSheet())
+    dispatch(closePaymentBottomSheet())
     dispatch(setHostCode(null))
     dispatch(closeChooseTime())
     dispatch(closeBottomSheet())
@@ -166,35 +124,8 @@ const SearchScreenHome = (
   return (
     <ThemeConsumer>
       {({ theme }) => (
-        <>
           <View style={styles.container}>
-            <ImageBackground
-              source={require('../../../assets/images/background-home.png')}
-              style={[styles.topContentContainerStyle, { width: maxWidth, height: 356 }]}
-              resizeMode="cover">
-              <LinearGradient
-                style={[
-                  styles.gradient,
-                  {
-                    width: maxWidth,
-                    height: 356,
-                  },
-                ]}
-                start={{
-                  x: 0.5,
-                  y: 0,
-                }}
-                end={{
-                  x: 0.5,
-                  y: 1,
-                }}
-                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 1)']}
-                locations={[0, 0.6927, 1]}
-              />
-              <Image source={require('../../../assets/images/logo.png')} style={styles.logoImage} />
-              <Text style={styles.heading}>Airbnb Host Car Sharing</Text>
-              <Text style={styles.subHeading}>Rent a car hourly with fuel included</Text>
-            </ImageBackground>
+            <BannerImage/>
             <View style={styles.bottomContentContainerStyle}>
               <View style={styles.hostDetailsContainer}>
                 <InputWithButton
@@ -219,7 +150,6 @@ const SearchScreenHome = (
               </RoundedOutline>
             </View>
           </View>
-        </>
       )}
     </ThemeConsumer>
   );

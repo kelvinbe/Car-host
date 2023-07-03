@@ -21,6 +21,10 @@ const MobileBanner = () => {
         ssr: true,
         fallback: true, // return false on the server, and re-evaluate on the client side
       })
+      const textStyle = {
+        fontSize: "20px",
+        color: 'white'
+      }
 
   return (
     <Box
@@ -33,6 +37,7 @@ const MobileBanner = () => {
       marginTop={'-108px'}
       h={'full'}
     >
+      
 
       
         <Flex  flexDirection={'column'} justifyContent={'center'} alignItems={'center'} paddingTop={isLargerThan800 ? "100px" : '125px'} marginBottom={'50px'}  data-testid = 'banner-info'>
@@ -49,10 +54,11 @@ const MobileBanner = () => {
                   <span style={{ color: 'white' }}>SHARING</span> APP
                 </Text>
               </>
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
-              turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
-              nec fringilla accumsan, risus sem sollicitudin lacus.
+            <Text sx={textStyle}>
+            In today&apos;s fast-paced and constantly evolving world, 
+            Divvly Car Rental System emerges as the epitome of convenience and efficiency when it comes to renting a car. 
+            Our platform, designed with the utmost user-friendliness in mind, 
+            caters to your every need, ensuring a hassle-free and seamless car rental experience. 
             </Text>
             <Stack direction={'column'} justifyContent={'center'} spacing={6}>
               <Link href='https://www.apple.com/app-store/' target="blank">

@@ -140,7 +140,7 @@ const LoginScreen = (props: Props) => {
         if (user){
             (async ()=>{
                 dispatch(fetchOnboarding()).unwrap().then((completed)=>{
-                    if (completed?.drivers_license && completed?.location && completed?.payment_method) {
+                    if (completed?.location && completed?.profile) {
                         navigateToHome()
                     } else {
                         navigateToOnBoarding()

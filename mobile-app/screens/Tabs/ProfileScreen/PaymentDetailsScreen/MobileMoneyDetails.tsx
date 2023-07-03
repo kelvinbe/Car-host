@@ -4,7 +4,7 @@ import { makeStyles, useTheme } from '@rneui/themed'
 import BaseInput from '../../../../components/atoms/Input/BaseInput/BaseInput';
 import Rounded from '../../../../components/atoms/Buttons/Rounded/Rounded';
 import { useAddPaymentMethodMutation } from '../../../../store/slices/billingSlice';
-import { useAppDispatch } from '../../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import { fetchUserData } from '../../../../store/slices/userSlice';
 import { isNaN } from 'lodash';
 import useToast from '../../../../hooks/useToast';
@@ -13,6 +13,8 @@ import { PaymentDetailsScreenParamList } from '../../../../types';
 import { DropdownData } from '../../../../components/organisms/select-dropdown/types';
 import SelectDropdown from '../../../../components/organisms/select-dropdown';
 import { useMaskedInputProps } from 'react-native-mask-input'
+import { selectCurrentFlow, setFlow } from '../../../../store/slices/flowstack';
+import * as Linking from 'expo-linking';
 
 const PHONE_NUMBER = [
     '0',
@@ -80,6 +82,7 @@ const MobileMoneyDetails = (props: Props) => {
         key: "M-Pesa",
         value: "MPESA"
     })
+    const current_flow = useAppSelector(selectCurrentFlow)
 
     const maskedInputProps = useMaskedInputProps({
         value: mpesa_number,
@@ -102,6 +105,11 @@ const MobileMoneyDetails = (props: Props) => {
             type: selected.value
         }).then(()=>{
             dispatch(fetchUserData(null))
+            if(current_flow === 'add_payment_method') {
+                dispatch(setFlow(null))
+                Linking.openURL(Linking.createURL("/map"))
+                return
+            }
             props.navigation.goBack()
         }).catch(()=>{
             toast({
@@ -138,7 +146,7 @@ const MobileMoneyDetails = (props: Props) => {
                     {...maskedInputProps}
                     label="Phone Number"
                     placeholder='07XX-XXX-XXX'
-                    keyboardType="number-pad"
+                    keyboardType="numbers-and-punctuation"
                 />
             </View>
         </View>

@@ -30,9 +30,10 @@ export const SlideWithBgImage = ({ banner }:{
     >
       {banner.id === 1 ? (
         <BannerInfo
+          id={1}
           letterSpacing=""
           direction="row"
-          display="block"
+          display="contents"
           image={banner.disImage ?? ""}
           textColor=""
           boxWidth="full"
@@ -48,12 +49,14 @@ export const SlideWithBgImage = ({ banner }:{
           boxPosition="absolute"
           right="0px"
           marginTop="-300"
+          marginLeft="-60px"
         />
       ) : banner.id === 2 ? (
         <BannerInfo
+          id={2}
           letterSpacing=""
           direction="row"
-          display="block"
+          display="contents"
           image={banner.disImage ?? ""}
           textColor=""
           boxWidth="1000px"
@@ -64,9 +67,12 @@ export const SlideWithBgImage = ({ banner }:{
           spacing={1}
           noStyleText={false}
           textAlign="left"
+          marginLeft="42px"
+          justifyContent="center"
         />
       ) : banner.id === 3 ? (
         <BannerInfo
+          id={3}
           letterSpacing="1em"
           direction="row"
           display="none"
@@ -112,9 +118,10 @@ export const Slide = ({ banner }:{
       data-testid="slidebanner-info"
     >
       <BannerInfo
+        id={4}
         letterSpacing="1em"
         direction="row"
-        display="block"
+        display="contents"
         image={banner.disImage ?? ""}
         textColor=""
         flexDirection="column"

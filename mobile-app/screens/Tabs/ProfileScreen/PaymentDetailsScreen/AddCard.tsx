@@ -15,6 +15,8 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store'
 import { isEmpty } from 'lodash'
 import { z } from 'zod'
 import { Masks, useMaskedInputProps } from 'react-native-mask-input'
+import { selectCurrentFlow, setFlow } from '../../../../store/slices/flowstack'
+import * as Linking from 'expo-linking'
 
 
 // custom masks 
@@ -103,6 +105,8 @@ function AddCard(props: Props){
             name: boolean
         }>
     }>>({})
+
+    const current_flow = useAppSelector(selectCurrentFlow)
 
     
     const [addPaymentMethod, { isLoading, isError }] = useAddPaymentMethodMutation()
@@ -203,6 +207,12 @@ function AddCard(props: Props){
                 type: "card"
             }).unwrap()
             dispatch(fetchUserData(null))
+
+            if (current_flow === "add_payment_method") {
+                dispatch(setFlow(null))
+                Linking.openURL(Linking.createURL("/map"))
+                return
+            }
             props.navigation.goBack()
         } catch (error) {
             toast({
@@ -235,7 +245,7 @@ function AddCard(props: Props){
                     />
                 <WithHelperText 
                     label="Card Number"
-                    keyboardType="numeric"
+                    keyboardType="numbers-and-punctuation"
                     rightIcon={
                         errors?.cardNumber ? 
                         (isEmpty(cardNumber) ? undefined : <Icon name="exclamation-circle" size={16} type="font-awesome" color={theme.colors.success} />) : 
@@ -265,7 +275,7 @@ function AddCard(props: Props){
                         placeholder="MM/YY"
                         width={"45%"}
                         label="Exp. Date"
-                        keyboardType='numeric'
+                        keyboardType='numbers-and-punctuation'
                         rightIcon={
                             errors?.expDate ? 
                             ( isEmpty(expDate) ? undefined :<Icon name="exclamation-circle" size={16} type="font-awesome" color={theme.colors.error} />) : 
@@ -276,7 +286,7 @@ function AddCard(props: Props){
                         width={"45%"}
                         placeholder="CVV"
                         label="CVV"
-                        keyboardType='numeric'
+                        keyboardType='numbers-and-punctuation'
                         maxLength={3}
                         value={cvv}
                         onChangeText={handleCvvChange}

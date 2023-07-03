@@ -25,6 +25,7 @@ import { selectBottomSheetState,
   closeCancelBooking as closeCancelBookingAction
 } from '../../../store/slices/mapBottomSheet';
 import ChooseTimeBottomSheet from './BottomSheetScreens/ChooseTime';
+import { Platform } from 'react-native';
 
 interface IProps {
   onClose: () => void;
@@ -57,6 +58,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
     width: '80%',
     backgroundColor: 'transparent',
     paddingVertical: 20,
+    marginBottom: Platform.OS === 'ios' ? 20 : 10, // TODO: update 
   },
 }));
 
@@ -134,6 +136,9 @@ const MapScreenBottomSheet = (props: Props) => {
           snapPoints={snapPoints}
           enablePanDownToClose={props?.inReservation ? false : true}
           index={0}
+          style={{
+            paddingBottom: 0
+          }}
           onClose={closeBottomSheet}>
           <BottomSheetView style={styles.container}>
             <BookingScreen

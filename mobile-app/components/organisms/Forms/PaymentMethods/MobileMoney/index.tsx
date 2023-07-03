@@ -141,7 +141,7 @@ const MobileMoneyForm = (props: IProps) => {
                         {...maskedInputProps}
                         label="Phone Number"
                         placeholder='07XX-XXX-XXX'
-                        keyboardType="number-pad"
+                        keyboardType="numbers-and-punctuation"
                     />
                 </View>
             </View>

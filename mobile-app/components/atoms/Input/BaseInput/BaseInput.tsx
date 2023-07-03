@@ -76,7 +76,7 @@ const BaseInput = (props: Props) => {
           inputContainerStyle={styles.inputContainerStyle}
           style={styles.style}
           errorStyle={styles.errorStyle}
-          containerStyle={[containerStyle, styles.containerStyle]}
+          containerStyle={[styles.containerStyle, containerStyle]}
           placeholderTextColor={theme.colors.grey0}
           underlineColorAndroid="transparent"
           labelStyle={[labelStyle, styles.labelStyle]}

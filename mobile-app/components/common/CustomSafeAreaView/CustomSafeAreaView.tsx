@@ -68,7 +68,7 @@ const CustomSafeAreaView = (props: Props) => {
     <View style={[styles.backgroundContainer,{
         backgroundColor: getStatusBarColor(),
         paddingTop: hasStatusBar() ? insets.top : 0,
-        paddingBottom: insets.bottom,
+        paddingBottom: currentScreen === 'ProfileScreenHome' ? 0 : insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
     }]} >
@@ -76,6 +76,9 @@ const CustomSafeAreaView = (props: Props) => {
         <View style={styles.safeAreaContainer} >
             {props.children}
         </View>
+        {
+            currentScreen === 'ProfileScreenHome' && <View style={{height: insets.bottom, backgroundColor: theme.colors.white}} />
+        }
     </View>
   )
 }

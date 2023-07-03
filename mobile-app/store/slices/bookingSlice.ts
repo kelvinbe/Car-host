@@ -7,6 +7,7 @@ import apiClient from '../../utils/apiClient';
 import { RESERVATIONS_ENDPOINT } from '../../hooks/constants';
 import { calcDuration } from '../../utils/utils';
 import { LocationObject } from 'expo-location';
+import { AxiosError } from 'axios';
 
 
 /**
@@ -21,7 +22,7 @@ export const loadBookingDetailsFromReservation = createAsyncThunk<any, any>(
             params: {
                 reservation_id: id
             }
-        }).then(({data})=>first(data)).catch(rejectWithValue)
+        }).then(({data})=>first(data)).catch((e: AxiosError)=>rejectWithValue(e?.response?.data ?? "An error occured"))
     }
 )
 
@@ -38,7 +39,7 @@ export const modifyCurrentReservation = createAsyncThunk('booking/modifyCurrentR
     }).then(({data})=>{
         dispatch(loadBookingDetailsFromReservation(data.id))
         return data
-    }).catch(rejectWithValue)
+    }).catch((e: AxiosError)=>rejectWithValue(e?.response?.data ?? "An error occured"))
 })
 
 /**
@@ -56,7 +57,7 @@ export const updateInspection = createAsyncThunk('booking/updateInspection', (da
         
         dispatch(loadBookingDetailsFromReservation(reservation_id))
         return null
-    }).catch(rejectWithValue)
+    }).catch((e: AxiosError)=>rejectWithValue(e?.response?.data ?? "An error occured"))
 })
 
 

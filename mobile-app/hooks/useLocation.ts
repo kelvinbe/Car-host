@@ -70,7 +70,7 @@ export default function useLocation(market_id?: string) {
     /**
      * @name fetchSubMarkets 
      */
-    const fetchSubMarkets = async (market_id: string)=>{
+    const fetchSubMarkets = async (market_id?: string)=>{
         setSubMarkets((prev)=>({
             ...prev,
             loading: true,

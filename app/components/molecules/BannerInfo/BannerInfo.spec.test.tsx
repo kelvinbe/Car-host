@@ -37,7 +37,7 @@ describe("Tests the BannerInfo component", () => {
     );
     expect(baseElement).toBeTruthy();
     expect(screen.getByTestId("banner-info").textContent).toBe(
-      "IntroducingHOST CARSHARING APPLorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus."
+      "IntroducingHOST CARSHARING APPIn today's fast-paced and constantly evolving world, Divvly Car Rental System emerges as the epitome of convenience and efficiency when it comes to renting a car. Our platform, designed with the utmost user-friendliness in mind, caters to your every need, ensuring a hassle-free and seamless car rental experience."
     );
 
     const links = screen.getAllByRole('link');

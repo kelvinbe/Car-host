@@ -40,11 +40,11 @@ const SearchScreen = (props: NativeStackScreenProps<BottomTabParamList, 'SearchS
       {({ theme }) => (
         <View
           style={{
-            width: '100%',
-            height: '100%',
+            flex: 1
           }}>
           <SearchScreenStacks.Navigator
             initialRouteName="SearchScreenHome"
+            key={currentScreen}
             screenOptions={{
               headerStyle: {
                 backgroundColor: theme.colors.background,

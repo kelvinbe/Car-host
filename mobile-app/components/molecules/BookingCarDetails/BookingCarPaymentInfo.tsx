@@ -73,7 +73,7 @@ const BookingCarPaymentInfo = (props: Props) => {
         <View style={styles.container}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Total</Text>
-            {paymentType && (
+            {(paymentType && isEmpty(reservation_id)) && (
               <TouchableOpacity
                 onPress={props.openSelectPaymentMethod}
                 style={[styles.actionButton, , { borderBottomColor: theme.colors.link }]}>

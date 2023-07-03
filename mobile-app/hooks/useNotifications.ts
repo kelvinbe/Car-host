@@ -16,6 +16,7 @@ import useBookingActions from './useBookingActions';
 import { location_search } from '../utils/utils';
 import { openChooseTimeAndBottomSheet, selectBottomSheetState, setBottomSheetNotification } from '../store/slices/mapBottomSheet';
 import * as Linking from 'expo-linking'
+import { selectCurrentFlow, setFlow } from '../store/slices/flowstack';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -120,6 +121,7 @@ const useNotifications = () => {
     const toast = useToast()
     const mapScreenState = useAppSelector(selectBottomSheetState)
     const { setAuthCode } = useBookingActions()
+    const current_flow = useAppSelector(selectCurrentFlow)
 
     /**
      * @name togglePushNotifications
@@ -130,7 +132,19 @@ const useNotifications = () => {
                 await updatePushToken(token, 0)
                 dispatch(updateSettings({
                     notifications_enabled: !userNotificationsEnabled
-                }))
+                })).unwrap().then(()=>{
+                  if (current_flow === "notification_enable") {
+                    dispatch(setFlow(null))
+                    Linking.openURL(Linking.createURL('/map'))
+                    return
+                  }
+                }).catch(()=>{
+                  if (current_flow === "notification_enable") {
+                    dispatch(setFlow(null))
+                    Linking.openURL(Linking.createURL('/map'))
+                    return
+                  }
+                })
             }).catch((e)=>{
                 toast({
                     title: "Error",

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase/firebaseApp'
-import { ResponseType } from 'expo-auth-session';
+import { ResponseType, makeRedirectUri } from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import * as Facebook from 'expo-auth-session/providers/facebook';
 import * as Google from 'expo-auth-session/providers/google';
@@ -12,6 +12,7 @@ import { GOOGLE_CLIENT_ID, FACEBOOK_APP_ID } from "@env"
 import * as Crypto from 'expo-crypto';
 import { useAppDispatch } from '../store/store';
 import { fetchUserData } from '../store/slices/userSlice';
+import * as Linking from 'expo-linking'
 
 
 WebBrowser.maybeCompleteAuthSession()
@@ -29,8 +30,12 @@ function useSocialAuth() {
 
     const [g_request, g_response, g_promptAsync] = Google.useAuthRequest({
         expoClientId:GOOGLE_CLIENT_ID,
-        responseType: ResponseType.Token,
-        clientId: GOOGLE_CLIENT_ID,
+        responseType: ResponseType.Code,
+        androidClientId: GOOGLE_CLIENT_ID,
+        redirectUri: makeRedirectUri({
+            scheme: "com.niebex.divvly"
+        }),
+        
     })
 
     useEffect(()=>{

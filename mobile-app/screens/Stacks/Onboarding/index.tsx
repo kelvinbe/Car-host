@@ -1,12 +1,19 @@
 import { Text, View } from 'react-native'
-import React, { useEffect} from 'react'
+import React, { useEffect, useMemo, useState} from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { UserOnboardingParamList } from '../../../types';
-import { Image, makeStyles, ThemeConsumer } from '@rneui/themed';
-import { AntDesign, Entypo, Feather, FontAwesome } from '@expo/vector-icons';
+import { Image, Input, makeStyles, ThemeConsumer } from '@rneui/themed';
 import Rounded from '../../../components/atoms/Buttons/Rounded/Rounded';
-import AccordionButton from '../../../components/atoms/Buttons/AccordionButton/AccordionButton';
-import useOnBoarding from '../../../hooks/useOnBoarding';
+import BaseInput from '../../../components/atoms/Input/BaseInput/BaseInput';
+import useLocation from '../../../hooks/useLocation';
+import SelectDropdown from '../../../components/organisms/select-dropdown';
+import { DropdownData } from '../../../components/organisms/select-dropdown/types';
+import { isEmpty } from 'lodash';
+import { z } from 'zod';
+import useToast from '../../../hooks/useToast';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { selectUpdateProfile, selectUserFeedback, selectUserProfile, updateUserData } from '../../../store/slices/userSlice';
+import Loading from '../../../components/molecules/Feedback/Loading/Loading';
 
 
 const useStyles = makeStyles((theme) => {
@@ -16,56 +23,39 @@ const useStyles = makeStyles((theme) => {
       backgroundColor: "white",
       alignItems: "center",
       justyifyContent: "space-between",
-      paddingHorizontal: 20
+      padding: 20
     },
-    contentContainer: {
-      flex: 1,
+    namesContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       width: "100%",
-      justifyContent: 'flex-start',
-      alignItems: 'center',
+      paddingVertical: 20
     },
-    bottomTextContainer: {
-      width: '100%',
+    nameInput: {
+      width: "48%"
+    },
+    locationInfo: {
+      width: "100%",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+      marginTop: 20
+    },
+    infoText: {
       fontSize: 16,
-      fontWeight: '500',
-      fontFamily: 'Lato_400Regular',
-      textAlign: 'center',
-      letterSpacing: 0.1,
+      fontWeight: "700",
     },
-    title: {
-      color: theme.colors.title,
-      fontSize: 22,
-      fontWeight: '700',
-      fontFamily: 'Lato_700Bold',
-      marginBottom: 10,
+    dropdown: {
+      width: "100%",
+      borderColor: theme.colors.primary
     },
-    logoContainer: {
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: 20,
-      marginBottom: 10,
+    serachBox: {
+      borderColor: theme.colors.primary,
+      marginTop: 20
     },
-    cardContainer: {
-      width: '100%',
-      height: 80,
-      shadowColor: '#ddd',
-      shadowOpacity: 0.3,
-      shadowOffset: {
-        width: -2,
-        height: 4,
-      },
-      elevation: 5,
-      marginVertical: 5,
-      marginTop: 25,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: 20,
-      borderRadius: 10,
-    },
-    buttonContainer: {
+    bottomContainer: {
+      flex: 1,
+      height: "100%",
       width: "100%",
       alignItems: "center",
       justifyContent: "flex-end",
@@ -81,109 +71,182 @@ interface IProps {
 
 type Props = NativeStackScreenProps<UserOnboardingParamList, "OnboardingHome"> & IProps;
 
+const dataSchema = z.object({
+  fname: z.string().nonempty(),
+  lname: z.string().nonempty(),
+  market_id: z.string().uuid(),
+  sub_market_id: z.string().uuid(),
+  phone: z.string().optional()
+})
+
 const Onboarding = (props: Props) => {
+  const dispatch = useAppDispatch()
+  const toast = useToast()
   const styles = useStyles(props)
+  const user = useAppSelector(selectUserProfile)
+  const fetchFeedback = useAppSelector(selectUserFeedback)
+  const updateFeedback = useAppSelector(selectUpdateProfile)
   const { navigation, route, goToApp } = props;
+  const { markets, subMarkets, fetchMarkets, fetchSubMarkets } = useLocation()
+  const [market, setMarket] = useState<DropdownData<string, string>|null>(user?.market_id ? {
+    key: user?.market_id ?? "",
+    value: user?.market?.name ?? ""
+  } :null)
+  const [subMarket, setSubMarket] = useState<DropdownData<string, string>|null>(user?.sub_market_id ? {
+    key: user?.sub_market_id ?? "",
+    value: user?.sub_market?.name ?? ""
+  } :null)
+  const [fname, setFname] = useState<string>(user?.fname ?? "")
+  const [lname, setLname] = useState<string>(user?.lname ?? "")
+  const [phone, setPhone] = useState<string>(user?.phone ?? "")
 
-  const { completed } = useOnBoarding()
+  const countries = useMemo(()=>markets?.data?.map((market)=>{
+    return {
+      key: market?.id,
+      value: market?.name
+    } as DropdownData<string,string>
+  }), [markets?.loading])
 
-  const handleDriversLicense = () => {
-    navigation.push("DriversLicense")
-  }
 
-  const handlePaymentMethod = () => {
-    navigation.push("SelectPaymentMethod", {
-      payment_method_added: false
+  const sub_markets = useMemo(()=>subMarkets?.data?.map((subMarket)=>{
+    return {
+      key: subMarket?.id,
+      value: subMarket?.name
+    } as DropdownData<string,string>
+  }), [subMarkets?.loading])
+
+  useEffect(()=>{
+      fetchMarkets()
+  }, [,markets?.error])
+
+
+  useEffect(()=>{
+    if(!isEmpty(market?.key)) {
+      fetchSubMarkets(market?.key)
+    }
+  }, [market?.key])
+
+  const handleSubmit = () => {
+    const parsed = dataSchema.safeParse({
+      fname,
+      lname,
+      market_id: market?.key,
+      sub_market_id: subMarket?.key
     })
+
+    if(parsed.success) {
+
+      const data = parsed.data
+
+      const for_update = {
+        fname: data.fname === user?.fname ? undefined : data.fname,
+        lname: data.lname === user?.lname ? undefined : data.lname,
+        market_id: data.market_id === user?.market_id ? undefined : data.market_id,
+        sub_market_id: data.sub_market_id === user?.sub_market_id ? undefined : data.sub_market_id,
+        phone: data.phone === user?.phone ? undefined : data.phone
+      }
+
+      const valid_changes  = Object.values(for_update).filter((value)=>value !== undefined)
+
+      if(valid_changes.length === 0) {
+        goToApp()
+      }else{
+        dispatch(updateUserData(for_update)).unwrap()
+        .then(()=>{
+          goToApp()
+        })
+        .catch((err)=>{
+          toast({
+            type: "error",
+            message: "Something went wrong"
+          })
+        })
+      }
+      
+    } else {
+      toast({
+        type: "error",
+        message: "Please fill all fields"
+      })
+    }
   }
-
-  const handleLocation = () => {
-    navigation.push("Location")
-  }
-
-  const onDone = () => {
-    goToApp()
-  }
-
-
-
-
 
   return (
     <ThemeConsumer>
       {({ theme }) => (
         <View style={styles.container}>
-          <View style={styles.contentContainer}>
-            <View style={styles.logoContainer}>
-              <Image
-                source={require('../../../assets/images/logo.png')}
-                style={{
-                  height: 100,
-                  width: 100,
-                }}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={styles.title}>Almost There</Text>
-            <Text style={styles.bottomTextContainer}>
-              You need to upload your Driver's license and set a payment method to make reservations
-            </Text>
-            <AccordionButton
-              icon={<FontAwesome name="drivers-license-o" size={20} color={theme.colors.grey1} />}
-              onPress={handleDriversLicense}
-              title="Driver's License"
-              customStyles={{
-                // @todo add shadow support
+          <View style={styles.namesContainer} >
+            <BaseInput
+              containerStyle={{
+                width: "48%",
+                borderRadius: 10
               }}
-              customAccordionIcon={
-                !completed?.drivers_license ? <Entypo name="chevron-right" size={24} color={theme.colors.grey1} /> :
-                  <AntDesign
-                    name="checkcircle"
-                    size={24}
-                    color={theme.colors.success}
-                  />
-              }
+              placeholder='First Name'
+              label="First Name"
+              value={fname}
+              onChangeText={setFname}
             />
-            <AccordionButton
-              icon={<Feather name="credit-card" size={24} color={theme.colors.grey1} />}
-              onPress={handlePaymentMethod}
-              title="Payment Method"
-              customStyles={{
-                // @todo add shadow support
+            <BaseInput
+              containerStyle={{
+                width: "48%",
+                borderRadius: 10,
+                marginVertical: 10
               }}
-              customAccordionIcon={
-                !completed?.payment_method ? <Entypo name="chevron-right" size={24} color={theme.colors.grey1} /> :
-                  <AntDesign
-                    name="checkcircle"
-                    size={24}
-                    color={theme.colors.success}
-                  />
-              }
-            />
-            <AccordionButton
-              icon={<Entypo name="location-pin" size={24} color={theme.colors.grey1} />}
-              onPress={handleLocation}
-              title="Location"
-              customStyles={{
-                // @todo add shadow support
-              }}
-              customAccordionIcon={
-                !completed?.location ? <Entypo name="chevron-right" size={24} color={theme.colors.grey1} /> :
-                  <AntDesign
-                    name="checkcircle"
-                    size={24}
-                    color={theme.colors.success}
-                  />
-              }
+              placeholder='Last Name'
+              label="Last Name"
+              value={lname}
+              onChangeText={setLname}
             />
           </View>
-          <View style={styles.buttonContainer} >
+          <BaseInput
+              containerStyle={{
+                width: "100%",
+                borderRadius: 10
+              }}
+              placeholder='Phone Number(Optional)'
+              label="Phone Number"
+              value={phone}
+              onChangeText={setPhone}
+            />
+          <View style={styles.locationInfo}>
+            <Text style={styles.infoText} >
+              Select your current location
+            </Text>
+            <SelectDropdown
+                data={countries ?? []}
+                placeholder={"Select a country"}
+                selected={market}
+                setSelected={setMarket}
+                searchOptions={{ cursorColor: theme.colors.primary }}
+                searchBoxStyles={styles.serachBox}
+                dropdownStyles={styles.dropdown}
+            />
+            <SelectDropdown
+              disabled={isEmpty(market)}
+              data={sub_markets ?? []}
+              placeholder={"Select a city"}
+              selected={subMarket}
+              setSelected={setSubMarket}
+              searchOptions={{ cursorColor: theme.colors.primary }}
+              searchBoxStyles={styles.serachBox}
+              dropdownStyles={styles.dropdown}
+            />
+          </View>
+          <View style={styles.bottomContainer} >
             <Rounded
-              fullWidth
-              disabled={!completed?.drivers_license || !completed?.payment_method || !completed?.location}
-              onPress={onDone}
+              disabled={
+                !dataSchema.required().safeParse({
+                  fname,
+                  lname,
+                  market_id: market?.key,
+                  sub_market_id: subMarket?.key,
+                  phone: "__optional__"
+                }).success
+              }
+              onPress={handleSubmit}
+              loading={updateFeedback?.loading}
             >
-              Done
+              Continue
             </Rounded>
           </View>
         </View>
@@ -193,7 +256,23 @@ const Onboarding = (props: Props) => {
   )
 }
 
+
+const PreOnboarding = (props: Props) => {
+  const feedback = useAppSelector(selectUserFeedback)
+  const {markets, fetchMarkets} = useLocation()
+
+  useEffect(()=>{
+    fetchMarkets()
+  }, [])
+
+  if(feedback?.loading || markets?.loading) {
+    return <Loading/>
+  }
+
+  return <Onboarding {...props}/>
+}
+
 /**
  * Memoize component to prevent unnecessary re-renders
  */
-export default React.memo(Onboarding)
+export default React.memo(PreOnboarding)

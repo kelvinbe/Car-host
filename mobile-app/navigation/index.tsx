@@ -136,14 +136,22 @@ export function UserOnboardingNavigation(props: onBoardingScreenProps) {
     if(isNull(user)){
       goToLogin()
     }else {
-      dispatch(fetchUserData(null))
+      const meta = user?.metadata
+      if (meta?.creationTime === meta?.lastSignInTime) {
+        // !!! IMPORTANT !!!   this is a new user, so we need to wait for their details to be created on the backend before we can proceed
+        setTimeout(()=>{
+          dispatch(fetchUserData(null))
+        }, 2000)
+      }else{
+        dispatch(fetchUserData(null))
+      }
     }
   })
   return (
     <UserOnboardingNavigator.Navigator initialRouteName='OnboardingHome'>
       <UserOnboardingNavigator.Screen name="OnboardingHome" options={{ headerShown: false, animation: 'slide_from_right' }}  children={(props) => (<Onboarding goToApp={goToApp} goToLogin={goToLogin} {...props} />)} />
     
-      <UserOnboardingNavigator.Screen name="DriversLicense" options={{ header(props){
+      {/* <UserOnboardingNavigator.Screen name="DriversLicense" options={{ header(props){
           return <BaseTopBar {...props} title="Upload Drivers License" chevronLeft home={false} />
         }, 
       animation: 'slide_from_right'
@@ -160,7 +168,7 @@ export function UserOnboardingNavigation(props: onBoardingScreenProps) {
           props?.route?.params?.payment_method === "mobile_money" ? "Add Mobile Money" :
           null // for now, will add others later
         } chevronLeft home={false} />
-      }}} />
+      }}} /> */}
     </UserOnboardingNavigator.Navigator>
   )
 }
@@ -281,10 +289,14 @@ function BottomTabNavigator(props: Props) {
               borderTopColor: theme.colors.background,
               elevation: 5,
               display: displayBottomNav ? 'flex' : 'none',
+              ...(displayBottomNav ? null : {
+                height: 0
+              })
             },
             tabBarActiveTintColor: theme.colors.primary,
             tabBarInactiveTintColor: theme.colors.grey0,
           }}
+          
           initialRouteName="SearchScreen">
           <Tabs.Screen
             name="SearchScreen"

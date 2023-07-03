@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as Location from 'expo-location'
 import { RootState } from ".";
 import { clearBookingState } from "./bookingSlice";
+import { AxiosError } from "axios";
 
 export const searchLocally = createAsyncThunk('search/searchLocally', async (data,{rejectWithValue, dispatch})=>{
     dispatch(clearBookingState())
@@ -16,7 +17,7 @@ export const searchLocally = createAsyncThunk('search/searchLocally', async (dat
 
         return location.coords
     } catch (e) {
-        return rejectWithValue(e)
+        return rejectWithValue((e as AxiosError)?.response?.data ?? "An error occured")
     }   
 })
 

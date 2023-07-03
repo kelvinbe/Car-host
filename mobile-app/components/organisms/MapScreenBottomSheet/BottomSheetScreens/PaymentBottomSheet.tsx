@@ -5,11 +5,15 @@ import { makeStyles, ThemeConsumer } from '@rneui/themed';
 import { FlatList } from 'react-native-gesture-handler';
 import useBookingActions from '../../../../hooks/useBookingActions';
 import useToast from '../../../../hooks/useToast';
-import { useAppSelector } from '../../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import { selectUserProfile } from '../../../../store/slices/userSlice';
 import PaymentMethod from '../../../atoms/PaymentMethod';
 import Divider from '../../../atoms/Divider/Divider';
 import { isEmpty } from 'lodash'
+import AccordionButton from '../../../atoms/Buttons/AccordionButton/AccordionButton';
+import { Feather } from '@expo/vector-icons';
+import * as Linking from 'expo-linking'
+import { setFlow } from '../../../../store/slices/flowstack';
 
 interface IProps {
   closeBottomSheet?: () => void;
@@ -45,6 +49,12 @@ const useStyles = makeStyles((theme, props: Props) => {
       width: '100%',
       flex: 1,
     },
+    emptyContainer: {
+      width: '100%'
+    },
+    infoText: {
+      fontSize: 16
+    }
   };
 });
 
@@ -56,11 +66,16 @@ const PaymentBottomSheet = (props: Props) => {
   const user = useAppSelector(selectUserProfile)
   const toast = useToast()
   const [activePaymentMethod, setActivePaymentMethod] = useState<string>()
+  const dispatch = useAppDispatch()
 
   const close = () => {
     bottomSheetRef.current?.close();
     props.closeBottomSheet && props.closeBottomSheet();
   };
+
+  const handleGetStarted = () => {
+    dispatch(setFlow('add_payment_method'))
+  }
 
   const handlePaymentSelect = (pt_id: any) => {
     const paymentType = user?.payment_types?.find(({id})=>pt_id === id)
@@ -74,6 +89,10 @@ const PaymentBottomSheet = (props: Props) => {
       })
     }
   };
+
+  const addPaymentMethod = () => {
+    Linking.openURL(Linking.createURL('/payment-details'))
+  }
 
   useEffect(()=>{
     if(!isEmpty(activePaymentMethod)){
@@ -97,16 +116,38 @@ const PaymentBottomSheet = (props: Props) => {
           onClose={props.closeBottomSheet}
           enablePanDownToClose>
           <View style={styles.contentContainer}>
-            <Text style={styles.contentTitleStyle}>Select payment</Text>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={user?.payment_types}
-              keyExtractor={(item) => item.id}
-              renderItem={({item: pm, index})=>(
-                <PaymentMethod isActive={pm.id === activePaymentMethod} onPress={setActivePaymentMethod} key={index} {...pm} />
-              )}
-              ItemSeparatorComponent={()=> <Divider/>}
-            />
+            <Text style={styles.contentTitleStyle}>Select payment method</Text>
+            {
+              isEmpty(user?.payment_types) ? 
+                <View style={styles.emptyContainer} > 
+                  <Text style={styles.infoText}>You haven't added a payment method yet!</Text>
+                  <AccordionButton
+                    title="Get started"
+                    onPress={addPaymentMethod}
+                    icon={<Feather name="credit-card" size={24} color={theme.colors.grey1} />}
+                    customStyles={{
+                      paddingHorizontal: 0,
+                      paddingVertical: 0,
+                      borderWidth: 1,
+                      borderColor: theme.colors.iconPrimary,
+                      borderRadius: 10,
+                      marginTop: 20,
+                    }}
+                    
+                  />
+                </View>
+                :
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={user?.payment_types}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({item: pm, index})=>(
+                    <PaymentMethod isActive={pm.id === activePaymentMethod} onPress={setActivePaymentMethod} key={index} {...pm} />
+                  )}
+                  ItemSeparatorComponent={()=> <Divider/>}
+                />
+
+            }
           </View>
         </BottomSheet>
       )}
