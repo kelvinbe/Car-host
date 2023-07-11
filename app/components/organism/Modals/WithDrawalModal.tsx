@@ -7,6 +7,8 @@ import { selectUser } from "../../../redux/userSlice";
 import { tBankAccountPayoutSchema } from "../Forms/BankPayoutMethod";
 import { isUndefined, isEmpty } from 'lodash'
 import {createWithDrawal} from '../../../redux/payoutSlice'
+import AvailableEarnings from "../../atoms/earnings-reports/available";
+import { selectPayoutReportFeedback } from "../../../redux/withdrawalSlice";
 
 
 
@@ -17,6 +19,8 @@ interface IProps {
 }
 
 const WithDrawalModal = (props: IProps) => {
+
+    const {data} = useAppSelector(selectPayoutReportFeedback)
   
     const {isOpen, onClose} = props
     const user = useAppSelector(selectUser)
@@ -32,15 +36,13 @@ const WithDrawalModal = (props: IProps) => {
 
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      const availableEarnings = user?.earnings?.available
       setInputState(e.target.value)
 
-        if(!isUndefined(availableEarnings)){
-          if(Number(e.target.value) > availableEarnings){
+        
+        if(Number(e.target.value) > (data?.available ?? 0)){
             setError('Please add a lower value')
         }else {
             setError('')
-        }
         }
     }
 
@@ -81,12 +83,23 @@ const WithDrawalModal = (props: IProps) => {
             <ModalHeader>Make A Withdrawal</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
-              <FormControl>
-                <FormLabel>Your Available Earnings {user?.earnings?.available}</FormLabel>
+              <FormControl
+                isInvalid={Boolean(error)}
+              >
+                <FormLabel>Your Available Earnings {data?.currency} {data?.available} </FormLabel>
                 <NumberInput>
-                <NumberInputField  disabled={user?.earnings?.available === 0} value={inputState} border='1px solid black' borderRadius='md' bg='white' w='100%' p={4} color='black' onChange={(e) => {handleChange(e)}} />
+                  <NumberInputField  
+                    disabled={((data?.available ?? 0) === 0)} value={inputState} 
+                    border='1px solid black' borderRadius='md' bg='white' w='100%' p={4} color='black' onChange={(e) => {handleChange(e)}} 
+                    placeholder={`MAX: ${data?.available ?? 0} MIN: ${100}`}  
+                  />
                 </NumberInput>
-                    {error && <Text fontSize="sm" color="red.500">{error}</Text>}
+                <FormErrorMessage>
+                  {
+                    ( Number(inputState) > (data?.available ?? 0) ) ? `Max withdrawal amount is ${data?.available}` : `Input invalid`
+                  }
+                </FormErrorMessage>
+
               </FormControl>
   
               <FormControl mt={4}>

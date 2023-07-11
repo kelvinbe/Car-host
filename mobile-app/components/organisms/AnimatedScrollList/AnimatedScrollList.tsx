@@ -37,7 +37,7 @@ const AnimatedScrollList = (props: Props) => {
     const dispatch = useAppDispatch()
     const {data: coords} = useAppSelector(selectCoords)
     const chosenHostCode = useAppSelector(selectChosenHostCode)
-    const { bookingDetails: { start_date_time, end_date_time} } = useBookingActions()
+    const { bookingDetails: { start_date_time, end_date_time}, clearBookingState } = useBookingActions()
     const { data, isLoading, isError, refetch, isFetching } = useGetVehiclesQuery({
         ...(isEmpty(chosenHostCode) ? {
             longitude: coords?.longitude.toString() ?? undefined,
@@ -81,6 +81,7 @@ const AnimatedScrollList = (props: Props) => {
         if(start_date_time && end_date_time){
             if(calcDuration(start_date_time, end_date_time) > 0){
                 const fetched = data?.find(({id}) => id === chosen_id)
+                clearBookingState()
                 props.handleSelect && props.handleSelect(fetched ? fetched : null);
             }else {
                 toast({

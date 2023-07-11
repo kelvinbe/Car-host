@@ -3,11 +3,12 @@ import React, { useState } from 'react'
 import { selectBookingData, setAuthCode, setBillingInfo, setEndDateTime, setHostId, setStartDateTime, setStatus, setVehicle, clearBookingState, setPaymentType, selectBookingPaymentAuthorization, setBookingPaymentAuthorization } from '../store/slices/bookingSlice'
 import { selectStripeCustomerId, selectUserProfile } from '../store/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../store/store'
-import { IPaymentMethod } from '../types'
+import { IPaymentMethod, IReservation } from '../types'
 import { calcDuration } from '../utils/utils'
-import { BACKEND_DOMAIN, PAYMENT_ENDPOINT } from './constants'
+import { BACKEND_DOMAIN, PAYMENT_ENDPOINT, RESERVATIONS_ENDPOINT } from './constants'
 import useToast from './useToast'
 import apiClient from '../utils/apiClient'
+import * as Linking from 'expo-linking'
 
 
 
@@ -166,6 +167,42 @@ function useBookingActions() {
     }
 
     /**
+     * @name payWithCash
+     */
+
+    const payWithCash = async () =>{
+      const { vehicle, start_date_time, end_date_time } = bookingDetails 
+      setLoading(true)
+      try{
+        const reservation = (await apiClient.post(`${RESERVATIONS_ENDPOINT}/cash`, {
+          start_date_time,
+          end_date_time,
+          amount: Number(((vehicle?.hourly_rate ?? 0) * calcDuration(start_date_time, end_date_time)).toFixed()),
+          vehicle_id: vehicle?.id
+        })).data as Partial<IReservation>
+
+        Linking.openURL(Linking.createURL("/booking-confirmation", {
+          queryParams: {
+            reservationId: reservation?.id
+          }
+        }))
+      }
+      catch (e)
+      {
+        setError(e as string)
+        toast({
+          message: "An error Occured",
+          title: "Error",
+          type: "error",
+          duration: 4000
+        })
+      }
+      finally{
+        setLoading(false)
+      }
+    }
+
+    /**
      * @name payForReservation
      * @description This function is used to pay for the reservation
      * @param {string} paymentMethodId - The payment method id
@@ -180,9 +217,7 @@ function useBookingActions() {
           await payWithMpesa()
           break;
         case 'CASH':
-          /**
-           * @todo - handle cash payments
-           */
+          await payWithCash()
           break;
         case 'PAYPAL':
           /**

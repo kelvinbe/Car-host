@@ -87,6 +87,12 @@ import { useAuthState } from 'react-firebase-hooks/auth';
               code: data.code,
             }, data.link)
             break;
+          case "cash_payment_approved":
+            Linking.openURL(Linking.createURL("/upcoming"))
+            break;
+          case "cash_payment_denied":
+            Linking.openURL(Linking.createURL("/search"))
+            break
           default:
             break;
         }

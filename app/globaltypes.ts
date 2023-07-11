@@ -393,16 +393,16 @@ export interface dIInvitation {
 }
 
 export interface IWithdrawals {
-  id :string;          
-  user: IUserProfile;            
-  user_id: string;            
+  id: string;
+  user: IUserProfile;
+  user_id: string;
   amount: number;
-  payout:IPayout;          
-  payout_id: string;          
+  payout: IPayout;
+  payout_id: string;
   status: "PENDING" | "APPROVED" | "COMPLETED" | "FAILED" | "CANCELLED";
-  createdAt: Date | string;       
-  payout_method: PayoutMethods;      
-  payout_method_id: string;            
+  created_at: Date | string;
+  payout_method: PayoutMethods;
+  payout_method_id: string;
 }
 
 export interface IAnalyticsData{

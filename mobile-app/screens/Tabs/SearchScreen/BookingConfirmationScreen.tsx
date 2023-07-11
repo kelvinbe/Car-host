@@ -120,7 +120,9 @@ const BookingConfirmationScreen = (props: Props) => {
                                 <TickMarkIcon stroke={theme.colors.primary} height={30} width={30} />
                             </View>
                             <Text style={styles.textStyle} >
-                                Booking Confirmed
+                                {
+                                    data?.status === "UPCOMING" ? "Booking Confirmed" : data?.status === "PENDING_CONFIRMATION" ? "Awaiting confirmation from host" : ""
+                                }
                             </Text>
                             <HistoryCard {...data} customStyle={{marginBottom: 20}} />
                         </View>

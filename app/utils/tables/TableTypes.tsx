@@ -241,14 +241,14 @@ export const WithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
     title: "Withdrawal Date",
     dataIndex: "createdAt",
     key: "createdAt",
-    render: (v, { createdAt: createdAt }) => (
+    render: (v, { created_at: createdAt }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
-          {dayjs(createdAt).format('DD MMM, YYYY')}
+          {get_formatted_date(createdAt)}
         </Text>
       </Flex>
     ),
-    sorter: (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
+    sorter: (a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at))
   },
   {
     title: "Amount",
@@ -298,14 +298,14 @@ export const AdminWithdrawalsTableColumns: ColumnsType<IWithdrawals> = [
     title: "Withdrawal Date",
     dataIndex: "createdAt",
     key: "createdAt",
-    render: (v, { createdAt: createdAt }) => (
+    render: (v, { created_at: createdAt }) => (
       <Flex {...FlexColStartStart}>
         <Text fontSize="14px" fontWeight="500">
           {dayjs(createdAt).format('DD MMM, YYYY')}
         </Text>
       </Flex>
     ),
-    sorter: (a, b) => Number(new Date(b?.createdAt)) - Number(new Date(a?.createdAt))
+    sorter: (a, b) => Number(new Date(b?.created_at)) - Number(new Date(a?.created_at))
   },
   {
     title: "Amount",

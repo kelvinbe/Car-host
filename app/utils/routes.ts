@@ -3,7 +3,7 @@ import { RxDashboard } from "react-icons/rx"
 import { RiReservedLine, RiDownload2Fill } from "react-icons/ri"
 import { SlLocationPin } from "react-icons/sl"
 import { TfiCar } from "react-icons/tfi"
-import { MdPowerInput } from "react-icons/md"
+import { MdPendingActions, MdPowerInput } from "react-icons/md"
 import { SiSimpleanalytics } from "react-icons/si"
 import { CiWallet, CiTimer } from "react-icons/ci"
 import { CgArrowsMergeAltH } from "react-icons/cg"
@@ -13,7 +13,7 @@ import {BsHouse} from 'react-icons/bs'
 // dashboard routes
 export const dashboardRoutes: {
     name: string;
-    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites" | "toWithdrawals" | "toProperties",
+    onClick: "toHome" | "toResports" | "toVehicleManagement" | "toReservations" | "toUsers" | "toAnalytics" | "toAvailability" | "toStations" | "toPayouts" | "toIntegrations" | "toAuthCodeManagement" | "toAllMapView" | "toAllReservations" | "toInvites" | "toWithdrawals" | "toProperties" | "toPendingReservations",
     admin: boolean,
     icon?: IconType,
     link?: string,
@@ -58,6 +58,13 @@ export const dashboardRoutes: {
       admin: false,
       icon: RiReservedLine,
       link: "/reservations"
+    },
+    {
+      name: "pending reservations",
+      onClick: "toPendingReservations",
+      admin: false,
+      icon: MdPendingActions,
+      link: "/pending-confirmation"
     },
     {
       name: "stations",

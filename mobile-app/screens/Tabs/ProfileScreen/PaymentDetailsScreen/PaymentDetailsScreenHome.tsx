@@ -106,10 +106,6 @@ function PaymentDetailsScreenHome(props: Props) {
 
     const makePrimary = (id?: string) =>{
         setCurrentId(id)
-        dispatch(updatePaymentType({
-            id,
-            is_primary: true
-        }))
     }
 
     const onSheetChange = useCallback((index: number)=>{

@@ -36,7 +36,7 @@ function BaseTable(props: IProps<any>) {
                 borderColor="gray.300"
                 w="full"
                 h="full"
-                maxW="82vw"
+                maxW="88vw"
                 rounded="sm"
                 overflowX="scroll"
                 // maxHeight='700px'

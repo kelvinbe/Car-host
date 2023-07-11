@@ -4,7 +4,7 @@ import { RootState } from ".";
 import apiClient from "../utils/apiClient";
 import { RESERVATION_DOMAIN } from "../hooks/constants";
 import LogRocket from "logrocket";
-import { isEmpty } from "lodash";
+import { create, isEmpty } from "lodash";
 import { clearEmulation, selectEmulationFeedback } from "./emulationSlice";
 
 
@@ -71,6 +71,26 @@ export const updateReservation = createAsyncThunk('reservations/updateReservatio
     }
 })
 
+
+export const updateCashReservation = createAsyncThunk('reservations/updateCashReservation', async (data: Partial<IReservation & {
+    reservation_id: string
+}>, {rejectWithValue, dispatch})=>{
+    try {
+        const res = (await apiClient.put(`${RESERVATION_DOMAIN}/cash`, {
+            ...data
+        }))
+
+        dispatch(fetchReservations({
+            status: 'PENDING_CONFIRMATION'
+        }))
+
+        return res.data
+    } catch(e) {
+        LogRocket.error(e)
+        return rejectWithValue(e as string)
+    }
+})
+
 const reservations: IReservation[] = []
 const reservationsSlice = createSlice({
     name: 'reservations',
@@ -94,7 +114,9 @@ const reservationsSlice = createSlice({
         fetchReservationsError: null | string,
         updateReservationLoading: boolean,
         updateReservationError: null | string,
-        active_reservation_id?: string
+        active_reservation_id?: string,
+        updateCashReservationLoading: boolean,
+        updateCashReservationError: null | string,
     } & Partial<PaginationSupportState<IReservation>>,
     reducers: {
         getReservations(state, action){
@@ -133,6 +155,18 @@ const reservationsSlice = createSlice({
             state.updateReservationLoading = false
             state.updateReservationError = action.payload as string
         })
+        builder.addCase(updateCashReservation.pending, (state, action)=>{
+            state.updateCashReservationLoading = true
+            state.updateCashReservationError = null
+        })
+        builder.addCase(updateCashReservation.fulfilled, (state, action)=>{
+            state.updateCashReservationLoading = false
+            state.updateCashReservationError = null
+        })
+        builder.addCase(updateCashReservation.rejected, (state, action)=>{
+            state.updateCashReservationLoading = false
+            state.updateCashReservationError = action.payload as string
+        })
     }
 })
 
@@ -158,6 +192,11 @@ export const selectReservationsPaginationState = (state: RootState)=>({
     current_size: state.reservations.current_size,
     current_search: state.reservations.current_search,
     current_sort: state.reservations.current_sort
+})
+
+export const selectUpdateCashReservationFeedback = (state: RootState)=>({
+    loading: state.reservations.updateCashReservationLoading,
+    error: state.reservations.updateCashReservationError
 })
 
 

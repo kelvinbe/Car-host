@@ -57,7 +57,8 @@ const BookingScreen = (props: Props) => {
       vehicle,
       code,
       paymentType,
-      status
+      status,
+      reservation_payment_method
     },
     clearBookingState,
     payForReservation,
@@ -186,16 +187,16 @@ const BookingScreen = (props: Props) => {
               styles.bottomSection,
               { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
             ]}>
-            <RoundedOutline onPress={props?.openCancelReservation} width="45%">
+            <RoundedOutline onPress={props?.openCancelReservation} width={reservation_payment_method !== "CASH" ? "45%" : "90%"}>
               {
                 status === "ACTIVE" ? "End" : "Cancel"
               }
             </RoundedOutline>
-            <Rounded
+            {(reservation_payment_method !== "CASH") &&<Rounded
              onPress={props?.openModifyReservation} 
              width="45%">
               Modify
-            </Rounded>
+            </Rounded>}
           </View>
         )
       ) : (

@@ -11,9 +11,10 @@ import PaymentMethod from '../../../atoms/PaymentMethod';
 import Divider from '../../../atoms/Divider/Divider';
 import { isEmpty } from 'lodash'
 import AccordionButton from '../../../atoms/Buttons/AccordionButton/AccordionButton';
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking'
-import { setFlow } from '../../../../store/slices/flowstack';
+import { flow_names, setFlow } from '../../../../store/slices/flowstack';
+import { IPaymentType } from '../../../../types';
 
 interface IProps {
   closeBottomSheet?: () => void;
@@ -54,6 +55,10 @@ const useStyles = makeStyles((theme, props: Props) => {
     },
     infoText: {
       fontSize: 16
+    },
+    bottomSection: {
+      width: '100%',
+      alignItems: 'center'
     }
   };
 });
@@ -91,7 +96,15 @@ const PaymentBottomSheet = (props: Props) => {
   };
 
   const addPaymentMethod = () => {
+    dispatch(setFlow('add_payment_method'))
     Linking.openURL(Linking.createURL('/payment-details'))
+  }
+
+  const payWithCash = () => {
+    setPaymentType({
+      type: "CASH",
+    } as Partial<IPaymentType>)
+    close()
   }
 
   useEffect(()=>{
@@ -148,6 +161,25 @@ const PaymentBottomSheet = (props: Props) => {
                 />
 
             }
+            <View style={styles.bottomSection} >
+              <Text>
+                Or
+              </Text>
+              <AccordionButton
+                    title="Pay with cash"
+                    onPress={payWithCash}
+                    icon={<MaterialCommunityIcons name="cash" size={24} color="black" />}
+                    customStyles={{
+                      paddingHorizontal: 0,
+                      paddingVertical: 0,
+                      borderWidth: 1,
+                      borderColor: theme.colors.iconPrimary,
+                      borderRadius: 10,
+                      marginTop: 20,
+                    }}
+                    
+                  />
+            </View>
           </View>
         </BottomSheet>
       )}

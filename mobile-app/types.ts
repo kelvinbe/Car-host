@@ -262,6 +262,7 @@ export interface IReservation {
   payment: IPayment | null;
   inspection: Inspection | null;
   inspection_id: string
+  payment_method: string
 }
 
 /**

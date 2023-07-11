@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { selectUser } from "../../../redux/userSlice";
 import { fetchEarningsData, fetchVehicleList, selectVehicleListFeedback } from "../../../redux/analyticsSlice";
 import { getYearsSinceJoined } from "../../../utils/utils";
+import AvailableEarnings from "../earnings-reports/available";
 
 const AnalyticsHeader = () => {
   const [vehicle_id, set_vehicle_id] = useState<string>("all")
@@ -35,9 +36,7 @@ const AnalyticsHeader = () => {
     <div className="grid grid-cols-5 w-full items-end justify-start gap-x-4">
       <div className="col-span-1 flex flex-row items-end justify-start gap-x-3 w-full">
         <Text variant={"label"} >General earnings: </Text>
-        <Text>
-          {user?.market?.currency} {user?.earnings?.all_time}
-        </Text>
+        <AvailableEarnings/>
       </div>
       <div className="col-span-2 flex flex-row items-center justify-start gap-x-3 w-full">
           <div className="flex flex-row items-center justify-start gap-x-1">

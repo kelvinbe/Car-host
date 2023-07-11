@@ -13,6 +13,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/organism/ErrorFallback";
 import { logError } from "../../utils/utils";
 import LogRocket from "logrocket";
+import AllTimeEarnings from "../../components/atoms/earnings-reports/all-time";
+import AvailableEarnings from "../../components/atoms/earnings-reports/available";
 
 
 
@@ -117,24 +119,18 @@ const SettingsPage: NextPage = () => {
                         <Text marginLeft='20px' fontSize="xl" fontWeight="semibold" color="gray.800"  >
                             All Time
                         </Text>
-                        <Text marginLeft='20px'  marginTop={7} fontSize="xl" fontWeight="semibold" color="gray.800"  >
-                            {user?.market?.currency} {user?.earnings?.all_time}
-                        </Text>
+                        <AllTimeEarnings
+                            marginLeft='20px'  marginTop={7} fontSize="xl" fontWeight="semibold" color="gray.800"
+                        />
                     </Flex>
                     <Flex p='20px' w="543px" h='140px' backgroundColor={'#ebedef'}  marginBottom='18px' rounded="md"  {...FlexColStartStart} >
                         <Text marginLeft='20px'  fontSize="xl" fontWeight="semibold" color="gray.800"  >
                             Balance
                         </Text>
                         <Flex {...FlexRowCenterBetween}   w="full"  >
-                            <Text  marginLeft='20px' marginTop={7} fontSize="xl" fontWeight="semibold" color="gray.800"  >
-                                {
-                                    user?.market?.currency
-                                }
-                                {
-                                    user?.earnings?.available
-                                }
-                            </Text>
-
+                            <AvailableEarnings
+                                marginLeft='20px'  marginTop={7} fontSize="xl" fontWeight="semibold" color="gray.800"
+                            />
                             <Button backgroundColor={'#2E72CA'} marginTop='20px'  color='white' onClick={onOpen}>Withdraw</Button>
                         </Flex>
                         <WithDrawalModal isOpen={isOpen} onClose={onClose} />

@@ -35,10 +35,7 @@ const useStyles = makeStyles((theme, props: Props) => ({
     flex: 1
   },
   mapContainer: {
-    width: '100%',
-    height: 150,
-    position: 'absolute',
-    top: 5,
+    flex: 1
   },
 }));
 

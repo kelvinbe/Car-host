@@ -1,10 +1,35 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../utils/apiClient";
-import { WITHDRAWALS_API } from "../hooks/constants";
+import { PAYOUT_REPORT_API, WITHDRAWALS_API } from "../hooks/constants";
 import { RootState } from ".";
 import { IPayout, IUserProfile, IWithdrawals, PaginationSupportState, PayoutMethods, asyncThinkFetchParams } from "../globaltypes";
 import LogRocket from "logrocket";
 import { isEmpty } from "lodash";
+
+type payout_report = {
+  /**
+   * @description - total amount of money earned by the host on the platform
+   */
+  all_time: number,
+  /**
+   * @description - amount they can withdraw
+   */
+  available: number,
+  /**
+   * @description - the currency of the amount
+   */
+  currency: string,
+}
+
+export const fetchPayoutReport = createAsyncThunk<Partial<payout_report>, null | undefined>("withdrawals/fetchPayoutReport", async(args: null| undefined = null, {rejectWithValue})=>{
+  try {
+    const res = await apiClient.get(`${PAYOUT_REPORT_API}`)
+    return res.data
+  } catch (e) {
+    LogRocket.error(e)
+    return rejectWithValue(e)
+  }
+})
 
 export const fetchWithdrawals = createAsyncThunk(
   "withdrawals/fetchWithdrawals",
@@ -65,6 +90,9 @@ interface InitialState extends Partial<PaginationSupportState<IWithdrawals>> {
   status: string;
   updateLoading: boolean;
   updateError: string | null;
+  loadingPayoutReport: boolean;
+  errorPayoutReport: string | null;
+  payoutReport: Partial<payout_report> | null;
 }
 
 const initialState: InitialState = {
@@ -76,6 +104,9 @@ const initialState: InitialState = {
   current_size: 10,
   updateError: null,
   updateLoading: false,
+  loadingPayoutReport: false,
+  errorPayoutReport: null,
+  payoutReport: null
 };
 
 const withdrawalSlice = createSlice({
@@ -117,6 +148,19 @@ const withdrawalSlice = createSlice({
       state.updateLoading = false;
       state.updateError = action.payload as string;
     })
+    builder.addCase(fetchPayoutReport.pending, (state)=>{
+      state.loadingPayoutReport = true;
+      state.errorPayoutReport = null;
+    })
+    builder.addCase(fetchPayoutReport.fulfilled, (state, action)=>{
+      state.loadingPayoutReport = false;
+      state.errorPayoutReport = null;
+      state.payoutReport = action.payload;
+    })
+    builder.addCase(fetchPayoutReport.rejected, (state, action)=>{
+      state.loadingPayoutReport = false;
+      state.errorPayoutReport = action.payload as string;
+    })
   },
 });
 
@@ -147,6 +191,14 @@ export const selectWithdrawalsPagination = (state: RootState) => {
     current_sort: state?.withdrawals?.current_sort ?? "desc",
     current_search: state?.withdrawals?.current_search ?? "__empty__",
   };
+}
+
+export const selectPayoutReportFeedback = (state: RootState) => {
+  return {
+    loading: state.withdrawals.loadingPayoutReport,
+    error: state.withdrawals.errorPayoutReport,
+    data: state.withdrawals.payoutReport
+  }
 }
 
 

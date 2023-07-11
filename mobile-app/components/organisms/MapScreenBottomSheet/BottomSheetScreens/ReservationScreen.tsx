@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme, props) => {
   return {
     container: {
       position: 'absolute',
-      top: 120,
+      bottom: 0,
       width: '100%',
       paddingVertical: 10,
       backgroundColor: theme.colors.white,
@@ -159,12 +159,12 @@ const ReservationScreen = (props: Props) => {
             styles.bottomSection,
             { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
           ]}>
-          <RoundedOutline onPress={startReservation} width="40%">
+          <RoundedOutline onPress={startReservation} width={bookingDetails?.reservation_payment_method === "CASH" ? "80%" :"40%"}>
             Start
           </RoundedOutline>
-          <Rounded onPress={props?.openModifyReservation} width="40%">
+          {(bookingDetails?.reservation_payment_method !== "CASH") && <Rounded onPress={props?.openModifyReservation} width="40%">
             Modify
-          </Rounded>
+          </Rounded>}
         </View>
       )}
       {

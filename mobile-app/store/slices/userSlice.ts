@@ -85,10 +85,11 @@ export const updateSettings = createAsyncThunk(
 );
 
 export const updatePaymentType = createAsyncThunk("user/payment_type", async (data: Partial<IPaymentType>, {rejectWithValue, dispatch})=>{
+  const {id, ...rest} = data;
   try {
-    await apiClient.patch(`${PAYMENT_METHOD_ENDPOINT}`, data, {
+    await apiClient.patch(`${PAYMENT_METHOD_ENDPOINT}`, rest, {
       params: {
-        payment_type_id: data.id
+        id
       }
     })
     dispatch(fetchUserData({}));

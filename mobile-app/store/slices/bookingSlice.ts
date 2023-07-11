@@ -118,6 +118,10 @@ const initialState: {
      * we have to use polling to validate payment from the backend for other payment providers
      */
     booking_payment_authorization: string | null
+    /**
+     * e.g CASH / STRIPE / PAYPAL / MPESA / MTN
+     */
+    reservation_payment_method: string | null
 } = {
     status: 'Incomplete',
     code: null,
@@ -144,7 +148,8 @@ const initialState: {
     inspection: null,
     inspectionUpdateError: null,
     inspectionUpdateLoading: false,
-    booking_payment_authorization: null
+    booking_payment_authorization: null,
+    reservation_payment_method: null
 }
 
 const bookingSlice = createSlice({
@@ -206,6 +211,7 @@ const bookingSlice = createSlice({
             state.location = null
             state.inspection = null
             state.reservation_id = undefined
+            state.reservation_payment_method = null
         },
         setNotification: (state, action)=>{
             state.notification = action.payload
@@ -237,6 +243,7 @@ const bookingSlice = createSlice({
             state.inspection = data?.inspection
             state.loadReservationDetailsLoading = false
             state.loadReservationDetailsError = null
+            state.reservation_payment_method = data?.payment_method
         })
         builder.addCase(loadBookingDetailsFromReservation.pending, (state, action)=>{
             state.loadReservationDetailsLoading = true

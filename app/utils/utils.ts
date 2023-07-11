@@ -236,4 +236,17 @@ export const uploadToFirebase = async (blob_url: string, file_name: string, file
       return day.format('DD MMM, YYYY');
     }
   }
-  
+
+
+  export const piggyBackDataToArray = <T extends object, K extends keyof any, U>(data: U, key: K, array: T[]) => {
+    const newArray = array?.map((item) => {
+        return {
+            ...item,
+            [key]: data
+        }
+    })
+
+    return newArray ?? [];
+}
+
+

@@ -43,6 +43,12 @@ export const PAYOUTMETHODS_API = `${DOMAIN}/payouts`
  * @description - all withdrawals related endpoints are accessible through this api route
  */
 export const WITHDRAWALS_API = `${DOMAIN}/payouts/withdrawals`
+
+/**
+ * @name PAYOUT_REPORT_API
+ * @description - all payout report related endpoints are accessible through this api route
+ */
+export const PAYOUT_REPORT_API = `${DOMAIN}/payouts/reports`
 /**
  * @name USERSETTINGS_API
  * @description - all user settings related endpoints are accessible through this api route

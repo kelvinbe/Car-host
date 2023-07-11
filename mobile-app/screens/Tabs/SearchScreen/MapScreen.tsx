@@ -68,10 +68,10 @@ const useStyles = makeStyles((theme, props) => ({
 const MapScreen = (props: Props) => {
   const state = useAppSelector(selectBottomSheetState)
   const styles = useStyles();
-  const { setStartDateTime, setEndDateTime, clearBookingState } = useBookingActions();
+  const { setStartDateTime, setEndDateTime, clearBookingState} = useBookingActions();
   const [, setOpen] = useState(false);
   const { data: coords } = useAppSelector(selectCoords)
-  const { bookingDetails: {start_date_time, end_date_time} } = useBookingActions()
+  const { bookingDetails: {start_date_time, end_date_time, code} } = useBookingActions()
 
   const vehicle_positions = useAppSelector(selectVehiclePositions)
   
@@ -86,8 +86,7 @@ const MapScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    if (isUndefined(props.inReservation)) {
-      clearBookingState();
+    if (isUndefined(props.inReservation) && (isEmpty(start_date_time) && isEmpty(end_date_time))) {
       const times = timeTilEndOfDay();
       try {
         setStartDateTime(dayjs(first(times)?.value).toISOString());
