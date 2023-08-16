@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "760482109861",
-    "project_id": "divvly",
-    "storage_bucket": "divvly.appspot.com"
+    "project_number": "1087976835904",
+    "project_id": "gari-chap",
+    "storage_bucket": "gari-chap.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:760482109861:android:adcc9b33bd628614d8b04c",
+        "mobilesdk_app_id": "1:1087976835904:android:34777c9ab1d4c699be48a5",
         "android_client_info": {
-          "package_name": "com.niebex.divvly"
+          "package_name": "com.chap.gari"
         }
       },
       "oauth_client": [
         {
-          "client_id": "760482109861-500f1jhetpa1bi2fe4hkjlsjrjmim7u6.apps.googleusercontent.com",
+          "client_id": "1087976835904-l4c7ee4ip8feklf72nvul3bm5grca72f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBiXTXY0BlCp5-PybRC4iH-AIeKFcZz--o"
+          "current_key": "AIzaSyDR9Btpo-AEfWIpwxWmj8r_2Dhr3EeBpjw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "760482109861-500f1jhetpa1bi2fe4hkjlsjrjmim7u6.apps.googleusercontent.com",
+              "client_id": "1087976835904-l4c7ee4ip8feklf72nvul3bm5grca72f.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

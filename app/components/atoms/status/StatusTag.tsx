@@ -17,15 +17,15 @@ function StatusTag(props: IProps) {
       padding="4.5px 26px"
       justifyContent="center"
       border="1px solid"
-      bgColor={`${props.status.toLocaleLowerCase()}.100`}
-      borderColor={`${props.status.toLocaleLowerCase()}.1000`}
+      bgColor={`${props.status?.toLocaleLowerCase()}.100`}
+      borderColor={`${props.status?.toLocaleLowerCase()}.1000`}
       width={150}
     >
       <Text
         fontSize="14px"
         fontWeight="700"
         textTransform={"capitalize"}
-        color={`${props.status.toLocaleLowerCase()}.1000`}
+        color={`${props.status?.toLocaleLowerCase()}.1000`}
       >
         {props.children}
       </Text>

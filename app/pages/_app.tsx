@@ -12,16 +12,7 @@ import React, {useEffect} from 'react'
 import { PagePhaseProps } from '../types'
 
 export default function App({ Component, pageProps }: AppProps<InitialPageProps & PagePhaseProps>) {
-  useEffect(()=>{
-    LogRocket.init(process.env.NEXT_PUBLIC_LOGROCKET_APP_ID as string,{
-      console: {
-        isEnabled: false,
-      },
-    });
-    LogRocket.getSessionURL((sessionURL)=>{
 
-    })
-  },[])
   return (
     <Provider store={store} >
       <ChakraProvider theme={theme} >

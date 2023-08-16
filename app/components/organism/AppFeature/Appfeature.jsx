@@ -153,37 +153,6 @@ const Appfeature = () => {
                     will be apparent each step of the way.
                   </Text>
                 </li>
-                <li>
-                  <Heading as={"h6"} fontSize={"xl"}>
-                    <b>Community and Sharing Economy</b>
-                  </Heading>
-                  <Text as={"p"} fontWeight={"medium"}>
-                   Divvly isn&apos;t just a car rental company, it&apos;s a close-knit
-                    community of people who share a common idea about the
-                    transformative potential of the sharing economy. Our
-                    platform provides an opportunity for like-minded people to
-                    connect in making transportation efficient, easy, and
-                    beneficial to both sides. We encourage car owners to join
-                    our community and take advantage of our platform to list
-                    their vehicles, enabling them to generate additional income
-                    during the times when their cars would otherwise be idle.
-                  </Text>
-                </li>
-                <li>
-                  <Heading as={"h6"} fontSize={"xl"}>
-                    <b>Our Commitment to Sustainability</b>
-                  </Heading>
-                  <Text as={"p"} fontWeight={"medium"}>
-                    By embracing the sharing economy model, Divvly actively
-                    promotes and advocates for sustainable practices,
-                    recognizing the urgent need to reduce the environmental
-                    impact associated with excessive car ownership. Our
-                    overarching objective is to cultivate a solid sense of
-                    community among our individuals, where car proprietors and
-                    renters alike can benefit from shared beliefs,
-                    participation, and collaborative endeavors.
-                  </Text>
-                </li>
               </ul>
             </Text>
           </Box>

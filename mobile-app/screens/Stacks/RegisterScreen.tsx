@@ -346,7 +346,7 @@ const RegisterScreen = (props: Props) => {
                             placeholder="password" 
                             rightIcon={<Icon onPress={toggleViewPassword} name={ viewPassword  ? "eye" :"eye-slash"} type="font-awesome" />} 
                             helperText={
-                               (password?.length > 0 && !passwordValid) ? <View style={styles.bottomHelperText}>
+                            (password?.length > 0 && !passwordValid) ? <View style={styles.bottomHelperText}>
                                     <View style={styles.bottomHelperTextContainerA} >
                                         <Icon
                                             name={ !(password.length >= 8) ? "exclamation-circle" :  "check-circle"}
@@ -412,7 +412,7 @@ const RegisterScreen = (props: Props) => {
                                             at least one special character
                                         </Text>
                                     </View>
-                               </View> : ""
+                            </View> : ""
                             }
                         />
                         <WithHelperText  value={confirmPassword} onChangeText={setConfirmPassword} label="Confirm Password" secureTextEntry={!viewConfirmPassword} container={{marginBottom: 20}} 
