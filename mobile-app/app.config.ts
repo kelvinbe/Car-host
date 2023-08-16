@@ -88,7 +88,6 @@ export default ({config}: ConfigContext): ExpoConfig => ({
     },
     owner: 'niebex',
     updates: {
-      url: "https://u.expo.dev/66e442df-c84d-468f-8c52-f40c8e3902b5",
       fallbackToCacheTimeout: 0
     },
     runtimeVersion: {

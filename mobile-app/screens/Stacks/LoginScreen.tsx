@@ -163,7 +163,7 @@ const LoginScreen = (props: Props) => {
   return ( (signInLoading || socialAuthLoading || loading) ? <Loading/> :
         <View style={styles.container} >
             <View style={styles.logoContainer}>
-              <Logo />
+            <Logo />
             </View>
             <View style={styles.contentContainer} >
                 <View style={styles.topContent} >

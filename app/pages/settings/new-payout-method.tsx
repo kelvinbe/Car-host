@@ -79,11 +79,11 @@ function NewPayoutMethodPage() {
                     {/* OThers can be added here */}
                 </Select>
             </FormControl>
-              <Flex {...FlexColCenterStart} flex="1" px="20px" py="20px" >
+            <Flex {...FlexColCenterStart} flex="1" px="20px" py="20px" >
                 {
                     payout_method === "bank" ? <BankPayoutMethodForm onDone={handleBankCompleted} onCancel={onBack} /> : <MobileMoneyPayoutMethodForm onDone={handleMobileMoneyCompleted} onCancel={onBack} />
                 }
-              </Flex>
+            </Flex>
             {
                 feedback.loading && <Progress w="full"
                     isIndeterminate

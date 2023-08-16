@@ -23,13 +23,9 @@ const ChooseLocation = dynamic(() => import("../Maps/ChooseLocation/ChooseLocati
 type IReducerState = {
     name: string,
     sub_market_id: string,
-    longitude: number,
-    latitude: number,
     image: string,
     isNameValid: boolean,
     isSubMarketValid: boolean,
-    isLongitudeValid: boolean,
-    isLatitudeValid: boolean,
     isImageValid: boolean,
     description: string,
     isDescriptionValid: boolean
@@ -38,13 +34,9 @@ type IReducerState = {
 const initialState: IReducerState = {
     name: '',
     sub_market_id: '',
-    longitude: 0,
-    latitude: 0,
     image: '',
     isNameValid: true,
     isSubMarketValid: true,
-    isLongitudeValid: false,
-    isLatitudeValid: false,
     isImageValid: false,
     description: '',
     isDescriptionValid: true
@@ -64,12 +56,12 @@ const slice = createSlice({
                 message: "Invalid sub market id"
             }).safeParse(action.payload).success
         },
-        add_coordinates: (state, action) => {
-            state.latitude = action.payload.latitude
-            state.longitude = action.payload.longitude
-            state.isLatitudeValid = z.number().min(-90).max(90).safeParse(action.payload.latitude).success
-            state.isLongitudeValid = z.number().min(-180).max(180).safeParse(action.payload.longitude).success
-        },
+        // add_coordinates: (state, action) => {
+        //     state.latitude = action.payload.latitude
+        //     state.longitude = action.payload.longitude
+        //     state.isLatitudeValid = z.number().min(-90).max(90).safeParse(action.payload.latitude).success
+        //     state.isLongitudeValid = z.number().min(-180).max(180).safeParse(action.payload.longitude).success
+        // },
         add_image: (state, action) => {
             state.image = action.payload
             state.isImageValid = z.string().url().safeParse(action.payload).success
@@ -82,7 +74,7 @@ const slice = createSlice({
 })
 
 const reducer = slice.reducer
-const { add_image, add_coordinates, add_name, add_sub_market_id, add_description } = slice.actions
+const { add_image, add_name, add_sub_market_id, add_description } = slice.actions
 
 interface Props {
     isOpen: boolean,
@@ -96,12 +88,8 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
         image,
         name,
         sub_market_id,
-        longitude,
-        latitude,
         isNameValid,
         isSubMarketValid,
-        isLongitudeValid,
-        isLatitudeValid,
         isImageValid,
         description,
         isDescriptionValid
@@ -116,7 +104,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
     const updateName = (e: ChangeEvent<HTMLInputElement>) => dispatchAction(add_name(e.target.value))
     const updateSubMarket = (e: ChangeEvent<HTMLSelectElement>) => dispatchAction(add_sub_market_id(e.target.value))
     const updateDescription = (e: ChangeEvent<HTMLTextAreaElement>) => dispatchAction(add_description(e.target.value))
-    const updateCoordinates = (coordinates: { latitude: number, longitude: number }) => dispatchAction(add_coordinates(coordinates))
+    // const updateCoordinates = (coordinates: { latitude: number, longitude: number }) => dispatchAction(add_coordinates(coordinates))
 
     const { fetchSubmarkets, submarkets } = useLocation()
 
@@ -131,7 +119,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
             updateName({ target: { value: station.name } } as ChangeEvent<HTMLInputElement>)
             updateSubMarket({ target: { value: station.sub_market_id } } as ChangeEvent<HTMLSelectElement>)
             updateDescription({ target: { value: station.description } } as ChangeEvent<HTMLTextAreaElement>)
-            updateCoordinates({ latitude: station?.latitude ?? 0, longitude: station?.longitude ?? 0 })
+            // updateCoordinates({ latitude: station?.latitude ?? 0, longitude: station?.longitude ?? 0 })
         }
     }, [station?.id])
 
@@ -146,8 +134,8 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
             updateStation({
                 name: station?.name === name ? undefined : name,
                 sub_market_id: station?.sub_market_id === sub_market_id ? undefined : sub_market_id,
-                longitude: station?.longitude === longitude ? undefined : longitude,
-                latitude: station?.latitude === latitude ? undefined : latitude,
+                // longitude: station?.longitude === longitude ? undefined : longitude,
+                // latitude: station?.latitude === latitude ? undefined : latitude,
                 image: station?.image === image ? undefined : image,
                 description: station?.description === description ? undefined : description,
                 station_id: station?.id
@@ -172,8 +160,8 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
             postStation({
                 name,
                 sub_market_id,
-                longitude,
-                latitude,
+                // longitude,
+                // latitude,
                 image,
                 description
             }).unwrap().then(() => {
@@ -245,13 +233,13 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
                                                 !isSubMarketValid ||
                                                 !isImageValid ||
                                                 !isDescriptionValid ||
-                                                !isLatitudeValid ||
-                                                !isLongitudeValid ||
+                                                // !isLatitudeValid ||
+                                                // !isLongitudeValid ||
                                                 isEmpty(name) ||
                                                 isEmpty(sub_market_id) ||
-                                                isEmpty(image) ||
-                                                isUndefined(latitude) ||
-                                                isUndefined(longitude)
+                                                isEmpty(image)
+                                                // isUndefined(latitude) ||
+                                                // isUndefined(longitude)
                                             }
                                             onClick={stationAction}
                                             loading={isLoading || updateLoading}
@@ -261,14 +249,7 @@ export default function StationActionModal({ isOpen, onClose, station }: Props) 
                                     </Flex>
                                 </Flex>
                                 <Flex {...FlexColCenterStart} w="50%" h="400px" >
-                                    <ChooseLocation
-                                        key={station?.id}
-                                        onChange={updateCoordinates}
-                                        pin={station ? {
-                                            lat: station?.latitude ?? 0,
-                                            lng: station?.longitude ?? 0
-                                        } : undefined}
-                                    />
+
                                 </Flex>
                             </Flex>
                             

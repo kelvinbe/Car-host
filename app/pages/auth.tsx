@@ -15,7 +15,7 @@ export default function Home() {
   const toast = useToast({
     position: "top",
   })
-                                                                                                                                     
+                                                                                                                                  
   const {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
