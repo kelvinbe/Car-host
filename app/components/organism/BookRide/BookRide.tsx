@@ -140,54 +140,6 @@ const BookRide = () => {
                     </Link>
                   </Flex>
                 </Box>
-                <Box>
-                  <Flex
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    flexDirection={"column"}
-                    width={!isLargerThan900 ? "full" : "500px"}
-                  >
-                    <Text fontSize="30px" fontWeight="bold" lineHeight="150%">
-                      Partner with Divvly Today
-                    </Text>
-                    <Box
-                      bgColor="#E63B2E"
-                      w="50px"
-                      height="10px"
-                      borderRadius="10px"
-                    ></Box>
-
-                    <Text
-                      p={"19px"}
-                      color="#33415C"
-                      fontSize="15px"
-                      sx={textStyle}
-                    >
-                      Experience the seamless, stress-free, and enjoyable
-                      journey that Divvly offers, regardless of whether you’re
-                      the vehicle owner, looking for a way to increase income,
-                      or a renter, searching for easier transportation. Say
-                      goodbye to the complexities and limitations of traditional
-                      car rental services and say hello to a new era of
-                      flexibility and ease. Discover a new way of transportation
-                      with Divvly Car Rental System!
-                    </Text>
-                    <Link href="contact-us">
-                      <Button
-                        color="black"
-                        bgColor="#E63B2E"
-                        size="lg"
-                        h="54px"
-                        borderRadius={10}
-                        fontWeight="bold"
-                        marginTop={5}
-                        _hover={{ color: "black", bg: "#E2E8F0" }}
-                      >
-                        Contact Us
-                      </Button>
-                    </Link>
-                  </Flex>
-                </Box>
               </VStack>
             </Box>
 
