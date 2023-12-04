@@ -4,12 +4,13 @@ import { getReactNativePersistence, initializeAuth, Auth, getAuth } from 'fireba
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const firebaseConfig = {
-  apiKey: API_KEY,
-  authDomain: AUTH_DOMAIN,
-  projectId: PROJECT_ID,
-  storageBucket: STORAGE_BUCKET,
-  messagingSenderId: MESSAGING_SENDER_ID,
-  appId: APP_ID
+  apiKey: "AIzaSyBtSyBDJ2gpo3ibkYmXaCxQ5tEPl_fOxKg",
+  authDomain: "gari-chap-mobile.firebaseapp.com",
+  projectId: "gari-chap-mobile",
+  storageBucket: "gari-chap-mobile.appspot.com",
+  messagingSenderId: "508914406372",
+  appId: "1:508914406372:web:0b4c07f4acc3649b6fadf1",
+  measurementId: "G-G12MS5NLRF"
 };
 
 let app: FirebaseApp;
