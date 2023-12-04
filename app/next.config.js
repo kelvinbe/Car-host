@@ -6,7 +6,7 @@ module.exports = {
     unoptimized:true
   },
   publicRuntimeConfig: {
-    'GOOGLE_MAPS_API_KEY': 'AIzaSyCs3fxia_UXztnwT9WJ-gnOGB30MGXF5_U'
+    'GOOGLE_MAPS_API_KEY': ''
   },
   output: 'standalone'
 }

@@ -1,6 +1,6 @@
 const { getDefaultConfig } = require('expo/metro-config');
 
-module.exports = (() => {
+module.exports = (() => {2
   const config = getDefaultConfig(__dirname);
 
   const { transformer, resolver } = config;
