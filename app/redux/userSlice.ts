@@ -46,6 +46,7 @@ const initialState: IReducer = {
 export const fetchUserDashboard = createAsyncThunk('user/fetchDashboard', async (undefined, {rejectWithValue, dispatch})=>{
     try {
         const result = await apiClient.get(`${USERS_DOMAIN}/dashboard`)
+        console.log('resultISBEINGHIT', result)
         return result.data
     } catch (e) {
         LogRocket.error(e)
@@ -182,16 +183,33 @@ const userSlice = createSlice({
 })
 
 export const selectUsers = (state: RootState)=>state.users.users
-export const selectUser = (state: RootState)=>{
-    const data = state.users.user
+export const selectUser = (state: RootState) => {
+    const data = state.users.user;
+
     if (isEmpty(data) && typeof window !== 'undefined') {
-        const stringified = localStorage?.getItem('user')
-        if (isEmpty(stringified)) return null
-        return JSON.parse(stringified ?? "{}") as IUserProfile | null
+        try {
+            const stringified = localStorage?.getItem('user');
+            
+            if (isEmpty(stringified)) return null;
+
+            const parsedData = JSON.parse(stringified!);
+
+            // Make sure parsedData is an object
+            if (typeof parsedData === 'object' && parsedData !== null) {
+                return parsedData as IUserProfile;
+            } else {
+                console.error('Invalid JSON format:', parsedData);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return null;
+        }
     }
 
-    return data
+    return data;
 }
+
 export const { getUsers } = userSlice.actions;
 export default userSlice.reducer;
 

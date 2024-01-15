@@ -324,10 +324,45 @@ const withdrawals_schema = (host_ids: [string], payout_method_ids: [string], pay
     payout_method_id: z.enum(payout_method_ids),
 })
 
+
+
+
 const payout_method_ids = payout_methods.map(p => p.id)
 const payouts = generateMock(payouts_schema(host_ids as [string], payout_method_ids as [string]).array().length(30))
 const payout_ids = payouts.map(payout=>payout.id)
 const withdrawals = generateMock(withdrawals_schema(host_ids as [string], payout_method_ids as [string], payout_ids as [string]).array().length(30))
+
+const generateUpcomingReservations = (customer_ids, vehicle_ids, count) => {
+    return generateMock(
+        reservations_schema(customer_ids as [string], vehicle_ids as [string]).array().length(count),
+        {
+            dateMap: {
+                start_date_time: () => faker.date.future(),
+                end_date_time: (start_date_time) => faker.date.future(undefined, start_date_time),
+                created_at: () => faker.date.past(),
+            },
+        }
+    );
+};
+
+// Generate additional upcoming reservations for non-admin users
+const nonAdminUsers = users.filter((user) => user.user_type === 'CUSTOMER' && !user.is_admin);
+const additionalNonAdminReservations = generateUpcomingReservations(
+    nonAdminUsers.map((user) => user.id),
+    vehicle_ids,
+    5 // You can adjust the count as needed
+);
+
+// Generate additional upcoming reservations for admin users
+const adminUsers = users.filter((user) => user.is_admin);
+const additionalAdminReservations = generateUpcomingReservations(
+    adminUsers.map((user) => user.id),
+    vehicle_ids,
+    5 // You can adjust the count as needed
+);
+
+const updatedReservations = [...reservations, ...additionalNonAdminReservations, ...additionalAdminReservations];
+
 
 const all_data = {
     markets,
@@ -390,7 +425,7 @@ const all_data = {
             },
         }
     }),
-    reservations: reservations.map((reservation)=>{
+    reservations: updatedReservations.map((reservation)=>{
         return {
             ...reservation,
             vehicle: {

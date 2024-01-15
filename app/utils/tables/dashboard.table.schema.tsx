@@ -19,7 +19,7 @@ export const DashboardReservations: ColumnsType<IReservation & {
         render: (v, {user}) =>{
             return (
                 <div className="flex flex-row items-center justify-start gap-x-3">
-                    <Avatar src={user?.profile_pic_url} name={user?.email} />
+                    <Avatar src={'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/439.jpg'} name={user?.email} />
                     <Text>
                         { (user?.fname || user?.lname) ? `${user?.fname ?? ""} ${user?.lname ?? ""}` : user?.email }
                     </Text>
@@ -63,7 +63,7 @@ export const DashboardReservations: ColumnsType<IReservation & {
         render: (v, {payment}) => {
             return (
                 <Text fontSize="14px" fontWeight="500">
-                    {payment?.amount ?? 0}
+                    {Math.random().toFixed() * 200}
                 </Text>
             )
         }

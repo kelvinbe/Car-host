@@ -72,7 +72,7 @@ function Reservations() {
 
   };
 
-
+  console.log('feedback', feedback)
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>

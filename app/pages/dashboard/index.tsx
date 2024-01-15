@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+'use client'
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Grid, GridItem, Box, Flex, Text } from "@chakra-ui/react";
 import BaseTable from "../../components/organism/Table/BaseTable/BaseTable";
@@ -30,16 +31,26 @@ import { app } from "../../firebase/firebaseApp";
 import { fetchUserDashboard, selectDashboardFeedback } from "../../redux/userSlice";
 import { DashboardReservations, DashboardWithdrawals } from "../../utils/tables/dashboard.table.schema";
 import VehiclePreview from "../../components/molecules/vehicle-preview";
+import dynamic from "next/dynamic";
 
 export default function Dashboard() {
   const dispatch = useAppDispatch();
   const feedback = useAppSelector(selectDashboardFeedback)
   const [viewButton, setViewButton] = useState<string | number>("");
 
+  const Map = useMemo(() => dynamic(
+    () => import("../../components/organism/Maps/LiveMapComponent/LiveMapComponent"),
+    { 
+      loading: () => <p>A map is loading</p>,
+      ssr: false
+    }
+  ), [])
+
   useEffect(()=>{
     dispatch(fetchUserDashboard())
   },[])
 
+  console.log('feedback', feedback?.data)
   
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
@@ -58,7 +69,7 @@ export default function Dashboard() {
           >
             <BaseTable
               columns={DashboardReservations}
-              data={feedback?.data?.reservations ?? []}
+              data={feedback?.data?.dashboard.filter(reservations => reservations).slice(0, 4) ?? []}
               primitiveProps={{
                 loading: feedback?.loading
               }}
@@ -79,15 +90,15 @@ export default function Dashboard() {
               borderColor="gray.300"
             >
               <VehiclePreview
-                vehicles={feedback?.data?.vehicles} 
+                vehicles={feedback?.data?.dashboard} 
                 loading={feedback?.loading}
               />
             </Flex>
           </PreviewTableContainer>
         </GridItem>
         <GridItem>
-          <LiveMapComponent loading={feedback?.loading} marketId="someId" vehicles={feedback?.data?.map_vehicles} />
-        </GridItem>
+          <Map />
+      </GridItem>
         <GridItem>
           <PreviewTableContainer title="Recent Withdrawals" link="/payouts">
             <BaseTable

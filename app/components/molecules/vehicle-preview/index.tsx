@@ -22,7 +22,7 @@ function VehiclePreview(props: IProps) {
         }) : (
             <>
                 {
-                    props?.vehicles?.map((vehicle, i)=>{
+                    props?.vehicles?.slice(0, 4)?.map((vehicle, i)=>{
                     return (
                         <div key={i} className="flex flex-row items-center h-[200px] w-full justify-center relative rounded-xl overflow-hidden cursor-pointer " role="button" >
                             <Image

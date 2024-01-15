@@ -11,6 +11,8 @@ const { faker } = require('@faker-js/faker');
 const jsonServer = require('json-server');
 const server = jsonServer.create();
 const router = jsonServer.router('mock/db.json');
+const { z } = require("zod");
+
 
 const middlewares = jsonServer.defaults({
   noCors: true
@@ -73,38 +75,164 @@ router.render = (req, res) => {
   }
 };
 
-server.get("/users", (req, res)=> {
+// ... (previous code)
 
-    const requested_id = req.query.user_id
-    const handle = req.query.handle
-    if (handle){ 
-      const user = db.get("users").find({handle}).value()
-      res.json({
-        data: !isEmpty(user),
-        status: "success",
-        message: "Success"
-      })
-    } else if (requested_id){
-      const user = db.get("users").find({id: requested_id}).value()
-      res.json({
-        data: user,
-        status: "success",
-        message: "Success"
-      })
-    } else {
-      const token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.decode(token);
-      const uid = decoded.user_id;
+server.get("/users/dashboard", (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.decode(token);
+  const uid = decoded.user_id;
 
-      res.json({
-          data: db.get("users").value().filter(({user_type})=> user_type === "HOST")[0],
-          status: "success",
-          message: "Success"
-      })
-    }
+  // Get the user based on the decoded UID
+  const user = db.get("users").find({ uid }).value();
 
+  if (!user) {
+    return res.status(404).json({
+      data: null,
+      status: "error",
+      message: "User not found",
+    });
+  }
+
+  // Fetch vehicle data for the user's dashboard
+  const userVehicles = db.get("vehicles").filter({ user_id: user.id }).value();
+
+  // Fetch upcoming reservations for the current user and vehicle
+  const upcomingReservations = db.get("reservations").value().filter(reservation => {
+    const endDate = new Date(reservation.end_date_time);
+    const currentDate = new Date();
+
+    // Check if the reservation's end date and time is greater than the current date and time
+    return endDate > currentDate;
+  });
+
+  // Fetch payments data
+  const payments = db.get("payments").value();
+
+  // Modify the data as needed for the dashboard
+  const dashboardData = {
+    user_id: user.id,
+    profile_pic_url: user.profile_pic_url, // Add user profile_pic_url
+    dashboard: userVehicles.map((vehicle) => {
+      const vehicleData = {
+        id: vehicle.id,
+        make: vehicle.make,
+        model: vehicle.model,
+        year: vehicle.year,
+        color: vehicle.color,
+        status: vehicle.status,
+        hourly_rate: vehicle.hourly_rate,
+        pictures: vehicle.pictures,
+        // Add more properties as needed for the dashboard
+      };
+
+      // Add upcoming reservations data with customer name, payments, and user details
+      vehicleData.reservations = upcomingReservations
+        .filter((reservation) => reservation.vehicle_id === vehicle.id)
+        .map((reservation) => {
+          const customer = db.get("users").find({ id: reservation.user_id }).value(); // Assuming customer_id is the user_id
+          const payment = payments.find((p) => p.reservation_id === reservation.id);
+
+          return {
+            reservation_id: reservation.id,
+            start_date_time: reservation.start_date_time,
+            end_date_time: reservation.end_date_time,
+            customer_name: customer ? `${customer.fname} ${customer.lname}` : "Unknown Customer",
+            vehicle_pictures: reservation.vehicle.pictures,
+            payment: payment || { amount: 0, tax: 0 }, // If payment is not found, provide default values
+            user: {
+              profile_pic_url: customer?.profile_pic_url, // Add user profile_pic_url
+              name: `${customer?.fname ?? ""} ${customer?.lname ?? ""}`,
+            },
+          };
+        });
+
+      return vehicleData;
+    }),
+  };
+
+  return res.json({
+    data: dashboardData,
+    status: "success",
+    message: "Vehicle data, reservations, and payments fetched for the dashboard",
+  });
+});
+
+
+server.get("/users", (req, res) => {
+  const requestedId = req.query.user_id;
+  const handle = req.query.handle;
+
+  if (handle) {
+    const user = db.get("users").find({ handle }).value();
+    const userWithReservations = getUserWithUpcomingReservations(user);
     
-})
+    res.json({
+      data: userWithReservations,
+      status: "success",
+      message: "Success",
+    });
+  } else if (requestedId) {
+    const user = db.get("users").find({ id: requestedId }).value();
+    const userWithReservations = getUserWithUpcomingReservations(user);
+
+    res.json({
+      data: userWithReservations,
+      status: "success",
+      message: "Success",
+    });
+  } else {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.decode(token);
+    const uid = decoded.user_id;
+
+    const customerWithReservations = db
+      .get("users")
+      .find(({ user_type }) => user_type === "CUSTOMER")
+      .value();
+    
+    const userWithReservations = getUserWithUpcomingReservations(customerWithReservations);
+
+    res.json({
+      data: userWithReservations,
+      status: "success",
+      message: "Success",
+    });
+  }
+});
+
+function getUserWithUpcomingReservations(user) {
+  if (isEmpty(user)) {
+    return user;
+  }
+
+  // Fetch upcoming reservations for the user
+  const upcomingReservations = db
+    .get("reservations")
+    .filter({ user_id: user.id, status: "UPCOMING" })
+    .value();
+
+  // Add upcoming reservations data with vehicle details
+  const userWithReservations = {
+    ...user,
+    upcomingReservations: upcomingReservations.map((reservation) => {
+      const vehicle = db.get("vehicles").find({ id: reservation.vehicle_id }).value();
+      return {
+        reservation_id: reservation.id,
+        start_date_time: reservation.start_date_time,
+        end_date_time: reservation.end_date_time,
+        vehicle: {
+          id: vehicle.id,
+          make: vehicle.make,
+          model: vehicle.model,
+          year: vehicle.year,
+          color: vehicle.color,
+        },
+      };
+    }),
+  };
+
+  return userWithReservations;
+}
 
 server.post("/users", (req, res)=>{
     const token = req.headers.authorization.split(" ")[1];

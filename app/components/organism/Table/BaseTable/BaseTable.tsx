@@ -22,6 +22,8 @@ function BaseTable(props: IProps<any>) {
     const [tableData, setTableData] = React.useState<any[]>([])
     const { columns, data, dataFetchFunction, handlePageChange, primitiveProps } = props
 
+    console.log('columnsss', tableData)
+
     useEffect(() => {
         if (!isUndefined(data)) {
             setTableData(data)
